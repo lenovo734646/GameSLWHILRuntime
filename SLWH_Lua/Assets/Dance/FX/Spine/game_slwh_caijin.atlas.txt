@@ -1,0 +1,286 @@
+
+game_slwh_caijin.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cj
+  rotate: false
+  xy: 1610, 885
+  size: 114, 63
+  orig: 114, 63
+  offset: 0, 0
+  index: -1
+game_slwh_cj_shang
+  rotate: false
+  xy: 1208, 698
+  size: 268, 48
+  orig: 268, 48
+  offset: 0, 0
+  index: -1
+game_slwh_cj_waikuang
+  rotate: false
+  xy: 2, 2
+  size: 383, 138
+  orig: 383, 138
+  offset: 0, 0
+  index: -1
+game_slwh_cj_xianshi
+  rotate: false
+  xy: 404, 262
+  size: 311, 80
+  orig: 311, 80
+  offset: 0, 0
+  index: -1
+game_slwh_cj_yuan1
+  rotate: false
+  xy: 2012, 1722
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+game_slwh_cj_yuan2
+  rotate: false
+  xy: 2012, 1722
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+game_slwh_cj_yuan4
+  rotate: false
+  xy: 2012, 1722
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+game_slwh_cj_yuan5
+  rotate: false
+  xy: 2012, 1722
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+game_slwh_cj_yuan3
+  rotate: false
+  xy: 2012, 1686
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+game_slwh_cj_yuandi
+  rotate: false
+  xy: 806, 401
+  size: 202, 143
+  orig: 202, 143
+  offset: 0, 0
+  index: -1
+sg/0_00000
+  rotate: false
+  xy: 2, 1556
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00001
+  rotate: false
+  xy: 2, 1354
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00002
+  rotate: false
+  xy: 404, 1556
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00003
+  rotate: false
+  xy: 2, 1152
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00004
+  rotate: false
+  xy: 404, 1354
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00005
+  rotate: false
+  xy: 806, 1556
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00006
+  rotate: false
+  xy: 2, 950
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00007
+  rotate: false
+  xy: 404, 1152
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00008
+  rotate: false
+  xy: 806, 1354
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00009
+  rotate: false
+  xy: 1208, 1556
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00010
+  rotate: false
+  xy: 2, 748
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00011
+  rotate: false
+  xy: 404, 950
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00012
+  rotate: false
+  xy: 806, 1152
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00013
+  rotate: false
+  xy: 1208, 1354
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00014
+  rotate: false
+  xy: 1610, 1556
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00015
+  rotate: false
+  xy: 2, 546
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00016
+  rotate: false
+  xy: 404, 748
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00017
+  rotate: false
+  xy: 806, 950
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00018
+  rotate: false
+  xy: 1208, 1152
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00019
+  rotate: false
+  xy: 1610, 1354
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00020
+  rotate: false
+  xy: 2, 344
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00021
+  rotate: false
+  xy: 404, 546
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00022
+  rotate: false
+  xy: 806, 748
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00023
+  rotate: false
+  xy: 1208, 950
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00024
+  rotate: false
+  xy: 1610, 1152
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00025
+  rotate: false
+  xy: 2, 142
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00026
+  rotate: false
+  xy: 404, 344
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00027
+  rotate: false
+  xy: 806, 546
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00028
+  rotate: false
+  xy: 1208, 748
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
+sg/0_00029
+  rotate: false
+  xy: 1610, 950
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1

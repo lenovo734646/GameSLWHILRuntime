@@ -1,0 +1,139 @@
+
+game_slwh_kjjg.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+game_slwh_bjg4
+  rotate: false
+  xy: 358, 533
+  size: 669, 669
+  orig: 669, 669
+  offset: 0, 0
+  index: -1
+game_slwh_bjguang1
+  rotate: false
+  xy: 910, 1331
+  size: 668, 673
+  orig: 668, 673
+  offset: 0, 0
+  index: -1
+game_slwh_bjguang2
+  rotate: true
+  xy: 1029, 756
+  size: 573, 559
+  orig: 573, 559
+  offset: 0, 0
+  index: -1
+game_slwh_diguang
+  rotate: false
+  xy: 2, 1204
+  size: 906, 800
+  orig: 906, 800
+  offset: 0, 0
+  index: -1
+game_slwh_guangg
+  rotate: true
+  xy: 1590, 991
+  size: 502, 315
+  orig: 502, 315
+  offset: 0, 0
+  index: -1
+game_slwh_guangsu
+  rotate: false
+  xy: 1580, 1495
+  size: 367, 509
+  orig: 367, 509
+  offset: 0, 0
+  index: -1
+game_slwh_huangguan
+  rotate: false
+  xy: 1029, 593
+  size: 199, 161
+  orig: 199, 161
+  offset: 0, 0
+  index: -1
+game_slwh_jinbi1
+  rotate: true
+  xy: 1949, 1904
+  size: 100, 92
+  orig: 100, 92
+  offset: 0, 0
+  index: -1
+game_slwh_jinbi2
+  rotate: false
+  xy: 910, 1227
+  size: 111, 102
+  orig: 111, 102
+  offset: 0, 0
+  index: -1
+game_slwh_jinbi3
+  rotate: false
+  xy: 241, 30
+  size: 83, 78
+  orig: 83, 78
+  offset: 0, 0
+  index: -1
+game_slwh_jinbi4
+  rotate: false
+  xy: 1029, 539
+  size: 66, 52
+  orig: 66, 52
+  offset: 0, 0
+  index: -1
+game_slwh_jinbi5
+  rotate: false
+  xy: 1730, 890
+  size: 145, 99
+  orig: 145, 99
+  offset: 0, 0
+  index: -1
+game_slwh_wutai
+  rotate: true
+  xy: 2, 110
+  size: 1092, 354
+  orig: 1092, 354
+  offset: 0, 0
+  index: -1
+game_slwh_xx1
+  rotate: false
+  xy: 2, 2
+  size: 237, 106
+  orig: 237, 106
+  offset: 0, 0
+  index: -1
+game_slwh_xx2
+  rotate: false
+  xy: 1230, 616
+  size: 137, 138
+  orig: 137, 138
+  offset: 0, 0
+  index: -1
+game_slwh_xx3
+  rotate: false
+  xy: 954, 203
+  size: 237, 106
+  orig: 237, 106
+  offset: 0, 0
+  index: -1
+game_slwh_xx4
+  rotate: false
+  xy: 1590, 851
+  size: 138, 138
+  orig: 138, 138
+  offset: 0, 0
+  index: -1
+game_slwh_zi
+  rotate: false
+  xy: 358, 142
+  size: 594, 167
+  orig: 594, 167
+  offset: 0, 0
+  index: -1
+game_slwh_zidi
+  rotate: false
+  xy: 358, 311
+  size: 839, 220
+  orig: 839, 220
+  offset: 0, 0
+  index: -1

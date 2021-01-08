@@ -125,6 +125,70 @@ class ObjectsSeletWindow : EditorWindow {
     }
 }
 
+class ObjectsDragSelectWindow : EditorWindow
+{
+    public List<GameObject> targetList = new List<GameObject>();
+    public Action<GameObject> onClose;
+    Vector2 scrollPos;
+    private void OnGUI()
+    {
+        GUILayout.BeginVertical();
+        GUILayout.Label("拖拽添加，左键点击移出", GUILayout.Width(300));
+        // 此矩形框用来接收拖拽的obj
+        Rect rect = EditorGUILayout.GetControlRect(GUILayout.Width(300), GUILayout.Height(150));
+        EditorGUI.TextField(rect, "拖放需要设置的Object到此");
+        //如果鼠标正在拖拽中或拖拽结束时，并且鼠标所在位置在文本输入框内  
+        if ((Event.current.type == EventType.DragUpdated
+          || Event.current.type == EventType.DragExited)
+          && rect.Contains(Event.current.mousePosition))
+        {
+            //改变鼠标的外表  
+            DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
+            if (DragAndDrop.objectReferences != null && DragAndDrop.objectReferences.Length > 0)
+            {
+                foreach (var obj in DragAndDrop.objectReferences)
+                {
+                    if (obj)
+                    {
+                        if (!targetList.Contains(obj))
+                            targetList.Add((GameObject)obj);
+                    }
+                }
+                return; // OnGUI函数中，不可以同时做改动pathList和绘制pathList会报错，这里return下一帧做绘制
+            }
+        }
+
+        // 绘制列表
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        foreach (var obj in targetList)
+        {
+            if (GUILayout.Button(obj.name + $"({obj.GetType().FullName})"))
+            {
+                targetList.Remove(obj);
+                break;
+            }
+        }
+        EditorGUILayout.EndScrollView();
+        //
+        GUILayout.Space(10);
+        if (GUILayout.Button("设置"))
+        {
+            foreach (var obj in targetList)
+            {
+                onClose?.Invoke(obj);
+            }
+            //Close();
+            Debug.Log("设置完毕");
+        }
+        GUILayout.Space(10);
+        if (GUILayout.Button("清空"))
+        {
+            targetList.Clear();
+        }
+        GUILayout.EndVertical();
+    }
+}
+
 class MethodSelecteWindows : EditorWindow {
     public Type targetType;
     Vector2 scrollPos;

@@ -44,7 +44,7 @@ public class LuaTool
 #if HALL
                 importer.SetAssetBundleNameAndVariant(AssetConfig.Lua_Bundle_Name + AssetConfig.Bundle_PostFix, string.Empty);
 #else
-                importer.SetAssetBundleNameAndVariant("lua.bundle", string.Empty);
+                importer.SetAssetBundleNameAndVariant(AssetConfig.Game_Name + "/" + AssetConfig.Lua_Bundle_Name + AssetConfig.Bundle_PostFix, string.Empty);
 #endif
             }
         }

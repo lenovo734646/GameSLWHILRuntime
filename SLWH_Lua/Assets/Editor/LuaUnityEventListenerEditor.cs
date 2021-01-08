@@ -82,40 +82,121 @@ public class LuaUnityEventListenerEditor : Editor {
             };
             window.Show();
         }
-        if (GUILayout.Button("添加Children的全部Btton事件监听(CallLuaByGameObjectName)")) {
-            List<Button> buttons = new List<Button>();
-            targetcom.GetComponentsInChildren(true,buttons);
-            foreach (var p in uiobjs) {
-                foreach (var btn in buttons) {
-                    if (btn == p.Value) {
-                        buttons.Remove(btn);
+        //if (GUILayout.Button("添加Children的全部Btton事件监听(CallLuaByGameObjectName)")) {
+        //    List<Button> buttons = new List<Button>();
+        //    targetcom.GetComponentsInChildren(true,buttons);
+        //    foreach (var p in uiobjs) {
+        //        foreach (var btn in buttons) {
+        //            if (btn == p.Value) {
+        //                buttons.Remove(btn);
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    foreach(var btn in buttons) {
+        //        UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.CallLuaByGameObjectName, btn);
+        //    }
+        //    EditorUtility.SetDirty(targetcom);
+        //    uiobjs.Clear();
+        //}
+        // 手动添加需要监听CallLuaByGameObjectName函数的组件
+        if (GUILayout.Button("手动添加需要监听（CallLuaByGameObjectName）函数的组件"))
+        {
+            findAllRef(targetcom);
+            var root = targetcom.transform.root;
+            //var btns = root.GetComponentsInChildren<Button>(true);
+            var window = (ObjectsDragSelectWindow)EditorWindow.GetWindow(typeof(ObjectsDragSelectWindow));
+            //window.targetList.AddRange(btns);
+            foreach (var p in uiobjs)
+            {
+                foreach (var btn in window.targetList)
+                {
+                    if (btn == p.Value)
+                    {
+                        window.targetList.Remove(btn);
                         break;
                     }
                 }
             }
-            foreach(var btn in buttons) {
-                UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.CallLuaByGameObjectName, btn);
-            }
-            EditorUtility.SetDirty(targetcom);
-            uiobjs.Clear();
+
+            window.onClose = go => {
+                var btn = go.GetComponent<Button>();
+                if(btn)
+                {
+                    Debug.Log("btn = " + btn.name);
+                    if (IsAddedMethedName(btn.onClick, "CallLuaByGameObjectName"))
+                    {
+                        Debug.LogWarning($"{btn.name} 已添加 CallLuaByGameObjectName 跳过执行");
+                        return;
+                    }
+                    UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.CallLuaByGameObjectName, btn);
+                    uiobjs.Clear();
+                    EditorUtility.SetDirty(targetcom);
+                }
+                var tog = go.GetComponent<Toggle>();
+                if(tog)
+                {
+                    Debug.Log("tog = " + tog.name);
+                    if (IsAddedMethedName(tog.onValueChanged, "CallLuaByGameObjectName"))
+                    {
+                        Debug.LogWarning($"{tog.name} 已添加 CallLuaByGameObjectName 跳过执行");
+                        return;
+                    }
+                        
+                    UnityEventTools.AddObjectPersistentListener(tog.onValueChanged, targetcom.CallLuaByGameObjectName, tog);
+                    uiobjs.Clear();
+                    EditorUtility.SetDirty(targetcom);
+                }
+                if(btn == null && tog == null)
+                {
+                    Debug.LogError($"GameObject {go.name} 不包含Button组件或Toggle组件！");
+                }
+            };
+            window.Show();
         }
-        if (GUILayout.Button("添加Children的全部Btton事件监听(OnCustumObjectEvent)")) {
+
+        if (GUILayout.Button("删除所有Button中[None]和[Missing]事件"))
+        {
             List<Button> buttons = new List<Button>();
             targetcom.GetComponentsInChildren(true, buttons);
-            foreach (var p in uiobjs) {
-                foreach (var btn in buttons) {
-                    if (btn == p.Value) {
-                        buttons.Remove(btn);
-                        break;
+
+            foreach (var btn in buttons)
+            {
+                var e = btn.onClick;
+                for (var i = 0; i < e.GetPersistentEventCount(); )
+                {
+                    var targetObj = e.GetPersistentTarget(i);
+                    var actionName = e.GetPersistentMethodName(i);
+                    
+                    if (targetObj == null)
+                    {
+                        Debug.LogWarning($"组件{btn.name}onClick Mathod Target is Missing MethonName = {actionName}，事件已移除");
+                        UnityEventTools.RemovePersistentListener(e, i);
                     }
+                    i++;
+
                 }
             }
-            foreach (var btn in buttons) {
-                UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.OnCustumObjectEvent, btn);
-            }
             EditorUtility.SetDirty(targetcom);
-            uiobjs.Clear();
         }
+
+        //if (GUILayout.Button("添加Children的全部Btton事件监听(OnCustumObjectEvent)")) {
+        //    List<Button> buttons = new List<Button>();
+        //    targetcom.GetComponentsInChildren(true, buttons);
+        //    foreach (var p in uiobjs) {
+        //        foreach (var btn in buttons) {
+        //            if (btn == p.Value) {
+        //                buttons.Remove(btn);
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    foreach (var btn in buttons) {
+        //        UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.OnCustumObjectEvent, btn);
+        //    }
+        //    EditorUtility.SetDirty(targetcom);
+        //    uiobjs.Clear();
+        //}
         //if (GUILayout.Button("清楚所有引用的事件监听")) {
 
         //}
@@ -164,6 +245,47 @@ public class LuaUnityEventListenerEditor : Editor {
 
         return false;
     }
+
+    // 
+    private bool IsAddedMethedName(UnityEvent e, string methodName)
+    {
+        bool isHave = false;
+        for (var i = 0; i < e.GetPersistentEventCount(); i++)
+        {
+            var targetObj = e.GetPersistentTarget(i);
+            if (targetObj == null)
+            {
+                Debug.LogError($"Mathod Target is Missing");
+            }
+            var addedMethodName = e.GetPersistentMethodName(i);
+            if (addedMethodName == methodName)
+                isHave = true;
+        }
+        return isHave;
+    }
+
+    private bool IsAddedMethedName(UnityEvent<bool> e, string methodName)
+    {
+        return CheckAddedEvent(e, methodName);
+    }
+
+    private bool CheckAddedEvent<T>(UnityEvent<T> e, string methodName)
+    {
+        bool isHave = false;
+        for (var i = 0; i < e.GetPersistentEventCount(); i++)
+        {
+            var targetObj = e.GetPersistentTarget(i);
+            if (targetObj == null)
+            {
+                Debug.LogError($"Mathod Target is Missing");
+            }
+            var addedMethodName = e.GetPersistentMethodName(i);
+            if (addedMethodName == methodName)
+                isHave = true;
+        }
+        return isHave;
+    }
+
 
 }
 

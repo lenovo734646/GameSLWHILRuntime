@@ -20,7 +20,7 @@ namespace SLWH
         public Text btnText;
 
         public List<AudioClip> audioClips;
-        public AudioSource audio;
+        public AudioSource audio11;
         public AudioClip clip;
 
         public Toggle toggle;

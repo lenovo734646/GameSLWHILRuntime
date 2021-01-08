@@ -125,6 +125,9 @@ class SetAnyTypeWindow : EditorWindow {
     Vector2 scrollPos;
     Dictionary<string, bool> checkDic = new Dictionary<string, bool>();
     private void OnGUI() {
+        //GUI.skin.label.normal.textColor = Color.red;
+        EditorGUILayout.LabelField("若不希望自动命名可右键单击选择类型，不必取消勾选");
+        //GUI.skin.label.normal.textColor = Color.white;
         Component[] list;
         GameObject gameObject;
         if (target is Component) {
@@ -155,13 +158,49 @@ class SetAnyTypeWindow : EditorWindow {
             if (!checkDic.ContainsKey(p.Key))
                 checkDic.Add(p.Key, true);
             var b = checkDic[p.Key] = GUILayout.Toggle(checkDic[p.Key], "自动设置名字");
-            if (clickbtn) {
-                
+
+            if (clickbtn && Event.current.button == (int)MouseButton.LeftMouse)
+            {
+                Debug.Log(Event.current.type);
                 setTargetFunc(p.Value, b);
+                Close();
+            }
+
+            if (clickbtn && Event.current.button == (int)MouseButton.RightMouse)
+            {
+                setTargetFunc(p.Value, false);
                 Close();
             }
             GUILayout.EndHorizontal();
         }
         EditorGUILayout.EndScrollView();
     }
+
+    //bool bleft = false;
+    //bool bright = false;
+    //private void Update()
+    //{
+        
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        bleft = true;
+    //        Debug.Log("你按下了鼠标左键");
+    //    }
+    //    if (Input.GetMouseButtonUp(0))
+    //    {
+    //        bleft = false;
+    //        Debug.Log("你抬起了鼠标左键");
+    //    }
+    //    //
+    //    if (Input.GetMouseButtonDown(1))
+    //    {
+    //        bright = true;
+    //        Debug.Log("你按下了鼠标右键");
+    //    }
+    //    if (Input.GetMouseButtonUp(1))
+    //    {
+    //        bright = false;
+    //        Debug.Log("你抬起了鼠标左键");
+    //    }
+    //}
 }

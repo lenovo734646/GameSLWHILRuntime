@@ -45,6 +45,7 @@ namespace SLWH
 
             //scrollRect.content.transform
             //img.sprite = null;
+            //toggle.isOn = false;
 
 
             int[] aa = new int[5];

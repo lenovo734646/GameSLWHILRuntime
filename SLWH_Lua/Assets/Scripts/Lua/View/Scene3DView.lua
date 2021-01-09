@@ -26,7 +26,6 @@ local ItemCountChangeMode = OSACore.ItemCountChangeMode
 
 local ResultPanel = require'UI.ResultPanel'
 local TopUI =  require'UI.TopUI'
-local Banker = require'UI.Banker'
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -48,8 +47,6 @@ function Class:__init(roomdata)
     self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)
     -- 顶部UI
     self.topUI = TopUI.Create(self.topUIInitHelper)
-    -- 上庄
-    self.banker = Banker.Create(self.bankerInfoInitHelper)
     --
     self.iconRigibody = self.iconPos:GetComponent('Rigidbody')
     local runItemIndexs = self.runItemIndexs

@@ -5,13 +5,13 @@ local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
 local BadWordsReplace = CS.SP.BadWordsReplace
-local EditorAssetLoader = CS.EditorAssetLoader
+
 local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
-local BadWordsReplace = CS.SP.BadWordsReplace
 local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local EmojiPanel = require"ChatRoot.EmojiPanel"
+local PhrasePanel = require'ChatSystem.PhrasePanel'
 local VoicePanel = require"ChatRoot.VoicePanel"
 local ChatMsgData = require"ChatRoot.ChatMsgData"
 local ChatMsgView = require 'ChatRoot.ChatMsgView'
@@ -25,6 +25,8 @@ function Create(...)
 end
 
 function Class:__init(panel, loader, selfUserID)
+    self.loader = loader
+    self.selfUserID = selfUserID
     self.panel = panel
     panel:GetComponent(typeof(LuaInitHelper)):Init(self)
     self.eventListener:Init(self)
@@ -54,43 +56,28 @@ function Class:__init(panel, loader, selfUserID)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
     end
 
-    --
-    self.selfUserID = selfUserID
-    -- 敏感词屏蔽 待加入
-    local badwordTextAsset = EditorAssetLoader.LoadEditorAsset("Assets/RareVoiceChat/BadWord.txt", typeof(TextAsset));
+    -- 敏感词屏蔽
+    local badwordTextAsset = loader.LoadEditorAsset("Assets/ChatSystem/BadWord.txt", typeof(TextAsset));
     self.badwordsReplace = BadWordsReplace(badwordTextAsset.text)
     --emojiPanel 表情
-    local emojis = EditorAssetLoader.LoadEditorAssetAll("Assets/RareVoiceChat/Texture/Emoji/Emoji.png", true)
-    local emojiPrefab = EditorAssetLoader.LoadEditorAsset("Assets/RareVoiceChat/prefab/emojiPrefab.prefab", typeof(GameObject), true)
-    self.emojiPanel = EmojiPanel.Create(self.emojiPanelAnimator.gameObject, self.inputField, emojis, emojiPrefab)
-    self.toggleEmoji.onValueChanged:AddListener(function (isOn)
-        if isOn and self.toggleVoiceInput.isOn then
-            self.toggleVoiceInput.isOn = false
-        end
-        self.emojiPanel:OnShow(isOn)
-    end)
+    local emojis = loader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true)
+    local emojiPrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Emoji.prefab", typeof(GameObject), true)
+    self.emojiPanel = EmojiPanel.Create(self.emojiPanelGo, self.inputField, emojis, emojiPrefab)
 
     -- phrase 常用短语
-
+    local phrasePrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Phrase.prefab", typeof(GameObject), true)
+    self.phrasePanel = PhrasePanel.create(self.phrasePanelGo, phrasePrefab)
 
     -- 语音聊天
     -- 最长录音时间
     self.maxRecordTime = 60
-    self.voicePanel = VoicePanel.Create(self.voicePanelRectTrans.gameObject, self.graphicRaycaster, self.maxRecordTime)
+    self.voicePanel = VoicePanel.Create(self.voicePanelGo, self.graphicRaycaster, self.maxRecordTime)
     self.voicePanel.onSendCallback = function (clipData)
         self:OnSendVoice(clipData)
     end
-    self.toggleVoiceInput.onValueChanged:AddListener(function (isOn)
-        if isOn and self.toggleEmoji.isOn then
-            self.toggleEmoji.isOn = false
-        end
-        if self.btnSend.gameObject.activeSelf then
-            self.btnSend.gameObject:SetActive(false)
-        end
-        self.voicePanel:OnShow(isOn)
-    end)
+
     --
-    self.inputField.shouldHideMobileInput = true--可在编辑器直接设置
+    --self.inputField.shouldHideMobileInput = true--已在编辑器直接设置
     self.inputField.onSubmit:AddListener(function (str)
         --回车键
         self:OnSendText(self.inputField)
@@ -127,8 +114,8 @@ function Class:OnSendVoice(clipData)
         logError("OnSendVoice clipData is null")
         return
     end
-    if self.toggleEmoji.isOn then
-        self.toggleEmoji.isOn = false
+    if self.tog_Emoji.isOn then
+        self.tog_Emoji.isOn = false
     end
     self:OnSendMsg(nil, clipData)
 end
@@ -138,8 +125,8 @@ function Class:OnSendText(inputField)
     if string.isNullOrEmpty(text) then
         return
     end
-    if self.toggleEmoji.isOn then
-        self.toggleEmoji.isOn = false
+    if self.tog_Emoji.isOn then
+        self.tog_Emoji.isOn = false
     end
     text = self.badwordsReplace:Replace(text, "*")
     self:OnSendMsg(text, nil)
@@ -183,6 +170,51 @@ function Class:ShowSendBtnByInput(inputField)
         self.btnSend.gameObject:SetActive(false)
     end
 end
+
+
+-- 以下代码为自动生成代码
+function Class:On_tog_Emoji_Event(tog_Emoji)
+    local isOn = tog_Emoji.isOn
+    --
+    if isOn and self.tog_Phrase.isOn then
+        self.tog_Phrase.isOn = false
+    end
+    if isOn and self.tog_Voice.isOn then
+        self.tog_Voice.isOn = false
+    end
+    --
+    self.emojiPanel:OnShow(isOn)
+end
+
+function Class:On_tog_Phrase_Event(tog_Phrase)
+    local isOn = tog_Phrase.isOn
+    --
+    if isOn and self.tog_Voice.isOn then
+        self.tog_Voice.isOn = false
+    end
+    if isOn and self.tog_Emoji.isOn then
+        self.tog_Emoji.isOn = false
+    end
+    --
+    self.emojiPanel:OnShow(isOn)
+end
+
+function Class:On_tog_Voice_Event(tog_Voice)
+    local isOn = tog_Voice.isOn
+    --
+    if isOn and self.tog_Emoji.isOn then
+        self.tog_Emoji.isOn = false
+    end
+    if isOn and self.tog_Phrase.isOn then
+        self.tog_Phrase.isOn = false
+    end
+    --
+    if self.btnSend.gameObject.activeSelf then
+        self.btnSend.gameObject:SetActive(false)
+    end
+    self.voicePanel:OnShow(isOn)
+end
+
 
 
 

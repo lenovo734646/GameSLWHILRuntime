@@ -13119,7 +13119,18 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2300884154989696659}
+        m_MethodName: CallLuaByGameObjectName
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 937522458}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1001 &955619512
 PrefabInstance:
@@ -22294,7 +22305,7 @@ MonoBehaviour:
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 1
-  m_HideMobileInput: 0
+  m_HideMobileInput: 1
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
   m_RegexValue: 
@@ -23080,7 +23091,18 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2300884154989696659}
+        m_MethodName: CallLuaByGameObjectName
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2300884154953315810}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &2300884154953315811
 MonoBehaviour:
@@ -23162,22 +23184,10 @@ MonoBehaviour:
     anyType: {fileID: 2300884155535098972}
     sType: 
     manualName: 
-  - name: voicePanelRectTrans
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 2300884154790231692}
-    sType: 
-    manualName: 
   - name: btnSend
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 2300884154734701668}
-    sType: 
-    manualName: 
-  - name: panelRectTrans
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 2300884154989696686}
     sType: 
     manualName: 
   - name: animatorHelper
@@ -23202,6 +23212,24 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 937522458}
+    sType: 
+    manualName: 
+  - name: emojiPanelGo
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 2300884155009563751}
+    sType: 
+    manualName: 
+  - name: phrasePanelGo
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 13007844}
+    sType: 
+    manualName: 
+  - name: voicePanelGo
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 2300884154790231691}
     sType: 
     manualName: 
 --- !u!1 &2300884154989696685
@@ -23420,9 +23448,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 1
-  autoPlayAnimName: popup_in
-  animatorStateInfoEventList: []
+  AutoPlayOnAwake: 0
+  autoPlayAnimName: 
+  animatorStateInfoEventList:
+  - AnimatorStateInfoName: popup_in
+    startAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2300884155009563751}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    completeAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2300884154105057501}
+          m_MethodName: set_value
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 1
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - AnimatorStateInfoName: popup_out
+    startAction:
+      m_PersistentCalls:
+        m_Calls: []
+    completeAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2300884155009563751}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &2300884155009563757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23464,10 +23539,10 @@ MonoBehaviour:
     anyType: {fileID: 2300884155578231918}
     sType: 
     manualName: 
-  - name: panelAnimator
+  - name: animatorHelper
     t: {fileID: 0}
     monoType: {fileID: 0}
-    anyType: {fileID: 2300884155009563753}
+    anyType: {fileID: 2300884155009563756}
     sType: 
     manualName: 
   - name: item_Emoji
@@ -24928,7 +25003,18 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2300884154989696659}
+        m_MethodName: CallLuaByGameObjectName
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2300884155535098972}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &2300884155535098973
 MonoBehaviour:

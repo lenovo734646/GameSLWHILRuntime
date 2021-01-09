@@ -18,11 +18,11 @@ function Create(...)
     return Class(...)
 end
 
-function Class:__init(panel, inputField, emojis, emojiPrefab)
+function Class:__init(panel, inputField, emojis, itemPrefab)
     self.panel = panel
     panel:GetComponent(typeof(LuaInitHelper)):Init(self)
     --
-    if emojiPrefab == nil then
+    if itemPrefab == nil then
         logError("emojiPrefab is nil")
         return
     end
@@ -30,7 +30,7 @@ function Class:__init(panel, inputField, emojis, emojiPrefab)
     self.emojiCount = emojis.Length-1
     if emojis ~= nil and self.emojiCount > 0 then
         for i = 1, self.emojiCount do
-            local go = GameObject.Instantiate(emojiPrefab, self.contentRoot)
+            local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)
             go:GetComponent(typeof(Image)).sprite = emojis[i]
             go.name = emojis[i].name
             go:GetComponent(typeof(Button)).onClick:AddListener(function ()
@@ -53,28 +53,10 @@ end
 
 function Class:OnShow(isOn)
     if isOn then
-        if self.panel.activeSelf == false then
-            self.panel:SetActive(true)
-        end
-        self.panelAnimator:Play("popup")
-        CoroutineHelper.StartCoroutine(function ()
-            yield(WaitForSeconds(0.1))
-            self.scrollRect.verticalScrollbar.value = 1;
-        end)
+        self.animatorHelper:Play("popup_in")
     else
-        self.panelAnimator:Play("popup reverse")
-        CoroutineHelper.StartCoroutine(function ()
-            while true do
-                yield()
-                if self.panel.transform.localScale.y <= 0 then
-                    self.panel:SetActive(false)
-                    break
-                end
-            end
-        end)
+        self.animatorHelper:Play("popup_out")
     end
-
-
 end
 
 

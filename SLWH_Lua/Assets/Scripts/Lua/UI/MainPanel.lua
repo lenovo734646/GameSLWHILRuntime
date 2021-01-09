@@ -15,6 +15,7 @@ local yield = coroutine.yield
 local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
+local EditorAssetLoader = CS.EditorAssetLoader
 
 local ChatPanel = require'UI.ChatPanel'
 
@@ -35,7 +36,7 @@ function Class:__init(panel, loader)
     self.eventListener:Init(self)
 
     -- 聊天界面
-    self.chatPanel = ChatPanel.Create(self.ChatPanel)
+    self.chatPanel = ChatPanel.Create(self.ChatPanel, EditorAssetLoader)
 
 end
 

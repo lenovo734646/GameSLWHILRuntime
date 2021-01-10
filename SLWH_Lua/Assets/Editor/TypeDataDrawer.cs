@@ -161,7 +161,6 @@ class SetAnyTypeWindow : EditorWindow {
 
             if (clickbtn && Event.current.button == (int)MouseButton.LeftMouse)
             {
-                Debug.Log(Event.current.type);
                 setTargetFunc(p.Value, b);
                 Close();
             }

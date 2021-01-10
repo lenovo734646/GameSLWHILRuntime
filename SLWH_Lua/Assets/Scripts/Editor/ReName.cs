@@ -6,13 +6,23 @@ using UnityEngine;
 
 public class ReNameWindow : EditorWindow
 {
-    string desc = "对根节点内的所有子节按“基本名字+名字序号”规则进行重命名，需要默认从0开始，按顺序累计+1";
     [Label("需要重命名的根节点")]
     public Transform root;
-    [Label("基本名字")]
+
+    [Label("是否使用原始文件名")]
+    public bool bUserOrigin = true;
+    [Label("保留原始文件名长度")]
+    public int len = 0;
+    [Label("名字固定字段")]
     public string baseName = "";
+    
+
+
     [Label("名字序号，累计+1")]
     public int index = 0;
+    [Label("是否序号在前")]
+    public bool bPrefix = false;
+    
 
     // 复制
     [Label("复制源,选中即可，也可拖放到此处")]
@@ -23,7 +33,7 @@ public class ReNameWindow : EditorWindow
     {
         this.titleContent = new GUIContent("重命名root下所有子对象");
     }
-    [MenuItem("Tools/ReName")]
+    [MenuItem("Tools/重命名和复制")]
     static void ShowWindow()
     {
         //获取窗口并打开
@@ -54,35 +64,45 @@ public class ReNameWindow : EditorWindow
         //绘制对象
         GUILayout.Space(10);
         root = (Transform)EditorGUILayout.ObjectField("根节点", root, typeof(Transform), true);
-        //绘制文本
-        GUILayout.Space(10);
-        baseName = EditorGUILayout.TextField("基本名字:", baseName);
-        //绘制文本
-        GUILayout.Space(10);
-        index = int.Parse(EditorGUILayout.TextField("起始序号:", index.ToString()));
 
-        // 复制功能
-        // 复制源
-        GUILayout.Space(10);
-        sourceGameObject = (GameObject)EditorGUILayout.ObjectField("复制源", sourceGameObject, typeof(GameObject), true);
-        // 复制数量
-        GUILayout.Space(10);
-        count = int.Parse(EditorGUILayout.TextField("复制数量:", count.ToString()));
+        // 是否使用原始文件名
+        bUserOrigin = EditorGUILayout.Toggle("是否使用原始文件名", bUserOrigin);
+        //
+        if(!bUserOrigin)
+        {
+            // 名字固定字段
+            baseName = EditorGUILayout.TextField("名字固定字段:", baseName);
+        }
+        else
+        {
+            // 保留原始文件名长度
+            len = EditorGUILayout.IntField("保留原始文件名长度:", len);
+        }
 
-        //绘制描述文本区域
-        GUILayout.Space(10);
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Description", GUILayout.MaxWidth(80));
-        desc = EditorGUILayout.TextArea(desc, GUILayout.MaxHeight(75));
-        GUILayout.EndHorizontal();
-
-        EditorGUILayout.Space();
+        // 名字起始序号
+        index = EditorGUILayout.IntField("起始序号:", index);
+        // 序号加在前面
+        bPrefix = EditorGUILayout.Toggle("序号加在前面", bPrefix);
 
         //添加名为"Save Bug"按钮，用于调用SaveBug()函数
         if (GUILayout.Button("重命名"))
         {
             ReName(root);
         }
+
+        // 复制功能
+        GUILayout.Space(20);
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("复制功能：", GUILayout.MaxWidth(80));
+        EditorGUILayout.TextArea("设置复制源，设置复制数量", GUILayout.MaxHeight(75));
+        GUILayout.EndHorizontal();
+        // 复制源
+        GUILayout.Space(10);
+        sourceGameObject = (GameObject)EditorGUILayout.ObjectField("复制源", sourceGameObject, typeof(GameObject), true);
+        // 复制数量
+        GUILayout.Space(10);
+        count = EditorGUILayout.IntField("复制数量:", count);
+
 
         if (GUILayout.Button("复制对象并重命名"))
         {
@@ -126,14 +146,30 @@ public class ReNameWindow : EditorWindow
 
     void ReName(Transform tf)
     {
-        //foreach(Transform child in root)
-        //{
+        // 
 
-        //}
+
+        //
         for(var i = 0; i < tf.childCount; i ++)
         {
             int t = index+i;
-            tf.GetChild(i).name = baseName + t.ToString();
+            var name = tf.GetChild(i).name;
+            if(bUserOrigin)
+            {
+                if (len > 0)
+                    name.Substring(0, len);
+            }
+            else
+            {
+                name = baseName;
+            }
+
+            if (bPrefix)
+                name = t.ToString() + name;
+            else
+                name = name + t.ToString();
+
+            tf.GetChild(i).name = name;
         }
         Debug.Log("重命名成功...");
     }

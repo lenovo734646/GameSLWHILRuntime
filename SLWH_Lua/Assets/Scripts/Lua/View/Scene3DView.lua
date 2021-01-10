@@ -24,8 +24,9 @@ local GameConfig = require'GameConfig'
 local OSACore = CS.Com.TheFallenGames.OSA.Core
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
 
-local ResultPanel = require'UI.ResultPanel'
-local TopUI =  require'UI.TopUI'
+local MainUI =  require'UI.MainUI'
+
+
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -43,10 +44,9 @@ function Class:__init(roomdata)
     self.gameObject = View
     View:GetComponent(typeof(LuaInitHelper)):Init(self)
     
-    -- 结算界面
-    self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)
-    -- 顶部UI
-    self.topUI = TopUI.Create(self.topUIInitHelper)
+
+    -- UI
+    self.mainUI = MainUI.Create(self.mainUIInitHelper)
     --
     self.iconRigibody = self.iconPos:GetComponent('Rigidbody')
     local runItemIndexs = self.runItemIndexs

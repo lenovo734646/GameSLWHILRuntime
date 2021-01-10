@@ -10,6 +10,8 @@ public class ToggleEventConverter : MonoBehaviour {
 
     public UnityEvent unityEvent;
 
+    public Toggle.ToggleEvent onValueChangedReverse;
+
     public void OnToggleValueChange(bool b) {
         if (!playWithTrue) {
             b = !b;
@@ -17,5 +19,11 @@ public class ToggleEventConverter : MonoBehaviour {
         if (b) {
             unityEvent?.Invoke();
         }
+    }
+
+    public void OnToggleValueReverse(bool b)
+    {
+        b = !b;
+        onValueChangedReverse?.Invoke(b);
     }
 }

@@ -11,6 +11,8 @@ public class ReNameWindow : EditorWindow
 
     [Label("是否使用原始文件名")]
     public bool bUserOrigin = true;
+    [Label("保留原始文件名起点")]
+    public int startIndex = 0;
     [Label("保留原始文件名长度")]
     public int len = 0;
     [Label("名字固定字段")]
@@ -20,6 +22,10 @@ public class ReNameWindow : EditorWindow
 
     [Label("名字序号，累计+1")]
     public int index = 0;
+    [Label("序号位数（不足补0）")]
+    public int indexCount = 1;
+    [Label("序号和名字分隔符")]
+    public string gapStr = "";
     [Label("是否序号在前")]
     public bool bPrefix = false;
     
@@ -76,11 +82,17 @@ public class ReNameWindow : EditorWindow
         else
         {
             // 保留原始文件名长度
+            startIndex = EditorGUILayout.IntField("保留原始文件名起点:", startIndex);
+            // 保留原始文件名长度
             len = EditorGUILayout.IntField("保留原始文件名长度:", len);
         }
 
         // 名字起始序号
         index = EditorGUILayout.IntField("起始序号:", index);
+        // 序号位数（不足补0）
+        indexCount = EditorGUILayout.IntField("序号位数:", indexCount);
+        // 序号分隔符
+        gapStr = EditorGUILayout.TextField("序号和名字分隔符:", gapStr);
         // 序号加在前面
         bPrefix = EditorGUILayout.Toggle("序号加在前面", bPrefix);
 
@@ -157,17 +169,21 @@ public class ReNameWindow : EditorWindow
             if(bUserOrigin)
             {
                 if (len > 0)
-                    name.Substring(0, len);
+                    name = name.Substring(startIndex, len);
+                else
+                    name = name.Substring(startIndex);
             }
             else
             {
                 name = baseName;
             }
 
+            var indexStr = t.ToString().PadLeft(indexCount, '0');
+
             if (bPrefix)
-                name = t.ToString() + name;
+                name = indexStr+ gapStr + name;
             else
-                name = name + t.ToString();
+                name = name + gapStr + indexStr;
 
             tf.GetChild(i).name = name;
         }

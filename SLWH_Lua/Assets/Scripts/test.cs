@@ -32,6 +32,8 @@ namespace SLWH
         public DOTweenAnimation tweenAnimation;
 
         public Image img;
+
+        public int padCount = 2;
         // Start is called before the first frame update
         void Start()
         {
@@ -48,27 +50,30 @@ namespace SLWH
             //toggle.isOn = false;
 
 
-            int[] aa = new int[5];
-            print(aa.Length);
-            for(var i = 0; i < 5; i ++)
-            {
-                aa[i] = i;
-            }
+            //int[] aa = new int[5];
+            //print(aa.Length);
+            //for(var i = 0; i < 5; i ++)
+            //{
+            //    aa[i] = i;
+            //}
 
-            for (var i = 0; i < aa.Length; i++)
-            {
-                print("aa = "+aa[i]);
-            }
+            //for (var i = 0; i < aa.Length; i++)
+            //{
+            //    print("aa = "+aa[i]);
+            //}
 
             // 清空数组
             //aa.Initialize(); // 只用来初始化，如果已经有值了，那么不会改变值
-            Array.Clear(aa, 0, aa.Length); // 清空数组并设置系统默认值：默认值 bool->false; int or float -> 0; 引用类型 or string -> null
-            print(aa.Length);
-            for (var i = 0; i < aa.Length; i++)
-            {
-                print(aa[i]);
-            }
+            //Array.Clear(aa, 0, aa.Length); // 清空数组并设置系统默认值：默认值 bool->false; int or float -> 0; 引用类型 or string -> null
+            //print(aa.Length);
+            //for (var i = 0; i < aa.Length; i++)
+            //{
+            //    print(aa[i]);
+            //}
 
+
+            int a = 1;
+            print(a.ToString().PadLeft(padCount));
         }
 
         // Update is called once per frame

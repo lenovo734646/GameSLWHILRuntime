@@ -17,6 +17,13 @@ public class SetParticleAttribute : EditorWindow
     Color color;
     //
     float scale = 1;
+
+    // 角度渐进
+    int startRotate = 0;
+    int gapRotate = 0;
+    bool xAxis = false;
+    bool yAxis = true;
+    bool zAxis = false;
     //
     SetParticleAttribute()
     {
@@ -97,7 +104,35 @@ public class SetParticleAttribute : EditorWindow
             SetScale(scale, targetName);
         }
 
+        GUILayout.Space(20);
+        GUILayout.Label("设置Root子对象rotate渐进");
+        GUILayout.Space(10);
+        startRotate = EditorGUILayout.IntField("渐进起始角度", startRotate);
+        gapRotate = EditorGUILayout.IntField("渐进角度", gapRotate);
+        xAxis = EditorGUILayout.Toggle("X轴", xAxis);
+        yAxis = EditorGUILayout.Toggle("Y轴", yAxis);
+        zAxis = EditorGUILayout.Toggle("Z轴", zAxis);
+        if (GUILayout.Button("设置"))
+        {
+            SetRotate();
+        }
+
         GUILayout.EndVertical();
+    }
+
+    void SetRotate()
+    {
+        if (gapRotate == 0)
+        {
+            Debug.LogError("角度间隔为0");
+            return;
+        }
+        for(var i = 0; i < root.transform.childCount; i++)
+        {
+            var child = root.transform.GetChild(i);
+            var x = startRotate + gapRotate * i;
+            child.GetComponent<RectTransform>().eulerAngles = new Vector3();
+        }
     }
 
     void SetScale(float v, string targetName = null)

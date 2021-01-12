@@ -7,10 +7,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Spine.AnimationState;
+using Object = UnityEngine.Object;
 
 namespace SLWH
 {
-
 
     public class test : MonoBehaviour
     {
@@ -34,6 +34,7 @@ namespace SLWH
         public Image img;
 
         public int padCount = 2;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -72,8 +73,8 @@ namespace SLWH
             //}
 
 
-            int a = 1;
-            print(a.ToString().PadLeft(padCount));
+            //int a = 1;
+            //print(a.ToString().PadLeft(padCount));
         }
 
         // Update is called once per frame
@@ -104,20 +105,20 @@ namespace SLWH
 
         public void OnTest()
         {
-            var b = spineHelper.IsPlaying();
-            print("OnTest = "+b);
+            //var b = spineHelper.IsPlaying();
+            //print("OnTest = "+b);
         }
 
         public void OnLongPress(string str)
         {
             Debug.Log("OnLongPress  "+ str);
-            btnText.text = "LongPress";
+            //btnText.text = "LongPress";
         }
 
         public void OnClick(string str)
         {
             Debug.Log("OnClick  " + str);
-            btnText.text = "Click";
+            //btnText.text = "Click";
         }
 
         public int AAint()

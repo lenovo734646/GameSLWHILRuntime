@@ -60,7 +60,7 @@ function Class:__init(roomdata)
             transform = child,
             gameObject = gameObject,
             item_id = tonumber(gameObject.name),
-            --animationHelper = child:GetComponent(typeof(AnimationHelper)), -- BCBM效果是粒子
+            animationHelper = child:GetComponent(typeof(AnimationHelper)), -- BCBM效果是粒子
         }
         tinsert(winStageDataList, childdata)
         gameObject:SetActive(false)
@@ -141,8 +141,16 @@ function Class:__init(roomdata)
     end
     --数据更新接口实现（itemViewGameObject会自动回收使用，所以需要对itemViewGameObject进行更新）
     roadScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
-        viewItemData.colorImg.sprite = itemdata.sprite
-        viewItemData.animalImg.sprite = itemdata
+        viewItemData.colorImg.sprite = itemdata.animalSpr
+        viewItemData.animalImg.sprite = itemdata.animalSpr
+        viewItemData.typeImg.sprite = itemdata.typeSpr
+        viewItemData.spImg.sprite = itemdata.spSpr
+        if itemdata.spSpr == nil then
+            viewItemData.spImg:SetActive(false)
+        else
+            viewItemData.spImg:SetActive(true)
+        end
+        
     end
     roadScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
         if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
@@ -157,9 +165,21 @@ function Class:__init(roomdata)
         end
     end
 
-    self.histroyIconSprites = {}
+    local exArrayData = {}
+    self.RoadInitHelper:Init(exArrayData)
+    self.roadColorSprites = {}
     self.RoadInitHelper:ObjectsSetToLuaTable(self.histroyIconSprites)
+    self.roadAnimalSprites = {}
+    exArrayData.animalImgArrayInitHelper:ObjectsSetToLuaTable(self.roadAnimalSprites)
+    self.roadTypeSprites = {}
+    exArrayData.typeImgArrayInitHelper:ObjectsSetToLuaTable(self.roadTypeSprites)
+    self.roadSPSprites = {}
+    exArrayData.spImgArrayInitHelper:ObjectsSetToLuaTable(self.roadSPSprites)
+
+    exArrayData = nil
     self.RoadInitHelper = nil
+
+    -- 筹码选择
     self.betSelectToggles = {}
     self.BetSelectBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
     self.BetSelectBtnsInitHelper = nil
@@ -177,10 +197,10 @@ end
 -- sp_id 特殊中奖id（大三元，大四喜）
 function Class:GetHistoryIconData(item_id, color_id, type_id, sp_id)
     return {
-        animalSpr = self.histroyIconSprites[item_id],
-        colorSpr = self.histroyIconSprites[color_id],
-        typeImg = self.histroyIconSprites[type_id],
-        spImg = self.histroyIconSprites[sp_id],
+        animalSpr = self.roadAnimalSprites[item_id],
+        colorSpr = self.roadColorSprites[color_id],
+        typeSpr = self.roadTypeSprites[type_id],
+        spSpr = self.roadSPSprites[sp_id],
     }
 end
 

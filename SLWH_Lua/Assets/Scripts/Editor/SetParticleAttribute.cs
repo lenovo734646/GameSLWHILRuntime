@@ -131,7 +131,17 @@ public class SetParticleAttribute : EditorWindow
         {
             var child = root.transform.GetChild(i);
             var x = startRotate + gapRotate * i;
-            child.GetComponent<RectTransform>().eulerAngles = new Vector3();
+            var y = startRotate + gapRotate * i;
+            var z = startRotate + gapRotate * i;
+
+            Vector3 rot = child.eulerAngles;
+            if (xAxis)
+                rot.x = x;
+            if (yAxis)
+                rot.y = y;
+            if (zAxis)
+                rot.z = z;
+            child.eulerAngles = rot;
         }
     }
 

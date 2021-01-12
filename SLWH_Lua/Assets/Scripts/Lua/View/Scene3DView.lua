@@ -47,9 +47,7 @@ function Class:__init(roomdata)
 
     -- UI
     self.mainUI = MainUI.Create(self.mainUIInitHelper)
-    --
-    self.iconRigibody = self.iconPos:GetComponent('Rigidbody')
-    local runItemIndexs = self.runItemIndexs
+    -- 中间获胜动物舞台
     local winStage = self.winStage
     local winStageChildren = {}
     winStage:GetComponent(typeof(LuaInitHelper)):Init(winStageChildren)
@@ -76,6 +74,8 @@ function Class:__init(roomdata)
     end
     self.winStageDataList = winStageDataList
 
+    -- 外圈动物
+    local runItemIndexs = self.runItemIndexs
     local runItemDataList = {}
     for i=1,RUN_ITEM_COUNT do
         local t = runItemIndexs:GetChild(i-1)
@@ -113,6 +113,7 @@ function Class:__init(roomdata)
     end
     self.runItemDataList = runItemDataList
 
+    -- 下注区
     local betAreaBtnInitHelpers = self.betAreaBtnsInitHelper.objects
     local betAreaList = {}
     for i = 1, betAreaBtnInitHelpers.Length do
@@ -128,19 +129,20 @@ function Class:__init(roomdata)
     end
     self.betAreaList = betAreaList
 
+    -- 路单区
     local roadScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
     self.roadScrollView = roadScrollView
     --数据提供接口实现
     roadScrollView.OnCreateViewItemData = function (itemViewGameObject,itemIndex)
-        local viewItemData = {
-            msgImg = itemViewGameObject:GetComponent("Image") ,
-            gameObject = itemViewGameObject,
-        }
+        local viewItemData = {}
+        itemViewGameObject:getComponen(typeof(LuaInitHelper)):Init(viewItemData)
+        viewItemData.gameObject = itemViewGameObject
         return viewItemData
     end
     --数据更新接口实现（itemViewGameObject会自动回收使用，所以需要对itemViewGameObject进行更新）
     roadScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
-        viewItemData.msgImg.sprite = itemdata.sprite
+        viewItemData.colorImg.sprite = itemdata.sprite
+        viewItemData.animalImg.sprite = itemdata
     end
     roadScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
         if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
@@ -163,13 +165,23 @@ function Class:__init(roomdata)
     self.BetSelectBtnsInitHelper = nil
 
 
-
+    -- ctrl
     self.ctrl = Scene3DViewCtrl.Create(self,View,roomdata)
     return self.ctrl
 end
 
-function Class:GetHistoryIconData(item_id)
-    return {sprite = self.histroyIconSprites[item_id]}
+-- 获取路单item信息
+-- item_id 中奖动物id
+-- color_id 中奖颜色id
+-- type_id 庄闲和 id
+-- sp_id 特殊中奖id（大三元，大四喜）
+function Class:GetHistoryIconData(item_id, color_id, type_id, sp_id)
+    return {
+        animalSpr = self.histroyIconSprites[item_id],
+        colorSpr = self.histroyIconSprites[color_id],
+        typeImg = self.histroyIconSprites[type_id],
+        spImg = self.histroyIconSprites[sp_id],
+    }
 end
 
 

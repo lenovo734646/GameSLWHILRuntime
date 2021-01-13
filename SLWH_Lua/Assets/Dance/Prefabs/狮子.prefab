@@ -567,9 +567,9 @@ GameObject:
   - component: {fileID: 4732948203064619542}
   - component: {fileID: 5054294619033868782}
   m_Layer: 0
-  m_Name: "03_\u72EE\u5B50"
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Name: "\u72EE\u5B50"
+  m_TagString: "\u72EE\u5B50"
+  m_Icon: {fileID: 2800000, guid: f9caaba968322e549ae737ce7dd365aa, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

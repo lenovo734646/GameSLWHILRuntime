@@ -597,9 +597,9 @@ GameObject:
   - component: {fileID: 6840773468335300604}
   - component: {fileID: 6441825618012989215}
   m_Layer: 0
-  m_Name: "08_\u7334\u5B50"
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Name: "\u7334\u5B50"
+  m_TagString: "\u7334\u5B50"
+  m_Icon: {fileID: 2800000, guid: c284a81c77bed8b45867d77896c845de, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

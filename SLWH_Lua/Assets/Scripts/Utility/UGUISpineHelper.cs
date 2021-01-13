@@ -100,6 +100,11 @@ namespace SLWH
             return 0;
         }
 
+        public void Play(string name)
+        {
+            PlayByName(name, null);
+        }
+
         // 播放默认动画并返回动画时间
         public float Play(bool bLoop = false)
         {
@@ -124,7 +129,8 @@ namespace SLWH
             {
                 if(!bloop && autoUnActive)
                 {
-                    completeAct = () => { spine.gameObject.SetActive(false); };
+                    if(completeAct == null)
+                        completeAct = () => { spine.gameObject.SetActive(false); };
                 }
 
                 //
@@ -138,6 +144,8 @@ namespace SLWH
                     };
                     state.Complete += complete;
                 }
+                if (gameObject.activeSelf == false)
+                    gameObject.SetActive(true);
                 //
                 entryAnim = state.SetAnimation(0, name, bloop);
             }

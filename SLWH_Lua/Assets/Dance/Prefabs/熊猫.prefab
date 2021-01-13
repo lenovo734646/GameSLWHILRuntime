@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 230137877724886166}
   - component: {fileID: 340906136595418533}
   m_Layer: 0
-  m_Name: "02_\u718A\u732B"
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Name: "\u718A\u732B"
+  m_TagString: "\u718A\u732B"
+  m_Icon: {fileID: 2800000, guid: 442a296f00ea19443be3ccdff47e5bbc, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

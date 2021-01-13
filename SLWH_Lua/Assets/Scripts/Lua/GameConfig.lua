@@ -2,7 +2,7 @@ local Config={
     debug = true,
     ShowAnimationTime = 8,
     ShowResultTime = 5,
-    RunItemCount = 32,
+    RunItemCount = 24,
     Ratio = {40, 30, 20, 10, 5, 5, 5, 5}, --下标从1开始
     -- 胜利音效名字（根据itemID）
     WinSound = {"shizi", "laoying", "xiongmao", "kongque", "houzi", "gezi", "tuzi", "yanzi"},

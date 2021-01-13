@@ -10,11 +10,11 @@ local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
 local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
-local EmojiPanel = require"ChatRoot.EmojiPanel"
-local PhrasePanel = require'ChatSystem.PhrasePanel'
-local VoicePanel = require"ChatRoot.VoicePanel"
-local ChatMsgData = require"ChatRoot.ChatMsgData"
-local ChatMsgView = require 'ChatRoot.ChatMsgView'
+local EmojiPanel = require"ChatSystem.EmojiPanel"
+local PhrasePanel = require"ChatSystem.PhrasePanel"
+local VoicePanel = require"ChatSystem.VoicePanel"
+local ChatMsgData = require"ChatSystem.ChatMsgData"
+local ChatMsgView = require 'ChatSystem.ChatMsgView'
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -66,7 +66,7 @@ function Class:__init(panel, loader, selfUserID)
 
     -- phrase 常用短语
     local phrasePrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Phrase.prefab", typeof(GameObject), true)
-    self.phrasePanel = PhrasePanel.create(self.phrasePanelGo, phrasePrefab)
+    self.phrasePanel = PhrasePanel.Create(self.phrasePanelGo, phrasePrefab)
 
     -- 语音聊天
     -- 最长录音时间

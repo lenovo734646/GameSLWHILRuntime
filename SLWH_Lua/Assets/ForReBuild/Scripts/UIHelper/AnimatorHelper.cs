@@ -40,9 +40,9 @@ namespace ForReBuild.UIHelper
     public class AnimatorHelper : MonoBehaviour
     {
         [SerializeField]
-        public bool AutoPlayOnAwake = true;
+        public bool AutoPlayOnAwake = false;
         [SerializeField]
-        public string autoPlayAnimName = "PopupWindow_in";
+        public string autoPlayAnimName = "";
         [SerializeField]
         public AnimatorStateInfoEvent[] animatorStateInfoEventList;
 

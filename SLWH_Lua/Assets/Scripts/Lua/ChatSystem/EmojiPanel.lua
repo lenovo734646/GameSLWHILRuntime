@@ -3,7 +3,6 @@ local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logErro
 local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local assetLoader = g_Env.assetLoader
 local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds

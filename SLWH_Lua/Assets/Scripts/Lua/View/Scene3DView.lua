@@ -48,9 +48,8 @@ function Class:__init(roomdata)
     -- UI
     self.mainUI = MainUI.Create(self.mainUIInitHelper)
     -- 中间获胜动物舞台
-    local winStage = self.winStage
     local winStageChildren = {}
-    winStage:GetComponent(typeof(LuaInitHelper)):Init(winStageChildren)
+    self.winStageInitHelper:Init(winStageChildren)
     local winStageDataList = {}
     local indexToFindMap = {}   -- 下标对应的winStageData
     for name,child in pairs(winStageChildren) do
@@ -60,7 +59,7 @@ function Class:__init(roomdata)
             transform = child,
             gameObject = gameObject,
             item_id = tonumber(gameObject.name),
-            animationHelper = child:GetComponent(typeof(AnimationHelper)), -- BCBM效果是粒子
+            animatorHelper = child:GetComponent(typeof(ForReBuild.UIHelper.AnimatorHelper)), 
         }
         tinsert(winStageDataList, childdata)
         gameObject:SetActive(false)
@@ -79,26 +78,14 @@ function Class:__init(roomdata)
     local runItemDataList = {}
     for i=1,RUN_ITEM_COUNT do
         local t = runItemIndexs:GetChild(i-1)
-        --local animationHelper = t:GetComponent(typeof(AnimationHelper)) --BCBM车标没有动画
-        local select = t:Find('select')
-        -- local winEffect = select:GetChild(0).gameObject -- BCBM中奖特效单独处理，没有放到每个item下面
-        -- winEffect:SetActive(false)
-        local selectps = select:GetChild(0):GetComponent('ParticleSystem')
+        local animatorHelper = t:GetComponent(typeof(ForReBuild.UIHelper.AnimatorHelper)) 
         local data = {
             transform = t,
-            --animationHelper = animationHelper,
+            animatorHelper = animatorHelper,
             winShowData = indexToFindMap[i],
-            position = t.position,
-            select = select,
-            selectps = selectps,
-            --winEffect = winEffect,
             index = i,
-            -- ActiveWinEffect = function (b)   -- 中奖动画外部管理
-            --     --winEffect:SetActive(b)
-            --     self.winParticleTransform.gameObject:SetActive(b)
-            -- end,
             Play = function ()
-                selectps:Play()
+                -- run item 
                 self.ctrl.soundMgr:PlaySound("run")
             end,
             OnTriggerEnter = function (self)
@@ -108,7 +95,6 @@ function Class:__init(roomdata)
                 end
             end,
         }
-        t:GetComponent(typeof(LuaUnityEventListener)):Init(data)
         tinsert(runItemDataList, data)
     end
     self.runItemDataList = runItemDataList
@@ -166,9 +152,9 @@ function Class:__init(roomdata)
     end
 
     local exArrayData = {}
-    self.RoadInitHelper:Init(exArrayData)
+    self.roadInitHelper:Init(exArrayData)
     self.roadColorSprites = {}
-    self.RoadInitHelper:ObjectsSetToLuaTable(self.histroyIconSprites)
+    self.roadInitHelper:ObjectsSetToLuaTable(self.roadColorSprites)
     self.roadAnimalSprites = {}
     exArrayData.animalImgArrayInitHelper:ObjectsSetToLuaTable(self.roadAnimalSprites)
     self.roadTypeSprites = {}
@@ -177,12 +163,12 @@ function Class:__init(roomdata)
     exArrayData.spImgArrayInitHelper:ObjectsSetToLuaTable(self.roadSPSprites)
 
     exArrayData = nil
-    self.RoadInitHelper = nil
+    self.roadInitHelper = nil
 
     -- 筹码选择
     self.betSelectToggles = {}
-    self.BetSelectBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
-    self.BetSelectBtnsInitHelper = nil
+    self.betAreaBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
+    self.betAreaBtnsInitHelper = nil
 
 
     -- ctrl

@@ -34,12 +34,11 @@ namespace SLWH
         }
 
         // error code 就是为了解决下面这一大串的if的
-        public void UpdateData()
+        public void UpdateData(int id)
         {
-            
+            ID = id;
          
         }
-
     }
 
 
@@ -55,21 +54,26 @@ namespace SLWH
         [SerializeField]
         public List<CheBiaoData> chebiaoList;
 
-        public string[] GetColorMaterialNames()
+        public LuaInitHelper winStageInitHelper;
+
+        //
+        string[]AnimalNames = { "狮子", "熊猫", "猴子", "兔子"};
+
+    public string[] GetColorMaterialNames()
         {
             return new string[] { "红色", "黄色", "绿色" };
         }
 
         public string[] GetCheBiaoNames()
         {
-            return new string[] { "狮子", "熊猫", "猴子", "兔子"};
+            return AnimalNames;
         }
 
         public int GetAnimalPrefabIndex(GameObject prefab)
         {
-            for(var i = 0;i < animalPrefabs.Length; i ++)
+            for(var i = 0; i < AnimalNames.Length; i ++)
             {
-                if (animalPrefabs[i] == prefab)
+                if (prefab.tag.Contains(AnimalNames[i]))
                     return i;
             }
             Debug.LogError("prefab 不存在: "+prefab.name);

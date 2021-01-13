@@ -71,14 +71,13 @@ namespace SLWH
                     Debug.LogError("添加的数量大于chebiaoRoot中的车标数量");
                     return;
                 }
-                var data = new CheBiaoData(chebiaoHelper.chebiaoGameObjects[count], //go自动指向下一个
-                    chebiaoHelper.chebiaoList[count - 1].material,  // 其他属性复制上一个,
-                    chebiaoHelper.chebiaoList[count - 1].sprite);
+                //go自动指向下一个
+                var data = new CheBiaoData(chebiaoHelper.chebiaoGameObjects[count], 0);
                 chebiaoHelper.chebiaoList.Add(new CheBiaoData(data));
             }
             else
             {
-                chebiaoHelper.chebiaoList.Add(new CheBiaoData(chebiaoHelper.chebiaoGameObjects[0], chebiaoHelper.colorMaterials[0], chebiaoHelper.chebiaoSprites[0]));
+                chebiaoHelper.chebiaoList.Add(new CheBiaoData(chebiaoHelper.chebiaoGameObjects[0], 0));
             }
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
@@ -143,11 +142,13 @@ namespace SLWH
                 return;
             }
 
-            var count = chebiaoHelper.chebiaoRoot.transform.childCount;
+            var tootTransform = chebiaoHelper.chebiaoRoot.transform;
+            var count = tootTransform.childCount;
             chebiaoHelper.chebiaoGameObjects = new GameObject[count];
             for (var i = 0; i < count; i++)
             {
-                chebiaoHelper.chebiaoGameObjects[i] = chebiaoHelper.chebiaoRoot.transform.GetChild(i).gameObject;
+                var go = tootTransform.GetChild(i).gameObject;
+                chebiaoHelper.chebiaoGameObjects[i] = go;
             }
             //
             colorChoises = chebiaoHelper.GetColorMaterialNames();
@@ -158,11 +159,33 @@ namespace SLWH
 
             if (GUILayout.Button("自动关联下注区"))
             {
-                // 更新名字
-                foreach (var data in chebiaoHelper.chebiaoList)
-                    data.UpdateData();
                 // 设置关联
-                AutoSetLuaInitHelperKey.Set();
+                var dataList = chebiaoHelper.winStageInitHelper.initList;
+                foreach (var data in dataList)  // 重置
+                    data.name = "";
+
+                var indexList = chebiaoHelper.chebiaoList;
+                for (var i = 0; i < indexList.Count; i++)
+                {
+                    var carID = indexList[i].ID;
+                    foreach (var data in dataList)
+                    {
+                        var target = data.anyType.name;
+                        if (target == carID.ToString())
+                        {
+                            if (data.name.Length > 0)
+                            {
+                                data.name += ",";
+                                data.name += indexList[i].gameObject.name;
+                            }
+                            else
+                            {
+                                data.name = indexList[i].gameObject.name;
+                            }
+                        }
+                    }
+                }
+
                 Debug.Log("关联完毕");
             }
 
@@ -170,6 +193,20 @@ namespace SLWH
             {
                 chebiaoHelper.chebiaoList.Reverse();
                 Debug.Log("逆序完毕");
+            }
+
+            if(GUILayout.Button("清空现有列表并根据现有GameObject自动填充列表"))
+            {
+                if (EditorUtility.DisplayDialog("警告！", "确定清空并重建吗？", "是", "否"))
+                {
+                    chebiaoHelper.chebiaoList.Clear();
+                    for (var i = 0; i < count; i++)
+                    {
+                        var go = tootTransform.GetChild(i).gameObject;
+                        CheBiaoData data = new CheBiaoData(go, chebiaoHelper.GetAnimalPrefabIndex(go)+1);
+                        chebiaoHelper.chebiaoList.Add(data);
+                    }
+                }
             }
             #region default
             EditorGUILayout.BeginVertical("box");
@@ -196,53 +233,42 @@ namespace SLWH
             if (data == null) return;
             //
             EditorGUI.ObjectField(new Rect(width, rect.y, width + 50, height), data.gameObject, typeof(GameObject), true);
-            ShowColorChoise(colorChoises, rect, width, height, width * 2, 0, data, index);
-            ShowChebiaoChoise(chebiaoChoises, rect, width, height, width * 3, 0, data, index);
-
-
-
-            //float dx = rect.x + count * width + count;
-            //float w = 40;
-            //float h = EditorGUIUtility.singleLineHeight;
-
-            ////
-            //EditorGUI.LabelField(new Rect(dx, rect.y, w, h), "颜色 ");
-            //dx += w;
-            //w = 50;
-            //EditorGUI.PropertyField(new Rect(dx, rect.y, w, h),
-            //element.FindPropertyRelative("material"), GUIContent.none);
-            //dx += w; w = 75;
-
-            //EditorGUI.LabelField(new Rect(dx, rect.y, w, h), "车标");
-            //dx += w; w = 50;
-            //EditorGUI.PropertyField(new Rect(dx, rect.y, w, h),
-            //element.FindPropertyRelative("sprite"), GUIContent.none);
+            ShowChebiaoChoise(chebiaoChoises, rect, width, height, width * 2, 0, data, index);
+            ShowIDLabel(rect, width, height, width * 3, 0, data.ID);
         }
 
-        private void ShowColorChoise(string[] choises, Rect rect, float width, float height, float dx, float dy, CheBiaoData data, int index)
+        private void ShowIDLabel(Rect rect, float width, float height, float dx, float dy, int id)
         {
-            if (choises == null || choises.Length == 0) return;
-
-            var matIndex = chebiaoHelper.GetColorMaterialIndex(data.material);
-            int choiseIndex = matIndex < 0 ? 0 : matIndex;
-            int oldIndex = choiseIndex;
-            choiseIndex = EditorGUI.Popup(new
-                Rect(rect.x + dx, rect.y + dy, width, height),
-                choiseIndex, choises);
-            //
-            bool isDirty = oldIndex != choiseIndex;
-            if (isDirty)
-            {
-                data.material = chebiaoHelper.colorMaterials[choiseIndex];
-                data.UpdateData();
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-            }
+            var tRect = new Rect(rect.x + dx, rect.y + dy, width, height);
+            EditorGUI.LabelField(tRect, "动物ID: "+id.ToString());
         }
+
+        //private void ShowColorChoise(string[] choises, Rect rect, float width, float height, float dx, float dy, CheBiaoData data, int index)
+        //{
+        //    if (choises == null || choises.Length == 0) return;
+
+        //    var matIndex = chebiaoHelper.GetColorMaterialIndex(data.material);
+        //    int choiseIndex = matIndex < 0 ? 0 : matIndex;
+        //    int oldIndex = choiseIndex;
+        //    choiseIndex = EditorGUI.Popup(new
+        //        Rect(rect.x + dx, rect.y + dy, width, height),
+        //        choiseIndex, choises);
+        //    //
+        //    bool isDirty = oldIndex != choiseIndex;
+        //    if (isDirty)
+        //    {
+        //        data.material = chebiaoHelper.colorMaterials[choiseIndex];
+        //        data.UpdateData();
+        //        EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        //    }
+        //}
 
         private void ShowChebiaoChoise(string[] choises, Rect rect, float width, float height, float dx, float dy, CheBiaoData data, int index)
         {
             if (choises == null || choises.Length == 0) return;
-            var sprIndex = chebiaoHelper.GetChebiaoSpriteIndex(data.sprite);
+            var rootTransform = chebiaoHelper.chebiaoRoot.transform;
+
+            var sprIndex = chebiaoHelper.GetAnimalPrefabIndex(data.gameObject);
             int choiseIndex = sprIndex < 0 ? 0 : sprIndex;
             int oldIndex = choiseIndex;
             choiseIndex = EditorGUI.Popup(new
@@ -252,12 +278,17 @@ namespace SLWH
             bool isDirty = oldIndex != choiseIndex;
             if (isDirty)
             {
-                data.sprite = chebiaoHelper.chebiaoSprites[choiseIndex];
-                if(choiseIndex <4)
-                    data.material = chebiaoHelper.colorMaterials[1];    // 高级车自动金色
-                else
-                    data.material = chebiaoHelper.colorMaterials[0];    // 低级车自动银色
-                data.UpdateData();
+                var pos = data.gameObject.transform.localPosition;
+                var rot = data.gameObject.transform.localRotation;
+                var blingIndex = data.gameObject.transform.GetSiblingIndex();
+
+                DestroyImmediate(data.gameObject);
+
+                data.gameObject = Instantiate(chebiaoHelper.animalPrefabs[choiseIndex], rootTransform);
+                data.gameObject.transform.localPosition = pos;
+                data.gameObject.transform.localRotation = rot;
+                data.gameObject.transform.SetSiblingIndex(blingIndex);
+                data.UpdateData(choiseIndex+1);
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
         }

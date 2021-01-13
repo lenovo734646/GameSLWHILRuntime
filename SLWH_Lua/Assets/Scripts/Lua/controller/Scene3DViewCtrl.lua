@@ -32,7 +32,6 @@ local clock = os.clock
 local SoundManager = require'controller.SoundManager'
 local ChouMaFly = require'controller.ChouMaFly'
 local UserInfo = require'UI.UserInfo'
-local Banker = require'UI.Banker'
 
 local SubGame_Env=SubGame_Env
 
@@ -78,8 +77,6 @@ function Class:__init(ui,View,roomdata)
     self.lastSeletedToggleIndex = 1
     self.lastCurrecy = SubGame_Env.playerRes.currency
 
-    -- 庄家管理
-    self.banker = Banker.Create(ui.bankerInfoInitHelper, roomdata.self_user_id)
     -- 玩家信息
     self.userInfo = UserInfo.Create(ui.userInfoInitHelper, roomdata)
     self:OnMoneyChange(SubGame_Env.playerRes.currency)

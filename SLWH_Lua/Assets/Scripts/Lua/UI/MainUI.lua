@@ -17,7 +17,7 @@ local Instantiate = Instantiate
 local GameObject = GameObject
 local EditorAssetLoader = CS.EditorAssetLoader
 
-local ChatPanel = require'UI.ChatPanel'
+local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 
 

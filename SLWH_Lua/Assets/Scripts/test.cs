@@ -80,27 +80,27 @@ namespace SLWH
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                bleft = true;
-                Debug.Log("你按下了鼠标左键");
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                bleft = false;
-                Debug.Log("你抬起了鼠标左键");
-            }
-            //
-            if (Input.GetMouseButtonDown(1))
-            {
-                bright = true;
-                Debug.Log("你按下了鼠标右键");
-            }
-            if (Input.GetMouseButtonUp(1))
-            {
-                bright = false;
-                Debug.Log("你抬起了鼠标左键");
-            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    bleft = true;
+            //    Debug.Log("你按下了鼠标左键");
+            //}
+            //if (Input.GetMouseButtonUp(0))
+            //{
+            //    bleft = false;
+            //    Debug.Log("你抬起了鼠标左键");
+            //}
+            ////
+            //if (Input.GetMouseButtonDown(1))
+            //{
+            //    bright = true;
+            //    Debug.Log("你按下了鼠标右键");
+            //}
+            //if (Input.GetMouseButtonUp(1))
+            //{
+            //    bright = false;
+            //    Debug.Log("你抬起了鼠标左键");
+            //}
         }
 
         public void OnTest()

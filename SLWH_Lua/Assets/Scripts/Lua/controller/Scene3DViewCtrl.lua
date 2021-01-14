@@ -31,7 +31,6 @@ local clock = os.clock
 
 local SoundManager = require'controller.SoundManager'
 local ChouMaFly = require'controller.ChouMaFly'
-local UserInfo = require'UI.UserInfo'
 
 local SubGame_Env=SubGame_Env
 
@@ -77,8 +76,6 @@ function Class:__init(ui,View,roomdata)
     self.lastSeletedToggleIndex = 1
     self.lastCurrecy = SubGame_Env.playerRes.currency
 
-    -- 玩家信息
-    self.userInfo = UserInfo.Create(ui.userInfoInitHelper, roomdata)
     self:OnMoneyChange(SubGame_Env.playerRes.currency)
     -- 计时器
     self.timerShow = TimerCounterUI.Create(ui.GameTimeCounterInitHelper)
@@ -611,7 +608,7 @@ end
 function Class:OnMoneyChange(currency)
     self:DoCheckForBetButtonState(currency)
     self.lastCurrecy = currency
-    self.userInfo:OnChangeMoney(currency)
+    self.mainUI.userInfo:OnChangeMoney(currency)
     
 end
 

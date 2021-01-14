@@ -15,10 +15,11 @@ local yield = coroutine.yield
 local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
-local EditorAssetLoader = CS.EditorAssetLoader
+
 
 local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
+local UserInfo = require'UI.UserInfo'
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -31,16 +32,18 @@ function Create(...)
 end
 
 
-function Class:__init(panel, loader)
+function Class:__init(panel, roomdata, loader)
     self.panel = panel
     panel:GetComponent(typeof(LuaInitHelper)):Init(self)
     self.eventListener:Init(self)
 
     -- 聊天界面
-    self.chatPanel = ChatPanel.Create(self.ChatPanel, EditorAssetLoader)
+    self.chatPanel = ChatPanel.Create(self.ChatPanel, loader)
 
     -- 结算界面
     self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)
+    -- 玩家信息
+    self.userInfo = UserInfo.Create(self.userinfo_luainithelper, roomdata)
 
 end
 

@@ -14,6 +14,7 @@ local CoroutineHelper = require'CoroutineHelper'
 local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
+local EditorAssetLoader = CS.EditorAssetLoader
 
 local yield = coroutine.yield
 
@@ -46,7 +47,7 @@ function Class:__init(roomdata)
     
 
     -- UI
-    self.mainUI = MainUI.Create(self.mainUIInitHelper)
+    self.mainUI = MainUI.Create(self.mainUIInitHelper, roomdata, EditorAssetLoader)
     -- 中间获胜动物舞台
     local winStageChildren = {}
     self.winStageInitHelper:Init(winStageChildren)

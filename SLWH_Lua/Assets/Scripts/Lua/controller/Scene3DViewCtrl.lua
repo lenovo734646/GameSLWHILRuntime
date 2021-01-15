@@ -220,7 +220,7 @@ function Class:OnSceneReady()
     self.timeStamp = nil
     local left_time = left_time-passTime
     if left_time > 2 then
-        self.ui.mainUI.timeCounter:StartCountDown(left_time, false, function (time)
+        self.ui.mainUI.timeCounter:StartCountDown(left_time, state, function (time)
             self:PlayCountDownSound(time)
         end)
     end
@@ -339,7 +339,7 @@ function Class:OnStateChangeNtf(data)
         self:OnFreeState()
     end
     --
-    self.ui.mainUI.timeCounter:StartCountDown(data.left_time, state==1, function (time)
+    self.ui.mainUI.timeCounter:StartCountDown(data.left_time, state, function (time)
         self:PlayCountDownSound(time)
     end)
 end

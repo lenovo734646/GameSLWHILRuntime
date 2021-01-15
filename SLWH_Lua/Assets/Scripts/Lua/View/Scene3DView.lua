@@ -134,9 +134,9 @@ function Class:__init(roomdata)
         viewItemData.typeImg.sprite = itemdata.typeSpr
         viewItemData.spImg.sprite = itemdata.spSpr
         if itemdata.spSpr == nil then
-            viewItemData:SetActive(false)
+            viewItemData.spImg.gameObject:SetActive(false)
         else
-            viewItemData:SetActive(true)
+            viewItemData.spImg.gameObject:SetActive(true)
         end
         
     end

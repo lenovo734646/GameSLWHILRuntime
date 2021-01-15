@@ -19,53 +19,52 @@ function Create(...)
 end
 
 function Class:__init(initHelper)
-    self.gameObject = initHelper.gameObject
-    initHelper:Init(self)
-    self.stateSprites = {}
-    initHelper:ObjectsSetToLuaTable(self.stateSprites)
+    -- self.gameObject = initHelper.gameObject
+    -- self.gameObject:SetActive(true)
+    -- initHelper:Init(self)
+    -- self.stateSprites = {}
+    -- initHelper:ObjectsSetToLuaTable(self.stateSprites)
     --
-    self.gameObject:SetActive(false)
+    
 end
 
 function Class:StartCountDown(time, state, playSoundFunc)
-    if self.co then
-        CoroutineHelper.StopCoroutine(self.co)
-    end
-    self.stateImg.sprite = self.stateSprites[state]
-    self.gameObject:SetActive(true)
-    local timeText = self.timeText
-    timeText.text = tostring(floor(time+0.5))
-    --
-    local function doOneSecond(leftTime)
-        -- print("leftTime real = "..leftTime)
-        leftTime = floor(leftTime+0.5)
-        if playSoundFunc ~= nil then
-            playSoundFunc(leftTime)
-        end
+    -- if self.co then
+    --     CoroutineHelper.StopCoroutine(self.co)
+    -- end
+    -- self.stateImg.sprite = self.stateSprites[state]
+    -- local timeText = self.timeText
+    -- timeText.text = tostring(floor(time+0.5))
+    -- --
+    -- local function doOneSecond(leftTime)
+    --     -- print("leftTime real = "..leftTime)
+    --     leftTime = floor(leftTime+0.5)
+    --     if playSoundFunc ~= nil then
+    --         playSoundFunc(leftTime)
+    --     end
         
-        if leftTime < 1 then
-            self.gameObject:SetActive(false)
-            return true
-        end
-        timeText.text = tostring(leftTime)
-    end
+    --     if leftTime < 1 then
+    --         return true
+    --     end
+    --     timeText.text = tostring(leftTime)
+    -- end
 
-    self.co = CoroutineHelper.StartCoroutine(function ()
-        local timerCounter = time - floor(time)
-        while true do
-            yield()
-            local dt = Time.deltaTime
-            time = time - dt
-            timerCounter = timerCounter - dt
-            if timerCounter <= 0 then
-                timerCounter = timerCounter + 1
-                if doOneSecond(time) then
-                    break
-                end
-            end
-        end
-        self.co = nil
-    end)
+    -- self.co = CoroutineHelper.StartCoroutine(function ()
+    --     local timerCounter = time - floor(time)
+    --     while true do
+    --         yield()
+    --         local dt = Time.deltaTime
+    --         time = time - dt
+    --         timerCounter = timerCounter - dt
+    --         if timerCounter <= 0 then
+    --             timerCounter = timerCounter + 1
+    --             if doOneSecond(time) then
+    --                 break
+    --             end
+    --         end
+    --     end
+    --     self.co = nil
+    -- end)
 end
 
 return _ENV

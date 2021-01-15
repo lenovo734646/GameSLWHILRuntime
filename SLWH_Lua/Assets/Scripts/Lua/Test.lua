@@ -32,7 +32,7 @@ function OnSceneLoaded(scene, mode)
         local ctrl = View.ctrl
 
         local TimerCounterUI = require'UI.TimerCounterUI'
-                local timerShow = TimerCounterUI.Create(View.GameTimeCounterInitHelper)
+                local timeCounter = TimerCounterUI.Create(View.GameTimeCounterInitHelper)
 
         local KeyListener = View.gameObject:GetComponent(typeof(CS.KeyListener))
         KeyListener.keyDownList:Add(UnityEngine.KeyCode.A)
@@ -47,11 +47,11 @@ function OnSceneLoaded(scene, mode)
                 -- coroutine.yield()
                 -- ctrl:OnMoneyChange(0)
                 print('freeState')
-                View.eventBroadcaster:Broadcast('freeState')
+                View.viewEventBroadcaster:Broadcast('freeState')
                 coroutine.yield()
-                View.eventBroadcaster:Broadcast('betState')
+                View.viewEventBroadcaster:Broadcast('betState')
                 coroutine.yield()
-                View.eventBroadcaster:Broadcast('showState')
+                View.viewEventBroadcaster:Broadcast('showState')
                 coroutine.yield()
             end
             -- ctrl:OnFreeState()
@@ -64,7 +64,7 @@ function OnSceneLoaded(scene, mode)
                 coroutine.resume(co)
                 
                 
-                --timerShow:StartCountDown(5, true)
+                --timeCounter:StartCountDown(5, true)
             end
         }
     end

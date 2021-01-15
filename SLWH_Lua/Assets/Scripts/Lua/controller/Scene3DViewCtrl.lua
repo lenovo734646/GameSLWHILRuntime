@@ -16,7 +16,6 @@ local CoroutineHelper = require'CoroutineHelper'
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local yield = coroutine.yield
 
-local TimerCounterUI = require 'UI.TimerCounterUI'
 local PBHelper = require 'protobuffer.PBHelper'
 local CLBCBMSender = require'protobuffer.CLBCBMSender'
 local GameConfig = require 'GameConfig'
@@ -30,7 +29,6 @@ local Input = UnityEngine.Input
 local clock = os.clock
 
 local SoundManager = require'controller.SoundManager'
-local ChouMaFly = require'controller.ChouMaFly'
 
 local SubGame_Env=SubGame_Env
 
@@ -77,18 +75,14 @@ function Class:__init(ui,View,roomdata)
     self.lastCurrecy = SubGame_Env.playerRes.currency
 
     self:OnMoneyChange(SubGame_Env.playerRes.currency)
-    -- 计时器
-    self.timerShow = TimerCounterUI.Create(ui.GameTimeCounterInitHelper)
 
     self.timeStamp = clock()
     -- 音乐音效管理
     self.soundMgr = SoundManager.Create(self.ui.soundManagerInitHelper)
     self.soundMgr:PlayBGMusic()
-    -- 飞筹码管理
-    self.choumaFly = ChouMaFly.Create(self.ui.choumaFlyRootTrans, roomdata.bet_config_array)
 
     --监听下注选择事件
-    ui.BetSelectBtns:Init{
+    ui.betSelectBtnsEventListener:Init{
         OnCustumEvent2 = function (_,params)
             self:OnBetSelect(params[0])
         end,
@@ -97,7 +91,7 @@ function Class:__init(ui,View,roomdata)
             self[eventName](self)
         end
     }
-    ui.betBtnEventListener:Init{
+    ui.betAreaBtnsEventListener:Init{
         OnCustumEvent2 = function (_,params)
             self:OnBetClicked(params[0])
         end
@@ -156,10 +150,6 @@ function Class:OnSceneReady()
         self.bankerTotalWin = data.banker_total_win
         self.bankerScore = data.banker_score
 
-        if self.banker:IsBanker() then
-            self.selfScore = self.bankerScore
-        end
-
         if self.win > 0 then
             self.soundMgr:PlaySound("win_bet")
         end
@@ -182,42 +172,22 @@ function Class:OnSceneReady()
             end
         else
             local total_bet = data.info.total_bet or 0
-            -- 飞筹码
-            local totalBet = self.TotalBet[item_id] or 0 -- 清除下注判断，避免item_id == -1 报错
-            local gapScore = total_bet - totalBet
-            if gapScore > 0 then    -- 清除下注效果不同步
-                local user_id = data.user_id
-                local bSelf = false
-                if user_id == self.self_user_id then
-                    bSelf = true
-                end
-                self.choumaFly:FlyIn(item_id, gapScore, bSelf)
-            end
+            -- -- 飞筹码
+            -- local totalBet = self.TotalBet[item_id] or 0 -- 清除下注判断，避免item_id == -1 报错
+            -- local gapScore = total_bet - totalBet
+            -- if gapScore > 0 then    -- 清除下注效果不同步
+            --     local user_id = data.user_id
+            --     local bSelf = false
+            --     if user_id == self.self_user_id then
+            --         bSelf = true
+            --     end
+            --     --self.choumaFly:FlyIn(item_id, gapScore, bSelf)
+            -- end
             -- 同步总押分
             self.TotalBet[item_id] = total_bet or 0 
             local betAreaData = self.ui.betAreaList[item_id]
             betAreaData.totalBetScore.text = convertNumberToString(total_bet)
         end
-    end)
-
-    -- 切换庄家
-    PBHelper.AddListener("ChangeBankerNtf", function (data)
-        local bankerInfo = data.bankerInfo
-        local banker_user_id = bankerInfo.banker_user_id
-        local banker_score = bankerInfo.banker_score
-        local banker_user_name = bankerInfo.banker_user_name
-        local banker_Head = bankerInfo.banker_Head
-        local banker_HeadFrame = bankerInfo.banker_HeadFrame
-        local nextBankerName = data.nextBankerName
-        self.banker:OnChangeBanker(banker_user_id, banker_user_name, banker_score, 
-                                    banker_Head, banker_HeadFrame, nextBankerName)
-    end)
-
-    -- 坐庄失败
-    PBHelper.AddListener("ActBankerFailedNtf", function (data)
-        local errcode = data.errcode
-        print("已下庄：", errcode)
-        -- TODO: 显示提示（errcode）
     end)
 
     -- 在线人数
@@ -241,7 +211,7 @@ function Class:OnSceneReady()
 
     self:OnStateChangeNtf({ left_time = left_time, state = state })
     if state == 2 then
-        self.ui.WaitNextStateTip:SetActive(true)
+        self.ui.mainUI:SetWaitNextStateTip(true)
     end
  
     
@@ -250,7 +220,7 @@ function Class:OnSceneReady()
     self.timeStamp = nil
     local left_time = left_time-passTime
     if left_time > 2 then
-        self.timerShow:StartCountDown(left_time, false, function (time)
+        self.ui.mainUI.timeCounter:StartCountDown(left_time, false, function (time)
             self:PlayCountDownSound(time)
         end)
     end
@@ -307,8 +277,8 @@ function Class:InitAnimalAnimation()
                 while true do
                     local delayTime = RandomFloat(0,2)
                     yield(WaitForSeconds(delayTime))
-                    data.selectps:Play()
-                    yield(WaitForSeconds(data.selectps.main.duration))
+                    data.animatorHelper:Play("Idel")
+                    yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel")))
                 end
             end)
         end
@@ -321,15 +291,13 @@ function Class:InitAnimalAnimation()
         data.PlayShowAsync = function () -- 跟中奖同时播放
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
-            self.soundMgr:PlaySound("feiqinzoushou_"..GameConfig.WinSound[winShowData.item_id])
+            self.soundMgr:PlaySound("SLWH_"..GameConfig.WinSound[winShowData.item_id])
             -- 等待显示中奖结算
             yield(WaitForSeconds(self.ui.resultPanel:ShowResult(winShowData.item_id, GameConfig.Ratio[winShowData.item_id], 
                                                                 self.win, self.totalWin, self.bankerWin, self.bankerTotalWin)))
             self.ui.resultPanel:HideResult()
             -- 同步玩家分数
             self:OnMoneyChange(self.selfScore)
-            -- 同步庄家分数
-            self.banker:ChangeMoney(self.bankerScore)
             winShowData.gameObject:SetActive(false)
             data.PlayIdle()
         end
@@ -362,7 +330,7 @@ end
 function Class:OnStateChangeNtf(data)
     local state = data.state
     self.state = state
-    self.ui.WaitNextStateTip:SetActive(false)
+    self.ui.mainUI:SetWaitNextStateTip(false)
     if state == 1 then --下注
         self:OnBetState()
     elseif state == 2 then --开奖
@@ -371,7 +339,7 @@ function Class:OnStateChangeNtf(data)
         self:OnFreeState()
     end
     --
-    self.timerShow:StartCountDown(data.left_time, state==1, function (time)
+    self.ui.mainUI.timeCounter:StartCountDown(data.left_time, state==1, function (time)
         self:PlayCountDownSound(time)
     end)
 end
@@ -382,84 +350,78 @@ function Class:DoTweenShowResultAnim(fromindex, toindex, round, time)
     time = time or GameConfig.ShowAnimationTime
     --print('DoTweenShowResultAnim round:'..round..' time:'..time)
     local ui = self.ui
-    local iconPos = ui.iconPos
-    local iconobj = iconPos.gameObject
+    print("TODO：开转")
+    -- local runItemDataList = ui.runItemDataList
+    -- local len = #runItemDataList
+    -- local totalWillRunCount = toindex - fromindex + len*round
+    -- if totalWillRunCount < len then
+    --     totalWillRunCount=totalWillRunCount+len
+    -- end
 
-    local runItemDataList = ui.runItemDataList
-    local len = #runItemDataList
-    local totalWillRunCount = toindex - fromindex + len*round
-    if totalWillRunCount < len then
-        totalWillRunCount=totalWillRunCount+len
-    end
+    -- local poslist = {}
+    -- local startindex = fromindex
+    -- self.curIconPosIndex = startindex
+    -- local data = runItemDataList[startindex]
+    -- local lastHitIndex = startindex
+    -- iconPos.position = data.position
+    -- tinsert(poslist,data.position)
+    -- for i=1, totalWillRunCount do
+    --     startindex = startindex + 1
+    --     if startindex > len then
+    --         startindex = 1
+    --     end
+    --     local data = runItemDataList[startindex]
+    --     tinsert(poslist,data.position)
+    -- end
 
-    local poslist = {}
-    local startindex = fromindex
-    self.curIconPosIndex = startindex
-    local data = runItemDataList[startindex]
-    local lastHitIndex = startindex
-    iconPos.position = data.position
-    tinsert(poslist,data.position)
-    for i=1, totalWillRunCount do
-        startindex = startindex + 1
-        if startindex > len then
-            startindex = 1
-        end
-        local data = runItemDataList[startindex]
-        tinsert(poslist,data.position)
-    end
-
-    local Ease = {
-        DG.Tweening.Ease.InOutSine, DG.Tweening.Ease.InOutQuad,
-        DG.Tweening.Ease.InOutQuad, DG.Tweening.Ease.InOutCubic,
-        DG.Tweening.Ease.InOutCubic, DG.Tweening.Ease.InOutQuart,
-        DG.Tweening.Ease.InOutQuart, DG.Tweening.Ease.InOutQuint,
-        DG.Tweening.Ease.InOutExpo, DG.Tweening.Ease.InOutFlash,
-        DG.Tweening.Ease.InOutCirc, DG.Tweening.Ease.InOutFlash
-    }
-    local curve =  Ease[RandomInt(1,#Ease)]
-    local move = true
+    -- local Ease = {
+    --     DG.Tweening.Ease.InOutSine, DG.Tweening.Ease.InOutQuad,
+    --     DG.Tweening.Ease.InOutQuad, DG.Tweening.Ease.InOutCubic,
+    --     DG.Tweening.Ease.InOutCubic, DG.Tweening.Ease.InOutQuart,
+    --     DG.Tweening.Ease.InOutQuart, DG.Tweening.Ease.InOutQuint,
+    --     DG.Tweening.Ease.InOutExpo, DG.Tweening.Ease.InOutFlash,
+    --     DG.Tweening.Ease.InOutCirc, DG.Tweening.Ease.InOutFlash
+    -- }
+    -- local curve =  Ease[RandomInt(1,#Ease)]
+    -- local move = true
 
 
-    --紧跟播放头
-    CoroutineHelper.StartCoroutine(function ()
-        while move do
-            local count = 0
-            while lastHitIndex ~= self.curIconPosIndex do
-                lastHitIndex = lastHitIndex + 1
-                if lastHitIndex > len then
-                    lastHitIndex = 1
-                end
-                runItemDataList[lastHitIndex].Play()
-                count = count + 1
-                if count > len then
-                    LogE('count > len')
-                    break
-                end
-            end
-            yield()
-        end
-        -- print('move end')
-    end)
+    -- --紧跟播放头
+    -- CoroutineHelper.StartCoroutine(function ()
+    --     while move do
+    --         local count = 0
+    --         while lastHitIndex ~= self.curIconPosIndex do
+    --             lastHitIndex = lastHitIndex + 1
+    --             if lastHitIndex > len then
+    --                 lastHitIndex = 1
+    --             end
+    --             runItemDataList[lastHitIndex].Play()
+    --             count = count + 1
+    --             if count > len then
+    --                 LogE('count > len')
+    --                 break
+    --             end
+    --         end
+    --         yield()
+    --     end
+    --     -- print('move end')
+    -- end)
 
 
-    return CoroutineHelper.StartCoroutine(function ()
-        iconobj:SetActive(true)
-        yield(iconPos:DOPath(poslist, time-GameConfig.ShowResultTime)
-        :SetEase(curve):WaitForCompletion())
-        local animaldata = runItemDataList[toindex]
-        --
-        self.ui.winParticleTransform.localPosition = animaldata.transform.localPosition
-        self.ui.winParticleTransform.gameObject:SetActive(true)
-        yield()
-        move = false
-        iconobj:SetActive(false)
+    -- return CoroutineHelper.StartCoroutine(function ()
+    --     yield(iconPos:DOPath(poslist, time-GameConfig.ShowResultTime)
+    --     :SetEase(curve):WaitForCompletion())
+    --     local animaldata = runItemDataList[toindex]
+    --     --
+    --     self.ui.winParticleTransform.localPosition = animaldata.transform.localPosition
+    --     self.ui.winParticleTransform.gameObject:SetActive(true)
+    --     yield()
+    --     move = false
 
-        yield(animaldata.PlayShowAsync())
-        -- 场上所有筹码飞回
-        self.choumaFly:FlyOut()
-        -- 
-        self.ui.winParticleTransform.gameObject:SetActive(false)
-    end)
+    --     yield(animaldata.PlayShowAsync())
+    --     -- 
+    --     self.ui.winParticleTransform.gameObject:SetActive(false)
+    -- end)
 end
 
 function Class:PlayIdleStateAnim()
@@ -543,20 +505,20 @@ end
 
 -- 下注阶段
 function Class:OnBetState(data)
-    self.ui.eventBroadcaster:Broadcast('betState')
+    self.ui.viewEventBroadcaster:Broadcast('betState')
     self.soundMgr:PlaySound("start")
     self:DoCheckForBetButtonState()--判断并禁用不能下注的按钮
     -- 判断是否自动续押
     --print("是否自动续押:", self.ui.autoContinueBet.isOn)
-    if self.ui.autoContinueBet.isOn then
-        self:OnContinueBtnClicked()
-    end
+    -- if self.ui.autoContinueBet.isOn then
+    --     self:OnContinueBtnClicked()
+    -- end
 end
 
 -- 游戏阶段（转和显示结果）
 function Class:OnShowState(data)
     local ui = self.ui
-    ui.eventBroadcaster:Broadcast('showState')
+    ui.viewEventBroadcaster:Broadcast('showState')
     self.soundMgr:PlaySound("stop")
     self:StopIdleStateAnim()
     local cur_result_list = data.cur_result_list
@@ -585,7 +547,7 @@ end
 -- 空闲阶段
 function Class:OnFreeState()
     local ui = self.ui
-    ui.eventBroadcaster:Broadcast('freeState')
+    ui.viewEventBroadcaster:Broadcast('freeState')
     self:PlayIdleStateAnim()
     self:__ResetBetScore()
     self.soundMgr:PlaySound("vs_alert")
@@ -602,13 +564,13 @@ end
 
 function Class:OnNetWorkReConnect()
     print("========OnNetWorkReConnect=======================")
-    self.ui.WaitNextStateTip:SetActive(true)
+    self.ui.mainUI:SetWaitNextStateTip(true)
 end
 
 function Class:OnMoneyChange(currency)
     self:DoCheckForBetButtonState(currency)
     self.lastCurrecy = currency
-    self.mainUI.userInfo:OnChangeMoney(currency)
+    self.ui.mainUI.userInfo:OnChangeMoney(currency)
     
 end
 
@@ -694,7 +656,6 @@ function Class:OnReceiveBetAck(data)
                 self.selfTotalBet[betAreaData.item_id] = 0
             end
             self:ResetBetSnapShot()
-            self.choumaFly:FlyOut(true)
         else
             local betAreaData = betAreaList[item_id]
             --

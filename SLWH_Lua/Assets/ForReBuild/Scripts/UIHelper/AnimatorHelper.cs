@@ -64,6 +64,19 @@ namespace ForReBuild.UIHelper
             }
         }
 
+        public float GetDuration(string animName)
+        {
+            AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+            foreach (AnimationClip clip in clips)
+            {
+                if (clip.name.Equals(animName))
+                {
+                    return clip.length;
+                }
+            }
+            return 0;
+        }
+
         public void Play(string animName)
         {
             if (gameObject.activeSelf == false)

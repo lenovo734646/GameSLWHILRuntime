@@ -58,7 +58,9 @@ namespace SLWH
         // 获取当前动画时长
         public float GetTimeByName(string name)
         {
-            if(string.IsNullOrEmpty(name))
+            if (gameObject.activeSelf == false)
+                gameObject.SetActive(true);
+            if (string.IsNullOrEmpty(name))
             {
                 Debug.LogError("name is null or empty");
                 return 0;
@@ -134,7 +136,7 @@ namespace SLWH
                 }
 
                 //
-                if(completeAct != null)
+                if(!bloop && completeAct != null)
                 {
                     complete = delegate {
                         completeAct?.Invoke();
@@ -144,8 +146,6 @@ namespace SLWH
                     };
                     state.Complete += complete;
                 }
-                if (gameObject.activeSelf == false)
-                    gameObject.SetActive(true);
                 //
                 entryAnim = state.SetAnimation(0, name, bloop);
             }
@@ -158,13 +158,18 @@ namespace SLWH
             StopByName(defaultName);
         }
         // 停止动画
-        public void StopByName(string name)
+        public void StopByName(string name, bool bUnActive = true)
         {
+            if (gameObject.activeSelf == false || entryAnim == null)
+                return;
             var duration = GetTimeByName(name);
             if (duration > 0)
             {
-                entryAnim = state.SetEmptyAnimation(0, 0);
+                state.SetEmptyAnimation(0, 0);
+                entryAnim = null;
             }
+            if (bUnActive)
+                gameObject.SetActive(false);
         }
 
 

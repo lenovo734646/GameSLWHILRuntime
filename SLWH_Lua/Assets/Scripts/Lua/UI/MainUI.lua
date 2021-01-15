@@ -20,6 +20,7 @@ local GameObject = GameObject
 local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 local UserInfo = require'UI.UserInfo'
+local TimerCounterUI = require 'UI.TimerCounterUI'
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -45,6 +46,17 @@ function Class:__init(panel, roomdata, loader)
     -- 玩家信息
     self.userInfo = UserInfo.Create(self.userinfo_luainithelper, roomdata)
 
+    -- 计时器
+    self.timeCounter = TimerCounterUI.Create(self.timecounter_luainithelper)
+
+end
+
+function Class:SetWaitNextStateTip(bShow)
+    if bShow then
+        self.gameStateSpineHelper:PlayByName("dengdai", nil, true)
+    else
+        self.gameStateSpineHelper:StopByName("dengdai", true)
+    end
 end
 
 

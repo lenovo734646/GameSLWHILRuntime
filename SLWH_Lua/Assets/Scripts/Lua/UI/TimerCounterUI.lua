@@ -20,25 +20,22 @@ end
 
 function Class:__init(initHelper)
     self.gameObject = initHelper.gameObject
-    initHelper:InitWithList(self,'sprites')
+    initHelper:Init(self)
+    self.stateSprites = {}
+    initHelper:ObjectsSetToLuaTable(self.stateSprites)
+    --
     self.gameObject:SetActive(false)
 end
 
-function Class:StartCountDown(time, showRedNuber, playSoundFunc)
+function Class:StartCountDown(time, state, playSoundFunc)
     if self.co then
         CoroutineHelper.StopCoroutine(self.co)
     end
+    self.stateImg.sprite = self.stateSprites[state]
     self.gameObject:SetActive(true)
-    local timeAnim = self.timeAnim
     local timeText = self.timeText
     timeText.text = tostring(floor(time+0.5))
-    timeAnim.gameObject:SetActive(false)
-
-    if (time > 3) or (not showRedNuber) then
-        timeAnim.gameObject:SetActive(false)
-    else
-        timeAnim.gameObject:SetActive(true)
-    end
+    --
     local function doOneSecond(leftTime)
         -- print("leftTime real = "..leftTime)
         leftTime = floor(leftTime+0.5)
@@ -50,14 +47,7 @@ function Class:StartCountDown(time, showRedNuber, playSoundFunc)
             self.gameObject:SetActive(false)
             return true
         end
-        if not showRedNuber or leftTime > 3 then
-            timeText.text = tostring(leftTime)
-        else
-            timeText.text = tostring(leftTime)
-            if (not timeAnim.gameObject.activeSelf)then
-                timeAnim.gameObject:SetActive(true)
-            end
-        end
+        timeText.text = tostring(leftTime)
     end
 
     self.co = CoroutineHelper.StartCoroutine(function ()

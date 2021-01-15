@@ -33,6 +33,12 @@ Button = CS.UnityEngine.UI.Button
 UpdateLuaBehaviour = CS.XLuaExtension.UpdateLuaBehaviour
 UGUIClickLuaBehaviour = CS.XLuaExtension.UGUIClickLuaBehaviour
 
+--Global
+Timer = require "LuaUtil/Timer"
+LuaClass = require "LuaUtil/LuaClass"
+LuaBase = require "LuaUtil/LuaBase"
+require'LuaUtil.Logger'
+
 --CustomCSharp
 Context = CS.Context
 AssetConfig = CS.AssetConfig

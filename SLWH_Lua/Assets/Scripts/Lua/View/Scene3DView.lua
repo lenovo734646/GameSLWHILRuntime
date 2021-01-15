@@ -80,6 +80,7 @@ function Class:__init(roomdata)
     for i=1,RUN_ITEM_COUNT do
         local t = runItemIndexs:GetChild(i-1)
         local animatorHelper = t:GetComponent(typeof(ForReBuild.UIHelper.AnimatorHelper)) 
+        print("animatorHelper = ",animatorHelper)
         local data = {
             transform = t,
             animatorHelper = animatorHelper,
@@ -122,7 +123,7 @@ function Class:__init(roomdata)
     --数据提供接口实现
     roadScrollView.OnCreateViewItemData = function (itemViewGameObject,itemIndex)
         local viewItemData = {}
-        itemViewGameObject:getComponen(typeof(LuaInitHelper)):Init(viewItemData)
+        itemViewGameObject:GetComponent(typeof(LuaInitHelper)):Init(viewItemData)
         viewItemData.gameObject = itemViewGameObject
         return viewItemData
     end
@@ -133,9 +134,9 @@ function Class:__init(roomdata)
         viewItemData.typeImg.sprite = itemdata.typeSpr
         viewItemData.spImg.sprite = itemdata.spSpr
         if itemdata.spSpr == nil then
-            viewItemData.spImg:SetActive(false)
+            viewItemData:SetActive(false)
         else
-            viewItemData.spImg:SetActive(true)
+            viewItemData:SetActive(true)
         end
         
     end
@@ -168,8 +169,8 @@ function Class:__init(roomdata)
 
     -- 筹码选择
     self.betSelectToggles = {}
-    self.betAreaBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
-    self.betAreaBtnsInitHelper = nil
+    self.betSelectBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
+    self.betSelectBtnsInitHelper = nil
 
 
     -- ctrl

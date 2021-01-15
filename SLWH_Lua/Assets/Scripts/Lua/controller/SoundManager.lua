@@ -55,7 +55,7 @@ end
 
 function Class:PlaySound(name)
     if not self.soundClips[name] then
-        LogE("SoundManager:PlaySound 音频不存在:", name)
+        --LogE("SoundManager:PlaySound 音频不存在:", name)
         return
     end
     self.soundAudioSource:PlayOneShot(self.soundClips[name])

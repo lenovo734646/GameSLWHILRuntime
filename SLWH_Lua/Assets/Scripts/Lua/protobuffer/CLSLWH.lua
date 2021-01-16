@@ -1,10 +1,10 @@
--- Debug模式直接使用“fll3d_support\protobuf\config\CLBCBM.proto”源文件，方便修改，正式发布再同步
+-- Debug模式直接使用“fll3d_support\protobuf\config\CLSLWH.proto”源文件，方便修改，正式发布再同步
 
 return [[
 syntax = "proto3";
 
-//客户端和飞禽走兽之间的协议
-package CLBCBM;
+//客户端和森林舞会之间的协议
+package CLSLWH;
 
 //登入服务通知
 message EnterServerNtf

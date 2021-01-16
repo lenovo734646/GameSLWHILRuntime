@@ -2,7 +2,7 @@ SubGame_Env = SubGame_Env or {}
 GameConfig = GameConfig or require'Config' -- 在大厅模式下会传给小游戏这个数值
 require "LuaUtil/LuaRequires"
 local PBHelper = require'protobuffer.PBHelper'
-local CLBCBMSender = require'protobuffer.CLBCBMSender'
+local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SceneView = require'View.Scene3DView'
 
 
@@ -30,10 +30,11 @@ local roomdata = {
     self_score = 0,
     self_user_id = 0,
 }
-PBHelper.Init('CLBCBM')
+PBHelper.Init('CLSLWH')
 PBHelper.AddPbPkg('CLPF')
+PBHelper.AddPbPkg('CLCHATROOM')
 
-CLBCBMSender.Send_EnterRoomReq(function (data)
+CLSLWHSender.Send_EnterRoomReq(function (data)
     print('Send_EnterRoomAck:'..json.encode(data))
     if data.errcode ~= 0 then
         if SUBGAME_EDITOR then

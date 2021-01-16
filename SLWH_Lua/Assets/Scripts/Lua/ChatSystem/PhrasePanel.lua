@@ -82,5 +82,14 @@ function Class:OnShow(isOn)
     end
 end
 
+function Class:GetPhraseData(index)
+    for k, v in pairs(PhraseDataTable) do
+        if v.index == index then
+            return {content = v.txt, sound = v.sound}
+        end
+    end
+    return nil
+end
+
 
 return _ENV

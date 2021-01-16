@@ -17,7 +17,7 @@ local WaitForSeconds = UnityEngine.WaitForSeconds
 local yield = coroutine.yield
 
 local PBHelper = require 'protobuffer.PBHelper'
-local CLBCBMSender = require'protobuffer.CLBCBMSender'
+local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local GameConfig = require 'GameConfig'
 local Destroy = Destroy
 local Instantiate = Instantiate
@@ -226,7 +226,7 @@ function Class:OnSceneReady()
     end
     
     -- 发送请求历史路单数据
-    CLBCBMSender.Send_HistoryReq(function (data)
+    CLSLWHSender.Send_HistoryReq(function (data)
         print('HistoryAck:'..json.encode(data))
         local icon_list = data
         local list = {}
@@ -639,7 +639,7 @@ end
 
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
-    CLBCBMSender.Send_SetBetReq(function (data)
+    CLSLWHSender.Send_SetBetReq(function (data)
         self:OnReceiveBetAck(data)
     end, item_id, betid)
 end

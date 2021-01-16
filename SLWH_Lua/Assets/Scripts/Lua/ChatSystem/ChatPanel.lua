@@ -16,6 +16,9 @@ local VoicePanel = require"ChatSystem.VoicePanel"
 local ChatMsgData = require"ChatSystem.ChatMsgData"
 local ChatMsgView = require 'ChatSystem.ChatMsgView'
 
+local PBHelper = require 'protobuffer.PBHelper'
+local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
+
 _ENV = moduledef { seenamespace = CS }
 
 local Class = class()
@@ -28,7 +31,16 @@ function Class:__init(panel, loader, selfUserID)
     self.loader = loader
     self.selfUserID = selfUserID
     self.panel = panel
-    panel:GetComponent(typeof(LuaInitHelper)):Init(self)
+    local initHelper = panel:GetComponent(typeof(LuaInitHelper))
+    -- 音频播放器
+    local sounds = {}
+    initHelper:ObjectsSetToLuaTable(sounds)
+    self.soundClips = {}
+    for key, clip in pairs(sounds) do
+        self.soundClips[clip.name] = clip
+    end
+    
+    initHelper:Init(self)
     self.eventListener:Init(self)
 
     --msg scroll view
@@ -95,6 +107,16 @@ function Class:__init(panel, loader, selfUserID)
     self.btnSend.onClick:AddListener(function ()
         self:OnSendText(self.inputField)
     end)
+
+
+
+    -- 消息监听
+    PBHelper.AddListener('ChatMessageNtf', function (data)
+        print("收到消息：userID = ", data.user_id, data.nickname, data.message_type, data.content, data.metadata)
+        local timeStampSec = tonumber(data.metadata)
+        --local faceSpr = GetHeadSprite(data.head)
+        self:OnReceiveMsg(timeStampSec, data.user_id, data.message_type, data.content, data.metadata, faceSpr)
+    end)
 end
 
 function Class:KeyControl()
@@ -109,6 +131,7 @@ function Class:Update()
 
 end
 
+-- 发送语音
 function Class:OnSendVoice(clipData)
     if clipData == nil then
         logError("OnSendVoice clipData is null")
@@ -117,9 +140,10 @@ function Class:OnSendVoice(clipData)
     if self.tog_Emoji.isOn then
         self.tog_Emoji.isOn = false
     end
-    self:OnSendMsg(nil, clipData)
+    -- TODO:Send
 end
 
+-- 发送文字
 function Class:OnSendText(inputField)
     local text = inputField.text
     if string.isNullOrEmpty(text) then
@@ -129,36 +153,68 @@ function Class:OnSendText(inputField)
         self.tog_Emoji.isOn = false
     end
     text = self.badwordsReplace:Replace(text, "*")
-    self:OnSendMsg(text, nil)
-    -- to do send
+    
+    --
+    local timeStampSec = os.time()
+    CLCHATROOMSender.Send_SendChatMessageReq(function (data)
+        self:SendChatMsgAck(data)
+    end,  1, text, tostring(timeStampSec))
     self.inputField.text = ""
 end
-
-function Class:OnSendMsg(text, clipData)
-
+-- 发送常用语
+function Class:OnSendPhrase(index)
     local timeStampSec = os.time()
-    
-    
-    -- 显示自己发送的信息
-    local selfIcon = EditorAssetLoader.LoadEditorAsset("Assets/RareVoiceChat/Texture/r0.png", typeof(Sprite), true)
-    self:OnReceiveMsg(timeStampSec, self.selfUserID, text, clipData, selfIcon)    
-    -- 模拟他人的回复（测试）
-    local otherIcon = EditorAssetLoader.LoadEditorAsset("Assets/RareVoiceChat/Texture/r1.png", typeof(Sprite), true)
-    self:OnReceiveMsg(timeStampSec, 1, text, clipData, otherIcon)  
-
+    CLCHATROOMSender.Send_SendChatMessageReq(function (data)
+        self:SendChatMsgAck(data)
+    end,  3, tostring(index), tostring(timeStampSec))
 end
 
-function Class:OnReceiveMsg(timeStampSec, userID, text, clipData, iconSpr)
+function Class:SendChatMsgAck(data)
+    if data.errcode == 1 then
+        print("发送消息失败：你不在房间中")
+    elseif data.errcode == 2 then
+        print("发送消息失败：发送内容太长")
+    elseif data.errcode == 3 then
+        print("发送消息失败：不支持的消息类型")
+    end
+end
+
+
+-- msgType: 1文本消息 2语音消息 3快捷消息
+function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, headSpr)
+    if content == nil then
+        LogE("OnReceiveMsg: content is nil ")
+        return
+    end
     local isMine = false
     if userID == self.selfUserID then
         isMine = true
     end
-    local audioClip = nil
-    if clipData ~= nil then
-        audioClip = self.voicePanel:ByteToAudioClip(clipData)
-    end
 
-    local msgData = ChatMsgData.Create(timeStampSec, userID, isMine, text, audioClip, iconSpr)
+    local index = -1
+    local audioClip = nil
+    if msgType == 2 then
+        if content ~= nil then
+            audioClip = self.voicePanel:ByteToAudioClip(content)
+        end
+    elseif msgType == 3 then
+        if content ~= nil then
+            index = tonumber(content)
+            if index > 0 then
+                local data = self.phrasePanel:GetPhraseData(index)
+                if data ~= nil then
+                    content = data.content
+                    self.audioSource:PlaySound("game_chat_sound_"..index)
+                else
+                    LogE("获取快捷消息数据失败 index ="..index)
+                    return
+                end
+            else
+                LogE("快捷消息index 转换错误 content = "..content)
+            end
+        end
+    end
+    local msgData = ChatMsgData.Create(timeStampSec, userID, isMine, content, audioClip, headSpr)
     self.msgScrollView:InsertItem(msgData)
 
 end

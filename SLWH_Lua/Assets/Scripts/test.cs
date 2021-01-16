@@ -20,7 +20,7 @@ namespace SLWH
         public Text btnText;
 
         public List<AudioClip> audioClips;
-        public AudioSource audio11;
+        public AudioSource audioSource;
         public AudioClip clip;
 
         public Toggle toggle;
@@ -38,6 +38,7 @@ namespace SLWH
         // Start is called before the first frame update
         void Start()
         {
+            //audioSource.PlayOneShot
             //print(par.main.startLifetime);
             //print(par.main.startLifetimeMultiplier);
             //print(par.main.duration);

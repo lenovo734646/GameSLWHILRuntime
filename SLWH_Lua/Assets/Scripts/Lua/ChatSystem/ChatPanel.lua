@@ -1,6 +1,8 @@
 
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
+local _G, g_Env, print, log, LogE, os, math = _G, g_Env, print, log, LogE, os, math
+local class, typeof, type, string, utf8, pairs= class, typeof, type, string, utf8, pairs
+
+local tostring, tonumber = tostring, tonumber
 
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
@@ -43,6 +45,9 @@ function Class:__init(panel, loader, selfUserID)
     initHelper:Init(self)
     self.eventListener:Init(self)
 
+    --
+    self.faceSpr = self.loader.LoadEditorAsset("Assets/ChatSystem/Texture/r0.png", typeof(Sprite), true)
+
     --msg scroll view
     self.msgScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
     self.msgScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
@@ -79,6 +84,9 @@ function Class:__init(panel, loader, selfUserID)
     -- phrase 常用短语
     local phrasePrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Phrase.prefab", typeof(GameObject), true)
     self.phrasePanel = PhrasePanel.Create(self.phrasePanelGo, phrasePrefab)
+    self.phrasePanel.OnPhraseClickCallBack = function (phraseData)
+        self:OnSendPhrase(phraseData)
+    end
 
     -- 语音聊天
     -- 最长录音时间
@@ -146,7 +154,7 @@ end
 -- 发送文字
 function Class:OnSendText(inputField)
     local text = inputField.text
-    if string.isNullOrEmpty(text) then
+    if string.IsNullOrEmpty(text) then
         return
     end
     if self.tog_Emoji.isOn then
@@ -155,18 +163,28 @@ function Class:OnSendText(inputField)
     text = self.badwordsReplace:Replace(text, "*")
     
     --
+    print("发送文本消息：", text)
     local timeStampSec = os.time()
+    -- 显示自己发送的信息
+    self:OnReceiveMsg(timeStampSec, self.selfUserID, 1, text, nil, self.faceSpr)   
+    --
     CLCHATROOMSender.Send_SendChatMessageReq(function (data)
         self:SendChatMsgAck(data)
     end,  1, text, tostring(timeStampSec))
     self.inputField.text = ""
 end
 -- 发送常用语
-function Class:OnSendPhrase(index)
+function Class:OnSendPhrase(phraseData)
+    print("发送快捷消息：", phraseData.index)
     local timeStampSec = os.time()
+    -- 显示自己发送的信息
+    self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
+    --
     CLCHATROOMSender.Send_SendChatMessageReq(function (data)
         self:SendChatMsgAck(data)
-    end,  3, tostring(index), tostring(timeStampSec))
+    end,  2, tostring(phraseData.index), tostring(timeStampSec))
+    -- 关闭界面
+    self.tog_Phrase.isOn = false;
 end
 
 function Class:SendChatMsgAck(data)
@@ -193,18 +211,18 @@ function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, he
 
     local index = -1
     local audioClip = nil
-    if msgType == 2 then
+    if msgType == 3 then
         if content ~= nil then
             audioClip = self.voicePanel:ByteToAudioClip(content)
         end
-    elseif msgType == 3 then
+    elseif msgType == 2 then
         if content ~= nil then
             index = tonumber(content)
-            if index > 0 then
+            if index ~= nil then
                 local data = self.phrasePanel:GetPhraseData(index)
                 if data ~= nil then
                     content = data.content
-                    self.audioSource:PlaySound("game_chat_sound_"..index)
+                    self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_"..index])
                 else
                     LogE("获取快捷消息数据失败 index ="..index)
                     return
@@ -220,7 +238,7 @@ function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, he
 end
 
 function Class:ShowSendBtnByInput(inputField)
-    if not string.isNullOrEmpty(self.inputField.text) then
+    if not string.IsNullOrEmpty(self.inputField.text) then
         self.btnSend.gameObject:SetActive(true)
     else
         self.btnSend.gameObject:SetActive(false)
@@ -252,7 +270,7 @@ function Class:On_tog_Phrase_Event(tog_Phrase)
         self.tog_Emoji.isOn = false
     end
     --
-    self.emojiPanel:OnShow(isOn)
+    self.phrasePanel:OnShow(isOn)
 end
 
 function Class:On_tog_Voice_Event(tog_Voice)

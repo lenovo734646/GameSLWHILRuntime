@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using ForReBuild.UIHelper;
 using Spine.Unity;
 using System;
 using System.Collections;
@@ -34,10 +35,58 @@ namespace SLWH
         public Image img;
 
         public int padCount = 2;
+        public int aa = 01;
+
+        public enum ColorType
+        {
+            Zero = 0,
+            Yellow,
+            Green,
+            Red,
+            Max,    // Invalid
+        }
+        public struct ColorCount
+        {
+            public ColorType colorType; // 颜色
+            public int count;           // 数量
+            public ColorCount(ColorType colorType_, int count_) { colorType = colorType_; count = count_; }
+        }
+
+
+        public enum ExWinType
+        {
+            Zero = 0, // Invalid
+            CaiJin,
+            SongDeng,
+            LiangBei,
+            SanBei,
+            Max, //Invalid
+        }
+        // 额外中奖概率
+        public readonly static Dictionary<ExWinType, double> ExWinRateMap = new Dictionary<ExWinType, double>() {
+            { ExWinType.CaiJin, 0.001},
+            { ExWinType.SongDeng, 0.002},
+            { ExWinType.LiangBei, 0.001},
+            { ExWinType.SanBei, 0.0005},
+            { ExWinType.Zero, 0.9955},
+        };
+
 
         // Start is called before the first frame update
         void Start()
         {
+            var exWinTyp = default(ColorType);
+            print("default exWinTyp = " + exWinTyp);
+            var rate = ExWinRateMap[ExWinType.CaiJin];
+            print(rate);
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    print(UnityEngine.Random.Range(1, 2+1));
+            //}
+            var r = UnityEngine.Random.Range(1, 2);
+            string[] strArray = { "而送灯","sdf", "123" };
+            print($"strArray = {strArray}");
             //audioSource.PlayOneShot
             //print(par.main.startLifetime);
             //print(par.main.startLifetimeMultiplier);
@@ -76,6 +125,17 @@ namespace SLWH
 
             //int a = 1;
             //print(a.ToString().PadLeft(padCount));
+
+            //var colorCountGroup = new ColorCount[] { new ColorCount(ColorType.Red, 12), new ColorCount(ColorType.Green, 7), new ColorCount(ColorType.Yellow, 11) };
+            //Array.Sort(colorCountGroup, (a, b) => a.count.CompareTo(b.count));
+            //Array.Reverse(colorCountGroup);
+            //for (var i = 0; i < colorCountGroup.Length; i++)
+            //{
+            //    print($"color = {colorCountGroup[i].colorType}, count = {colorCountGroup[i].count}");
+            //}
+
+
+
         }
 
         // Update is called once per frame

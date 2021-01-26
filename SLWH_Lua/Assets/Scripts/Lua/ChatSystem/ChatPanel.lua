@@ -6,7 +6,6 @@ local tostring, tonumber = tostring, tonumber
 
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
-local BadWordsReplace = CS.SP.BadWordsReplace
 
 local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
@@ -73,9 +72,6 @@ function Class:__init(panel, loader, selfUserID)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
     end
 
-    -- 敏感词屏蔽
-    local badwordTextAsset = loader.LoadEditorAsset("Assets/ChatSystem/BadWord.txt", typeof(TextAsset));
-    self.badwordsReplace = BadWordsReplace(badwordTextAsset.text)
     --emojiPanel 表情
     local emojis = loader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true)
     local emojiPrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Emoji.prefab", typeof(GameObject), true)
@@ -160,8 +156,6 @@ function Class:OnSendText(inputField)
     if self.tog_Emoji.isOn then
         self.tog_Emoji.isOn = false
     end
-    text = self.badwordsReplace:Replace(text, "*")
-    
     --
     print("发送文本消息：", text)
     local timeStampSec = os.time()

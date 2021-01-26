@@ -77,6 +77,18 @@ namespace ForReBuild.UIHelper
             return 0;
         }
 
+        public void SetSpeed( float speed)
+        {
+            var curveValue = animator.GetFloat("Curve_Run_1");
+            animator.speed = speed;
+        }
+
+        public void SetCurve(string name)
+        {
+            var clip = GetAnimationClip(name);
+            //clip.SetCurve("11", typeof(DoTweenCompleteHelper), "11", );
+        }
+
         public void Play(string animName)
         {
             if (gameObject.activeSelf == false)
@@ -106,7 +118,7 @@ namespace ForReBuild.UIHelper
             {
                 curanimState = animator.GetCurrentAnimatorStateInfo(0); // 这里获取到的才是正确的
                                                                         //print(curanimState.IsName("Base.PopupWindow_in") + "   speed =" + curanimState.speed);
-                if (curanimState.speed == 1) // 正放
+                if (curanimState.speed > 0) // 正放
                 {
                     curAnimatorStateInfoEvent.startAction.Invoke();
                 }
@@ -122,7 +134,7 @@ namespace ForReBuild.UIHelper
             if(curAnimatorStateInfoEvent != null)
             {
                 curanimState = animator.GetCurrentAnimatorStateInfo(0);
-                if (curanimState.speed == 1) // 正放
+                if (curanimState.speed > 0) // 正放
                 {
                     curAnimatorStateInfoEvent.completeAction.Invoke();
                 }
@@ -141,6 +153,19 @@ namespace ForReBuild.UIHelper
                     return t;
             }
             Debug.LogError($"没有找到名字为{name}的动画！");
+            return null;
+        }
+
+        private AnimationClip GetAnimationClip(string animName)
+        {
+            AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+            foreach (AnimationClip clip in clips)
+            {
+                if (clip.name.Equals(animName))
+                {
+                    return clip;
+                }
+            }
             return null;
         }
     }

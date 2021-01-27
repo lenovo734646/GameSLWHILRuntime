@@ -58,6 +58,7 @@ function Class:__init(panel, loader, selfUserID)
                     self.msgScrollView:RemoveOneFromStart(true)
                 end
             end
+            print("SmoothScrollTo 11111111111")
             self.msgScrollView:SmoothScrollTo(tarIndex, 0.1, nil, DoneFunc)
         end
     end
@@ -115,7 +116,7 @@ function Class:__init(panel, loader, selfUserID)
 
 
     -- 消息监听
-    PBHelper.AddListener('ChatMessageNtf', function (data)
+    PBHelper.AddListener('CLCHATROOM.ChatMessageNtf', function (data)
         print("收到消息：userID = ", data.user_id, data.nickname, data.message_type, data.content, data.metadata)
         local timeStampSec = tonumber(data.metadata)
         --local faceSpr = GetHeadSprite(data.head)
@@ -188,12 +189,15 @@ function Class:SendChatMsgAck(data)
         print("发送消息失败：发送内容太长")
     elseif data.errcode == 3 then
         print("发送消息失败：不支持的消息类型")
+    else
+        print("发送消息成功")
     end
 end
 
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
 function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, headSpr)
+    --print("接受到消息:", msgType, userID, content)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
         return

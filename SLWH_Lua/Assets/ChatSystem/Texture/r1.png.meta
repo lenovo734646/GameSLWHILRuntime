@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c9a203dbed650e342a29a48f5cc206ec
+guid: d99d46fe083801742ba25188194321c3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -124,5 +124,5 @@ TextureImporter:
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: 
+  assetBundleName: chatsystem.bundle
   assetBundleVariant: 

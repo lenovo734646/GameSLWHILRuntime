@@ -27,7 +27,7 @@ public class SetBundleNameEditor : EditorWindow
     {
         GUILayout.BeginVertical();
         GUILayout.Space(10);
-        bundleName = EditorGUILayout.TextField("Bundle名字不用带扩展:", bundleName, GUILayout.Width(300))+".bundle";
+        bundleName = EditorGUILayout.TextField("Bundle名字不用带扩展:", bundleName, GUILayout.Width(300));
 
         GUILayout.Space(20);
         //将上面的框作为文本输入框  
@@ -64,7 +64,7 @@ public class SetBundleNameEditor : EditorWindow
         GUILayout.Space(10);
         if (GUILayout.Button("设置"))
         {
-            SetBundleName(bundleName);
+            SetBundleName(bundleName+ ".bundle");
             pathList.Clear();
             AssetDatabase.Refresh();
             Debug.Log("设置完毕");
@@ -97,7 +97,8 @@ public class SetBundleNameEditor : EditorWindow
         {
             var assetPath = AssetDatabase.GUIDToAssetPath(guid);
             var importer = AssetImporter.GetAtPath(assetPath);
-            if (importer != null)
+            //Debug.Log("importer = "+ importer.GetType());
+            if (importer != null && importer.GetType() != typeof(UnityEditor.MonoImporter))
             {
 
                 importer.SetAssetBundleNameAndVariant(bundleName, string.Empty);

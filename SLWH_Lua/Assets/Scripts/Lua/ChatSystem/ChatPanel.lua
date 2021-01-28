@@ -82,7 +82,7 @@ function Class:__init(panel, loader, userData)
     end
 
     --emojiPanel 表情
-    local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(Sprite))
+    local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(Sprite), true)
     self.emojiPanel = EmojiPanel.Create(self.emojiPanelGo, self.inputField, emojis, self.Item_Emoji)
 
     -- phrase 常用短语
@@ -178,7 +178,7 @@ end
 function Class:OnSendPhrase(phraseData)
     print("发送快捷消息：", phraseData.index)
     local timeStampSec = os.time()
-    -- 显示自己发送的信息
+    -- 显示自己发送的信息，自己的消息服务器也会转发给自己，这里使用服务器返回的
     --self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
     --
     CLCHATROOMSender.Send_SendChatMessageReq(function (data)

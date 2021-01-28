@@ -36,18 +36,15 @@ public class ResHelper {
         return r;
     }
 
-    public static Object[] LoadAll(string path, Type type, bool rawPath = false)
+    public static Object[] LoadAll(string path, bool rawPath = false)
     {
         if (!rawPath)
         {
             path = SysDefines.AB_BASE_PATH + path;
         }
-        var r = Resources.LoadAll(path, type);
 #if UNITY_EDITOR
-        if (r == null)
-            r = AssetDatabase.LoadAllAssetsAtPath(path);
+        return AssetDatabase.LoadAllAssetsAtPath(path);
 #endif
-        return r;
     }
 
 }

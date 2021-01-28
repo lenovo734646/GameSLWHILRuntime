@@ -132,11 +132,7 @@ function Class:LoadAll(path, type, notCache)
     if self.isLoadFromEditor then
         Log('Load from editor'..path)
         local r
-        if type then
-            r = ResHelper.LoadAll(path, type, isRawPath)
-        else
-            r = ResHelper.LoadAll(path, isRawPath)
-        end
+        r = ResHelper.LoadAll(path, isRawPath)
         if r then
             return r
         else
@@ -154,7 +150,7 @@ function Class:LoadAll(path, type, notCache)
     if bundle then
         local r
         if type then
-            r = bundle:LoadAssetWithSubAssets(path, isRawPath)
+            r = bundle:LoadAssetWithSubAssets(path, type, isRawPath)
         else
             r = bundle:LoadAssetWithSubAssets(path, isRawPath)
         end

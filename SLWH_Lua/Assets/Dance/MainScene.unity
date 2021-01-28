@@ -502,7 +502,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bebef0d628bbd23429dd002145bb8771, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f0b3b0d85cab3f241ac7a22e5c4fcafc, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8308,7 +8308,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 100
   m_Viewport: {fileID: 2049357941}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1680540252}
@@ -41147,7 +41147,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bebef0d628bbd23429dd002145bb8771, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f0b3b0d85cab3f241ac7a22e5c4fcafc, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -37,6 +37,8 @@ namespace SLWH
         public int padCount = 2;
         public int aa = 01;
 
+     
+
         public enum ColorType
         {
             Zero = 0,
@@ -87,6 +89,9 @@ namespace SLWH
             var r = UnityEngine.Random.Range(1, 2);
             string[] strArray = { "而送灯","sdf", "123" };
             print($"strArray = {strArray}");
+
+            var sprs = ResHelper.LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true);
+            var ss = EditorAssetLoader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", false);
             //audioSource.PlayOneShot
             //print(par.main.startLifetime);
             //print(par.main.startLifetimeMultiplier);
@@ -99,7 +104,6 @@ namespace SLWH
             //scrollRect.content.transform
             //img.sprite = null;
             //toggle.isOn = false;
-
 
             //int[] aa = new int[5];
             //print(aa.Length);

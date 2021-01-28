@@ -16,7 +16,7 @@ local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
 
-
+local SubGame_Env = SubGame_Env
 local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 local UserInfo = require'UI.UserInfo'
@@ -39,7 +39,7 @@ function Class:__init(panel, roomdata, loader)
     self.eventListener:Init(self)
 
     -- 聊天界面
-    self.chatPanel = ChatPanel.Create(self.ChatPanel, loader)
+    self.chatPanel = ChatPanel.Create(self.ChatPanel, SubGame_Env.loader, SubGame_Env.playerRes)
 
     -- 结算界面
     self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)

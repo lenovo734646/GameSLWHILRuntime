@@ -3,7 +3,7 @@ using XLua;
 
 namespace XLuaExtension
 {
-    [LuaCallCSharp]
+    //[LuaCallCSharp]
     public class DestroyLuaBehaviour : BaseLuaBehaviour<DestroyLuaBehaviour>
     {
         private Action<LuaTable> luaDestroy;

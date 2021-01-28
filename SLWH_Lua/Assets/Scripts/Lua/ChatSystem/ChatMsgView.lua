@@ -17,9 +17,14 @@ function Create(...)
 end
 
 --root:RectTransform类型
-function Class:__init(view, loader)
+function Class:__init(view)
     self.view = view
-    view:GetComponent(typeof(LuaInitHelper)):Init(self)
+    local initHelper = view:GetComponent(typeof(LuaInitHelper))
+    initHelper:Init(self)
+    self.msgItemBGs = {}
+    initHelper:ObjectsSetToLuaTable(self.msgItemBGs)
+
+
     self.paddingAtIconSide = self.rootLayoutGroup.padding.right
     self.paddingAtOtherSide = self.rootLayoutGroup.padding.left
     self.colorAtInit = self.contentBackImage.color
@@ -39,26 +44,28 @@ function Class:UpdateFromData(data)
     -- 头像和布局
     self.userID = data.userID
     if data.isMine then
-        self.rightIcon.gameObject:SetActive(true)
-        self.rightIcon.sprite = data.iconSpr
-        self.leftIcon.gameObject:SetActive(false)
+        self.rightHeadBG:SetActive(true)
+        self.rightHeadImage.sprite = data.iconSpr
+        self.leftIHeadBG:SetActive(false)
         --
-        self.contentBackImage.color = Color(0.75, 1, 1, self.colorAtInit.a)
+        --self.contentBackImage.color = Color(0.75, 1, 1, self.colorAtInit.a)
         self.rootLayoutGroup.childAlignment = TextAnchor.MiddleRight
         self.msgContentLayoutGroup.childAlignment = TextAnchor.MiddleRight
         self.rootLayoutGroup.padding.right = self.paddingAtIconSide
         self.rootLayoutGroup.padding.left = self.paddingAtOtherSide
     else
-        self.leftIcon.gameObject:SetActive(true)
-        self.leftIcon.sprite = data.iconSpr
-        self.rightIcon.gameObject:SetActive(false)
+        self.leftIHeadBG:SetActive(true)
+        self.leftHeadImage.sprite = data.iconSpr
+        self.rightHeadBG:SetActive(false)
         --
-        self.contentBackImage.color = self.colorAtInit
+        --self.contentBackImage.color = self.colorAtInit
         self.rootLayoutGroup.childAlignment = TextAnchor.MiddleLeft
         self.msgContentLayoutGroup.childAlignment = TextAnchor.MiddleLeft
         self.rootLayoutGroup.padding.right = self.paddingAtOtherSide
         self.rootLayoutGroup.padding.left = self.paddingAtIconSide
     end
+    -- 设置消息条目背景
+    self.contentBackImage.sprite = data.msgItemBgSpr
     -- 消息内容
     if data.audioClip ~= nil then
         self.wfDraw.gameObject:SetActive(true)

@@ -41,6 +41,9 @@ namespace ForReBuild {
                 AbCacheMap.Add(fullpath, aBRefCounter);
             }
             aBRefCounter.refCount++;
+            if (showLog) {
+                Debug.Log($"GetAB refCount:{aBRefCounter.refCount} fullpath:{fullpath}");
+            }
             return aBRefCounter.AssetBundle;
         }
 
@@ -50,11 +53,14 @@ namespace ForReBuild {
                 StartCoroutine(cLoad(fullpath, action));
             } else {
                 aBRefCounter.refCount++;
+                if (showLog) {
+                    Debug.Log($"GetABAsync refCount:{aBRefCounter.refCount} fullpath:{fullpath}");
+                }
                 action(aBRefCounter.AssetBundle);
             }
         }
 
-        static byte[] DecryptFile(string fullpath) {
+        public static byte[] fck(string fullpath) {
             byte[] filedata = File.ReadAllBytes(fullpath);
             int DecLen = 1024 + 16;
             if (filedata.Length < 1024) {
@@ -63,7 +69,7 @@ namespace ForReBuild {
             byte[] needDecData = new byte[DecLen];
             Array.Copy(filedata, needDecData, DecLen);
 
-            byte[] decryptBytes = UnityHelper.AESDecrypt(needDecData, key); //解密  
+            byte[] decryptBytes = UnityHelper.fck(needDecData, key); //解密  
             Array.Copy(decryptBytes, filedata, DecLen);
 
             byte[] aDecData = new byte[filedata.Length - 16];
@@ -73,11 +79,15 @@ namespace ForReBuild {
         }
 
         AssetBundle LoadFromFile(string fullpath) {
+#if DEV_VER
             if (fullpath.EndsWith(".bundleEnc")) {
-                var bytes = DecryptFile(fullpath);
-                return AssetBundle.LoadFromMemory(bytes);
+                return AssetBundle.LoadFromMemory(fck(fullpath));
             }
             return AssetBundle.LoadFromFile(fullpath);
+#else
+            return AssetBundle.LoadFromMemory(fck(fullpath));
+#endif
+
         }
 
 
@@ -105,7 +115,7 @@ namespace ForReBuild {
             async void loadFromFile(string fullpath) {
                 var bytes = await Task.Run(()=> {
                     try {
-                       return DecryptFile(fullpath);
+                       return fck(fullpath);
                     } catch (Exception ex) {
                         Debug.LogError("DecryptFile error:" + ex);
                     }
@@ -124,6 +134,9 @@ namespace ForReBuild {
             var aBRefCounter = new ABRefCounter(req.assetBundle, fullpath);
             AbCacheMap.Add(fullpath, aBRefCounter);
             action(req.assetBundle);
+            if (showLog) {
+                Debug.Log($"cLoad refCount:{aBRefCounter.refCount} fullpath:{fullpath}");
+            }
         }
 
 

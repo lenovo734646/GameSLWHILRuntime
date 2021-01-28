@@ -202,7 +202,7 @@ public class AssetBundleTool
         Array.Copy(filedata, needDecData, DecLen);
         byte[] keyBytes = Encoding.UTF8.GetBytes(_Enckey);
 
-        byte[] decryptBytes = UnityHelper.AESDecrypt(needDecData, keyBytes); //解密  
+        byte[] decryptBytes = UnityHelper.fck(needDecData, keyBytes); //解密  
         Array.Copy(decryptBytes, filedata, DecLen);
 
         byte[] aDecData = new byte[filedata.Length-16];

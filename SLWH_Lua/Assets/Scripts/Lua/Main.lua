@@ -1,15 +1,27 @@
 SubGame_Env = SubGame_Env or {}
-GameConfig = GameConfig or require'Config' -- 在大厅模式下会传给小游戏这个数值
+
 require "LuaUtil/LuaRequires"
+GameConfig = GameConfig or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
+
 local PBHelper = require'protobuffer.PBHelper'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SceneView = require'View.Scene3DView'
+local Loader = require 'Rebuild.LuaAssetLoader'
 
-
+local Sprite = UnityEngine.Sprite
 if SUBGAME_EDITOR then
     -- 在大厅中将使用大厅的环境
-    local playerRes = {diamond=0,currency=0,integral=0}
+    local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
     SubGame_Env.playerRes = playerRes
+
+    SubGame_Env.GetHeadSprite = function (headID)
+        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..headID..".png", typeof(Sprite))
+    end
+
+    SubGame_Env.GetHeadFrameSprite = function (headFrameID)
+        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..headFrameID..".png", typeof(Sprite))
+    end
+    print("SUBGAME_EDITOR!")
     -- PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
     --     print("111111111111111111")
     --     if data.res_type == 2 then
@@ -29,6 +41,10 @@ local roomdata = {
     self_bet_list = {},
     self_score = 0,
     self_user_id = 0,
+    self_user_name = "",
+    self_user_Head = 0,
+    self_user_HeadFrame = 0,
+
 }
 PBHelper.Init('CLSLWH')
 PBHelper.AddPbPkg('CLPF')
@@ -48,8 +64,15 @@ CLSLWHSender.Send_EnterRoomReq(function (data)
     for key, value in pairs(roomdata.bet_config_array) do
         print("bet_config_array: "..key..",  "..value)
     end
-    print("SelfUserID = ", roomdata.self_user_id)
+    
     SubGame_Env.playerRes.currency = roomdata.self_score
+    SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
+    SubGame_Env.playerRes.userName = roomdata.self_user_name
+    SubGame_Env.playerRes.headID = roomdata.self_user_Head
+    SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
+    print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
+    --
+    SubGame_Env.loader = Loader.Create(GameConfig:GetSavePath("BCBM"), GameConfig.debug)
     SceneManager.LoadScene("MainScene")
 end)
 

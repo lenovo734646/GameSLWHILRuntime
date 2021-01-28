@@ -19,8 +19,13 @@ local ChatMsgView = require 'ChatSystem.ChatMsgView'
 
 local PBHelper = require 'protobuffer.PBHelper'
 local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
+local SubGame_Env = SubGame_Env
+-- local GetHeadSprite = SubGame_Env.GetHeadSprite
+-- local GetHeadFrameSprite = SubGame_Env.GetHeadFrameSprite
+-- print("GetHeadSprite = ", GetHeadSprite, SubGame_Env.GetHeadSprite)
 
 _ENV = moduledef { seenamespace = CS }
+
 
 local Class = class()
 
@@ -28,11 +33,13 @@ function Create(...)
     return Class(...)
 end
 
-function Class:__init(panel, loader, selfUserID)
+function Class:__init(panel, loader, userData)
     self.loader = loader
-    self.selfUserID = selfUserID
+    self.selfUserID = userData.selfUserID
     self.panel = panel
     local initHelper = panel:GetComponent(typeof(LuaInitHelper))
+    initHelper:Init(self)
+    self.eventListener:Init(self)
     -- 音频播放器
     local sounds = {}
     initHelper:ObjectsSetToLuaTable(sounds)
@@ -40,12 +47,14 @@ function Class:__init(panel, loader, selfUserID)
     for key, clip in pairs(sounds) do
         self.soundClips[clip.name] = clip
     end
+    self.msgItemBGs = {}
+    self.msgItemBGInitHelper:ObjectsSetToLuaTable(self.msgItemBGs)
+    self.msgItemBGInitHelper = nil
     
-    initHelper:Init(self)
-    self.eventListener:Init(self)
+
 
     --
-    self.faceSpr = self.loader.LoadEditorAsset("Assets/ChatSystem/Texture/r0.png", typeof(Sprite), true)
+    self.faceSpr = SubGame_Env.GetHeadSprite(userData.headID)
 
     --msg scroll view
     self.msgScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
@@ -58,7 +67,6 @@ function Class:__init(panel, loader, selfUserID)
                     self.msgScrollView:RemoveOneFromStart(true)
                 end
             end
-            print("SmoothScrollTo 11111111111")
             self.msgScrollView:SmoothScrollTo(tarIndex, 0.1, nil, DoneFunc)
         end
     end
@@ -74,13 +82,11 @@ function Class:__init(panel, loader, selfUserID)
     end
 
     --emojiPanel 表情
-    local emojis = loader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true)
-    local emojiPrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Emoji.prefab", typeof(GameObject), true)
-    self.emojiPanel = EmojiPanel.Create(self.emojiPanelGo, self.inputField, emojis, emojiPrefab)
+    local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(Sprite))
+    self.emojiPanel = EmojiPanel.Create(self.emojiPanelGo, self.inputField, emojis, self.Item_Emoji)
 
     -- phrase 常用短语
-    local phrasePrefab = loader.LoadEditorAsset("Assets/ChatSystem/prefab/Item_Phrase.prefab", typeof(GameObject), true)
-    self.phrasePanel = PhrasePanel.Create(self.phrasePanelGo, phrasePrefab)
+    self.phrasePanel = PhrasePanel.Create(self.phrasePanelGo, self.Item_Phrase)
     self.phrasePanel.OnPhraseClickCallBack = function (phraseData)
         self:OnSendPhrase(phraseData)
     end
@@ -119,8 +125,8 @@ function Class:__init(panel, loader, selfUserID)
     PBHelper.AddListener('CLCHATROOM.ChatMessageNtf', function (data)
         print("收到消息：userID = ", data.user_id, data.nickname, data.message_type, data.content, data.metadata)
         local timeStampSec = tonumber(data.metadata)
-        --local faceSpr = GetHeadSprite(data.head)
-        self:OnReceiveMsg(timeStampSec, data.user_id, data.message_type, data.content, data.metadata, faceSpr)
+        local headSpr = SubGame_Env.GetHeadSprite(data.head)
+        self:OnReceiveMsg(timeStampSec, data.user_id, data.message_type, data.content, data.metadata, headSpr)
     end)
 end
 
@@ -160,8 +166,8 @@ function Class:OnSendText(inputField)
     --
     print("发送文本消息：", text)
     local timeStampSec = os.time()
-    -- 显示自己发送的信息
-    self:OnReceiveMsg(timeStampSec, self.selfUserID, 1, text, nil, self.faceSpr)   
+    -- 显示自己发送的信息，自己的消息服务器也会转发给自己，这里使用服务器返回的
+    --self:OnReceiveMsg(timeStampSec, 0012, 1, text, nil, self.faceSpr)   
     --
     CLCHATROOMSender.Send_SendChatMessageReq(function (data)
         self:SendChatMsgAck(data)
@@ -173,7 +179,7 @@ function Class:OnSendPhrase(phraseData)
     print("发送快捷消息：", phraseData.index)
     local timeStampSec = os.time()
     -- 显示自己发送的信息
-    self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
+    --self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
     --
     CLCHATROOMSender.Send_SendChatMessageReq(function (data)
         self:SendChatMsgAck(data)
@@ -197,14 +203,16 @@ end
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
 function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, headSpr)
-    --print("接受到消息:", msgType, userID, content)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
         return
     end
+    print("msgItemBGs = ", self.msgItemBGs[1], self.msgItemBGs[2])
+    local msgItemBgSpr = self.msgItemBGs[1]
     local isMine = false
     if userID == self.selfUserID then
         isMine = true
+        msgItemBgSpr = self.msgItemBGs[2]
     end
 
     local index = -1
@@ -230,7 +238,7 @@ function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, he
             end
         end
     end
-    local msgData = ChatMsgData.Create(timeStampSec, userID, isMine, content, audioClip, headSpr)
+    local msgData = ChatMsgData.Create(timeStampSec, userID, isMine, content, audioClip, headSpr, msgItemBgSpr)
     self.msgScrollView:InsertItem(msgData)
 
 end

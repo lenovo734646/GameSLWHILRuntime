@@ -5,6 +5,7 @@ using XLua;
 
 namespace XLuaExtension
 {
+    [LuaCallCSharp]
     public class UGUIClickLuaBehaviour : BaseLuaBehaviour<UGUIClickLuaBehaviour>,IPointerClickHandler
     {
         private Action<LuaTable, PointerEventData> luaOnPointerClick;
@@ -25,11 +26,17 @@ namespace XLuaExtension
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (luaOnPointerClick2 != null)
-                luaOnPointerClick2(eventData);
-            if (luaOnPointerClick != null)
-                luaOnPointerClick(self, eventData);
+            luaOnPointerClick2?.Invoke(eventData);
+            luaOnPointerClick?.Invoke(self, eventData);
         }
+
+        private void OnDestroy() {
+            if (luaOnPointerClick2 != null)
+                luaOnPointerClick2 = null;
+            if (luaOnPointerClick != null)
+                luaOnPointerClick = null;
+        }
+
     }
 }
 

@@ -21,6 +21,7 @@ local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 local UserInfo = require'UI.UserInfo'
 local TimerCounterUI = require 'UI.TimerCounterUI'
+local PlayerListPanel = require'PlayerList.PlayerListPanel'
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -40,6 +41,8 @@ function Class:__init(panel, roomdata, loader)
 
     -- 聊天界面
     self.chatPanel = ChatPanel.Create(self.ChatPanel, SubGame_Env.loader, SubGame_Env.playerRes)
+    -- 玩家列表界面
+    self.playerListPanel = PlayerListPanel.Create(self.playerListPanel)
 
     -- 结算界面
     self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)
@@ -57,6 +60,11 @@ function Class:SetWaitNextStateTip(bShow)
     else
         self.gameStateSpineHelper:StopByName("dengdai", true)
     end
+end
+
+function Class:On_btn_PlayerList_Event(btn_PlayerList)
+    print("发送完结列表请求")
+    self.playerListPanel:OnSendPlayerListReq()
 end
 
 

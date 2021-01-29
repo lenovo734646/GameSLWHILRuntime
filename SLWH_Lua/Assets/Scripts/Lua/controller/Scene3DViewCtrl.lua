@@ -108,12 +108,12 @@ end
 -- showRedNuber: 是否显示红色数字，下注状态就显示，这里其实是gameState
 function Class:PlayCountDownSound(time)
     if time > 5 then
-        self.soundMgr:PlaySound("countdown")
+        self.soundMgr:PlaySound("TimerTick")
     else
         if self:IsBetState() then
             self.soundMgr:PlaySound("alert")
         else
-            self.soundMgr:PlaySound("countdown")
+            self.soundMgr:PlaySound("TimerTick")
         end
     end
 end
@@ -506,7 +506,7 @@ end
 -- 下注阶段
 function Class:OnBetState(data)
     self.ui.viewEventBroadcaster:Broadcast('betState')
-    self.soundMgr:PlaySound("start")
+    self.soundMgr:PlaySound("start_bet")
     self:DoCheckForBetButtonState()--判断并禁用不能下注的按钮
     -- 判断是否自动续押
     --print("是否自动续押:", self.ui.autoContinueBet.isOn)
@@ -519,7 +519,7 @@ end
 function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
-    self.soundMgr:PlaySound("stop")
+    --self.soundMgr:PlaySound("stop") -- 停止下注音频暂缺
     self:StopIdleStateAnim()
     local cur_result_list = data.cur_result_list
     local anim_result_list = data.anim_result_list

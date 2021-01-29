@@ -54,11 +54,35 @@ function Class:StopBGMusic()
 end
 
 function Class:PlaySound(name)
-    if not self.soundClips[name] then
-        --LogE("SoundManager:PlaySound 音频不存在:", name)
+    local clip = self.soundClips[name]
+    if clip == nil then
+        LogE("SoundManager:PlaySound 音频不存在:"..name)
         return
     end
-    self.soundAudioSource:PlayOneShot(self.soundClips[name])
+    self.soundAudioSource:PlayOneShot(clip)
+end
+
+function Class:GetSoundLength(name)
+    local clip = self.soundClips[name]
+    if clip == nil then
+        LogE("SoundManager:GetSoundLength 音频不存在:"..name)
+        return 0
+    end
+    return clip.length
+end
+
+-- 延迟播放AudioSource的AudioClip
+function Class:PlaySoundDelayed(delayTime)
+    self.soundAudioSource:PlayDelayed()
+end
+-- 播放AudioSource的AudioClip
+function Class:PlayDefault()
+    self.soundAudioSource:Play()
+end
+
+-- 停止AudioSource的AudioClip
+function Class:StopDefault()
+    self.soundAudioSource:Stop()
 end
 
 function Class:SetMusicMute(b)

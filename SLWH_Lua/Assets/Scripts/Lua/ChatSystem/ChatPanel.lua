@@ -207,7 +207,7 @@ function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, he
         LogE("OnReceiveMsg: content is nil ")
         return
     end
-    print("msgItemBGs = ", self.msgItemBGs[1], self.msgItemBGs[2])
+    --print("msgItemBGs = ", self.msgItemBGs[1], self.msgItemBGs[2])
     local msgItemBgSpr = self.msgItemBGs[1]
     local isMine = false
     if userID == self.selfUserID then

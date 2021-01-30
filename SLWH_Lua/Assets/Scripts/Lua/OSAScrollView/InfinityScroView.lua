@@ -54,6 +54,10 @@ function Class:__init(OSAScrollViewCom)
     end
 end
 
+function Class:Init()
+    self.OSAScrollView:Init()
+end
+
 function Class:AddItemAndSmoothScrollTo(index, duration, progressFunc, onDoneFunc)
     self:OnAddItemRequested(index)
     self:SmoothScrollTo(self.OSAScrollView:GetItemsCount(), duration, progressFunc, onDoneFunc)

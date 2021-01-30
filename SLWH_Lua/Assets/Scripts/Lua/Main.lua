@@ -1,5 +1,6 @@
 SubGame_Env = SubGame_Env or {}
 
+
 require "LuaUtil/LuaRequires"
 GameConfig = GameConfig or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
 
@@ -15,11 +16,11 @@ if SUBGAME_EDITOR then
     SubGame_Env.playerRes = playerRes
 
     SubGame_Env.GetHeadSprite = function (headID)
-        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..headID..".png", typeof(Sprite))
+        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..(headID+1)..".png", typeof(Sprite))
     end
 
     SubGame_Env.GetHeadFrameSprite = function (headFrameID)
-        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..headFrameID..".png", typeof(Sprite))
+        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(Sprite))
     end
     print("SUBGAME_EDITOR!")
     -- PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
@@ -28,6 +29,23 @@ if SUBGAME_EDITOR then
     --         playerRes.currency = data.res_value
     --     end
     -- end)
+end
+
+SubGame_Env.ConvertNumberToString = function (n)
+    if n == nil then
+        return ""
+    end
+    local unit = ''
+    if n >= 10000 then
+        n = n / 10000
+        n = math.floor(n*100)/100
+        unit = '万'
+    elseif n >= 100000000 then
+        n = n / 100000000
+        n = math.floor(n*100)/100
+        unit = '亿'
+    end
+    return n..unit
 end
 
 

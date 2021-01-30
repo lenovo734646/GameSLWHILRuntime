@@ -19,11 +19,7 @@ end
 --root:RectTransform类型
 function Class:__init(view)
     self.view = view
-    local initHelper = view:GetComponent(typeof(LuaInitHelper))
-    initHelper:Init(self)
-    self.msgItemBGs = {}
-    initHelper:ObjectsSetToLuaTable(self.msgItemBGs)
-
+    view:GetComponent(typeof(LuaInitHelper)):Init(self)
 
     self.paddingAtIconSide = self.rootLayoutGroup.padding.right
     self.paddingAtOtherSide = self.rootLayoutGroup.padding.left

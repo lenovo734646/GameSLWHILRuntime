@@ -31,23 +31,12 @@ local clock = os.clock
 local SoundManager = require'controller.SoundManager'
 
 local SubGame_Env=SubGame_Env
+local ConvertNumberToString = SubGame_Env.ConvertNumberToString
 
 _ENV = moduledef { seenamespace = CS }
 local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
 
-local convertNumberToString = function (n)
-    local unit = ''
-    if n >= 10000 then
-        n = n / 10000
-        n = math.floor(n*100)/100
-        unit = '万'
-    elseif n >= 100000000 then
-        n = n / 100000000
-        n = math.floor(n*100)/100
-        unit = '亿'
-    end
-    return n..unit
-end
+
 
 local Class = class()
 
@@ -168,7 +157,7 @@ function Class:OnSceneReady()
                 --print("清除下注 id = ", id, total_bet)
                 self.TotalBet[id] = total_bet
                 local betAreaData = self.ui.betAreaList[id]
-                betAreaData.totalBetScore.text = convertNumberToString(total_bet)
+                betAreaData.totalBetScore.text = ConvertNumberToString(total_bet)
             end
         else
             local total_bet = data.info.total_bet or 0
@@ -186,7 +175,7 @@ function Class:OnSceneReady()
             -- 同步总押分
             self.TotalBet[item_id] = total_bet or 0 
             local betAreaData = self.ui.betAreaList[item_id]
-            betAreaData.totalBetScore.text = convertNumberToString(total_bet)
+            betAreaData.totalBetScore.text = ConvertNumberToString(total_bet)
         end
     end)
 
@@ -660,7 +649,7 @@ function Class:OnReceiveBetAck(data)
             local betAreaData = betAreaList[item_id]
             --
             local total_bet = self_bet_info.total_bet
-            betAreaData.selfBetScore.text = convertNumberToString(total_bet)
+            betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
             self.betSnapShot[item_id] = total_bet
             self.selfTotalBet[item_id] = 0
             self.soundMgr:PlaySound("bet")

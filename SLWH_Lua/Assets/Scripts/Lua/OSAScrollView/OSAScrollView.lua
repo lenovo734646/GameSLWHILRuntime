@@ -25,9 +25,9 @@ end
 function Class:__init(OSAScrollViewCom)
     -- 
     self.OSAScrollViewCom = OSAScrollViewCom
-    if not self.OSAScrollViewCom.IsInitialized then
-        self.OSAScrollViewCom:Init()
-    end
+    -- if not self.OSAScrollViewCom.IsInitialized and self.OSAScrollViewCom.gameObject.activeSelf == true then
+    --     self.OSAScrollViewCom:Init()
+    -- end
     -- self.OSAScrollViewCom.exView = self
     --
     OSAScrollViewCom.StartCallback = function (paramters_)
@@ -61,7 +61,9 @@ end
 
 -- 回调
 function Class:Init(osaView_)
-    local osaView = osaView_
+    if not self.OSAScrollViewCom.IsInitialized then
+        self.OSAScrollViewCom:Init()
+    end
 end
 
 function Class:UpdateView(osaView_)

@@ -13347,7 +13347,7 @@ MonoBehaviour:
       _KeepItemsPoolOnEmptyList: 0
       _KeepItemsPoolOnLayoutRebuild: 0
       _KeepItemsSizesOnLayoutRebuild: 0
-    _ItemPrefab: {fileID: 8921445257626346458, guid: 5aa75ad8cbaaa0a4ea3eeecf59194c28,
+    _ItemPrefab: {fileID: 3589991802422803485, guid: d9fed6a062e009b48a16ce89bdb9136e,
       type: 3}
     _PrefabControlsDefaultItemSize: 1
     _AlsoControlItemTransversalSize: 0
@@ -15468,16 +15468,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1240168768}
-        m_MethodName: DOPlayForward
-        m_Mode: 1
+      - m_Target: {fileID: 1580205403}
+        m_MethodName: CallLuaByGameObjectName
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 1108456840}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 1240168763}
         m_MethodName: SetActive
@@ -15490,11 +15490,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1580205403}
-        m_MethodName: CallLuaByGameObjectName
-        m_Mode: 2
+      - m_Target: {fileID: 1240168768}
+        m_MethodName: DOPlayForward
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 1108456840}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -16170,7 +16170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1240168764
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16180,13 +16180,13 @@ RectTransform:
   m_GameObject: {fileID: 1240168763}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 566329516}
   - {fileID: 751705974}
   - {fileID: 837059430}
   m_Father: {fileID: 1580205399}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16243,10 +16243,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objects:
-  - {fileID: 2800000, guid: 607ef7cb93b984c4184c164da966177b, type: 3}
-  - {fileID: 2800000, guid: 91fd53ca9180fd04183486c8cd4fdc88, type: 3}
-  - {fileID: 2800000, guid: 5267639fca3e32b48810634426b81fb8, type: 3}
-  - {fileID: 2800000, guid: c70844212ebd6d74fb8078adf8091f40, type: 3}
+  - {fileID: 21300000, guid: 607ef7cb93b984c4184c164da966177b, type: 3}
+  - {fileID: 21300000, guid: 91fd53ca9180fd04183486c8cd4fdc88, type: 3}
+  - {fileID: 21300000, guid: 5267639fca3e32b48810634426b81fb8, type: 3}
+  - {fileID: 21300000, guid: c70844212ebd6d74fb8078adf8091f40, type: 3}
   sortByName: 0
   initList:
   - name: OSAScrollViewCom
@@ -19426,6 +19426,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1485450968}
   m_CullTransparentMesh: 0
+--- !u!1 &1485898966
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1485898967}
+  m_Layer: 0
+  m_Name: DDOLGameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1485898967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485898966}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1492274986
 GameObject:
   m_ObjectHideFlags: 0
@@ -20969,9 +20999,9 @@ RectTransform:
   - {fileID: 1517591310}
   - {fileID: 1798755423}
   - {fileID: 847000485}
-  - {fileID: 2300884154989696686}
   - {fileID: 2007436617}
   - {fileID: 1240168764}
+  - {fileID: 2300884154989696686}
   m_Father: {fileID: 1090969923}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -23481,7 +23511,7 @@ MonoBehaviour:
   toggle: {fileID: 0}
   scrollRect: {fileID: 0}
   spineHelper: {fileID: 0}
-  tweenAnimation: {fileID: 0}
+  tweenAnimation: {fileID: 1240168768}
   img: {fileID: 0}
   padCount: 2
   aa: 1
@@ -24461,7 +24491,7 @@ RectTransform:
   - {fileID: 1471606645}
   - {fileID: 1130866133}
   m_Father: {fileID: 1580205399}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -59620,7 +59650,7 @@ PrefabInstance:
     - target: {fileID: 5171738289952083935, guid: 70dfecaac9ff65746a679a085ddc1680,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5171738289952083935, guid: 70dfecaac9ff65746a679a085ddc1680,
         type: 3}

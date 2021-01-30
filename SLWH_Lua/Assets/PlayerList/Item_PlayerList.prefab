@@ -215,13 +215,13 @@ MonoBehaviour:
     anyType: {fileID: 3589991803065941631}
     sType: 
     manualName: 
-  - name: betScore
+  - name: betScoreText
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3589991802610855882}
     sType: 
     manualName: 
-  - name: winCount
+  - name: winCountText
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3589991803686638692}

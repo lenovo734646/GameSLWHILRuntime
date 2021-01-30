@@ -5,7 +5,7 @@ local class, typeof, type, string, utf8, pairs= class, typeof, type, string, utf
 local tostring, tonumber = tostring, tonumber
 
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
-local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
+local DOTweenAnimation = CS.DG.Tweening.DOTweenAnimation
 
 local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
@@ -15,6 +15,8 @@ local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local PBHelper = require 'protobuffer.PBHelper'
 local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
 local SubGame_Env = SubGame_Env
+local PlayerListItemData = require'PlayerList.PlayerListItemData'
+local PlayerListItemView = require'PlayerList.PlayerListItemView'
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -36,25 +38,25 @@ function Class:__init(panel)
     initHelper:ObjectsSetToLuaTable(self.rankImages)
     self.initHelper = nil
     --Item scroll view
-    self.msgScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
-    self.msgScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
-        if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
-            local itemsCount = self.msgScrollView:GetItemsCount()
-            local tarIndex = itemsCount-1
-            local DoneFunc = function ()
-                if itemsCount > 100 then                    -- 只保存100条数据
-                    self.msgScrollView:RemoveOneFromStart(true)
-                end
-            end
-            self.msgScrollView:SmoothScrollTo(tarIndex, 0.1, nil, DoneFunc)
-        end
-    end
+    self.playerListScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
+    -- self.playerListScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
+    --     if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
+    --         local itemsCount = self.playerListScrollView:GetItemsCount()
+    --         local tarIndex = itemsCount-1
+    --         local DoneFunc = function ()
+    --             if itemsCount > 100 then                    -- 只保存100条数据
+    --                 self.playerListScrollView:RemoveOneFromStart(true)
+    --             end
+    --         end
+    --         self.playerListScrollView:SmoothScrollTo(tarIndex, 0.1, nil, DoneFunc)
+    --     end
+    -- end
     --itemRoot : RectTransform类型
-    self.msgScrollView.OnCreateViewItemData = function (itemRoot, itemIndex)
-        return ChatMsgView.Create(itemRoot)
+    self.playerListScrollView.OnCreateViewItemData = function (itemRoot, itemIndex)
+        return PlayerListItemView.Create(itemRoot)
     end
 
-    self.msgScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
+    self.playerListScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
         viewItemData:UpdateFromData(itemdata)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
     end
@@ -72,17 +74,32 @@ function Class:OnSendPlayerListReq()
         end
         --
         local count = data.total_amount
-        for i = 1, count, 1 do
-            local info = data.players[i]
-            print("玩家列表：", info.nickname, info.user_id, info.head)
-
-            -- local msgData = ChatMsgData.Create(timeStampSec, userID, isMine, content, audioClip, headSpr, msgItemBgSpr)
-            -- self.msgScrollView:InsertItem(msgData)
+        print("count = ", count)
+        local players = data.players
+        for key, info in pairs(players) do
+            print("玩家列表：", key, info.nickname, info.user_id, info.head)
+            local rankImageSpr = self.rankImages[key]
+            local itemData = PlayerListItemData.Create(info.user_id, info.nickname, info.head, info.headFrame, 
+                                                        info.currency, info.betScore, info.winCount, key, rankImageSpr)
+            self.playerListScrollView:InsertItem(itemData)
         end
 
      
-    end)
+    end, 0, 100)
 end
+
+-- 以下代码为自动生成，请勿更改
+function Class:On_btn_Close_Event(btn_Close)
+    self.popUpDOTweenAnim.onComplete:AddListener(function ()
+        print("OnComplete......")
+        if self.panel.transform.localScale.x < 0.1 then
+            self.panel:SetActive(false)
+        end
+    end)
+    self.popUpDOTweenAnim.hasOnComplete = true;
+    self.popUpDOTweenAnim:DOPlayBackwards()
+end
+
 
 
 

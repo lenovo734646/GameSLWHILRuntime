@@ -92,6 +92,13 @@ namespace SLWH
 
             var sprs = ResHelper.LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true);
             var ss = EditorAssetLoader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", false);
+
+
+            //transform.DOPlayBackwards();
+
+            //gameObject.transform.localScale.x
+
+
             //audioSource.PlayOneShot
             //print(par.main.startLifetime);
             //print(par.main.startLifetimeMultiplier);
@@ -205,12 +212,16 @@ namespace SLWH
 
 
 
-            if (GUI.Button(new Rect(10, 500, 100, 50), "Test Delete AllChild"))
+            if (GUI.Button(new Rect(10, 500, 100, 50), "Backwards"))
             {
-                if(bright)
-                    Debug.Log("右键点击按钮");
-                if(bleft)
-                    Debug.Log("左键点击按钮");
+                tweenAnimation.hasOnComplete = true;
+                tweenAnimation.onComplete = new UnityEngine.Events.UnityEvent();
+                tweenAnimation.onComplete.AddListener(() => { tweenAnimation.gameObject.SetActive(false); print("播放结束！"); });
+                tweenAnimation.DOPlayBackwards();
+                //if(bright)
+                //    Debug.Log("右键点击按钮");
+                //if(bleft)
+                //    Debug.Log("左键点击按钮");
 
                 //Debug.Log("1111111"+ CallLuaByGameObjectName);
             }

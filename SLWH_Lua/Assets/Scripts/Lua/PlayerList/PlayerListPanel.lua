@@ -3,6 +3,9 @@ local _G, g_Env, print, log, LogE, os, math = _G, g_Env, print, log, LogE, os, m
 local class, typeof, type, string, utf8, pairs= class, typeof, type, string, utf8, pairs
 
 local tostring, tonumber = tostring, tonumber
+local table = table
+local tinsert = table.insert
+local tremove = table.remove
 
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local DOTweenAnimation = CS.DG.Tweening.DOTweenAnimation
@@ -61,6 +64,24 @@ function Class:__init(panel)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
     end
 
+    -- -- onComplete回调 playForward finish 调用
+    -- self.popUpDOTweenAnim.onComplete:AddListener(function ()
+    --     print("OnComplete......")
+    --     if self.panel.transform.localScale.x < 0.1 then
+    --         self.panel:SetActive(false)
+    --     end
+    -- end)
+    -- self.popUpDOTweenAnim.hasOnComplete = true;
+
+    -- playBackwards finish 调用
+    self.popUpDOTweenAnim.onRewind:AddListener(function ()
+        --print("onRewind......")
+        if self.panel.transform.localScale.x < 0.1 then
+            self.panel:SetActive(false)
+        end
+    end)
+    self.popUpDOTweenAnim.hasOnRewind = true;
+
 end
 
 -- 发送 玩家列表请求
@@ -73,6 +94,7 @@ function Class:OnSendPlayerListReq()
             return
         end
         --
+        local items = {}
         local count = data.total_amount
         print("count = ", count)
         local players = data.players
@@ -81,22 +103,16 @@ function Class:OnSendPlayerListReq()
             local rankImageSpr = self.rankImages[key]
             local itemData = PlayerListItemData.Create(info.user_id, info.nickname, info.head, info.headFrame, 
                                                         info.currency, info.betScore, info.winCount, key, rankImageSpr)
-            self.playerListScrollView:InsertItem(itemData)
+            tinsert(items, itemData)
         end
-
+        self.playerListScrollView:ReplaceItems(items, true)
      
     end, 0, 100)
 end
 
 -- 以下代码为自动生成，请勿更改
 function Class:On_btn_Close_Event(btn_Close)
-    self.popUpDOTweenAnim.onComplete:AddListener(function ()
-        print("OnComplete......")
-        if self.panel.transform.localScale.x < 0.1 then
-            self.panel:SetActive(false)
-        end
-    end)
-    self.popUpDOTweenAnim.hasOnComplete = true;
+
     self.popUpDOTweenAnim:DOPlayBackwards()
 end
 

@@ -37,7 +37,7 @@ namespace SLWH
         public int padCount = 2;
         public int aa = 01;
 
-     
+        int [,]array = new int[3, 5];
 
         public enum ColorType
         {
@@ -93,7 +93,38 @@ namespace SLWH
             var sprs = ResHelper.LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true);
             var ss = EditorAssetLoader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", false);
 
+            // 二维数组
+            //for (int i = 0; i < array.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < array.GetLength(1); j++)
+            //    {
+            //        array[i, j] = (i * 5) + j;
+            //    }
+            //}
 
+            //foreach(var val in array)
+            //{
+            //    print("Array = " + val);
+
+            //}
+
+
+            // 二进制
+            print(Convert.ToString(1, 2));
+            print(Convert.ToString(2, 2));
+            print(Convert.ToString(4, 2));
+            print(Convert.ToString(8, 2));
+            print(Convert.ToString(16, 2));
+            print(Convert.ToString(32, 2));
+
+            print(Convert.ToString(0x1, 2));
+            print(Convert.ToString(0x2, 2));
+            print(Convert.ToString(0x4, 2));
+            print(Convert.ToString(0x8, 2));
+            print(Convert.ToString(0x10, 2));
+            print(Convert.ToString(0x20, 2));
+
+            print(Convert.ToString(0x20|0x2, 2));
             //transform.DOPlayBackwards();
 
             //gameObject.transform.localScale.x

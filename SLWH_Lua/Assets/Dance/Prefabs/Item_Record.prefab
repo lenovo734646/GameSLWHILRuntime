@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3342005183715309584}
   - component: {fileID: 3342005183715309679}
   m_Layer: 5
-  m_Name: typeImg
+  m_Name: enjoyTypeImg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 3342005184151290938}
   - component: {fileID: 3342005184151290937}
   m_Layer: 5
-  m_Name: spImg
+  m_Name: exTypeImg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -253,13 +253,13 @@ MonoBehaviour:
     anyType: {fileID: 3342005185439391740}
     sType: 
     manualName: 
-  - name: typeImg
+  - name: enjoyTypeImg
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3342005183715309679}
     sType: 
     manualName: 
-  - name: spImg
+  - name: exTypeImg
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3342005184151290937}

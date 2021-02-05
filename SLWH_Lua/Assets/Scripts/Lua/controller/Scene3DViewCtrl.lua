@@ -161,17 +161,6 @@ function Class:OnSceneReady()
             end
         else
             local total_bet = data.info.total_bet or 0
-            -- -- 飞筹码
-            -- local totalBet = self.TotalBet[item_id] or 0 -- 清除下注判断，避免item_id == -1 报错
-            -- local gapScore = total_bet - totalBet
-            -- if gapScore > 0 then    -- 清除下注效果不同步
-            --     local user_id = data.user_id
-            --     local bSelf = false
-            --     if user_id == self.self_user_id then
-            --         bSelf = true
-            --     end
-            --     --self.choumaFly:FlyIn(item_id, gapScore, bSelf)
-            -- end
             -- 同步总押分
             self.TotalBet[item_id] = total_bet or 0 
             local betAreaData = self.ui.betAreaList[item_id]
@@ -217,11 +206,12 @@ function Class:OnSceneReady()
     -- 发送请求历史路单数据
     CLSLWHSender.Send_HistoryReq(function (data)
         print('HistoryAck:'..json.encode(data))
-        local icon_list = data
+        local record_list = data.record_list
         local list = {}
-        for _,animalID in ipairs(icon_list)do
-            local spr = ui.histroyIconSprites[animalID]
-            tinsert(list, {sprite = spr})
+        for _,info in ipairs(record_list)do
+            local result = info.ressult_info_list
+            local itemData = ui:GetHistoryIconData(info.)
+            tinsert(list, itemData)
         end
         ui.roadScrollView:ReplaceItems(list)
     end)

@@ -105,7 +105,7 @@ function Class:OnSendPlayerListReq()
                                                         info.currency, info.betScore, info.winCount, key, rankImageSpr)
             tinsert(items, itemData)
         end
-        self.playerListScrollView:ReplaceItems(items, true)
+        self.playerListScrollView:ReplaceItems(items)
      
     end, 0, 100)
 end

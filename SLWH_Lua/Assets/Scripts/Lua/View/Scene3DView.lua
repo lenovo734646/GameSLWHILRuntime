@@ -129,10 +129,10 @@ function Class:__init(roomdata)
     end
     --数据更新接口实现（itemViewGameObject会自动回收使用，所以需要对itemViewGameObject进行更新）
     roadScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
-        viewItemData.colorImg.sprite = itemdata.animalSpr
+        viewItemData.colorImg.sprite = itemdata.colorSpr
         viewItemData.animalImg.sprite = itemdata.animalSpr
-        viewItemData.typeImg.sprite = itemdata.typeSpr
-        viewItemData.spImg.sprite = itemdata.spSpr
+        viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
+        viewItemData.exTypeImg.sprite = itemdata.exTypeSpr
         if itemdata.spSpr == nil then
             viewItemData.spImg.gameObject:SetActive(false)
         else
@@ -159,10 +159,10 @@ function Class:__init(roomdata)
     self.roadInitHelper:ObjectsSetToLuaTable(self.roadColorSprites)
     self.roadAnimalSprites = {}
     exArrayData.animalImgArrayInitHelper:ObjectsSetToLuaTable(self.roadAnimalSprites)
-    self.roadTypeSprites = {}
-    exArrayData.typeImgArrayInitHelper:ObjectsSetToLuaTable(self.roadTypeSprites)
-    self.roadSPSprites = {}
-    exArrayData.spImgArrayInitHelper:ObjectsSetToLuaTable(self.roadSPSprites)
+    self.roadEnjoyTypeSprites = {}
+    exArrayData.enjoyTypeImgArrayInitHelper:ObjectsSetToLuaTable(self.roadEnjoyTypeSprites)
+    self.roadExSprites = {}
+    exArrayData.exSprArrayInitHelper:ObjectsSetToLuaTable(self.roadExSprites)
 
     exArrayData = nil
     self.roadInitHelper = nil
@@ -183,12 +183,12 @@ end
 -- color_id 中奖颜色id
 -- type_id 庄闲和 id
 -- sp_id 特殊中奖id（大三元，大四喜）
-function Class:GetHistoryIconData(item_id, color_id, type_id, sp_id)
+function Class:GetHistoryIconData(color_id, animal_id, enjoyType_id, ex_id)
     return {
-        animalSpr = self.roadAnimalSprites[item_id],
         colorSpr = self.roadColorSprites[color_id],
-        typeSpr = self.roadTypeSprites[type_id],
-        spSpr = self.roadSPSprites[sp_id],
+        animalSpr = self.roadAnimalSprites[animal_id],
+        enjoyTypeSpr = self.roadTypeSprites[enjoyType_id],
+        exTypeSpr = self.roadSPSprites[ex_id],
     }
 end
 

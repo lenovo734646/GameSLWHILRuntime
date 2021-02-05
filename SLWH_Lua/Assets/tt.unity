@@ -2360,6 +2360,7 @@ GameObject:
   - component: {fileID: 384613587}
   - component: {fileID: 384613588}
   - component: {fileID: 384613589}
+  - component: {fileID: 384613590}
   m_Layer: 0
   m_Name: test
   m_TagString: Untagged
@@ -2493,7 +2494,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 384613586}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d52ea184b98c4ef469f1878af5fc5b92, type: 3}
   m_Name: 
@@ -2512,6 +2513,18 @@ MonoBehaviour:
   img: {fileID: 0}
   padCount: 2
   aa: 1
+--- !u!114 &384613590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 384613586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b20efc9dc59dbd49ac60476104c685b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &389190757
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,9 +42,11 @@ public class ResHelper {
         {
             path = SysDefines.AB_BASE_PATH + path;
         }
+        var r = Resources.LoadAll(path, typeof(Sprite));
 #if UNITY_EDITOR
-        return AssetDatabase.LoadAllAssetsAtPath(path);
+        r = AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
 #endif
+        return r;
     }
 
 }

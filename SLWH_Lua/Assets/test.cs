@@ -37,6 +37,9 @@ namespace SLWH
         public int padCount = 2;
         public int aa = 01;
 
+        public GameObject baoshi;
+        public Material[] materials; 
+
         int [,]array = new int[3, 5];
 
         public enum ColorType
@@ -108,26 +111,29 @@ namespace SLWH
 
             //}
 
+            transform.eulerAngles = new Vector3(1, 1, 1);
+            transform.DORotate(new Vector3(0, 720, 0), 1).SetEase(Ease.InBounce);
+            //// 二进制
+            //print(Convert.ToString(1, 2));
+            //print(Convert.ToString(2, 2));
+            //print(Convert.ToString(4, 2));
+            //print(Convert.ToString(8, 2));
+            //print(Convert.ToString(16, 2));
+            //print(Convert.ToString(32, 2));
 
-            // 二进制
-            print(Convert.ToString(1, 2));
-            print(Convert.ToString(2, 2));
-            print(Convert.ToString(4, 2));
-            print(Convert.ToString(8, 2));
-            print(Convert.ToString(16, 2));
-            print(Convert.ToString(32, 2));
+            //print(Convert.ToString(0x1, 2));
+            //print(Convert.ToString(0x2, 2));
+            //print(Convert.ToString(0x4, 2));
+            //print(Convert.ToString(0x8, 2));
+            //print(Convert.ToString(0x10, 2));
+            //print(Convert.ToString(0x20, 2));
 
-            print(Convert.ToString(0x1, 2));
-            print(Convert.ToString(0x2, 2));
-            print(Convert.ToString(0x4, 2));
-            print(Convert.ToString(0x8, 2));
-            print(Convert.ToString(0x10, 2));
-            print(Convert.ToString(0x20, 2));
-
-            print(Convert.ToString(0x20|0x2, 2));
+            //print(Convert.ToString(0x20|0x2, 2));
             //transform.DOPlayBackwards();
 
             //gameObject.transform.localScale.x
+
+
 
 
             //audioSource.PlayOneShot
@@ -176,8 +182,7 @@ namespace SLWH
             //    print($"color = {colorCountGroup[i].colorType}, count = {colorCountGroup[i].count}");
             //}
 
-
-
+            gameObject.AddComponent<AudioListener>();
         }
 
         // Update is called once per frame
@@ -238,12 +243,20 @@ namespace SLWH
 
         }
 
+        int materialIndex = 0;
         private void OnGUI()
         {
+            if (GUI.Button(new Rect(200, 300, 100, 50), "ChangeMaterial"))
+            {
+
+                baoshi.GetComponent<MeshRenderer>().material = materials[materialIndex];
+                materialIndex++;
+                if (materialIndex >= materials.Length)
+                    materialIndex = 0;
+            }
 
 
-
-            if (GUI.Button(new Rect(10, 500, 100, 50), "Backwards"))
+                if (GUI.Button(new Rect(10, 450, 100, 50), "Backwards"))
             {
                 tweenAnimation.hasOnComplete = true;
                 tweenAnimation.onComplete = new UnityEngine.Events.UnityEvent();
@@ -255,7 +268,10 @@ namespace SLWH
                 //    Debug.Log("左键点击按钮");
 
                 //Debug.Log("1111111"+ CallLuaByGameObjectName);
+                
             }
+
+            
             //if (Input.GetMouseButtonDown(2))
             //{
             //    Debug.Log("你按下了鼠标中键");

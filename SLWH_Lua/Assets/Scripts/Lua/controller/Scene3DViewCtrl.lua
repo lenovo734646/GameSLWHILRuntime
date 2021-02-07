@@ -6,7 +6,7 @@ local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE
 
 local logError = logError
 local math,pairs = math,pairs
-
+local Vector3 = CS.UnityEngine.Vector3
 local DOTween = CS.DG.Tweening.DOTween
 local table = table
 local tinsert = table.insert
@@ -209,8 +209,8 @@ function Class:OnSceneReady()
         local record_list = data.record_list
         local list = {}
         for _,info in ipairs(record_list)do
-            local result = info.ressult_info_list
-            local itemData = ui:GetHistoryIconData(info.)
+            local result = info.ressult_info_list[1] -- 暂时只使用一个值
+            local itemData = ui:GetHistoryIconData(result.winColor, result.winAnimal, info.win_enjoyGameType, info.win_exType)
             tinsert(list, itemData)
         end
         ui.roadScrollView:ReplaceItems(list)
@@ -324,83 +324,42 @@ function Class:OnStateChangeNtf(data)
 end
 
 -- 开奖（从开始转到显示结算界面）
-function Class:DoTweenShowResultAnim(fromindex, toindex, round, time)
+function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromindex, animalToindex, round, time)
     round = round or 3
     time = time or GameConfig.ShowAnimationTime
     --print('DoTweenShowResultAnim round:'..round..' time:'..time)
     local ui = self.ui
     print("TODO：开转")
-    -- local runItemDataList = ui.runItemDataList
-    -- local len = #runItemDataList
-    -- local totalWillRunCount = toindex - fromindex + len*round
-    -- if totalWillRunCount < len then
-    --     totalWillRunCount=totalWillRunCount+len
-    -- end
+    local runItemDataList = ui.runItemDataList
+    local len = #runItemDataList
+    local colorTotalWillRunCount = colorToindex - colorFromindex + len*round
+    if colorTotalWillRunCount < len then
+        colorTotalWillRunCount=colorTotalWillRunCount+len
+    end
 
-    -- local poslist = {}
-    -- local startindex = fromindex
-    -- self.curIconPosIndex = startindex
-    -- local data = runItemDataList[startindex]
-    -- local lastHitIndex = startindex
-    -- iconPos.position = data.position
-    -- tinsert(poslist,data.position)
-    -- for i=1, totalWillRunCount do
-    --     startindex = startindex + 1
-    --     if startindex > len then
-    --         startindex = 1
-    --     end
-    --     local data = runItemDataList[startindex]
-    --     tinsert(poslist,data.position)
-    -- end
-
-    -- local Ease = {
-    --     DG.Tweening.Ease.InOutSine, DG.Tweening.Ease.InOutQuad,
-    --     DG.Tweening.Ease.InOutQuad, DG.Tweening.Ease.InOutCubic,
-    --     DG.Tweening.Ease.InOutCubic, DG.Tweening.Ease.InOutQuart,
-    --     DG.Tweening.Ease.InOutQuart, DG.Tweening.Ease.InOutQuint,
-    --     DG.Tweening.Ease.InOutExpo, DG.Tweening.Ease.InOutFlash,
-    --     DG.Tweening.Ease.InOutCirc, DG.Tweening.Ease.InOutFlash
-    -- }
-    -- local curve =  Ease[RandomInt(1,#Ease)]
-    -- local move = true
+    local startRot = colorFromindex*15
+    self.curIconPosIndex = startRot
+    local lastHitIndex = startRot
+    local arrow_transform = ui.arrow_transform
+    local arrowTotalRot = colorTotalWillRunCount*15
+    arrow_transform.eulerAngles = Vector3(0, startRot, 0)
 
 
-    -- --紧跟播放头
-    -- CoroutineHelper.StartCoroutine(function ()
-    --     while move do
-    --         local count = 0
-    --         while lastHitIndex ~= self.curIconPosIndex do
-    --             lastHitIndex = lastHitIndex + 1
-    --             if lastHitIndex > len then
-    --                 lastHitIndex = 1
-    --             end
-    --             runItemDataList[lastHitIndex].Play()
-    --             count = count + 1
-    --             if count > len then
-    --                 LogE('count > len')
-    --                 break
-    --             end
-    --         end
-    --         yield()
-    --     end
-    --     -- print('move end')
-    -- end)
+    local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
 
+    return CoroutineHelper.StartCoroutine(function ()
+        yield(arrow_transform:DORotate(Vector3(0, arrowTotalRot, 0), time-GameConfig.ShowResultTime)
+        :SetEase(curve):WaitForCompletion())
+        local animaldata = runItemDataList[toindex]
+        --
+        self.ui.winParticleTransform.localPosition = animaldata.transform.localPosition
+        self.ui.winParticleTransform.gameObject:SetActive(true)
+        yield()
 
-    -- return CoroutineHelper.StartCoroutine(function ()
-    --     yield(iconPos:DOPath(poslist, time-GameConfig.ShowResultTime)
-    --     :SetEase(curve):WaitForCompletion())
-    --     local animaldata = runItemDataList[toindex]
-    --     --
-    --     self.ui.winParticleTransform.localPosition = animaldata.transform.localPosition
-    --     self.ui.winParticleTransform.gameObject:SetActive(true)
-    --     yield()
-    --     move = false
-
-    --     yield(animaldata.PlayShowAsync())
-    --     -- 
-    --     self.ui.winParticleTransform.gameObject:SetActive(false)
-    -- end)
+        yield(animaldata.PlayShowAsync())
+        -- 
+        self.ui.winParticleTransform.gameObject:SetActive(false)
+    end)
 end
 
 function Class:PlayIdleStateAnim()
@@ -484,14 +443,24 @@ end
 
 -- 下注阶段
 function Class:OnBetState(data)
-    self.ui.viewEventBroadcaster:Broadcast('betState')
+    local ui = self.ui
+    ui.viewEventBroadcaster:Broadcast('betState')
     self.soundMgr:PlaySound("start_bet")
-    self:DoCheckForBetButtonState()--判断并禁用不能下注的按钮
-    -- 判断是否自动续押
-    --print("是否自动续押:", self.ui.autoContinueBet.isOn)
-    -- if self.ui.autoContinueBet.isOn then
-    --     self:OnContinueBtnClicked()
-    -- end
+    self:DoCheckForBetButtonState()--判断并禁用不能钱不够的筹码按钮
+    -- 设置动物倍率和颜色
+    local colorArray = data.color_array
+    local ratioArray = data.ratio_array
+
+    -- 设置颜色
+    for index, value in ipairs(colorArray) do
+        ui.colorMeshList[index].material = ui.colorMeshMaterialList[value]
+    end
+    -- 设置倍率（包含庄闲和）
+    local count = #ui.betAreaList
+    for i = 1, count, 1 do
+        ui.betAreaList[i].ratioText.text = ratioArray[i]
+    end
+    --
 end
 
 -- 游戏阶段（转和显示结果）
@@ -499,14 +468,15 @@ function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     --self.soundMgr:PlaySound("stop") -- 停止下注音频暂缺
+    -- 停止动物动画
     self:StopIdleStateAnim()
-    local cur_result_list = data.cur_result_list
     local anim_result_list = data.anim_result_list
     if anim_result_list then
         CoroutineHelper.StartCoroutine(function ()
             for i=1,#anim_result_list do
                 local indexdata = anim_result_list[i]
-                local from,to = indexdata.from,indexdata.to
+                local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
+                local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
                 --print('indexs:',from,' ',to)
                 local round = 2
                 local showTime = self.normal_show_time
@@ -514,11 +484,14 @@ function Class:OnShowState(data)
                     round = 0
                     showTime = self.shark_more_show_time
                 end
-                yield(self:DoTweenShowResultAnim(from, to, round, showTime/1000))--播放转盘动画
+                yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime/1000))--播放转盘动画
                 --print('show one end item_id = ', cur_result_list[1])
-                ui.roadScrollView:InsertItem(ui:GetHistoryIconData(cur_result_list[1]))
-                tremove(cur_result_list, i)
+                
             end
+            -- 开奖结束再更新record，避免剧透
+            local recordData = data.history_record
+            local resultInfo = recordData.ressult_info_list[1]
+            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(resultInfo.color_id, resultInfo.animal_id, recordData.win_enjoyGameType, recordData.win_exType))
         end)
     end
 end

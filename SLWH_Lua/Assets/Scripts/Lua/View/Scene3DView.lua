@@ -43,8 +43,10 @@ function Class:__init(roomdata)
 
     local View = GameObject.Find('View')
     self.gameObject = View
-    View:GetComponent(typeof(LuaInitHelper)):Init(self)
-    
+    local initHelper = View:GetComponent(typeof(LuaInitHelper))
+    initHelper:Init(self)
+    self.colorMeshMaterialList = {}
+    initHelper:ObjectsSetToLuaTable(self.colorMeshMaterialList)
 
     -- UI
     self.mainUI = MainUI.Create(self.mainUIInitHelper, roomdata, EditorAssetLoader)
@@ -101,6 +103,14 @@ function Class:__init(roomdata)
     end
     self.runItemDataList = runItemDataList
 
+    -- 内圈颜色
+    local colorMeshList = {}
+    local colorCount = self.colorRootTransform.childCount
+    for i = 0, colorCount-1, 1 do
+        local colorMesh = self.colorRootTransform:GetChild(i):GetComponent("MeshRenderer"),
+        tinsert(colorMeshList, colorMesh)
+    end
+    self.colorMeshList = colorMeshList
     -- 下注区
     local betAreaBtnInitHelpers = self.betAreaBtnsInitHelper.objects
     local betAreaList = {}

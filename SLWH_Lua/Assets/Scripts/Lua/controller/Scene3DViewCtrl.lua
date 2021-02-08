@@ -329,28 +329,48 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     time = time or GameConfig.ShowAnimationTime
     --print('DoTweenShowResultAnim round:'..round..' time:'..time)
     local ui = self.ui
-    print("TODO：开转")
-    local runItemDataList = ui.runItemDataList
-    local len = #runItemDataList
+    print("TODO：颜色开转")
+    local colorDataList = ui.colorDataList
+    local len = #colorDataList
     local colorTotalWillRunCount = colorToindex - colorFromindex + len*round
     if colorTotalWillRunCount < len then
         colorTotalWillRunCount=colorTotalWillRunCount+len
     end
 
-    local startRot = colorFromindex*15
-    self.curIconPosIndex = startRot
-    local lastHitIndex = startRot
+    local colorStartRot = colorFromindex*15
     local arrow_transform = ui.arrow_transform
     local arrowTotalRot = colorTotalWillRunCount*15
-    arrow_transform.eulerAngles = Vector3(0, startRot, 0)
-
-
+    arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
 
-    return CoroutineHelper.StartCoroutine(function ()
+    CoroutineHelper.StartCoroutine(function ()
         yield(arrow_transform:DORotate(Vector3(0, arrowTotalRot, 0), time-GameConfig.ShowResultTime)
         :SetEase(curve):WaitForCompletion())
-        local animaldata = runItemDataList[toindex]
+        local colordata = colorDataList[colorToindex]
+        colordata.animator:SetActive(true)  -- 播放闪烁动画
+    end)
+
+    -- 
+    print("TODO：动物开转")
+    local runItemDataList = ui.runItemDataList
+    local len = #runItemDataList
+    local animalTotalWillRunCount = animalToindex - animalFromindex + len*round
+    if animalTotalWillRunCount < len then
+        animalTotalWillRunCount=animalTotalWillRunCount+len
+    end
+
+    local animalStartRot = animalFromindex*15
+    local animalRotRoot_transform = ui.animal_rotate_root_transform
+    local animalTotalRot = animalTotalWillRunCount*15
+    animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
+    local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
+
+    CoroutineHelper.StartCoroutine(function ()
+        yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), time-GameConfig.ShowResultTime)
+        :SetEase(curve):WaitForCompletion())
+        local animaldata = runItemDataList[animalToindex]
+        animaldata.animatorHelper:Play("Victory") 
+        
         --
         self.ui.winParticleTransform.localPosition = animaldata.transform.localPosition
         self.ui.winParticleTransform.gameObject:SetActive(true)
@@ -360,6 +380,8 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         -- 
         self.ui.winParticleTransform.gameObject:SetActive(false)
     end)
+
+    
 end
 
 function Class:PlayIdleStateAnim()
@@ -453,7 +475,7 @@ function Class:OnBetState(data)
 
     -- 设置颜色
     for index, value in ipairs(colorArray) do
-        ui.colorMeshList[index].material = ui.colorMeshMaterialList[value]
+        ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
     end
     -- 设置倍率（包含庄闲和）
     local count = #ui.betAreaList

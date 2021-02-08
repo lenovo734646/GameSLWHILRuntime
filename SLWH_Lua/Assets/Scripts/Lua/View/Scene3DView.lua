@@ -104,13 +104,16 @@ function Class:__init(roomdata)
     self.runItemDataList = runItemDataList
 
     -- 内圈颜色
-    local colorMeshList = {}
+    local colorDataList = {}
     local colorCount = self.colorRootTransform.childCount
     for i = 0, colorCount-1, 1 do
-        local colorMesh = self.colorRootTransform:GetChild(i):GetComponent("MeshRenderer"),
-        tinsert(colorMeshList, colorMesh)
+        local data = {
+            colorMesh = self.colorRootTransform:GetChild(i):GetComponent("MeshRenderer"),
+            animator = self.colorRootTransform:GetChild(i):GetComponent("Animator"),
+        }
+        tinsert(colorDataList, data)
     end
-    self.colorMeshList = colorMeshList
+    self.colorDataList = colorDataList
     -- 下注区
     local betAreaBtnInitHelpers = self.betAreaBtnsInitHelper.objects
     local betAreaList = {}

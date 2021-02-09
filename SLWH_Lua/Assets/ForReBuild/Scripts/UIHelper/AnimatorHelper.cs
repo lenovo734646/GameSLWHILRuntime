@@ -77,10 +77,34 @@ namespace ForReBuild.UIHelper
             return 0;
         }
 
+        public Animator GetAnimator()
+        {
+            return animator;
+        }
+
         public void SetSpeed( float speed)
         {
-            var curveValue = animator.GetFloat("Curve_Run_1");
             animator.speed = speed;
+        }
+
+        public void SetBool(string name, bool v)
+        {
+            animator.SetBool(name, v);
+        }
+
+        public void SetInteger(string name, int v)
+        {
+            animator.SetInteger(name, v);
+        }
+
+        public void SetFloat(string name, float v)
+        {
+            animator.SetFloat(name, v);
+        }
+
+        public void SetTrigger(string name)
+        {
+            animator.SetTrigger(name);
         }
 
         public void SetCurve(string name)

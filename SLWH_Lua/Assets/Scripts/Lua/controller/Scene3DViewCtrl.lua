@@ -256,8 +256,8 @@ function Class:InitAnimalAnimation()
                 while true do
                     local delayTime = RandomFloat(0,2)
                     yield(WaitForSeconds(delayTime))
-                    data.animatorHelper:Play("Idel")
-                    yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel")))
+                    data.animatorHelper:Play("Idel1")
+                    yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel1")))
                 end
             end)
         end
@@ -270,6 +270,7 @@ function Class:InitAnimalAnimation()
         data.PlayShowAsync = function () -- 跟中奖同时播放
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
+            winShowData.animatorHelper:Play("Victory")
             self.soundMgr:PlaySound("SLWH_"..GameConfig.WinSound[winShowData.item_id])
             -- 等待显示中奖结算
             yield(WaitForSeconds(self.ui.resultPanel:ShowResult(winShowData.item_id, GameConfig.Ratio[winShowData.item_id], 
@@ -365,20 +366,17 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
 
-    CoroutineHelper.StartCoroutine(function ()
+    return CoroutineHelper.StartCoroutine(function ()
         yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), time-GameConfig.ShowResultTime)
         :SetEase(curve):WaitForCompletion())
         local animaldata = runItemDataList[animalToindex]
-        animaldata.animatorHelper:Play("Victory") 
-        
-        --
-        self.ui.winParticleTransform.localPosition = animaldata.transform.localPosition
-        self.ui.winParticleTransform.gameObject:SetActive(true)
+        animaldata.animatorHelper:Play("Victory") -- 中奖动物播放胜利动画
+        ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
+        ui.winStageAnimal:DOPlayForward()   -- 播放中奖动物升起动画
+
         yield()
 
         yield(animaldata.PlayShowAsync())
-        -- 
-        self.ui.winParticleTransform.gameObject:SetActive(false)
     end)
 
     

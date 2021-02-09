@@ -113,6 +113,7 @@ namespace SLWH
 
             transform.eulerAngles = new Vector3(1, 1, 1);
             transform.DORotate(new Vector3(0, 720, 0), 1).SetEase(Ease.InBounce);
+
             //// 二进制
             //print(Convert.ToString(1, 2));
             //print(Convert.ToString(2, 2));
@@ -249,18 +250,20 @@ namespace SLWH
             if (GUI.Button(new Rect(200, 300, 100, 50), "ChangeMaterial"))
             {
 
-                baoshi.GetComponent<MeshRenderer>().material = materials[materialIndex];
-                materialIndex++;
-                if (materialIndex >= materials.Length)
-                    materialIndex = 0;
+                //baoshi.GetComponent<MeshRenderer>().material = materials[materialIndex];
+                //materialIndex++;
+                //if (materialIndex >= materials.Length)
+                //    materialIndex = 0;
+                tweenAnimation.DOPlayForward();
+
             }
 
 
                 if (GUI.Button(new Rect(10, 450, 100, 50), "Backwards"))
             {
-                tweenAnimation.hasOnComplete = true;
-                tweenAnimation.onComplete = new UnityEngine.Events.UnityEvent();
-                tweenAnimation.onComplete.AddListener(() => { tweenAnimation.gameObject.SetActive(false); print("播放结束！"); });
+                //tweenAnimation.hasOnComplete = true;
+                //tweenAnimation.onComplete = new UnityEngine.Events.UnityEvent();
+                //tweenAnimation.onComplete.AddListener(() => { tweenAnimation.gameObject.SetActive(false); print("播放结束！"); });
                 tweenAnimation.DOPlayBackwards();
                 //if(bright)
                 //    Debug.Log("右键点击按钮");

@@ -1,3 +1,5 @@
+local Tweening = CS.DG.Tweening
+
 local Config={
     debug = true,
     ShowAnimationTime = 8,
@@ -21,12 +23,12 @@ local Config={
     end,
 
     Ease = {
-        DG.Tweening.Ease.InOutSine, DG.Tweening.Ease.InOutQuad,
-        DG.Tweening.Ease.InOutQuad, DG.Tweening.Ease.InOutCubic,
-        DG.Tweening.Ease.InOutCubic, DG.Tweening.Ease.InOutQuart,
-        DG.Tweening.Ease.InOutQuart, DG.Tweening.Ease.InOutQuint,
-        DG.Tweening.Ease.InOutExpo, DG.Tweening.Ease.InOutFlash,
-        DG.Tweening.Ease.InOutCirc, DG.Tweening.Ease.InOutFlash
+        Tweening.Ease.InOutSine, Tweening.Ease.InOutQuad,
+        Tweening.Ease.InOutQuad, Tweening.Ease.InOutCubic,
+        Tweening.Ease.InOutCubic, Tweening.Ease.InOutQuart,
+        Tweening.Ease.InOutQuart, Tweening.Ease.InOutQuint,
+        Tweening.Ease.InOutExpo, Tweening.Ease.InOutFlash,
+        Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
     },
 }
 

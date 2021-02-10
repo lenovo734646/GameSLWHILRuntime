@@ -312,7 +312,7 @@ function Class:OnStateChangeNtf(data)
     self.state = state
     self.ui.mainUI:SetWaitNextStateTip(false)
     if state == 1 then --下注
-        self:OnBetState()
+        self:OnBetState(data)
     elseif state == 2 then --开奖
         self:OnShowState(data)
     else -- state == 3 空闲
@@ -343,12 +343,12 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     local arrowTotalRot = colorTotalWillRunCount*15
     arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-
+    local colordata = colorDataList[colorToindex]
     CoroutineHelper.StartCoroutine(function ()
         yield(arrow_transform:DORotate(Vector3(0, arrowTotalRot, 0), time-GameConfig.ShowResultTime)
         :SetEase(curve):WaitForCompletion())
-        local colordata = colorDataList[colorToindex]
-        colordata.animator:SetActive(true)  -- 播放闪烁动画
+        
+        colordata.animator.enabled = true  -- 播放闪烁动画
     end)
 
     -- 
@@ -377,6 +377,9 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         yield()
 
         yield(animaldata.PlayShowAsync())
+        animaldata.animatorHelper:Play("Idel1")
+        ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+        colordata.animator.enabled = false  -- 停止播放闪烁动画
     end)
 
     
@@ -648,5 +651,7 @@ function Class:OnReceiveBetAck(data)
         end
     end
 end
+
+
 
 return _ENV

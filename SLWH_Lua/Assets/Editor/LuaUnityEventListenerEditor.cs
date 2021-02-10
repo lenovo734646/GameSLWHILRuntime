@@ -8,14 +8,16 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 [CustomEditor(typeof(LuaUnityEventListener))]
-public class LuaUnityEventListenerEditor : Editor {
+public class LuaUnityEventListenerEditor : Editor
+{
 
 
     //float time = 0;
     List<KeyValuePair<string, Object>> uiobjs = new List<KeyValuePair<string, Object>>();
     //List<Toggle> toggles;
 
-    public override void OnInspectorGUI() {
+    public override void OnInspectorGUI()
+    {
         var targetcom = (LuaUnityEventListener)target;
         DrawDefaultInspector();
 
@@ -28,30 +30,36 @@ public class LuaUnityEventListenerEditor : Editor {
         //}
 
         findAllRef(targetcom);
-        if (uiobjs.Count>0)
+        if (uiobjs.Count > 0)
             GUILayout.Label("此监听被以下组件引用(前面是被引用的函数)");
 
-        foreach (var p in uiobjs) {
+        foreach (var p in uiobjs)
+        {
             var uiobj = p.Value;
-            EditorGUILayout.ObjectField(p.Key,uiobj,uiobj.GetType(),false);
+            EditorGUILayout.ObjectField(p.Key, uiobj, uiobj.GetType(), false);
         }
 
-        if (GUILayout.Button("添加Btton事件监听(CallLuaByGameObjectName)")) {
+        if (GUILayout.Button("添加Btton事件监听(CallLuaByGameObjectName)"))
+        {
             findAllRef(targetcom);
             var root = targetcom.transform.root;
             var btns = root.GetComponentsInChildren<Button>(true);
             var window = (ObjectsSeletWindow)EditorWindow.GetWindow(typeof(ObjectsSeletWindow));
             window.targetList.AddRange(btns);
-            foreach (var p in uiobjs) {
-                foreach (var btn in window.targetList) {
-                    if (btn == p.Value) {
+            foreach (var p in uiobjs)
+            {
+                foreach (var btn in window.targetList)
+                {
+                    if (btn == p.Value)
+                    {
                         window.targetList.Remove(btn);
                         break;
                     }
                 }
             }
-            
-            window.onClose = obj => {
+
+            window.onClose = obj =>
+            {
                 var btn = obj as Button;
                 UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.CallLuaByGameObjectName, btn);
                 uiobjs.Clear();
@@ -59,22 +67,27 @@ public class LuaUnityEventListenerEditor : Editor {
             };
             window.Show();
         }
-        if (GUILayout.Button("添加Btton事件监听(OnCustumObjectEvent)")) {
+        if (GUILayout.Button("添加Btton事件监听(OnCustumObjectEvent)"))
+        {
             findAllRef(targetcom);
             var root = targetcom.transform.root;
             var btns = root.GetComponentsInChildren<Button>(true);
             var window = (ObjectsSeletWindow)EditorWindow.GetWindow(typeof(ObjectsSeletWindow));
             window.targetList.AddRange(btns);
-            foreach (var p in uiobjs) {
-                foreach (var btn in window.targetList) {
-                    if (btn == p.Value) {
+            foreach (var p in uiobjs)
+            {
+                foreach (var btn in window.targetList)
+                {
+                    if (btn == p.Value)
+                    {
                         window.targetList.Remove(btn);
                         break;
                     }
                 }
             }
 
-            window.onClose = obj => {
+            window.onClose = obj =>
+            {
                 var btn = obj as Button;
                 UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.OnCustumObjectEvent, btn);
                 uiobjs.Clear();
@@ -119,9 +132,10 @@ public class LuaUnityEventListenerEditor : Editor {
                 }
             }
 
-            window.onClose = go => {
+            window.onClose = go =>
+            {
                 var btn = go.GetComponent<Button>();
-                if(btn)
+                if (btn)
                 {
                     Debug.Log("btn = " + btn.name);
                     if (IsAddedMethedName(btn.onClick, "CallLuaByGameObjectName"))
@@ -134,7 +148,7 @@ public class LuaUnityEventListenerEditor : Editor {
                     EditorUtility.SetDirty(targetcom);
                 }
                 var tog = go.GetComponent<Toggle>();
-                if(tog)
+                if (tog)
                 {
                     Debug.Log("tog = " + tog.name);
                     if (IsAddedMethedName(tog.onValueChanged, "CallLuaByGameObjectName"))
@@ -142,12 +156,12 @@ public class LuaUnityEventListenerEditor : Editor {
                         Debug.LogWarning($"{tog.name} 已添加 CallLuaByGameObjectName 跳过执行");
                         return;
                     }
-                        
+
                     UnityEventTools.AddObjectPersistentListener(tog.onValueChanged, targetcom.CallLuaByGameObjectName, tog);
                     uiobjs.Clear();
                     EditorUtility.SetDirty(targetcom);
                 }
-                if(btn == null && tog == null)
+                if (btn == null && tog == null)
                 {
                     Debug.LogError($"GameObject {go.name} 不包含Button组件或Toggle组件！");
                 }
@@ -163,11 +177,11 @@ public class LuaUnityEventListenerEditor : Editor {
             foreach (var btn in buttons)
             {
                 var e = btn.onClick;
-                for (var i = 0; i < e.GetPersistentEventCount(); )
+                for (var i = 0; i < e.GetPersistentEventCount();)
                 {
                     var targetObj = e.GetPersistentTarget(i);
                     var actionName = e.GetPersistentMethodName(i);
-                    
+
                     if (targetObj == null)
                     {
                         Debug.LogWarning($"组件{btn.name}onClick Mathod Target is Missing MethonName = {actionName}，事件已移除");
@@ -201,11 +215,14 @@ public class LuaUnityEventListenerEditor : Editor {
 
         //}
         HashSet<string> eventNameSet = new HashSet<string>();
-        if (GUILayout.Button("把CallLuaByGameObjectName事件生成Lua代码并复制到剪贴板")) {
+        if (GUILayout.Button("把CallLuaByGameObjectName事件生成Lua代码并复制到剪贴板"))
+        {
             string s = "";
-            foreach (var p in uiobjs) {
+            foreach (var p in uiobjs)
+            {
                 var uiobj = p.Value;
-                if(p.Key== "CallLuaByGameObjectName") {
+                if (p.Key == "CallLuaByGameObjectName")
+                {
                     if (eventNameSet.Contains(uiobj.name)) continue;
                     eventNameSet.Add(uiobj.name);
                     s += $"function Class:On_{uiobj.name}_Event({uiobj.name})\n    \n";
@@ -215,29 +232,37 @@ public class LuaUnityEventListenerEditor : Editor {
             GUIUtility.systemCopyBuffer = s;
         }
 
-        }
+    }
 
-    void findAllRef(LuaUnityEventListener luaUnityEventListener) {
+    void findAllRef(LuaUnityEventListener luaUnityEventListener)
+    {
         if (uiobjs.Count != 0) return;
         var root = luaUnityEventListener.transform.root;
         var btns = root.GetComponentsInChildren<Button>(true);
-        foreach (var btn in btns) {
-            if (isContainListener(luaUnityEventListener, btn.onClick, out string refname)) {
+        foreach (var btn in btns)
+        {
+            if (isContainListener(luaUnityEventListener, btn.onClick, out string refname))
+            {
                 uiobjs.Add(new KeyValuePair<string, Object>(refname, btn));
             }
         }
         var toggles = root.GetComponentsInChildren<Toggle>(true);
-        foreach (var toggle in toggles) {
-            if (isContainListener(luaUnityEventListener, toggle.onValueChanged, out string refname)) {
+        foreach (var toggle in toggles)
+        {
+            if (isContainListener(luaUnityEventListener, toggle.onValueChanged, out string refname))
+            {
                 uiobjs.Add(new KeyValuePair<string, Object>(refname, toggle));
             }
         }
     }
 
-    bool isContainListener(LuaUnityEventListener luaUnityEventListener, UnityEventBase unityEventBase, out string refname) {
+    bool isContainListener(LuaUnityEventListener luaUnityEventListener, UnityEventBase unityEventBase, out string refname)
+    {
         refname = "";
-        for (var i = 0;i< unityEventBase.GetPersistentEventCount(); i++) {
-           if(unityEventBase.GetPersistentTarget(i)==luaUnityEventListener) {
+        for (var i = 0; i < unityEventBase.GetPersistentEventCount(); i++)
+        {
+            if (unityEventBase.GetPersistentTarget(i) == luaUnityEventListener)
+            {
                 refname = unityEventBase.GetPersistentMethodName(i);
                 return true;
             }

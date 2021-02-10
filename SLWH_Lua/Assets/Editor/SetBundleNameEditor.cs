@@ -74,6 +74,12 @@ public class SetBundleNameEditor : EditorWindow
         {
             pathList.Clear();
         }
+
+        GUILayout.Space(10);
+        if (GUILayout.Button("清空所选文件夹下资源的Bundle标签"))
+        {
+            SetBundleName("");
+        }
         GUILayout.EndVertical();
 
     }

@@ -146,13 +146,13 @@ function Class:OnSceneReady()
 
     -- 其他玩家下注广播
     PBHelper.AddListener('OtherPlayerSetBetNtf', function (data)
-        local item_id = data.info.animal_id
+        local item_id = data.info.index_id
         
         --print("OtherPlayerSetBetNtf...", item_id, total_bet)
         if item_id == -1 then   -- 清除筹码返回
             local totalBetInfoList = data.room_tatol_bet_info_list
             for key, betInfo in pairs(totalBetInfoList) do
-                local id = betInfo.animal_id
+                local id = betInfo.index_id
                 local total_bet = betInfo.total_bet
                 --print("清除下注 id = ", id, total_bet)
                 self.TotalBet[id] = total_bet
@@ -181,10 +181,10 @@ function Class:OnSceneReady()
     local selfTotalBet = roomdata.self_bet_list
     local totalBet = roomdata.room_tatol_bet_info_list
     for _, info in pairs(selfTotalBet) do
-        self.selfTotalBet[info.animal_id] = info.total_bet
+        self.selfTotalBet[info.index_id] = info.total_bet
     end
     for _, info in pairs(totalBet) do
-        self.TotalBet[info.animal_id] = info.total_bet
+        self.TotalBet[info.index_id] = info.total_bet
     end
 
     self:OnStateChangeNtf({ left_time = left_time, state = state })
@@ -271,11 +271,12 @@ function Class:InitAnimalAnimation()
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
             winShowData.animatorHelper:Play("Victory")
-            self.soundMgr:PlaySound("SLWH_"..GameConfig.WinSound[winShowData.item_id])
+            self.soundMgr:PlaySound(GameConfig.WinSound[winShowData.item_id])
             -- 等待显示中奖结算
-            yield(WaitForSeconds(self.ui.resultPanel:ShowResult(winShowData.item_id, GameConfig.Ratio[winShowData.item_id], 
+            local resultPanel = self.ui.mainUI.resultPanel
+            yield(WaitForSeconds(resultPanel:ShowResult(winShowData.item_id, GameConfig.Ratio[winShowData.item_id], 
                                                                 self.win, self.totalWin, self.bankerWin, self.bankerTotalWin)))
-            self.ui.resultPanel:HideResult()
+            resultPanel:HideResult()
             -- 同步玩家分数
             self:OnMoneyChange(self.selfScore)
             winShowData.gameObject:SetActive(false)
@@ -343,11 +344,11 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     local arrowTotalRot = colorTotalWillRunCount*15
     arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-    local colordata = colorDataList[colorToindex]
+    
     CoroutineHelper.StartCoroutine(function ()
         yield(arrow_transform:DORotate(Vector3(0, arrowTotalRot, 0), time-GameConfig.ShowResultTime)
         :SetEase(curve):WaitForCompletion())
-        
+        local colordata = colorDataList[colorToindex]
         colordata.animator.enabled = true  -- 播放闪烁动画
     end)
 
@@ -379,6 +380,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         yield(animaldata.PlayShowAsync())
         animaldata.animatorHelper:Play("Idel1")
         ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+        local colordata = colorDataList[colorToindex]
         colordata.animator.enabled = false  -- 停止播放闪烁动画
     end)
 
@@ -470,19 +472,26 @@ function Class:OnBetState(data)
     ui.viewEventBroadcaster:Broadcast('betState')
     self.soundMgr:PlaySound("start_bet")
     self:DoCheckForBetButtonState()--判断并禁用不能钱不够的筹码按钮
-    -- 设置动物倍率和颜色
+    -- 设置动物倍率和颜色(下注阶段进入颜色和倍率是nil，没传过来)
     local colorArray = data.color_array
     local ratioArray = data.ratio_array
+    if colorArray ~= nil then
+        -- 设置颜色
+        for index, value in ipairs(colorArray) do
+            print("设置颜色：",value)
+            ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
+        end
+    end
+    if ratioArray ~= nil then
+        -- 设置倍率（包含庄闲和）
+        local count = #ui.betAreaList
+        for i = 1, count, 1 do
+            print("设置倍率：",ratioArray[i])
+            ui.betAreaList[i].ratioText.text = ratioArray[i]
+        end
+    end
 
-    -- 设置颜色
-    for index, value in ipairs(colorArray) do
-        ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
-    end
-    -- 设置倍率（包含庄闲和）
-    local count = #ui.betAreaList
-    for i = 1, count, 1 do
-        ui.betAreaList[i].ratioText.text = ratioArray[i]
-    end
+
     --
 end
 

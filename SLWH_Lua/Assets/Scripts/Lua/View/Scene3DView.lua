@@ -146,10 +146,10 @@ function Class:__init(roomdata)
         viewItemData.animalImg.sprite = itemdata.animalSpr
         viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
         viewItemData.exTypeImg.sprite = itemdata.exTypeSpr
-        if itemdata.spSpr == nil then
-            viewItemData.spImg.gameObject:SetActive(false)
+        if itemdata.exTypeSpr == nil then
+            viewItemData.exTypeImg.gameObject:SetActive(false)
         else
-            viewItemData.spImg.gameObject:SetActive(true)
+            viewItemData.exTypeImg.gameObject:SetActive(true)
         end
         
     end
@@ -200,8 +200,8 @@ function Class:GetHistoryIconData(color_id, animal_id, enjoyType_id, ex_id)
     return {
         colorSpr = self.roadColorSprites[color_id],
         animalSpr = self.roadAnimalSprites[animal_id],
-        enjoyTypeSpr = self.roadTypeSprites[enjoyType_id],
-        exTypeSpr = self.roadSPSprites[ex_id],
+        enjoyTypeSpr = self.roadEnjoyTypeSprites[enjoyType_id],
+        exTypeSpr = self.roadExSprites[ex_id],
     }
 end
 

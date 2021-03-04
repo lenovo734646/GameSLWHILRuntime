@@ -182,8 +182,8 @@ namespace SLWH
             //{
             //    print($"color = {colorCountGroup[i].colorType}, count = {colorCountGroup[i].count}");
             //}
-
-            gameObject.AddComponent<AudioListener>();
+            
+            //gameObject.AddComponent<AudioListener>();
         }
 
         // Update is called once per frame

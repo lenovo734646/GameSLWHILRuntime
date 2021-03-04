@@ -8,7 +8,10 @@ local Config={
     Ratio = {40, 30, 20, 10, 5, 5, 5, 5}, --下标从1开始
     Color ={ Red = 1, Green = 2, Yellow = 3, SanYuan = 4, SiXi = 5 },  -- 颜色定义
     -- 胜利音效名字（根据itemID）
-    WinSound = {"shizi", "laoying", "xiongmao", "kongque", "houzi", "gezi", "tuzi", "yanzi"},
+    WinSound = {"red_lion", "red_panda", "red_monkey", "red_rabbit", 
+                "green_lion", "green_panda", "green_monkey", "green_rabbit",
+                "yellow_lion", "yellow_panda", "yellow_monkey", "yellow_rabbit",
+                "enjoygame_zhuang", "enjoygame_xian", "enjoygame_he"},
 
     debugPBPath = [[E:\WorkRoot\fll3d_support\protobuf\config\]],
 

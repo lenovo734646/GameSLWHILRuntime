@@ -61,16 +61,15 @@ LoopType = CS.DG.Tweening.LoopType
 SysDefines = CS.SysDefines
 UIManager = CS.UIManager
 GameController = CS.GameController
-AudioManager = CS.AudioManager.Instance
 ObjectPoolManager = CS.ObjectPoolManager.Instance
 CoroutineController = CS.CoroutineController.Instance
 UnityHelper = CS.UnityHelper
 
 -- OSAScrollVeiw 
 OSA = OSA or{}
-OSA.OSAScrollView = CS.OSAScrollView.OSAScrollView
-OSA.MyParam = CS.OSAScrollView.MyParam
-OSA.MyItemViewHolder = CS.OSAScrollView.MyItemViewHolder
+OSA.OSAScrollView = CS.OSAHelper.OSAScrollView
+OSA.MyParam = CS.OSAHelper.MyParam
+OSA.MyItemViewHolder = CS.OSAHelper.MyItemViewHolder
 OSA.ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 OSA.ContentGravity = CS.Com.TheFallenGames.OSA.Core.BaseParams.ContentGravity
 

@@ -58,11 +58,6 @@ function Class:Init()
     self.OSAScrollView:Init()
 end
 
-function Class:AddItemAndSmoothScrollTo(index, duration, progressFunc, onDoneFunc)
-    self:OnAddItemRequested(index)
-    self:SmoothScrollTo(self.OSAScrollView:GetItemsCount(), duration, progressFunc, onDoneFunc)
-end
-
 function Class:SmoothScrollTo(index, duration, progressFunc, onDoneFunc)
     if index < 0 or index +1 > self.OSAScrollView:GetItemsCount() then
         return
@@ -76,6 +71,16 @@ function Class:SmoothScrollTo(index, duration, progressFunc, onDoneFunc)
     end
     --
     return self.OSAScrollView:SmoothScrollTo(index, dur, 0.1, 0.1, progressFunc, onDoneFunc, true)
+end
+
+function Class:SmoothScrollToEnd(dur)
+    dur = dur or 0.2
+    self:SmoothScrollTo(self.OSAScrollView:GetItemsCount()-1, dur)
+end
+
+function Class:SmoothScrollToStart(dur)
+    dur = dur or 0.2
+    self:SmoothScrollTo(0, dur)
 end
 
 function Class:InsertItemAuto(index)

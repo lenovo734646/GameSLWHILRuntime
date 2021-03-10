@@ -93,8 +93,6 @@ namespace SLWH
             string[] strArray = { "而送灯","sdf", "123" };
             print($"strArray = {strArray}");
 
-            var sprs = ResHelper.LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", true);
-            var ss = EditorAssetLoader.LoadEditorAssetAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", false);
 
             // 二维数组
             //for (int i = 0; i < array.GetLength(0); i++)

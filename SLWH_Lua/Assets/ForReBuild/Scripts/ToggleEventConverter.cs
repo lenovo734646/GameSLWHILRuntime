@@ -21,10 +21,8 @@ public class ToggleEventConverter : MonoBehaviour {
         }
     }
 
-    public void OnToggleValueReverse(bool b)
-    {
-        if(!b)
-        {
+    public void OnToggleValueReverse(bool b) {
+        if (!b) {
             onValueChangedReverse?.Invoke(b);
         }
     }

@@ -36,10 +36,8 @@ public class ResHelper {
         return r;
     }
 
-    public static Object[] LoadAll(string path, bool rawPath = false)
-    {
-        if (!rawPath)
-        {
+    public static Object[] LoadAll(string path, bool rawPath = false) {
+        if (!rawPath) {
             path = SysDefines.AB_BASE_PATH + path;
         }
         var r = Resources.LoadAll(path, typeof(Sprite));
@@ -48,5 +46,4 @@ public class ResHelper {
 #endif
         return r;
     }
-
 }

@@ -1,5 +1,5 @@
 
-local _G = _G
+local _G, g_Env = _G, g_Env
 local class = class
 local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE,tonumber =
       print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE,tonumber
@@ -23,13 +23,12 @@ local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
 local RandomInt = UnityHelper.RandomInt
-local RandomFloat = UnityEngine.Random.Range
+local RandomFloat = UnityHelper.RandomFloat
 
 local Input = UnityEngine.Input
 local clock = os.clock
 
-local SoundManager = require'controller.SoundManager'
-
+local AudioManager = AudioManager or CS.AudioManager
 local SubGame_Env=SubGame_Env
 local ConvertNumberToString = SubGame_Env.ConvertNumberToString
 
@@ -50,7 +49,7 @@ function Class:__init(ui,View,roomdata)
     self.roomdata = roomdata
     _G.PrintTable(self.histroyList)
     View:GetComponent(typeof(LuaUnityEventListener)):Init(self)
-    View:GetComponent(typeof(KeyListener)):Init(self)
+    View:GetComponent(typeof(KeyEventListener)):Init(self)
     --
     self.bet_config_array = roomdata.bet_config_array
     self.self_user_id = roomdata.self_user_id
@@ -66,9 +65,6 @@ function Class:__init(ui,View,roomdata)
     self:OnMoneyChange(SubGame_Env.playerRes.currency)
 
     self.timeStamp = clock()
-    -- 音乐音效管理
-    self.soundMgr = SoundManager.Create(self.ui.soundManagerInitHelper)
-    self.soundMgr:PlayBGMusic()
 
     --监听下注选择事件
     ui.betSelectBtnsEventListener:Init{
@@ -97,12 +93,12 @@ end
 -- showRedNuber: 是否显示红色数字，下注状态就显示，这里其实是gameState
 function Class:PlayCountDownSound(time)
     if time > 5 then
-        self.soundMgr:PlaySound("TimerTick")
+        AudioManager.Instance:PlaySoundEff2D("TimerTick")
     else
         if self:IsBetState() then
-            self.soundMgr:PlaySound("alert")
+            AudioManager.Instance:PlaySoundEff2D("alert")
         else
-            self.soundMgr:PlaySound("TimerTick")
+            AudioManager.Instance:PlaySoundEff2D("TimerTick")
         end
     end
 end
@@ -140,7 +136,7 @@ function Class:OnSceneReady()
         self.bankerScore = data.banker_score
 
         if self.win > 0 then
-            self.soundMgr:PlaySound("win_bet")
+            AudioManager.Instance:PlaySoundEff2D("win_bet")
         end
     end)
 
@@ -271,7 +267,7 @@ function Class:InitAnimalAnimation()
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
             winShowData.animatorHelper:Play("Victory")
-            self.soundMgr:PlaySound(GameConfig.WinSound[winShowData.item_id])
+            AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[winShowData.item_id])
             -- 等待显示中奖结算
             local resultPanel = self.ui.mainUI.resultPanel
             yield(WaitForSeconds(resultPanel:ShowResult(winShowData.item_id, GameConfig.Ratio[winShowData.item_id], 
@@ -470,7 +466,7 @@ end
 function Class:OnBetState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('betState')
-    self.soundMgr:PlaySound("start_bet")
+    AudioManager.Instance:PlaySoundEff2D("start_bet")
     self:DoCheckForBetButtonState()--判断并禁用不能钱不够的筹码按钮
     -- 设置动物倍率和颜色(下注阶段进入颜色和倍率是nil，没传过来)
     local colorArray = data.color_array
@@ -499,7 +495,7 @@ end
 function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
-    --self.soundMgr:PlaySound("stop") -- 停止下注音频暂缺
+    --AudioManager.Instance:PlaySoundEff2D("stop") -- 停止下注音频暂缺
     -- 停止动物动画
     self:StopIdleStateAnim()
     local anim_result_list = data.anim_result_list
@@ -534,7 +530,7 @@ function Class:OnFreeState()
     ui.viewEventBroadcaster:Broadcast('freeState')
     self:PlayIdleStateAnim()
     self:__ResetBetScore()
-    self.soundMgr:PlaySound("vs_alert")
+    AudioManager.Instance:PlaySoundEff2D("vs_alert")
 end
 
 function Class:__ResetBetScore()
@@ -647,7 +643,7 @@ function Class:OnReceiveBetAck(data)
             betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
             self.betSnapShot[item_id] = total_bet
             self.selfTotalBet[item_id] = 0
-            self.soundMgr:PlaySound("bet")
+            AudioManager.Instance:PlaySoundEff2D("bet")
         end
         print("下注成功返回玩家当前分数：data.self_score")
         self:OnMoneyChange(data.self_score)

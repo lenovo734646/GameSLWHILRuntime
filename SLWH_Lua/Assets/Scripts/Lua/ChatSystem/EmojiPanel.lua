@@ -26,7 +26,7 @@ function Class:__init(panel, inputField, emojis, itemPrefab)
         return
     end
     self.inputField = inputField
-    self.emojiCount = emojis.Length-1
+    self.emojiCount = #emojis
     if emojis ~= nil and self.emojiCount > 0 then
         for i = 1, self.emojiCount do
             local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)

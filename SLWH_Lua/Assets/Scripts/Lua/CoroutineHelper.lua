@@ -1,13 +1,22 @@
 local util = require 'xlua.util'
 
+
+
 local cs_coroutine_runner = gLuaEntryCom
+
+
 
 return {
     StartCoroutine = function(...)
 	    return cs_coroutine_runner:StartCoroutine(util.cs_generator(...))
 	end;
 
+	StartCoroutineAuto = function (component, ...)
+		return component:StartCoroutine(util.cs_generator(...))
+	end,
+
 	StopCoroutine = function(coroutine)
 	    cs_coroutine_runner:StopCoroutine(coroutine)
-	end
+	end,
+
 }, cs_coroutine_runner

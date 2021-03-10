@@ -29,6 +29,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using XLua;
 using ZXing;
+using static XLua.LuaEnv;
 
 public static class UnityHelper
 {
@@ -101,6 +102,11 @@ public static class UnityHelper
     //是否点击在UI控件上，用于判断UI点穿
     public static bool IsPointerOverUIObject()
     {
+        return IsPointerOverUnityUIObject();
+    }
+
+    //UI层是5
+    public static bool IsPointerOverUnityUIObject(int filterLayer = 5) {
         if (EventSystem.current == null)
             return false;
 
@@ -113,13 +119,14 @@ public static class UnityHelper
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
 
         var count = results.Count - 1;
-        for (int i = count; i >= 0; i--)
-        {
-            if (results[i].gameObject.layer != 5)
-                results.RemoveAt(i);
+        var rcount = 0;
+        if (filterLayer > 0) {
+            for (int i = count; i >= 0; i--) {
+                if (results[i].gameObject.layer == filterLayer)
+                    rcount++;
+            }
         }
-
-        return results.Count > 0;
+        return rcount > 0;
     }
 
     /// <summary>
@@ -656,7 +663,7 @@ public static class UnityHelper
         return result.ToString();
     }
     public static string CalFileMd5(string filename) {
-        return CalMd5(File.ReadAllBytes(filename));
+        return CalMd5(ReadAllBytes(filename));
     }
     public static string CalStringMd5(string str) {
         return CalMd5(Encoding.UTF8.GetBytes(str));

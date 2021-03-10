@@ -22,6 +22,10 @@ local debugSubGamePath = {
         scriptpath = [[H:\SLWH\Assets\Scripts\Lua\]],
         respath = [[H:\SLWH\StreamingAssets\Win\]]
     },
+    FQZS = {
+        scriptpath = [[H:\FQZS\Assets\Scripts\Lua\]],
+        respath = [[H:\FQZS\StreamingAssets\Win\]]
+    },
 }
 
 local Config = {

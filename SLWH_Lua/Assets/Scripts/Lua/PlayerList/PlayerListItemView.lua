@@ -8,6 +8,7 @@ local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
 local TextAnchor = UnityEngine.TextAnchor
 local SubGame_Env=SubGame_Env
+local ConvertNumberToString = SubGame_Env.ConvertNumberToString
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -33,7 +34,7 @@ function Class:UpdateFromData(data)
     -- 头像和布局
     self.userID = data.userID
     self.TMP_f_UserNickName.text = data.userName
-    self.TMP_f_UserMoney.text = SubGame_Env.ConvertNumberToString(data.gold)
+    self.TMP_f_UserMoney.text = ConvertNumberToString(data.gold)
     if data.headID then
         self.head_image.sprite = SubGame_Env.GetHeadSprite(data.headID)
     end
@@ -51,8 +52,8 @@ function Class:UpdateFromData(data)
         self.rankText.gameObject:SetActive(true)
         self.rankText.text = tostring(data.rank)
     end
-    self.betScoreText.text = SubGame_Env.ConvertNumberToString(data.betScore)
-    self.winCountText.text = SubGame_Env.ConvertNumberToString(data.winCount)
+    self.betScoreText.text = ConvertNumberToString(data.betScore)
+    self.winCountText.text = ConvertNumberToString(data.winCount)
 end
 
 function Class:UserInfoBtnClick()

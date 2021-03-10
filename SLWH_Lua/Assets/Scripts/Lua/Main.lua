@@ -4,18 +4,17 @@ SubGame_Env.ConvertNumberToString = function (n)
         return ""
     end
     local unit = ''
-    if n >= 10000 then
-        n = n / 10000
-        n = math.floor(n*100)/100
-        unit = '万'
-    elseif n >= 100000000 then
+    if n >= 100000000 then
         n = n / 100000000
         n = math.floor(n*100)/100
         unit = '亿'
+    elseif n >= 10000 then
+        n = n / 10000
+        n = math.floor(n*100)/100
+        unit = '万'
     end
     return n..unit
 end
-
 
 require "LuaUtil/LuaRequires"
 GameConfig = GameConfig or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
@@ -24,8 +23,12 @@ local PBHelper = require'protobuffer.PBHelper'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SceneView = require'View.Scene3DView'
 local Loader = require 'Rebuild.LuaAssetLoader'
+--
+local yield = coroutine.yield
+local CoroutineHelper = require 'CoroutineHelper'
 
 local Sprite = UnityEngine.Sprite
+local GameObject = UnityEngine.GameObject
 if SUBGAME_EDITOR then
     -- 在大厅中将使用大厅的环境
     local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
@@ -50,7 +53,6 @@ end
 
 
 
-
 local roomdata = {
     last_bet_id = 1,
     bet_config_array = {},
@@ -68,6 +70,20 @@ local roomdata = {
 PBHelper.Init('CLSLWH')
 PBHelper.AddPbPkg('CLPF')
 PBHelper.AddPbPkg('CLCHATROOM')
+
+local SceneList = {"MainScene"}
+local AssetList = {}--"Assets/AssetsFinal/EmojiPics.prefab"
+local SoundPkgList = {'Assets/AssetsFinal/BCBMSounds.prefab'}
+local LoadList = {AssetList = AssetList, SoundPkgList=SoundPkgList, SceneList=SceneList}
+local GetLoadCount = function ()
+    local count = 0
+    for _, t in pairs(LoadList) do
+        count = count + #t
+    end
+    return count
+end
+
+
 
 CLSLWHSender.Send_EnterRoomReq(function (data)
     print('Send_EnterRoomAck:'..json.encode(data))
@@ -91,13 +107,54 @@ CLSLWHSender.Send_EnterRoomReq(function (data)
     SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
     print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
     --
-    SubGame_Env.loader = Loader.Create(GameConfig:GetSavePath("BCBM"), GameConfig.debug)
-    SceneManager.LoadScene("MainScene")
+    SubGame_Env.loader = SubGame_Env.loader or Loader.Create(GameConfig:GetSavePath("BCBM"), GameConfig.debug)
+
+    print("开始加载LoadingScene....")
+    SubGame_Env.loader:LoadScene('LoadingScene')
 end)
 
 local gameView
 
 function OnSceneLoaded(scene, mode)
+    if scene.name == "LoadingScene" then
+        local sliderGo = GameObject.Find("Slider")
+        local slider = sliderGo:GetComponent("Slider")
+        slider.value = 0.25
+        print("加载进度：", slider.value)
+        local loader = SubGame_Env.loader
+        local allLoadCount = GetLoadCount()
+        local loadedCount = 0
+        local updateProgress = function ()
+            loadedCount = loadedCount+1
+            slider.value = (loadedCount/allLoadCount)
+            print("加载进度：", loadedCount, allLoadCount, slider.value)
+        end
+        CoroutineHelper.StartCoroutine(function ()
+            for k, v in pairs(LoadList) do
+                print("k = ", k, v)
+                if k == "SceneList" then
+                    print("1111111", k)
+                    for _, sceneName in pairs(v) do
+                        print("loadScene", sceneName)
+                        SceneManager.LoadSceneAsync(sceneName)
+                        updateProgress()
+                    end
+                elseif k == "AssetList" then
+                    for _, assetPath in pairs(v) do
+                        loader:LoadAsync(assetPath)
+                        loadedCount = loadedCount+1
+                        updateProgress()
+                    end
+                elseif k == "SoundPkgList" then
+                    for _, soundPkgPath in pairs(v) do
+                        loader:LoadSoundsPackageAsync(soundPkgPath)
+                        loadedCount = loadedCount+1
+                        updateProgress()
+                    end
+                end
+            end
+        end)
+    end
     if scene.name == "MainScene" then
         gameView = SceneView.Create(roomdata)
     end
@@ -113,6 +170,11 @@ local OnReceiveNetData = PBHelper.OnReceiveNetData
 function OnReceiveNetDataPack(data, packname)
     OnReceiveNetData(data, packname)
     
+end
+
+-- 退出游戏时调用：如果有必要可用来清理场景，关闭UI等
+function OnCloseSubGame()
+    print("退出小游戏 OnCloseSubGame...")
 end
 
 

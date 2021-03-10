@@ -48,7 +48,7 @@ namespace ForReBuild.UIHelper
 
         private void OnDisable()
         {
-            Stop();
+            Stop(autoUnActive);
         }
 
         public float GetTime()
@@ -142,7 +142,7 @@ namespace ForReBuild.UIHelper
                         completeAct?.Invoke();
                         state.Complete -= complete;
                         complete = null;
-                        Stop();
+                        Stop(autoUnActive);
                     };
                     state.Complete += complete;
                 }
@@ -153,9 +153,9 @@ namespace ForReBuild.UIHelper
         }
 
 
-        public void Stop()
+        public void Stop(bool bUnActive = true)
         {
-            StopByName(defaultName);
+            StopByName(defaultName, bUnActive);
         }
         // 停止动画
         public void StopByName(string name, bool bUnActive = true)

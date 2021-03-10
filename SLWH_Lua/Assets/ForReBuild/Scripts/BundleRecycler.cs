@@ -13,9 +13,9 @@ namespace ForReBuild {
 
         public static BundleRecycler Instance { get; private set; }
 
-        public static byte[] key = Encoding.UTF8.GetBytes("ABCDEFGHIJKLMN0123456789");
+        public static byte[] key = Encoding.UTF8.GetBytes("tehW5F0vPuWEVGaxwEjeroquQRAIQabI");
 
-        public static bool showLog = true;
+        public bool showLog = true;
 
         class ABRefCounter {
             public string FullPath { get; private set; }
@@ -27,7 +27,7 @@ namespace ForReBuild {
             }
         }
 
-        static Dictionary<string, ABRefCounter> AbCacheMap { get; } = 
+        Dictionary<string, ABRefCounter> AbCacheMap { get; } = 
             new Dictionary<string, ABRefCounter>();
 
         public bool HasAsset(string fullpath) {
@@ -172,6 +172,9 @@ namespace ForReBuild {
                     StartCoroutine(cDoRecycle(assetInfo));
                 }
             });
+        }
+        private void OnDestroy() {
+            Instance = null;
         }
     }
 }

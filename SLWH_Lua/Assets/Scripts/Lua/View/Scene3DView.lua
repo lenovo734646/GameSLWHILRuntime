@@ -17,7 +17,7 @@ local GameObject = GameObject
 local EditorAssetLoader = CS.EditorAssetLoader
 
 local yield = coroutine.yield
-
+local AudioManager = AudioManager or CS.AudioManager
 local Scene3DViewCtrl = require'controller.Scene3DViewCtrl'
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local GameConfig = require'GameConfig'
@@ -90,7 +90,7 @@ function Class:__init(roomdata)
             index = i,
             Play = function ()
                 -- run item 
-                self.ctrl.soundMgr:PlaySound("run")
+                AudioManager.Instance:PlaySoundEff2D("run")
             end,
             OnTriggerEnter = function (self)
                 local uictrl = self.uictrl

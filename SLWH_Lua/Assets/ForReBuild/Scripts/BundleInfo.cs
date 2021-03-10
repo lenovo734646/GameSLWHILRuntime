@@ -44,6 +44,9 @@ namespace ForReBuild {
             var bundleInfo = new BundleInfo();
             bundleInfo.Info.assetBundle = assetBundle;
             bundleInfo.Info.fullpath = fullpath;
+            if (assetBundle == null) {
+                Debug.LogError("can not load  "+ fullpath);
+            }
             return bundleInfo;
         }
 
@@ -74,6 +77,14 @@ namespace ForReBuild {
             if (!rawPath) {
                 name = SysDefines.AB_BASE_PATH + name;
             }
+            if (Info == null) {
+                Debug.LogError("Info == null");
+                return null;
+            }
+            if (Info.assetBundle == null) {
+                Debug.LogError("Info.assetBundle == null");
+                return null;
+            }
             return Info.assetBundle.LoadAsset(name);
         }
 
@@ -82,6 +93,13 @@ namespace ForReBuild {
                 name = SysDefines.AB_BASE_PATH + name;
             }
             return Info.assetBundle.LoadAsset(name, type);
+        }
+
+        public Object[] LoadAssetWithSubAssets(string name, Type type, bool rawPath = false) {
+            if (!rawPath) {
+                name = SysDefines.AB_BASE_PATH + name;
+            }
+            return Info.assetBundle.LoadAssetWithSubAssets(name, type);
         }
 
         public void Unload() {

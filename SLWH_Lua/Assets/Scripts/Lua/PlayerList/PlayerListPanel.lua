@@ -72,17 +72,8 @@ function Class:__init(panel)
     --     end
     -- end)
     -- self.popUpDOTweenAnim.hasOnComplete = true;
-
-    -- playBackwards finish 调用
-    self.popUpDOTweenAnim.onRewind:AddListener(function ()
-        --print("onRewind......")
-        if self.panel.transform.localScale.x < 0.1 then
-            self.panel:SetActive(false)
-        end
-    end)
-    self.popUpDOTweenAnim.hasOnRewind = true;
-
 end
+
 
 -- 发送 玩家列表请求
 function Class:OnSendPlayerListReq()
@@ -98,6 +89,7 @@ function Class:OnSendPlayerListReq()
         local count = data.total_amount
         print("count = ", count)
         local players = data.players
+        self.onlineCount.text = "在线人数："..count
         for key, info in pairs(players) do
             print("玩家列表：", key, info.nickname, info.user_id, info.head)
             local rankImageSpr = self.rankImages[key]
@@ -108,12 +100,6 @@ function Class:OnSendPlayerListReq()
         self.playerListScrollView:ReplaceItems(items)
      
     end, 0, 100)
-end
-
--- 以下代码为自动生成，请勿更改
-function Class:On_btn_Close_Event(btn_Close)
-
-    self.popUpDOTweenAnim:DOPlayBackwards()
 end
 
 

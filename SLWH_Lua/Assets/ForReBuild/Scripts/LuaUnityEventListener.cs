@@ -80,6 +80,7 @@ public class LuaUnityEventListener : MonoBehaviour
         callparams(tablefuncName);
     }
     public void CallLuaByGameObjectName(Object @object) {
+        Debug.Log("点击的是"+($"On_{@object.name}_Event", @object));
         callparams($"On_{@object.name}_Event", @object);
     }
 
@@ -108,6 +109,7 @@ public class LuaUnityEventListener : MonoBehaviour
     
     void Update() {
         if (hasOnScreenSizeChanged) checkScreen();
+        callparams("Update");
     }
 
     

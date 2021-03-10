@@ -82,7 +82,10 @@ function Class:__init(panel, loader, userData)
     end
 
     --emojiPanel 表情
-    local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(Sprite), true)
+    local emojis = {}
+    local emojiPicsPrefab = loader:Load("Assets/AssetsFinal/EmojiPics.prefab")
+    emojiPicsPrefab:GetComponent(typeof(LuaInitHelper)):ObjectsSetToLuaTable(emojis)
+    --local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(Sprite), true)
     self.emojiPanel = EmojiPanel.Create(self.emojiPanelGo, self.inputField, emojis, self.Item_Emoji)
 
     -- phrase 常用短语
@@ -131,15 +134,14 @@ function Class:__init(panel, loader, userData)
 end
 
 function Class:KeyControl()
-    if Input:GetKeyDown(KeyCode.KeypadEnter) or Input:GetKeyDown(KeyCode.Return) then
+    if Input.GetKeyDown(KeyCode.KeypadEnter) or Input.GetKeyDown(KeyCode.Return) then
         self:OnSendText(self.inputField)
     end
 end
 
 function Class:Update()
-    self:KeyControl() --
     --安卓键盘高度同步
-
+    --_G.LogTrace("改成KeyEventListener，不要UPDATE")
 end
 
 -- 发送语音
@@ -295,7 +297,9 @@ function Class:On_tog_Voice_Event(tog_Voice)
     self.voicePanel:OnShow(isOn)
 end
 
-
-
+function Class:On_btnSend_Event(btnSend)
+    print("发送文本聊天信息.....")
+    self:OnSendText(self.inputField)
+end
 
 return _ENV

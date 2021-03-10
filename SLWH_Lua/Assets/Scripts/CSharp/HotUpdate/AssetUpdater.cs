@@ -40,7 +40,7 @@ public class AssetUpdater : MonoBehaviour
         //var curFileListPath = _config.GetPath(AssetConfig.File_List_Name, false);
         //if (curFileListPath != null)
         //{
-        //    var oldText = AssetUtil.ReadFile(curFileListPath);
+        //    var oldText = UtilityEnv.ReadFile(curFileListPath);
         //    var data = oldText.Split('|')[0].Split('#');
         //    if (data[0] == version)
         //    {

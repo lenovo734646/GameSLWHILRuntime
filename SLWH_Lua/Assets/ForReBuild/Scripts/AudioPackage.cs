@@ -31,7 +31,8 @@ namespace ForReBuild {
                 AudioDic.Add(data.pathOrName, data.clip);
             }
             if (autoAddToAudioManager)
-                AudioManager.Instance.AddAudioPackage(this);
+                if(AudioManager.Instance)
+                    AudioManager.Instance.AddAudioPackage(this);
         }
 
         public bool TryGetClip(string pathOrName, out AudioClip audioClip) {
@@ -50,7 +51,8 @@ namespace ForReBuild {
         }
 
         void OnDestroy() {
-            AudioManager.Instance.RemoveAudioPackage(this);
+            if (AudioManager.Instance)
+                AudioManager.Instance.RemoveAudioPackage(this);
         }
     }
 }

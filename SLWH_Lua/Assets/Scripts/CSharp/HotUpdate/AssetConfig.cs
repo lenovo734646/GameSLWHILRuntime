@@ -196,7 +196,7 @@ public class AssetConfig
 #if UNITY_ANDROID && !UNITY_EDITOR
         if (_allAssets == null)
         {
-            string ret = AssetUtil.ReadFile(streamingAssetsPath + File_List_Name);
+            string ret = UtilityEnv.ReadFile(streamingAssetsPath + File_List_Name);
             if (ret != null)
             {
                 var list = new List<string>();

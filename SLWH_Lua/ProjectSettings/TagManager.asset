@@ -4,10 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - "\u718A\u732B"
-  - "\u72EE\u5B50"
-  - "\u7334\u5B50"
-  - "\u5154\u5B50"
+  - bullet
+  - fish
+  - mainBtn
+  - fishingBtn
+  - mainRedDot
+  - fishingRedDot
+  - agateEnemy
+  - giftsItem
+  - scene
+  - bg
   layers:
   - Default
   - TransparentFX
@@ -17,17 +23,17 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Fish
+  - PostProcessing
+  - FishPyis
+  - BulletPyis
+  - Scene
+  - Ground
+  - Button3D
+  - SubGame
+  - UI3D
+  - C
+  - D
   - 
   - 
   - 
@@ -44,4 +50,28 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 1
+    uniqueID: 1332377433
+    locked: 0
+  - name: 2
+    uniqueID: 3011970539
+    locked: 0
+  - name: 3
+    uniqueID: 1612306177
+    locked: 0
+  - name: 4
+    uniqueID: 2335210971
+    locked: 0
+  - name: 5
+    uniqueID: 847673207
+    locked: 0
+  - name: 6
+    uniqueID: 631006183
+    locked: 0
+  - name: 7
+    uniqueID: 2029022977
+    locked: 0
+  - name: 8
+    uniqueID: 2067979889
     locked: 0

@@ -46,7 +46,7 @@ public class LuaAutoInitHelper : MonoBehaviour
                     name += "_1";
                     Debug.LogWarning($"重复的key 重命名为 {name} 父级:{t.parent.name}");
                 }
-                table.Set(name, t);
+                table.Set(name, t.gameObject);
             }
         });
 
@@ -59,7 +59,7 @@ public class LuaAutoInitHelper : MonoBehaviour
         foreach (Transform t in transform) {
             action(t, table);
             if (t.childCount > 0) {
-                var name = t.name;
+                var name = t.name + "_c";
                 if (table.ContainsKey(name)) {
                     name += "_1";
                     Debug.LogWarning($"重复的key 重命名为 {name} 父级:{t.parent.name}");

@@ -117,9 +117,12 @@ namespace ForReBuild.UIHelper
         {
             if (gameObject.activeSelf == false)
                 gameObject.SetActive(true);
-            if(animatorStateInfoEventList.Length > 0)
+            if (animator.enabled == false)
+                animator.enabled = true;
+
+            if (animatorStateInfoEventList.Length > 0)
                 curAnimatorStateInfoEvent = GetAnimatorStateEvent(animName);
-            animator.Play(animName);
+            animator.Play(animName, 0, 0);
 
 
             //curanimState = animator.GetCurrentAnimatorStateInfo(0); // 这里获取到的数据并不准确，因为AnimationClip并没有真正播放
@@ -129,10 +132,17 @@ namespace ForReBuild.UIHelper
         {
             if (gameObject.activeSelf == false)
                 gameObject.SetActive(true);
+            if(animator.enabled == false)
+                animator.enabled = true;
 
             curAnimatorStateInfoEvent = new AnimatorStateInfoEvent(animName, startAct, completeAct);
 
-            animator.Play(animName);
+            animator.Play(animName, 0, 0);
+        }
+
+        public void Stop()
+        {
+            animator.enabled = false;
         }
 
 

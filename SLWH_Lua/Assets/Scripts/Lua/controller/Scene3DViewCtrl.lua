@@ -184,7 +184,7 @@ function Class:OnSceneReady()
     end
 
     self:OnStateChangeNtf({ left_time = left_time, state = state })
-    if state == 2 then
+    if state ~= 1 then
         self.ui.mainUI:SetWaitNextStateTip(true)
     end
  
@@ -307,8 +307,8 @@ end
 function Class:OnStateChangeNtf(data)
     local state = data.state
     self.state = state
-    self.ui.mainUI:SetWaitNextStateTip(false)
     if state == 1 then --下注
+        self.ui.mainUI:SetWaitNextStateTip(false)
         self:OnBetState(data)
     elseif state == 2 then --开奖
         self:OnShowState(data)
@@ -495,7 +495,7 @@ end
 function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
-    --AudioManager.Instance:PlaySoundEff2D("stop") -- 停止下注音频暂缺
+    AudioManager.Instance:PlaySoundEff2D("stop") 
     -- 停止动物动画
     self:StopIdleStateAnim()
     local anim_result_list = data.anim_result_list

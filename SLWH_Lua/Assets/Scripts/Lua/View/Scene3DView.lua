@@ -82,7 +82,7 @@ function Class:__init(roomdata)
     for i=1,RUN_ITEM_COUNT do
         local t = runItemIndexs:GetChild(i-1)
         local animatorHelper = t:GetComponent(typeof(ForReBuild.UIHelper.AnimatorHelper)) 
-        print("animatorHelper = ",animatorHelper)
+        --print("animatorHelper = ",animatorHelper)
         local data = {
             transform = t,
             animatorHelper = animatorHelper,
@@ -170,12 +170,14 @@ function Class:__init(roomdata)
     self.roadInitHelper:Init(exArrayData)
     self.roadColorSprites = {}
     self.roadInitHelper:ObjectsSetToLuaTable(self.roadColorSprites)
-    self.roadAnimalSprites = {}
-    exArrayData.animalImgArrayInitHelper:ObjectsSetToLuaTable(self.roadAnimalSprites)
-    self.roadEnjoyTypeSprites = {}
-    exArrayData.enjoyTypeImgArrayInitHelper:ObjectsSetToLuaTable(self.roadEnjoyTypeSprites)
-    self.roadExSprites = {}
-    exArrayData.exSprArrayInitHelper:ObjectsSetToLuaTable(self.roadExSprites)
+
+    --
+    local roadSprsInitHelper = {}
+    self.roadSprsInitHelper:Init(roadSprsInitHelper)
+
+    self.roadAnimalSprites = roadSprsInitHelper.roadAnimalSprites
+    self.roadEnjoyTypeSprites = roadSprsInitHelper.roadEnjoyTypeSprites
+    self.roadExSprites = roadSprsInitHelper.roadExSprites
 
     exArrayData = nil
     self.roadInitHelper = nil

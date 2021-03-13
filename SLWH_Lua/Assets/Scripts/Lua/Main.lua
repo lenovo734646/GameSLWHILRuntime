@@ -72,9 +72,13 @@ PBHelper.AddPbPkg('CLPF')
 PBHelper.AddPbPkg('CLCHATROOM')
 
 local SceneList = {"MainScene"}
-local AssetList = {}--"Assets/AssetsFinal/EmojiPics.prefab"
-local SoundPkgList = {'Assets/AssetsFinal/BCBMSounds.prefab'}
-local LoadList = {AssetList = AssetList, SoundPkgList=SoundPkgList, SceneList=SceneList}
+local AssetList = {
+    "Assets/AssetsFinal/EmojiPics.prefab"
+}
+local SoundPkgList = {
+    'Assets/AssetsFinal/SLWHSounds.prefab'
+}
+local LoadList = {AssetList, SoundPkgList, SceneList}
 local GetLoadCount = function ()
     local count = 0
     for _, t in pairs(LoadList) do
@@ -120,39 +124,35 @@ function OnSceneLoaded(scene, mode)
         local sliderGo = GameObject.Find("Slider")
         local slider = sliderGo:GetComponent("Slider")
         slider.value = 0.25
-        print("加载进度：", slider.value)
         local loader = SubGame_Env.loader
         local allLoadCount = GetLoadCount()
         local loadedCount = 0
         local updateProgress = function ()
             loadedCount = loadedCount+1
             slider.value = (loadedCount/allLoadCount)
-            print("加载进度：", loadedCount, allLoadCount, slider.value)
+            --print("加载进度：", loadedCount, allLoadCount, slider.value)
         end
         CoroutineHelper.StartCoroutine(function ()
             for k, v in pairs(LoadList) do
-                print("k = ", k, v)
-                if k == "SceneList" then
-                    print("1111111", k)
+                if k == 1 then
+                    for _, assetPath in pairs(v) do
+                        loader:LoadAsync(assetPath)
+                        updateProgress()
+                    end
+                elseif k == 2 then
+                    for _, soundPkgPath in pairs(v) do
+                        loader:LoadSoundsPackage(soundPkgPath)
+                        updateProgress()
+                    end
+                elseif k == 3 then
                     for _, sceneName in pairs(v) do
                         print("loadScene", sceneName)
                         SceneManager.LoadSceneAsync(sceneName)
                         updateProgress()
                     end
-                elseif k == "AssetList" then
-                    for _, assetPath in pairs(v) do
-                        loader:LoadAsync(assetPath)
-                        loadedCount = loadedCount+1
-                        updateProgress()
-                    end
-                elseif k == "SoundPkgList" then
-                    for _, soundPkgPath in pairs(v) do
-                        loader:LoadSoundsPackageAsync(soundPkgPath)
-                        loadedCount = loadedCount+1
-                        updateProgress()
-                    end
                 end
             end
+            --#region
         end)
     end
     if scene.name == "MainScene" then

@@ -42,6 +42,8 @@ namespace SLWH
 
         int [,]array = new int[3, 5];
 
+        public AnimatorHelper animatorHelper;
+
         public enum ColorType
         {
             Zero = 0,
@@ -76,6 +78,10 @@ namespace SLWH
             { ExWinType.Zero, 0.9955},
         };
 
+        public void LogOut(string s)
+        {
+            print("LogOut: "+s);
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -245,14 +251,15 @@ namespace SLWH
         int materialIndex = 0;
         private void OnGUI()
         {
-            if (GUI.Button(new Rect(200, 300, 100, 50), "ChangeMaterial"))
+            if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
             {
+                animatorHelper.Play("Anxia");
 
                 //baoshi.GetComponent<MeshRenderer>().material = materials[materialIndex];
                 //materialIndex++;
                 //if (materialIndex >= materials.Length)
                 //    materialIndex = 0;
-                tweenAnimation.DOPlayForward();
+                //tweenAnimation.DOPlayForward();
 
             }
 

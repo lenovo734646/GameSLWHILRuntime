@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7698324055116798056}
   - component: {fileID: 7698324055116798057}
+  - component: {fileID: 6423679335867520402}
   m_Layer: 0
   m_Name: SLWHSounds
   m_TagString: Untagged
@@ -122,6 +123,9 @@ MonoBehaviour:
   - name: yellow_rabbit
     clip: {fileID: 8300000, guid: 34fe0e0c918722441b4c7045c6027df0, type: 3}
     pathOrName: yellow_rabbit
+  - name: stop
+    clip: {fileID: 8300000, guid: 89115d5961e30774093ad46d0962c545, type: 3}
+    pathOrName: stop
   audioClips:
   - {fileID: 8300000, guid: 5eb892679e7f20946b69cd5f670c40d4, type: 3}
   - {fileID: 8300000, guid: b6a0a7c1d9bd28243867d2ca5fefb2b1, type: 3}
@@ -149,5 +153,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f9176cbfa2088b94db63c36910dc4ecf, type: 3}
   - {fileID: 8300000, guid: 80925feaca8f31b48afaae4fa021e4e0, type: 3}
   - {fileID: 8300000, guid: 34fe0e0c918722441b4c7045c6027df0, type: 3}
+  - {fileID: 8300000, guid: 89115d5961e30774093ad46d0962c545, type: 3}
   basePath: 
   autoAddToAudioManager: 1
+--- !u!114 &6423679335867520402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698324055116798054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f60d99aa605d554daa112b92e271401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -33,6 +33,24 @@ local Config={
         Tweening.Ease.InOutExpo, Tweening.Ease.InOutFlash,
         Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
     },
+
+    ColorType = {
+        Red = 1,
+        Green = 2,
+        Yellow = 3, 
+        SanYuan = 4,
+        SiXi = 5,
+    },
+
+    ExWinType = {
+        CaiJin = 1,
+        SongDeng = 2,
+        LiangBei = 3,
+        SanBei = 4,
+        MeiZhong = 5,
+    },
+
+    
 }
 
 return Config

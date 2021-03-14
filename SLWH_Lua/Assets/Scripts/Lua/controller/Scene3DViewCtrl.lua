@@ -206,7 +206,15 @@ function Class:OnSceneReady()
         local list = {}
         for _,info in ipairs(record_list)do
             local result = info.ressult_info_list[1] -- 暂时只使用一个值
-            local itemData = ui:GetHistoryIconData(result.winColor, result.winAnimal, info.win_enjoyGameType, info.win_exType)
+            local songDengInfo = info.ressult_info_list[2]
+            local songDengColorID = nil
+            local songDengAnimalID = nil
+            if songDengInfo ~= nil then
+                songDengColorID = songDengInfo.winColor
+                songDengAnimalID =  songDengInfo.winAnimal
+            end
+            local itemData = ui:GetHistoryIconData(result.winColor, result.winSanYuanColor, result.winAnimal, info.win_enjoyGameType, info.win_exType,
+                                                    songDengColorID, songDengAnimalID)
             tinsert(list, itemData)
         end
         ui.roadScrollView:ReplaceItems(list)
@@ -513,13 +521,20 @@ function Class:OnShowState(data)
                     showTime = self.shark_more_show_time
                 end
                 yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime/1000))--播放转盘动画
-                --print('show one end item_id = ', cur_result_list[1])
                 
             end
             -- 开奖结束再更新record，避免剧透
             local recordData = data.history_record
             local resultInfo = recordData.ressult_info_list[1]
-            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(resultInfo.color_id, resultInfo.animal_id, recordData.win_enjoyGameType, recordData.win_exType))
+            local songDengInfo = recordData.ressult_info_list[2]
+            local songDengColorID = nil
+            local songDengAnimalID = nil
+            if songDengInfo ~= nil then
+                songDengColorID = songDengInfo.winColor
+                songDengAnimalID =  songDengInfo.winAnimal
+            end
+            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(resultInfo.color_id, resultInfo.winSanYuanColor, resultInfo.animal_id, recordData.win_enjoyGameType, recordData.win_exType,
+                                                                songDengColorID, songDengAnimalID))
         end)
     end
 end

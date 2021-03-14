@@ -145,11 +145,42 @@ function Class:__init(roomdata)
         viewItemData.colorImg.sprite = itemdata.colorSpr
         viewItemData.animalImg.sprite = itemdata.animalSpr
         viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
-        viewItemData.exTypeImg.sprite = itemdata.exTypeSpr
-        if itemdata.exTypeSpr == nil then
-            viewItemData.exTypeImg.gameObject:SetActive(false)
-        else
-            viewItemData.exTypeImg.gameObject:SetActive(true)
+        --
+        if itemdata.sanYuanInfo ~= nil then
+            local syData = {}
+            viewItemData.sanYuanInitHelper:Init(syData)
+            syData.item_1.sprite = itemdata.colorSpr
+            syData.item_2.sprite = itemdata.colorSpr
+            syData.item_3.sprite = itemdata.colorSpr
+            syData.item_4.sprite = itemdata.colorSpr
+            syData.animal_1.sprite = itemdata.sanYuanInfo.animalSpr_1
+            syData.animal_2.sprite = itemdata.sanYuanInfo.animalSpr_2
+            syData.animal_3.sprite = itemdata.sanYuanInfo.animalSpr_3
+            syData.animal_4.sprite = itemdata.sanYuanInfo.animalSpr_4
+            viewItemData.sanYuanInitHelper.gameObject:SetActive(true)
+        elseif itemdata.siXiInfo ~= nil then
+            local sxData = {}
+            viewItemData.siXiInitHelper:Init(sxData)
+            sxData.item_1.sprite = itemdata.siXiInfo.colorSpr_1
+            sxData.item_2.sprite = itemdata.siXiInfo.colorSpr_2
+            sxData.item_3.sprite = itemdata.siXiInfo.colorSpr_3
+            sxData.animal_1.sprite = itemdata.siXiInfo.animalSpr
+            sxData.animal_2.sprite = itemdata.siXiInfo.animalSpr
+            sxData.animal_3.sprite = itemdata.siXiInfo.animalSpr
+            viewItemData.siXiInitHelper.gameObject:SetActive(true)
+        end
+        --
+        if itemdata.shanDianRatio ~= nil then
+            local sdData = {}
+            viewItemData.shanDianInitHelper:Init(sdData)
+            sdData.ratio.text = tostring(itemdata.shanDianRatio)
+            viewItemData.shanDianInitHelper.gameObject:SetActive(true)
+        elseif itemdata.songDengInfo ~= nil then
+            local songDengData = {}
+            viewItemData.songDengInitHelper:Init(songDengData)
+            songDengData.colorImg.sprite = itemdata.songDengInfo.songDengColorSpr
+            songDengData.animalImg.sprite = itemdata.songDengInfo.songDengAnimalSpr
+            viewItemData.songDengInitHelper.gameObject:SetActive(true)
         end
         
     end
@@ -198,12 +229,58 @@ end
 -- color_id 中奖颜色id
 -- type_id 庄闲和 id
 -- sp_id 特殊中奖id（大三元，大四喜）
-function Class:GetHistoryIconData(color_id, animal_id, enjoyType_id, ex_id)
+function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID)
+    local ColorType = GameConfig.ColorType
+    local ExWinType = GameConfig.ExWinType
+
+    local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
+    local sanYuanInfo = nil
+    local siXiInfo = nil
+    local songDengInfo = nil
+    local shanDianRatio = nil
+    if color_id == ColorType.SanYuan then   -- 大三元处理
+        colorSpr = self.roadColorSprites[sanYuanColor_id]
+        sanYuanInfo = {
+            animalSpr_1 = self.roadAnimalSprites[1],
+            animalSpr_2 = self.roadAnimalSprites[2],
+            animalSpr_3 = self.roadAnimalSprites[3],
+            animalSpr_4 = self.roadAnimalSprites[4],
+        }
+    elseif color_id == ColorType.SiXi then   -- 大四喜处理
+        colorSpr = self.roadColorSprites[1] -- 给个默认
+        siXiInfo = {
+            colorSpr_1 = self.roadColorSprites[1],
+            colorSpr_2 = self.roadColorSprites[2],
+            colorSpr_3 = self.roadColorSprites[3],
+            animalSpr = self.roadAnimalSprites[animal_id],
+        }
+    end
+    -- 特殊大奖处理
+    if ex_id == ExWinType.LiangBei then
+        shanDianRatio = 2
+    elseif ex_id == ExWinType.SanBei then
+        shanDianRatio = 3
+    elseif ex_id == ExWinType.SongDeng then
+        songDengInfo = {
+            songDengColorSpr = self.roadColorSprites[songDengColorID],
+            songDengAnimalSpr = self. roadAnimalSprites[songDengAnimalID],
+        }
+    end
+
     return {
-        colorSpr = self.roadColorSprites[color_id],
+        -- color_id = color_id,
+        -- ex_id = ex_id,
+        colorSpr = colorSpr,
         animalSpr = self.roadAnimalSprites[animal_id],
         enjoyTypeSpr = self.roadEnjoyTypeSprites[enjoyType_id],
-        exTypeSpr = self.roadExSprites[ex_id],
+        --
+        sanYuanInfo = sanYuanInfo,
+        siXiInfo = siXiInfo,
+        --
+        shanDianRatio = shanDianRatio,
+        songDengInfo = songDengInfo,
+        
+
     }
 end
 

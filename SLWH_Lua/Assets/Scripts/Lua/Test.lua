@@ -34,7 +34,7 @@ function OnSceneLoaded(scene, mode)
         local TimerCounterUI = require'UI.TimerCounterUI'
                 local timeCounter = TimerCounterUI.Create(View.GameTimeCounterInitHelper)
 
-        local KeyListener = View.gameObject:GetComponent(typeof(CS.KeyListener))
+        local KeyListener = View.gameObject:GetComponent(typeof(CS.KeyEventListener))
         KeyListener.keyDownList:Add(UnityEngine.KeyCode.A)
         local co = coroutine.create(function ()
             -- ctrl:OnBetState()

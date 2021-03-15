@@ -36,16 +36,31 @@ function Class:__init(resultPanelGameObject)
     self.resultWinSprs = {}
     resultInitHelper:ObjectsSetToLuaTable(self.resultWinSprs)
     --
-    -- self.btnOK.onClick:AddListener(function ()
-    --     self:HideResult()
-    -- end)
     
     self:HideResult()
 end
 
 -- 返回等待时间可供协程调用
-function Class:ShowResult(winID, winRatio, winScore, totalWinScore, bankerWinScore, bankerTotalWinScore)
+function Class:ShowResult(resultPanelData)
     print("显示结算界面，功能待实现")
+    local ColorType = GameConfig.ColorType
+    local ExWinType = GameConfig.ExWinType
+
+    local winScore = resultPanelData.winScore or 0
+    local betScore = resultPanelData.betScore or 0
+    local color_id = resultPanelData.color_id
+    local win_enjoyGameType = resultPanelData.win_enjoyGameType
+    local win_exType = resultPanelData.win_exType
+    if color_id == ColorType.SanYuan then   -- 同一颜色四种动物都中奖
+        color_id = resultPanelData.winSanYuanColor
+        self.animalRabbit:SetActive(true)
+        self.animalPanda:SetActive(true)
+        self.animalLion:SetActive(true)
+        self.animalMonky:SetActive(true)
+    elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
+        
+    end
+
 
     -- winScore = winScore or 0
     -- if winScore > 0 then

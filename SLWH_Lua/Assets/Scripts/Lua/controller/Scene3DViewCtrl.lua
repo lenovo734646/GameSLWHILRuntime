@@ -127,15 +127,10 @@ function Class:OnSceneReady()
     -- 本局自己输赢和庄家输赢
     PBHelper.AddListener('SelfWinResultNtf', function (data)
         print("SelfWinResultNtf", data.self_score, data.banker_score)
-        self.win = data.win -- 本局输赢
-        self.totalWin = data.total_win  -- 总输赢
+        self.resultPanelData.winScore = data.win_score -- 本局输赢
+        self.resultPanelData.betScore = data.bet_score  -- 总输赢
         self.selfScore = data.self_score
-
-        self.bankerWin = data.banker_win
-        self.bankerTotalWin = data.banker_total_win
-        self.bankerScore = data.banker_score
-
-        if self.win > 0 then
+        if self.resultPanelData.winScore > 0 then
             AudioManager.Instance:PlaySoundEff2D("win_bet")
         end
     end)
@@ -278,9 +273,9 @@ function Class:InitAnimalAnimation()
             AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[winShowData.item_id])
             -- 等待显示中奖结算
             local resultPanel = self.ui.mainUI.resultPanel
-            yield(WaitForSeconds(resultPanel:ShowResult(winShowData.item_id, GameConfig.Ratio[winShowData.item_id], 
-                                                                self.win, self.totalWin, self.bankerWin, self.bankerTotalWin)))
+            yield(WaitForSeconds(resultPanel:ShowResult(self.resultPanelData)))
             resultPanel:HideResult()
+            self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
             -- 同步玩家分数
             self:OnMoneyChange(self.selfScore)
             winShowData.gameObject:SetActive(false)
@@ -504,6 +499,27 @@ function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
+    -- 统计结果
+    
+    local recordData = data.history_record
+    local resultInfo = recordData.ressult_info_list[1]
+    local songDengInfo = recordData.ressult_info_list[2]
+    local songDengColorID = nil
+    local songDengAnimalID = nil
+    if songDengInfo ~= nil then
+        songDengColorID = songDengInfo.winColor
+        songDengAnimalID =  songDengInfo.winAnimal
+    end
+    -- 统计数据给结算界面
+    self.resultPanelData = {
+        color_id = resultInfo.color_id,
+        winSanYuanColor = resultInfo.winSanYuanColor,
+        animal_id = resultInfo.animal_id,
+        win_enjoyGameType = recordData.win_enjoyGameType,
+        win_exType = recordData.win_exType,
+        songDengColorID = songDengColorID,
+        songDengAnimalID = songDengAnimalID,
+    } 
     -- 停止动物动画
     self:StopIdleStateAnim()
     local anim_result_list = data.anim_result_list
@@ -524,15 +540,6 @@ function Class:OnShowState(data)
                 
             end
             -- 开奖结束再更新record，避免剧透
-            local recordData = data.history_record
-            local resultInfo = recordData.ressult_info_list[1]
-            local songDengInfo = recordData.ressult_info_list[2]
-            local songDengColorID = nil
-            local songDengAnimalID = nil
-            if songDengInfo ~= nil then
-                songDengColorID = songDengInfo.winColor
-                songDengAnimalID =  songDengInfo.winAnimal
-            end
             ui.roadScrollView:InsertItem(ui:GetHistoryIconData(resultInfo.color_id, resultInfo.winSanYuanColor, resultInfo.animal_id, recordData.win_enjoyGameType, recordData.win_exType,
                                                                 songDengColorID, songDengAnimalID))
         end)

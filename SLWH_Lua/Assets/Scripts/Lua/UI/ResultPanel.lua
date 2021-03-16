@@ -15,6 +15,7 @@ local yield = coroutine.yield
 local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
+local Vector3 = Vector3
 
 local GameConfig = require'GameConfig'
 
@@ -33,9 +34,10 @@ function Class:__init(resultPanelGameObject)
     -- 结算界面
     local resultInitHelper = self.resultPanel:GetComponent(typeof(LuaInitHelper))
     resultInitHelper:Init(self)
-    self.resultWinSprs = {}
-    resultInitHelper:ObjectsSetToLuaTable(self.resultWinSprs)
+    self.resultAnimals = {}
+    resultInitHelper:ObjectsSetToLuaTable(self.resultAnimals)
     --
+    
     
     self:HideResult()
 end
@@ -45,20 +47,24 @@ function Class:ShowResult(resultPanelData)
     print("显示结算界面，功能待实现")
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
-
+    local AnimalType = GameConfig.AnimalType
+    --
     local winScore = resultPanelData.winScore or 0
     local betScore = resultPanelData.betScore or 0
     local color_id = resultPanelData.color_id
+    local animal_id = resultPanelData.animal_id
     local win_enjoyGameType = resultPanelData.win_enjoyGameType
     local win_exType = resultPanelData.win_exType
     if color_id == ColorType.SanYuan then   -- 同一颜色四种动物都中奖
         color_id = resultPanelData.winSanYuanColor
-        self.animalRabbit:SetActive(true)
-        self.animalPanda:SetActive(true)
-        self.animalLion:SetActive(true)
-        self.animalMonky:SetActive(true)
+        local colorSpr = 
+        for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
+            self:__AddAnimal(i, )
+        end
     elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
-        
+        for i = 1, 3, 1 do
+            self:__AddAnimal(animal_id)
+        end
     end
 
 
@@ -90,6 +96,20 @@ end
 
 function Class:HideResult()
     self.resultPanel:SetActive(false)
+    for i = 0, self.resuletScrollView.content.childCount-1, 1 do
+        Destroy(self.resuletScrollView.content:GetChild(i).gameObject)
+    end
+end
+
+-- 初始化一个中奖动物
+function Class:__AddAnimal(animal_id, colorSpr, ratio)
+    local go = Instantiate(self.resultAnimals[animal_id], self.resuletScrollView.content)
+    go.transform.localPosition = Vector3.zero
+    local animalData = {}
+    go:GetComponent(typeof(luaInitHelper)):Init(animalData)
+    animalData.color.sprite = colorSpr
+    animalData.ratioText.text = ratio
+    
 end
 
 function Class:__GetNumString(num)

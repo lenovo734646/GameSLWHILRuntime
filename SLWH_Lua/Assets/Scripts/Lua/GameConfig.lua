@@ -50,6 +50,18 @@ local Config={
         MeiZhong = 5,
     },
 
+    AnimalType = {
+        Lion = 1,      
+        Panda = 2,    
+        Monkey = 3,        
+        Rabbit = 4,
+    },
+
+    EnjoyGameType = {
+        Zhuang = 1,
+        Xian = 2,
+        He = 3,
+    },
     
 }
 

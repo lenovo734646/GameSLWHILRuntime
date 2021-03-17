@@ -5,8 +5,6 @@ local Config={
     ShowAnimationTime = 8,
     ShowResultTime = 5,
     RunItemCount = 24,
-    Ratio = {40, 30, 20, 10, 5, 5, 5, 5}, --下标从1开始
-    Color ={ Red = 1, Green = 2, Yellow = 3, SanYuan = 4, SiXi = 5 },  -- 颜色定义
     -- 胜利音效名字（根据itemID）
     WinSound = {"red_lion", "red_panda", "red_monkey", "red_rabbit", 
                 "green_lion", "green_panda", "green_monkey", "green_rabbit",
@@ -33,6 +31,8 @@ local Config={
         Tweening.Ease.InOutExpo, Tweening.Ease.InOutFlash,
         Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
     },
+
+    EnjoyGameRatio = {2, 8, 2}, --下标从1开始
 
     ColorType = {
         Red = 1,

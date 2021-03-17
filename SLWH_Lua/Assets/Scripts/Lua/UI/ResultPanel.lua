@@ -37,8 +37,28 @@ function Class:__init(resultPanelGameObject)
     self.resultAnimals = {}
     resultInitHelper:ObjectsSetToLuaTable(self.resultAnimals)
     --
-    
-    
+    local multiList = {}
+    local multiListInitHelper = self.resultPanel:GetComponent(typeof(LuaInitMultiListHelper))
+    multiListInitHelper:Init(multiList)
+    --
+    self.enjoyGameData = {}
+    self.winEnjoyGameInitHelper:Init(self.enjoyGameData)
+    self.winAnimalData = {}
+    self.winAnimalInitHelper:Init(self.winAnimalData)
+    self.winShanDianData = {}
+    self.winShandianInitHelper:Init(self.winShanDianData)
+    self.winCaiJinData = {}
+    self.winCaiJinInitHelper:Init(self.winCaiJinData)
+    self.winSongDengData = {}
+    self.winSongDengInitHelper:Init(self.winSongDengData)
+    --
+
+    self.smallColors = multiList.multiList
+    self.bgColors = multiList.bgColors
+    self.animalNameSprs = multiList.animalNameSprs
+    self.animalSprs = multiList.animalSprs
+    self.enjoyTypeSprs = multiList.enjoyTypeSprs
+
     self:HideResult()
 end
 
@@ -52,19 +72,32 @@ function Class:ShowResult(resultPanelData)
     local winScore = resultPanelData.winScore or 0
     local betScore = resultPanelData.betScore or 0
     local color_id = resultPanelData.color_id
-    local animal_id = resultPanelData.animal_id
-    local win_enjoyGameType = resultPanelData.win_enjoyGameType
-    local win_exType = resultPanelData.win_exType
+    local exType = resultPanelData.exType
+    --庄闲和小游戏
+
+    local enjoyGameData = resultPanelData.enjoyGameData
+    self.enjoyGameData.winColorBG = self.bgColors[enjoyGameData.enjoyGame_id]
+    self.enjoyGameData.enjoyImg = self.enjoyTypeSprs[enjoyGameData.enjoyGame_id]
+    self.enjoyGameData.ratioText.text = enjoyGameData.enjoyGameRatio
+
+    -- 颜色(普通中奖+三元四喜)
     if color_id == ColorType.SanYuan then   -- 同一颜色四种动物都中奖
-        color_id = resultPanelData.winSanYuanColor
-        local colorSpr = 
+        local data = resultPanelData.sanyuanData
+        local colorSpr = self.smallColors[data.sanyuanColor_id]
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-            self:__AddAnimal(i, )
+            self:__AddAnimal(i, colorSpr, data.animalRatioArray[i])
         end
+        self.
     elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
-        for i = 1, 3, 1 do
-            self:__AddAnimal(animal_id)
+        local data = resultPanelData.sixiData
+        for i = ColorType.Red, ColorType.Yellow, 1 do
+            local spr = self.smallColors[i]
+            self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i])
         end
+    else
+        local data = resultPanelData.normalData
+        local spr = self.smallColors[color_id]
+        self:__AddAnimal(data.animal_id, spr, data.ratio)
     end
 
 

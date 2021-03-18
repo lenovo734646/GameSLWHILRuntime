@@ -197,21 +197,14 @@ function Class:__init(roomdata)
         end
     end
 
-    local exArrayData = {}
-    self.roadInitHelper:Init(exArrayData)
-    self.roadColorSprites = {}
-    self.roadInitHelper:ObjectsSetToLuaTable(self.roadColorSprites)
-
-    --
-    local roadSprsInitHelper = {}
-    self.roadSprsInitHelper:Init(roadSprsInitHelper)
-
-    self.roadAnimalSprites = roadSprsInitHelper.roadAnimalSprites
-    self.roadEnjoyTypeSprites = roadSprsInitHelper.roadEnjoyTypeSprites
-    self.roadExSprites = roadSprsInitHelper.roadExSprites
-
-    exArrayData = nil
-    self.roadInitHelper = nil
+    local roadMultiList = {}
+    self.roadInitMultiListHelper:Init(roadMultiList)
+    self.roadColorSprites = roadMultiList.bgColorSprs
+    self.roadAnimalSprites = roadMultiList.roadAnimalSprites
+    self.roadEnjoyTypeSprites = roadMultiList.roadEnjoyTypeSprites
+    self.roadExSprites = roadMultiList.roadExSprites
+    
+    self.roadMultiList = nil
 
     -- 筹码选择
     self.betSelectToggles = {}

@@ -17,8 +17,9 @@ SubGame_Env.ConvertNumberToString = function (n)
 end
 
 require "LuaUtil/LuaRequires"
-GameConfig = GameConfig or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
-
+local Config = Config or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
+local g_Env = g_Env
+local GameConfig require'GameConfig'
 local PBHelper = require'protobuffer.PBHelper'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SceneView = require'View.Scene3DView'
@@ -92,10 +93,18 @@ end
 CLSLWHSender.Send_EnterRoomReq(function (data)
     print('Send_EnterRoomAck:'..json.encode(data))
     if data.errcode ~= 0 then
-        if SUBGAME_EDITOR then
-            assert(false, 'errcode='..data.errcode)
+        if g_Env then
+            local errorstr = GameConfig.EnterRoomErrorTip[data.errcode]
+            --g_Env.ShowHitMessage(errorstr)
+            g_Env.MessageBox{
+                content = errorstr,
+                onOK = function()
+                    g_Env.SubGameCtrl.Leave()
+                end
+            }
+            
         else
-            -- TODO 错误提示,返回大厅
+            print('TODO 获取错误提示 data.errcode=', data.errcode)
         end
         return
     end
@@ -111,7 +120,7 @@ CLSLWHSender.Send_EnterRoomReq(function (data)
     SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
     print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
     --
-    SubGame_Env.loader = SubGame_Env.loader or Loader.Create(GameConfig:GetSavePath("BCBM"), GameConfig.debug)
+    SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
 
     print("开始加载LoadingScene....")
     SubGame_Env.loader:LoadScene('LoadingScene')

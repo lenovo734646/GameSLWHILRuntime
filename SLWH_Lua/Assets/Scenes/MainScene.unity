@@ -1139,7 +1139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &111754084
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1155,10 +1155,10 @@ RectTransform:
   m_Father: {fileID: 1717706051}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1085, y: -150}
+  m_SizeDelta: {x: 430, y: 225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &111754085
 MonoBehaviour:
@@ -1199,6 +1199,12 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 265003549}
+    sType: 
+    manualName: 
+  - name: winCaiJiGO
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 111754083}
     sType: 
     manualName: 
   showlog: 0
@@ -6674,7 +6680,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 234.8, y: -48}
+  m_AnchoredPosition: {x: 234.79999, y: -48}
   m_SizeDelta: {x: 160, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &265003549
@@ -7045,7 +7051,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &295869655
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7061,10 +7067,10 @@ RectTransform:
   m_Father: {fileID: 1717706051}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 285, y: -150}
+  m_SizeDelta: {x: 190, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &295869656
 MonoBehaviour:
@@ -7117,6 +7123,12 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 1945430240}
+    sType: 
+    manualName: 
+  - name: winAnimalGO
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 295869654}
     sType: 
     manualName: 
   showlog: 0
@@ -10218,9 +10230,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8348497177043833004}
-  - {fileID: 9062008884983584464}
   - {fileID: 1167487366}
+  - {fileID: 9062008884983584464}
+  - {fileID: 8348497177043833004}
   - {fileID: 123030143}
   - {fileID: 96671126}
   - {fileID: 1291700163}
@@ -11970,7 +11982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1136911529
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11986,10 +11998,10 @@ RectTransform:
   m_Father: {fileID: 1717706051}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 790, y: -150}
+  m_SizeDelta: {x: 160, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1136911530
 MonoBehaviour:
@@ -12030,6 +12042,12 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 1182448178}
+    sType: 
+    manualName: 
+  - name: winShandianGO
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 1136911528}
     sType: 
     manualName: 
   showlog: 0
@@ -12138,7 +12156,7 @@ Transform:
   - {fileID: 2116692250}
   - {fileID: 763426443}
   m_Father: {fileID: 819170682}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1182448176
 GameObject:
@@ -14526,6 +14544,13 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 88e066de72b215546bb4562f0f640ad5, type: 3}
     - {fileID: 21300000, guid: 97bea84196bba3148a63167a1fe876f5, type: 3}
     - {fileID: 21300000, guid: 97bea84196bba3148a63167a1fe876f5, type: 3}
+  - name: bgColorSprs
+    ObjectList:
+    - {fileID: 21300000, guid: f621c6c6ac7877c469e00a4bc2908753, type: 3}
+    - {fileID: 21300000, guid: 482f3bfd92f141442ba02b589a213a03, type: 3}
+    - {fileID: 21300000, guid: 25e814a9e0e7f7f44afa10258918b23d, type: 3}
+    - {fileID: 21300000, guid: 38f163fdb8728ed4680634f97e94a3b4, type: 3}
+    - {fileID: 21300000, guid: 73939c9c154f70b43bb5d10ac5d6ebd9, type: 3}
 --- !u!114 &1522398452 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7387655652515874705, guid: 38e4264f2ee5fcb4ab9a60a58740027c,
@@ -15088,10 +15113,16 @@ MonoBehaviour:
     anyType: {fileID: 1661450703}
     sType: 
     manualName: 
-  - name: ratiotext_textmeshprougui
+  - name: ratio
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 22174321}
+    sType: 
+    manualName: 
+  - name: winSongDengGO
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 1634338580}
     sType: 
     manualName: 
   showlog: 0
@@ -15368,6 +15399,12 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 1742032587}
+    sType: 
+    manualName: 
+  - name: winEnjoyGameGO
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 1664152986}
     sType: 
     manualName: 
   showlog: 0

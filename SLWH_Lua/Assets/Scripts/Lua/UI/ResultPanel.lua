@@ -73,13 +73,15 @@ function Class:ShowResult(resultPanelData)
     local betScore = resultPanelData.betScore or 0
     local color_id = resultPanelData.color_id
     local exType = resultPanelData.exType
-    --庄闲和小游戏
-
+    --
+    self.betText.text = tostring(betScore)
+    self.winText.text = self:__GetNumString(winScore)
+    --庄和闲小游戏
     local enjoyGameData = resultPanelData.enjoyGameData
     self.enjoyGameData.winColorBG = self.bgColors[enjoyGameData.enjoyGame_id]
     self.enjoyGameData.enjoyImg = self.enjoyTypeSprs[enjoyGameData.enjoyGame_id]
     self.enjoyGameData.ratioText.text = enjoyGameData.enjoyGameRatio
-
+    self.enjoyGameData.winEnjoyGameGO:SetActive(true)
     -- 颜色(普通中奖+三元四喜)
     if color_id == ColorType.SanYuan then   -- 同一颜色四种动物都中奖
         local data = resultPanelData.sanyuanData
@@ -87,41 +89,43 @@ function Class:ShowResult(resultPanelData)
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
             self:__AddAnimal(i, colorSpr, data.animalRatioArray[i])
         end
-        self.
+        self.winSanYuan:SetActive(true)
     elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
         local data = resultPanelData.sixiData
         for i = ColorType.Red, ColorType.Yellow, 1 do
             local spr = self.smallColors[i]
             self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i])
         end
+        self.winSiXi:SetActive(true)
     else
         local data = resultPanelData.normalData
         local spr = self.smallColors[color_id]
         self:__AddAnimal(data.animal_id, spr, data.ratio)
+        local winAnimalData = {}
+        self.winAnimalInitHelper:Init(winAnimalData)
+        winAnimalData.winColorBG.sprite = spr
+        winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
+        winAnimalData.ratioText.text = tostring(data.ratio)
+        self.winAnimalData.winAnimalGO:SetActive(true)
     end
 
-
-    -- winScore = winScore or 0
-    -- if winScore > 0 then
-    --     self.winBG:SetActive(true)
-    -- else
-    --     self.loseBG:SetActive(true)
-    -- end
-    -- self.winIcon.sprite = self.resultWinSprs[winID]
-    -- self.winRatio.text = "x"..tostring(winRatio)
-    -- self.selfName.text = "我"
-
-    -- self.selfWinScore.text = self:__GetNumString(winScore)
-    -- self.selfTotalWinScore.text = self:__GetNumString(totalWinScore)
-    -- -- 庄家
-    -- self.bankerName = "庄家"
-
-    -- local bankerWinText = tostring(bankerWinScore)
-    -- if bankerWinScore > 0 then
-    --     bankerWinText = "+"..bankerWinText
-    -- end
-    -- self.bankerWinScore.text = bankerWinText
-    -- self.bankerTotalWinScore.text = tostring(bankerTotalWinScore)
+    -- 额外大奖
+    if exType == ExWinType.CaiJin then
+        self.winCaiJinData.ratio.text = tostring(resultPanelData.caijin_ratio)
+        self.winCaiJinData.winCaiJiGO:SetActive(true)
+    elseif exType == ExWinType.LiangBei or exType == ExWinType.SanBei then
+        self.winShanDianData.ratio.text = tostring(resultPanelData.shandian_ratio)
+        self.winShanDianData.winShandianGO:SetActive(true)
+    elseif exType == ExWinType.SongDeng then
+        local data = resultPanelData.songdengData
+        local color = self.bgColors[data.songDengColorID]
+        local animal = self.animalSprs[data.songDengAnimalID]
+        local ratio = data.songDengRatio
+        self.winSongDengData.winColorBG.sprite = color
+        self.winSongDengData.animalImg.sprite = animal
+        self.winSongDengData.ratio.text = tostring(ratio)
+        self.winSongDengData.winSongDengGO:SetActive(true)
+    end
 
     self.resultPanel:SetActive(true)
     return GameConfig.ShowResultTime
@@ -132,6 +136,14 @@ function Class:HideResult()
     for i = 0, self.resuletScrollView.content.childCount-1, 1 do
         Destroy(self.resuletScrollView.content:GetChild(i).gameObject)
     end
+    --
+    --self.enjoyGameData.winEnjoyGameGO:SetActive(false)
+    self.winSanYuan:SetActive(false)
+    self.winSiXi:SetActive(false)
+    self.winAnimalData.winAnimalGO:SetActive(false)
+    self.winCaiJinData.winCaiJiGO:SetActive(false)
+    self.winShanDianData.winShandianGO:SetActive(false)
+    self.winSongDengData.winSongDengGO:SetActive(false)
 end
 
 -- 初始化一个中奖动物

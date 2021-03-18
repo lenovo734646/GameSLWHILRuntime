@@ -506,67 +506,85 @@ function Class:OnShowState(data)
     local ExWinType = GameConfig.ExWinType
     local AnimalType = GameConfig.AnimalType
     --
-    local recordData = data.history_record
-    local resultInfo = recordData.ressult_info_list[1]
-    local songDengInfo = recordData.ressult_info_list[2]
+    if data.history_record ~= nil then
+        local recordData = data.history_record
+        local resultInfo = recordData.ressult_info_list[1]
+        local songDengInfo = recordData.ressult_info_list[2]
 
-    -- 统计结果
-    -- 庄闲和小游戏
-    local enjoyGameData = {
-        enjoyGame_id = recordData.win_enjoyGameType,
-        enjoyGameRatio = GameConfig.EnjoyGameRatio[recordData.win_enjoyGameType],
-    }
-    self.resultPanelData.enjoyGameData = enjoyGameData
-    -- 颜色(普通中奖+三元四喜)
-    local color_id = resultInfo.color_id
-    if color_id == ColorType.SanYuan then
+        -- 统计结果
+        -- 庄闲和小游戏
+        local enjoyGameData = {
+            enjoyGame_id = recordData.win_enjoyGameType,
+            enjoyGameRatio = GameConfig.EnjoyGameRatio[recordData.win_enjoyGameType],
+        }
+        self.resultPanelData.enjoyGameData = enjoyGameData
+        -- 颜色(普通中奖+三元四喜)
+        local color_id = resultInfo.color_id
+        if color_id == ColorType.SanYuan then
 
-        local sanyuanColor_id = resultInfo.winSanYuanColor
-        local animalRatioArray = {}
-        for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-            tinsert(animalRatioArray, self:__GetRatio(sanyuanColor_id, i))
+            local sanyuanColor_id = resultInfo.winSanYuanColor
+            local animalRatioArray = {}
+            for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
+                tinsert(animalRatioArray, self:__GetRatio(sanyuanColor_id, i))
+            end
+            local sanyuanData = {
+                sanyuanColor_id = sanyuanColor_id,
+                animalRatioArray = animalRatioArray,
+            }
+            self.resultPanelData.sanyuanData = sanyuanData
+
+        elseif color_id == ColorType.SiXi then
+            local animal_id = resultInfo.animal_id
+            local animalRatioArray = {}
+            for i = ColorType.Red, ColorType.Yellow, 1 do
+                tinsert(animalRatioArray, self:__GetRatio(i, animal_id))
+            end
+            local sixiData = {
+                animal_id =  animal_id,
+                animalRatioArray = animalRatioArray,
+            }
+            self.resultPanelData.sixiData = sixiData
+        else
+            local normalData = {
+            animal_id = resultInfo.animal_id,
+            ratio = self:__GetRatio(color_id, resultInfo.animal_id)
+            }
+            self.resultPanelData.normalData = normalData
         end
-        local sanyuanData = {
-            sanyuanColor_id = sanyuanColor_id,
-            animalRatioArray = animalRatioArray,
-        }
-        self.resultPanelData.sanyuanData = sanyuanData
-
-    elseif color_id == ColorType.SiXi then
-        local animal_id = resultInfo.animal_id
-        local animalRatioArray = {}
-        for i = ColorType.Red, ColorType.Yellow, 1 do
-            tinsert(animalRatioArray, self:__GetRatio(i, animal_id))
+        -- 额外大奖
+        local exType = recordData.win_exType
+        if exType == ExWinType.CaiJin then
+            self.resultPanelData.caijin_ratio = data.caijin_ratio
+        elseif exType == ExWinType.LiangBei or exType == ExWinType.SanBei then
+            self.resultPanelData.shandian_ratio = data.shandian_ratio
+        elseif exType == ExWinType.SongDeng then
+            local songdengData = {
+                songDengColorID = songDengInfo.winColor,
+                songDengAnimalID = songDengInfo.winAnimal,
+                songDengRatio = self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal)
+            }
+            self.resultPanelData.songdengData = songdengData
         end
-        local sixiData = {
-            animal_id =  animal_id,
-            animalRatioArray = animalRatioArray,
-        }
-        self.resultPanelData.sixiData = sixiData
-    else
-        local normalData = {
-        animal_id = resultInfo.animal_id,
-        ratio = self:__GetRatio(color_id, resultInfo.animal_id)
-        }
-        self.resultPanelData.normalData = normalData
-    end
-    -- 额外大奖
-    local exType = recordData.win_exType
-    if exType == ExWinType.CaiJin then
-        self.resultPanelData.caijin_ratio = data.caijin_ratio
-    elseif exType == ExWinType.LiangBei or exType == ExWinType.SanBei then
-        self.resultPanelData.shandian_ratio = data.shandian_ratio
-    elseif exType == ExWinType.SongDeng then
-        local songdengData = {
-            songDengColorID = songDengInfo.winColor,
-            songDengAnimalID = songDengInfo.winAnimal,
-            songDengRatio = self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal)
-        }
-        self.resultPanelData.songdengData = songdengData
-    end
-    self.resultPanelData.color_id = color_id
-    self.resultPanelData.exType = exType
+        self.resultPanelData.color_id = color_id
+        self.resultPanelData.exType = exType
 
+        print("=====OnShowState=======:")
+        local ratio = ""
+        for i = 1, #self.ratioArray, 1 do
+            ratio = ratio..self.ratioArray[i]..","
+        end
+        print("倍率表：", ratio)
+        print("庄和闲结果: ", recordData.win_enjoyGameType)
+        print("颜色结果: ", color_id)
+        print("动物结果: ", resultInfo.animal_id)
+        print("大三元颜色结果: ", resultInfo.winSanYuanColor)
+        print("额外大奖结果：", exType)
+        print("彩金倍率：", data.caijin_ratio)
+        print("闪电倍率：", data.shandian_ratio)
+        print("送灯奖励：", songDengInfo.winColor, songDengInfo.winAnimal, self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal))
+
+    end
+    
 
     -- 停止动物动画
     self:StopIdleStateAnim()
@@ -718,9 +736,9 @@ function Class:OnReceiveBetAck(data)
         print("下注成功返回玩家当前分数：data.self_score")
         self:OnMoneyChange(data.self_score)
     else
-        if _G.ShotHitMessage then
-            local errorstr = '' -- TODO 获取错误提示
-            _G.ShotHitMessage(errorstr)
+        if g_Env.ShotHitMessage then
+            local errorstr = GameConfig.BetErrorTip[data.errcode]
+            g_Env.ShotHitMessage(errorstr)
         else
             print('TODO 获取错误提示 data.errcode=', data.errcode)
         end

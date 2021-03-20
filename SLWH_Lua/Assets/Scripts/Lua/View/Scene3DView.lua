@@ -120,13 +120,16 @@ function Class:__init(roomdata)
     for i = 1, betAreaBtnInitHelpers.Length do
         local helper = betAreaBtnInitHelpers[i-1]
         local item_id = tonumber(helper.name)
+        
         if helper.t==nil then
             local data = {
                 item_id = item_id,
             }
             helper:Init(data,false)
         end
+        
         betAreaList[item_id] = helper.t
+        print("item_id = ", helper.t.item_id)
     end
     self.betAreaList = betAreaList
 

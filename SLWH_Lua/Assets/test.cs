@@ -95,11 +95,10 @@ namespace SLWH
             //{
             //    print(UnityEngine.Random.Range(1, 2+1));
             //}
-            var r = UnityEngine.Random.Range(1, 2);
-            string[] strArray = { "而送灯","sdf", "123" };
-            print($"strArray = {strArray}");
-
-
+            //var r = UnityEngine.Random.Range(1, 2);
+            //string[] strArray = { "而送灯","sdf", "123" };
+            //print($"strArray = {strArray}");
+            //scrollRect.content.DetachChildren();
             // 二维数组
             //for (int i = 0; i < array.GetLength(0); i++)
             //{

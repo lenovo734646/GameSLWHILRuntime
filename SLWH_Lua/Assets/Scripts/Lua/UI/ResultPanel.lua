@@ -53,7 +53,7 @@ function Class:__init(resultPanelGameObject)
     self.winSongDengInitHelper:Init(self.winSongDengData)
     --
 
-    self.smallColors = multiList.multiList
+    self.smallColors = multiList.smallColors
     self.bgColors = multiList.bgColors
     self.animalNameSprs = multiList.animalNameSprs
     self.animalSprs = multiList.animalSprs

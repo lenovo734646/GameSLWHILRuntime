@@ -406,7 +406,7 @@ end
 function Class:OnBetClicked(luaInitHelper)
     local betAreaData = luaInitHelper.t
     local item_id = betAreaData.item_id
-
+    print("OnBetClicked item_id = ",item_id)
     if self.notEnoughMoney then
         if _G.ShotHitMessage then
             local errorstr = ''
@@ -474,6 +474,11 @@ function Class:OnBetState(data)
     ui.viewEventBroadcaster:Broadcast('betState')
     AudioManager.Instance:PlaySoundEff2D("start_bet")
     self:DoCheckForBetButtonState()--判断并禁用不能钱不够的筹码按钮
+
+    if data.ratio_array == nil then
+        -- 下注阶段进入
+         return
+     end
     -- 设置动物倍率和颜色(下注阶段进入颜色和倍率是nil，没传过来)
     local colorArray = data.color_array
     local ratioArray = data.ratio_array
@@ -492,7 +497,10 @@ function Class:OnBetState(data)
             ui.betAreaList[i].ratioText.text = ratioArray[i]
         end
     end
-    self.ratioArray = ratioArray
+    if ratioArray ~= nil then
+        self.ratioArray = ratioArray   
+    end
+     
 
     --
 end
@@ -502,6 +510,11 @@ function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
+
+     if data.history_record == nil then
+        -- 结算阶段进入
+         return
+     end
     --
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
@@ -511,22 +524,27 @@ function Class:OnShowState(data)
         local recordData = data.history_record
         local resultInfo = recordData.ressult_info_list[1]
         local songDengInfo = recordData.ressult_info_list[2]
-        local color_id = resultInfo.color_id
+        local winColor = resultInfo.winColor
+        local winSanYuanColor = resultInfo.winSanYuanColor
+        local winAnimal = resultInfo.winAnimal
         local exType = recordData.win_exType
-        print("=====OnShowState=======:")
+        print("=====OnShowState=======:", self.ratioArray)
         local ratio = ""
         for i = 1, #self.ratioArray, 1 do
             ratio = ratio..self.ratioArray[i]..","
         end
         print("倍率表：", ratio)
         print("庄和闲结果: ", recordData.win_enjoyGameType)
-        print("颜色结果: ", color_id)
-        print("动物结果: ", resultInfo.animal_id)
-        print("大三元颜色结果: ", resultInfo.winSanYuanColor)
+        print("颜色结果: ", winColor)
+        print("动物结果: ", winAnimal)
+        print("大三元颜色结果: ", winSanYuanColor)
         print("额外大奖结果：", exType)
         print("彩金倍率：", data.caijin_ratio)
         print("闪电倍率：", data.shandian_ratio)
-        print("送灯奖励：", songDengInfo.winColor, songDengInfo.winAnimal, self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal))
+        if exType == ExWinType.SongDeng then
+            print("送灯奖励：", songDengInfo.winColor, songDengInfo.winAnimal, self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal))
+        end
+        
 
         -- 统计结果
         -- 庄闲和小游戏
@@ -537,34 +555,31 @@ function Class:OnShowState(data)
         self.resultPanelData.enjoyGameData = enjoyGameData
         -- 颜色(普通中奖+三元四喜)
         
-        if color_id == ColorType.SanYuan then
-
-            local sanyuanColor_id = resultInfo.winSanYuanColor
+        if winColor == ColorType.SanYuan then
             local animalRatioArray = {}
             for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-                tinsert(animalRatioArray, self:__GetRatio(sanyuanColor_id, i))
+                tinsert(animalRatioArray, self:__GetRatio(winSanYuanColor, i))
             end
             local sanyuanData = {
-                sanyuanColor_id = sanyuanColor_id,
+                sanyuanColor_id = winSanYuanColor,
                 animalRatioArray = animalRatioArray,
             }
             self.resultPanelData.sanyuanData = sanyuanData
 
-        elseif color_id == ColorType.SiXi then
-            local animal_id = resultInfo.animal_id
+        elseif winColor == ColorType.SiXi then
             local animalRatioArray = {}
             for i = ColorType.Red, ColorType.Yellow, 1 do
-                tinsert(animalRatioArray, self:__GetRatio(i, animal_id))
+                tinsert(animalRatioArray, self:__GetRatio(i, winAnimal))
             end
             local sixiData = {
-                animal_id =  animal_id,
+                animal_id =  winAnimal,
                 animalRatioArray = animalRatioArray,
             }
             self.resultPanelData.sixiData = sixiData
         else
             local normalData = {
-            animal_id = resultInfo.animal_id,
-            ratio = self:__GetRatio(color_id, resultInfo.animal_id)
+            animal_id = winAnimal,
+            ratio = self:__GetRatio(winColor, winAnimal)
             }
             self.resultPanelData.normalData = normalData
         end
@@ -582,7 +597,8 @@ function Class:OnShowState(data)
             }
             self.resultPanelData.songdengData = songdengData
         end
-        self.resultPanelData.color_id = color_id
+        self.resultPanelData.color_id = winColor
+        self.resultPanelData.animal_id = winAnimal
         self.resultPanelData.exType = exType
 
 

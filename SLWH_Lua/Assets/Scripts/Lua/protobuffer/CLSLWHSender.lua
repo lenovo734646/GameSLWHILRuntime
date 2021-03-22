@@ -106,17 +106,18 @@ function Send_ExitRoomReq_Async(err_paser)
 end
 
 --返回的表内容(协程方法Async同样适用):
--- errcode              0成功 1你不在房间中 2阶段不对 3筹码不合法 4押注项不合法 5金币不足 6超过下注最大上限 7庄家不可以下注
--- self_score                       玩家当前的分数
+-- errcode              0成功 1你不在房间中 2阶段不对 3筹码不合法 4押注项不合法 5金币不足 6超过个人下注最大上限 7超过房间下注最大上限  8庄家不可以下注
+-- self_score           玩家当前的分数
 -- self_bet_info      自己下注信息
-function Send_SetBetReq(callback, animal_id, bet_id)
-    local senddata = {animal_id = animal_id, bet_id = bet_id, }
+-- errParam             错误参数：比如下注上限等
+function Send_SetBetReq(callback, index_id, bet_id)
+    local senddata = {index_id = index_id, bet_id = bet_id, }
     AsyncRequest('CLSLWH.SetBetReq',senddata,'CLSLWH.SetBetAck',callback)
 end
 
-function Send_SetBetReq_Async(animal_id, bet_id, err_paser)
+function Send_SetBetReq_Async(index_id, bet_id, err_paser)
     err_paser = err_paser or ErrorPaser
-    local senddata = {animal_id = animal_id, bet_id = bet_id, }
+    local senddata = {index_id = index_id, bet_id = bet_id, }
     local data
     local callback = function(data_) data = data_ end
     AsyncRequest('CLSLWH.SetBetReq',senddata,'CLSLWH.SetBetAck',callback)
@@ -139,7 +140,7 @@ function Send_SetBetReq_Async(animal_id, bet_id, err_paser)
 end
 
 --返回的表内容(协程方法Async同样适用):
--- icon_list    历史记录列表
+-- record_list    历史记录列表
 function Send_HistoryReq(callback)
     local senddata = {}
     AsyncRequest('CLSLWH.HistoryReq',senddata,'CLSLWH.HistoryAck',callback)

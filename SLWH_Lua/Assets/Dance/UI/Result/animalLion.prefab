@@ -551,6 +551,12 @@ MonoBehaviour:
     anyType: {fileID: 1632427418}
     sType: 
     manualName: 
+  - name: animator
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 4706037452698568857}
+    sType: 
+    manualName: 
   showlog: 0
 --- !u!1 &1324523199035390290
 GameObject:

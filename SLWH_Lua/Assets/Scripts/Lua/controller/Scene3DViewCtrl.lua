@@ -406,7 +406,7 @@ end
 function Class:OnBetClicked(luaInitHelper)
     local betAreaData = luaInitHelper.t
     local item_id = betAreaData.item_id
-    print("OnBetClicked item_id = ",item_id)
+
     if self.notEnoughMoney then
         if _G.ShotHitMessage then
             local errorstr = ''
@@ -527,6 +527,7 @@ function Class:OnShowState(data)
         local winColor = resultInfo.winColor
         local winSanYuanColor = resultInfo.winSanYuanColor
         local winAnimal = resultInfo.winAnimal
+        local winEnjoyGameType = recordData.win_enjoyGameType
         local exType = recordData.win_exType
         print("=====OnShowState=======:", self.ratioArray)
         local ratio = ""
@@ -534,7 +535,7 @@ function Class:OnShowState(data)
             ratio = ratio..self.ratioArray[i]..","
         end
         print("倍率表：", ratio)
-        print("庄和闲结果: ", recordData.win_enjoyGameType)
+        print("庄和闲结果: ", winEnjoyGameType)
         print("颜色结果: ", winColor)
         print("动物结果: ", winAnimal)
         print("大三元颜色结果: ", winSanYuanColor)
@@ -549,8 +550,8 @@ function Class:OnShowState(data)
         -- 统计结果
         -- 庄闲和小游戏
         local enjoyGameData = {
-            enjoyGame_id = recordData.win_enjoyGameType,
-            enjoyGameRatio = GameConfig.EnjoyGameRatio[recordData.win_enjoyGameType],
+            enjoyGame_id = winEnjoyGameType,
+            enjoyGameRatio = GameConfig.EnjoyGameRatio[winEnjoyGameType],
         }
         self.resultPanelData.enjoyGameData = enjoyGameData
         -- 颜色(普通中奖+三元四喜)
@@ -625,8 +626,13 @@ function Class:OnShowState(data)
                 
             end
             -- 开奖结束再更新record，避免剧透
-            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(resultInfo.color_id, resultInfo.winSanYuanColor, resultInfo.animal_id, recordData.win_enjoyGameType, recordData.win_exType,
-                                                                songDengColorID, songDengAnimalID))
+            local sdColor, sdAnimal = nil,nil
+            if songDengInfo ~= nil then
+                sdColor = songDengInfo.winColor
+                sdAnimal = songDengInfo.winAnimal
+            end
+            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(winColor, winSanYuanColor, winAnimal, winEnjoyGameType, exType,
+                                                                sdColor, sdAnimal))
         end)
     end
 end
@@ -726,17 +732,18 @@ end
 
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
+    print("OnSendBet item_id = ",item_id, betid)
     CLSLWHSender.Send_SetBetReq(function (data)
         self:OnReceiveBetAck(data)
     end, item_id, betid)
 end
 
 function Class:OnReceiveBetAck(data)
-    --print("OnReceiveBetAck"..json.encode(data))
+    print("OnReceiveBetAck"..json.encode(data))
     local betAreaList = self.ui.betAreaList
     if data.errcode == 0 then
         local self_bet_info = data.self_bet_info
-        local item_id = self_bet_info.animal_id
+        local item_id = self_bet_info.index_id
         if item_id == -1 then
             for _, betAreaData in pairs(betAreaList) do
                 betAreaData.selfBetScore.text = '0'
@@ -747,6 +754,7 @@ function Class:OnReceiveBetAck(data)
             local betAreaData = betAreaList[item_id]
             --
             local total_bet = self_bet_info.total_bet
+            print("betAreaData.selfBetScore = ", betAreaData.selfBetScore)
             betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
             self.betSnapShot[item_id] = total_bet
             self.selfTotalBet[item_id] = 0

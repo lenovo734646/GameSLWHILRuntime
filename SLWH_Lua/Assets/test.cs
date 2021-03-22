@@ -32,7 +32,10 @@ namespace SLWH
 
         public DOTweenAnimation tweenAnimation;
 
+        public Sprite spr;
         public Image img;
+
+        public EventBroadcaster eventBroadcaster;
 
         public int padCount = 2;
         public int aa = 01;
@@ -90,6 +93,8 @@ namespace SLWH
             print("default exWinTyp = " + exWinTyp);
             var rate = ExWinRateMap[ExWinType.CaiJin];
             print(rate);
+
+
 
             //for (int i = 0; i < 10; i++)
             //{
@@ -252,7 +257,16 @@ namespace SLWH
         {
             if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
             {
-                animatorHelper.Play("Anxia");
+                // 替换图片精灵并设置原尺寸
+                //img.sprite = spr;
+                //img.SetNativeSize();
+                // animator 播放动画
+                //animatorHelper.Play("Anxia");
+
+                spineHelper.Play("dengdai");
+                //spineHelper.Play("kaishixiazhu");
+
+                eventBroadcaster.Broadcast("showState");
 
                 //baoshi.GetComponent<MeshRenderer>().material = materials[materialIndex];
                 //materialIndex++;

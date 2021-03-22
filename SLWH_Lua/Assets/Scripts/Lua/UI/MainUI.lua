@@ -56,9 +56,11 @@ end
 
 function Class:SetWaitNextStateTip(bShow)
     if bShow then
-        self.gameStateSpineHelper:PlayByName("dengdai", nil, true)
+        self.WaitNextStateTipSpineHelper.gameObject:SetActive(true)
+        self.WaitNextStateTipSpineHelper:PlayByName("dengdai", nil, true)
     else
-        self.gameStateSpineHelper:StopByName("dengdai", true)
+        self.WaitNextStateTipSpineHelper:StopByName("dengdai", true)
+        self.WaitNextStateTipSpineHelper.gameObject:SetActive(false)
     end
 end
 

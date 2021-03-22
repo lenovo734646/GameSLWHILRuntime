@@ -64,6 +64,9 @@ end
 
 -- 返回等待时间可供协程调用
 function Class:ShowResult(resultPanelData)
+    if resultPanelData.enjoyGameData == nil then
+        return
+    end
     print("显示结算界面，功能待实现")
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
@@ -99,13 +102,14 @@ function Class:ShowResult(resultPanelData)
         self.winSiXi:SetActive(true)
     else
         local data = resultPanelData.normalData
-        local spr = self.smallColors[color_id]
-        self:__AddAnimal(data.animal_id, spr, data.ratio)
+        self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio)
+        --
         local winAnimalData = {}
         self.winAnimalInitHelper:Init(winAnimalData)
-        winAnimalData.winColorBG.sprite = spr
+        winAnimalData.winColorBG.sprite = self.bgColors[color_id]
         winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
-        winAnimalData.ratioText.text = tostring(data.ratio)
+        winAnimalData.animalImg:SetNativeSize()
+        winAnimalData.ratioText.text = "x"..tostring(data.ratio)
         self.winAnimalData.winAnimalGO:SetActive(true)
     end
 
@@ -123,7 +127,7 @@ function Class:ShowResult(resultPanelData)
         local ratio = data.songDengRatio
         self.winSongDengData.winColorBG.sprite = color
         self.winSongDengData.animalImg.sprite = animal
-        self.winSongDengData.ratio.text = tostring(ratio)
+        self.winSongDengData.ratio.text = "x"..tostring(ratio)
         self.winSongDengData.winSongDengGO:SetActive(true)
     end
 
@@ -151,9 +155,10 @@ function Class:__AddAnimal(animal_id, colorSpr, ratio)
     local go = Instantiate(self.resultAnimals[animal_id], self.resuletScrollView.content)
     go.transform.localPosition = Vector3.zero
     local animalData = {}
-    go:GetComponent(typeof(luaInitHelper)):Init(animalData)
+    go:GetComponent(typeof(LuaInitHelper)):Init(animalData)
     animalData.color.sprite = colorSpr
-    animalData.ratioText.text = ratio
+    animalData.ratioText.text = "x"..ratio
+    animalData.animator:Play("Jump", 0, 0);
     
 end
 

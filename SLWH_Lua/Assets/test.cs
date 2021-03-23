@@ -16,6 +16,8 @@ namespace SLWH
     public class test : MonoBehaviour
     {
         public GameObject Root;
+        public int rotate;
+        public float duration;
         public ParticleSystem par;
         public Button button;
         public Text btnText;
@@ -263,17 +265,18 @@ namespace SLWH
                 // animator 播放动画
                 //animatorHelper.Play("Anxia");
 
-                spineHelper.Play("dengdai");
+                //spineHelper.Play("dengdai");
                 //spineHelper.Play("kaishixiazhu");
 
-                eventBroadcaster.Broadcast("showState");
+                //eventBroadcaster.Broadcast("showState");
 
                 //baoshi.GetComponent<MeshRenderer>().material = materials[materialIndex];
                 //materialIndex++;
                 //if (materialIndex >= materials.Length)
                 //    materialIndex = 0;
                 //tweenAnimation.DOPlayForward();
-
+                Root.transform.DORotate(new Vector3(0, rotate, 0), duration, RotateMode.FastBeyond360);
+                print("DORotate = " + rotate + "  dur = " + duration);
             }
 
 

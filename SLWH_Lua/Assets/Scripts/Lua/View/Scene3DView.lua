@@ -111,6 +111,7 @@ function Class:__init(roomdata)
             colorMesh = self.colorRootTransform:GetChild(i):GetComponent("MeshRenderer"),
             animator = self.colorRootTransform:GetChild(i):GetComponent("Animator"),
         }
+        print("ColorDataList = ", i , data.colorMesh, data.animator)
         tinsert(colorDataList, data)
     end
     self.colorDataList = colorDataList

@@ -5,11 +5,12 @@ local Config={
     ShowAnimationTime = 8,
     ShowResultTime = 5,
     RunItemCount = 24,
+    AnimalCount = 4,
     -- 胜利音效名字（根据itemID）
     WinSound = {"red_lion", "red_panda", "red_monkey", "red_rabbit", 
                 "green_lion", "green_panda", "green_monkey", "green_rabbit",
                 "yellow_lion", "yellow_panda", "yellow_monkey", "yellow_rabbit",
-                "enjoygame_zhuang", "enjoygame_xian", "enjoygame_he"},
+                "enjoygame_zhuang", "enjoygame_he","enjoygame_xian" },
 
     debugPBPath = [[E:\WorkRoot\fll3d_support\protobuf\config\]],
 

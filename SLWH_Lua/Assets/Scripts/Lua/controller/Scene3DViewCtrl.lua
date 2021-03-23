@@ -8,6 +8,7 @@ local logError = logError
 local math,pairs = math,pairs
 local Vector3 = CS.UnityEngine.Vector3
 local DOTween = CS.DG.Tweening.DOTween
+local RotateMode = CS.DG.Tweening.RotateMode
 local table = table
 local tinsert = table.insert
 local tremove = table.remove
@@ -273,7 +274,18 @@ function Class:InitAnimalAnimation()
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
             winShowData.animatorHelper:Play("Victory")
-            AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[winShowData.item_id])
+            -- 播放声音
+            local color_id = self.resultPanelData.color_id
+            local animal_id = self.resultPanelData.animal_id
+            if color_id == GameConfig.ColorType.SanYuan then
+                AudioManager.Instance:PlaySoundEff2D("dasanyuan")
+            elseif color_id == GameConfig.ColorType.SiXi then
+                AudioManager.Instance:PlaySoundEff2D("dasixi")
+            else
+                local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
+                AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
+            end
+            
             -- 等待显示中奖结算
             local resultPanel = self.ui.mainUI.resultPanel
             yield(WaitForSeconds(resultPanel:ShowResult(self.resultPanelData)))
@@ -331,31 +343,38 @@ end
 function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromindex, animalToindex, round, time)
     round = round or 3
     time = time or GameConfig.ShowAnimationTime
-    --print('DoTweenShowResultAnim round:'..round..' time:'..time)
+    print('开转 colorFromindex:'..colorFromindex..' ticolorToindexme:'..colorToindex)
+    print('开转 animalFromindex:'..animalFromindex..' animalToindex:'..animalToindex)
     local ui = self.ui
-    print("TODO：颜色开转")
+
     local colorDataList = ui.colorDataList
     local len = #colorDataList
-    local colorTotalWillRunCount = colorToindex - colorFromindex + len*round
+    local rotCount = colorFromindex - colorToindex  -- 逆时针转
+    if rotCount < 0 then
+        rotCount = rotCount + len
+    end
+    local colorTotalWillRunCount = rotCount + len*round
     if colorTotalWillRunCount < len then
         colorTotalWillRunCount=colorTotalWillRunCount+len
     end
 
     local colorStartRot = colorFromindex*15
     local arrow_transform = ui.arrow_transform
-    local arrowTotalRot = colorTotalWillRunCount*15
+    local arrowTotalRot = -colorTotalWillRunCount*15    -- 指针逆时针转
     arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-    
+    print("TODO：指针开转", arrowTotalRot)
     CoroutineHelper.StartCoroutine(function ()
-        yield(arrow_transform:DORotate(Vector3(0, arrowTotalRot, 0), time-GameConfig.ShowResultTime)
+        yield(arrow_transform:DORotate(Vector3(0, arrowTotalRot, 0), time-GameConfig.ShowResultTime, RotateMode.FastBeyond360)
         :SetEase(curve):WaitForCompletion())
         local colordata = colorDataList[colorToindex]
+        print("colordata = ", colordata, colorToindex,  colordata.animator)
         colordata.animator.enabled = true  -- 播放闪烁动画
+        print("222222222222222222222")
     end)
 
     -- 
-    print("TODO：动物开转")
+    
     local runItemDataList = ui.runItemDataList
     local len = #runItemDataList
     local animalTotalWillRunCount = animalToindex - animalFromindex + len*round
@@ -369,14 +388,16 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
 
+    print("TODO：动物开转", animalTotalRot)
     return CoroutineHelper.StartCoroutine(function ()
-        yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), time-GameConfig.ShowResultTime)
+        yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), time-GameConfig.ShowResultTime, RotateMode.FastBeyond360)
         :SetEase(curve):WaitForCompletion())
         local animaldata = runItemDataList[animalToindex]
+        print("animaldata = ", animaldata, animalToindex)
         animaldata.animatorHelper:Play("Victory") -- 中奖动物播放胜利动画
         ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
         ui.winStageAnimal:DOPlayForward()   -- 播放中奖动物升起动画
-
+        print("1111111111111111")
         yield()
 
         yield(animaldata.PlayShowAsync())
@@ -615,7 +636,7 @@ function Class:OnShowState(data)
                 local indexdata = anim_result_list[i]
                 local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
                 local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
-                --print('indexs:',from,' ',to)
+                
                 local round = 2
                 local showTime = self.normal_show_time
                 if i > 1 then
@@ -758,7 +779,7 @@ function Class:OnReceiveBetAck(data)
             betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
             self.betSnapShot[item_id] = total_bet
             self.selfTotalBet[item_id] = 0
-            AudioManager.Instance:PlaySoundEff2D("bet")
+            AudioManager.Instance:PlaySoundEff2D("betSound")
         end
         print("下注成功返回玩家当前分数：data.self_score")
         self:OnMoneyChange(data.self_score)
@@ -776,7 +797,15 @@ function Class:__GetRatio(color_id, animal_id)
     return index;
 end
 
-
+-- 获取下注项的Index（lua数组下标从1开始）
+-- color_id ： 下注颜色：GameConfig.ColorType，从1开始
+-- animal_id : 下注动物：：GameConfig.AnimalType, 从1开始
+function Class:__GetBetItemLuaIndex(color_id, animal_id)
+    color_id = color_id -1
+    animal_id = animal_id -1
+    local index = color_id * GameConfig.AnimalCount + animal_id;
+    return index;
+end
 
 
 return _ENV

@@ -68,6 +68,7 @@ function Class:ShowResult(resultPanelData)
         return
     end
     print("显示结算界面，功能待实现")
+    self.resultPanel:SetActive(true)
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
     local AnimalType = GameConfig.AnimalType
@@ -87,20 +88,23 @@ function Class:ShowResult(resultPanelData)
     self.enjoyGameData.winEnjoyGameGO:SetActive(true)
     -- 颜色(普通中奖+三元四喜)
     if color_id == ColorType.SanYuan then   -- 同一颜色四种动物都中奖
+        self.winSanYuan:SetActive(true)
         local data = resultPanelData.sanyuanData
         local colorSpr = self.smallColors[data.sanyuanColor_id]
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
             self:__AddAnimal(i, colorSpr, data.animalRatioArray[i])
         end
-        self.winSanYuan:SetActive(true)
+        
     elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
+        self.winSiXi:SetActive(true)
         local data = resultPanelData.sixiData
         for i = ColorType.Red, ColorType.Yellow, 1 do
             local spr = self.smallColors[i]
             self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i])
         end
-        self.winSiXi:SetActive(true)
+        
     else
+        self.winAnimalData.winAnimalGO:SetActive(true)
         local data = resultPanelData.normalData
         self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio)
         --
@@ -110,17 +114,19 @@ function Class:ShowResult(resultPanelData)
         winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
         winAnimalData.animalImg:SetNativeSize()
         winAnimalData.ratioText.text = "x"..tostring(data.ratio)
-        self.winAnimalData.winAnimalGO:SetActive(true)
+        
     end
 
     -- 额外大奖
     if exType == ExWinType.CaiJin then
-        self.winCaiJinData.ratio.text = tostring(resultPanelData.caijin_ratio)
         self.winCaiJinData.winCaiJiGO:SetActive(true)
+        self.winCaiJinData.ratio.text = tostring(resultPanelData.caijin_ratio)
     elseif exType == ExWinType.LiangBei or exType == ExWinType.SanBei then
-        self.winShanDianData.ratio.text = tostring(resultPanelData.shandian_ratio)
         self.winShanDianData.winShandianGO:SetActive(true)
+        self.winShanDianData.ratio.text = tostring(resultPanelData.shandian_ratio)
+
     elseif exType == ExWinType.SongDeng then
+        self.winSongDengData.winSongDengGO:SetActive(true)
         local data = resultPanelData.songdengData
         local color = self.bgColors[data.songDengColorID]
         local animal = self.animalSprs[data.songDengAnimalID]
@@ -128,10 +134,10 @@ function Class:ShowResult(resultPanelData)
         self.winSongDengData.winColorBG.sprite = color
         self.winSongDengData.animalImg.sprite = animal
         self.winSongDengData.ratio.text = "x"..tostring(ratio)
-        self.winSongDengData.winSongDengGO:SetActive(true)
+
     end
 
-    self.resultPanel:SetActive(true)
+
     return GameConfig.ShowResultTime
 end
 

@@ -12,9 +12,8 @@ local tonumber = tonumber
 local CoroutineHelper = require'CoroutineHelper'
 local yield = coroutine.yield
 
-local Destroy = Destroy
-local Instantiate = Instantiate
-local GameObject = GameObject
+local SubGame_Env=SubGame_Env
+local ConvertNumberToString = SubGame_Env.ConvertNumberToString
 
 local GameConfig = require'GameConfig'
 
@@ -39,7 +38,7 @@ function Class:__init(userInfoInitHelper, roomData)
 end
 
 function Class:OnChangeMoney(currency)
-    self.TMP_f_UserMoney.text = tostring(currency)
+    self.TMP_f_UserMoney.text = ConvertNumberToString(currency)
 end
 
 function Class:OnChangeHead(headID)

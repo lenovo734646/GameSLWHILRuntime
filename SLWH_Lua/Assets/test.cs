@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using ForReBuild.UIHelper;
+using OSAHelper;
 using Spine.Unity;
 using System;
 using System.Collections;
@@ -16,7 +17,7 @@ namespace SLWH
     public class test : MonoBehaviour
     {
         public GameObject Root;
-        public int rotate;
+        public float rotate;
         public float duration;
         public ParticleSystem par;
         public Button button;
@@ -43,11 +44,14 @@ namespace SLWH
         public int aa = 01;
 
         public GameObject baoshi;
-        public Material[] materials; 
+        public Material[] materials;
+
+        public Animator animator;
 
         int [,]array = new int[3, 5];
 
         public AnimatorHelper animatorHelper;
+        public OSAScrollView oSAScrollView;
 
         public enum ColorType
         {
@@ -91,11 +95,10 @@ namespace SLWH
         // Start is called before the first frame update
         void Start()
         {
-            var exWinTyp = default(ColorType);
-            print("default exWinTyp = " + exWinTyp);
-            var rate = ExWinRateMap[ExWinType.CaiJin];
-            print(rate);
-
+            //var exWinTyp = default(ColorType);
+            //print("default exWinTyp = " + exWinTyp);
+            //var rate = ExWinRateMap[ExWinType.CaiJin];
+            //print(rate);
 
 
             //for (int i = 0; i < 10; i++)
@@ -120,6 +123,8 @@ namespace SLWH
             //    print("Array = " + val);
 
             //}
+            
+
 
             transform.eulerAngles = new Vector3(1, 1, 1);
             transform.DORotate(new Vector3(0, 720, 0), 1).SetEase(Ease.InBounce);
@@ -275,8 +280,18 @@ namespace SLWH
                 //if (materialIndex >= materials.Length)
                 //    materialIndex = 0;
                 //tweenAnimation.DOPlayForward();
-                Root.transform.DORotate(new Vector3(0, rotate, 0), duration, RotateMode.FastBeyond360);
-                print("DORotate = " + rotate + "  dur = " + duration);
+
+                //// 顺时针旋转
+                //var rot = rotate + Root.transform.localEulerAngles.y;
+                //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
+                //Root.transform.DORotate(new Vector3(0, rot, 0), duration, RotateMode.FastBeyond360);
+                //print("DORotate = " + rot + "  dur = " + duration);
+
+                // 逆时针旋转
+                var rot2 = rotate - Root.transform.localEulerAngles.y;
+                print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
+                Root.transform.DORotate(new Vector3(0, -rot2, 0), duration, RotateMode.FastBeyond360);
+                print("DORotate = " + rot2 + "  dur = " + duration);
             }
 
 

@@ -111,7 +111,6 @@ function Class:__init(roomdata)
             colorMesh = self.colorRootTransform:GetChild(i):GetComponent("MeshRenderer"),
             animator = self.colorRootTransform:GetChild(i):GetComponent("Animator"),
         }
-        print("ColorDataList = ", i , data.colorMesh, data.animator)
         tinsert(colorDataList, data)
     end
     self.colorDataList = colorDataList
@@ -130,7 +129,6 @@ function Class:__init(roomdata)
         end
         
         betAreaList[item_id] = helper.t
-        print("item_id = ", helper.t.item_id)
     end
     self.betAreaList = betAreaList
 
@@ -146,9 +144,15 @@ function Class:__init(roomdata)
     end
     --数据更新接口实现（itemViewGameObject会自动回收使用，所以需要对itemViewGameObject进行更新）
     roadScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
+        local SetAnimalImg = function (animalImg, spr)
+            animalImg.sprite = spr
+            animalImg:SetNativeSize()
+        end
+
         viewItemData.colorImg.sprite = itemdata.colorSpr
-        viewItemData.animalImg.sprite = itemdata.animalSpr
+        SetAnimalImg(viewItemData.animalImg, itemdata.animalSpr)
         viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
+        print("itemdata.colorSpr = ", itemdata.colorSpr, itemdata.animalSpr, itemdata.enjoyTypeSpr)
         --
         if itemdata.sanYuanInfo ~= nil then
             local syData = {}
@@ -229,6 +233,8 @@ end
 function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID)
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
+
+    print("HistroyData: " ,color_id, animal_id, enjoyType_id)
 
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
     local sanYuanInfo = nil

@@ -108,12 +108,10 @@ function Class:ShowResult(resultPanelData)
         local data = resultPanelData.normalData
         self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio)
         --
-        local winAnimalData = {}
-        self.winAnimalInitHelper:Init(winAnimalData)
-        winAnimalData.winColorBG.sprite = self.bgColors[color_id]
-        winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
-        winAnimalData.animalImg:SetNativeSize()
-        winAnimalData.ratioText.text = "x"..tostring(data.ratio)
+        self.winAnimalData.winColorBG.sprite = self.bgColors[color_id]
+        self.winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
+        self.winAnimalData.animalImg:SetNativeSize()
+        self.winAnimalData.ratioText.text = "x"..tostring(data.ratio)
         
     end
 
@@ -161,7 +159,7 @@ function Class:__AddAnimal(animal_id, colorSpr, ratio)
     local go = Instantiate(self.resultAnimals[animal_id], self.resuletScrollView.content)
     go.transform.localPosition = Vector3.zero
     local animalData = {}
-    go:GetComponent(typeof(LuaInitHelper)):Init(animalData)
+    go:GetComponent(typeof(LuaInitHelper)):Init(animalData, false)
     animalData.color.sprite = colorSpr
     animalData.ratioText.text = "x"..ratio
     animalData.animator:Play("Jump", 0, 0);

@@ -20,6 +20,7 @@ local yield = coroutine.yield
 local PBHelper = require 'protobuffer.PBHelper'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local GameConfig = require 'GameConfig'
+
 local Destroy = Destroy
 local Instantiate = Instantiate
 local GameObject = GameObject
@@ -82,6 +83,7 @@ function Class:__init(ui,View,roomdata)
             self:OnBetClicked(params[0])
         end
     }
+
 
     -- 玩家上一次下注总值
     self.selfTotalBet = {}
@@ -167,6 +169,14 @@ function Class:OnSceneReady()
     PBHelper.AddListener("OnlinePlayerCountNtf", function (data)
         print("OnlinePlayerCountNtf: ", data.online_count)
         self.ui.topUI:UpdateOnlinePlayerCount(data.online_count)
+    end)
+
+
+    -- 统计数据
+    PBHelper.AddListener("StatisticDataNtf", function (data)
+        print("统计数据："..json.encode(data))
+        self.ui.mainUI:SetStatisticData(data.SixiCount, data.SanYuanCount, data.ZhuangCount, 
+                                        data.XianCount, data.HeCount, data.AllGameCount)
     end)
     --
     local roomdata = self.roomdata
@@ -291,6 +301,8 @@ function Class:InitAnimalAnimation()
             winShowData.animatorHelper:Play("Victory")
             -- 播放声音
             local color_id = self.resultPanelData.color_id
+            print("播放声音：", self.resultPanelData.color_id)
+            assert(color_id)
             local animal_id = self.resultPanelData.animal_id
             if color_id == GameConfig.ColorType.SanYuan then
                 AudioManager.Instance:PlaySoundEff2D("dasanyuan")
@@ -306,6 +318,7 @@ function Class:InitAnimalAnimation()
             local resultPanel = self.ui.mainUI.resultPanel
             yield(WaitForSeconds(resultPanel:ShowResult(self.resultPanelData)))
             resultPanel:HideResult()
+            print("清空结果数据避免冗余干扰")
             self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
             -- 同步玩家分数
             self:OnMoneyChange(self.selfScore)
@@ -576,7 +589,7 @@ function Class:OnShowState(data)
     local winAnimal = resultInfo.winAnimal
     local winEnjoyGameType = recordData.win_enjoyGameType
     local exType = recordData.win_exType
-    print("=====OnShowState=======:", self.ratioArray)
+    print("=====OnShowState=======:")
     local ratio = ""
     for i = 1, #self.ratioArray, 1 do
         ratio = ratio..self.ratioArray[i]..","
@@ -646,10 +659,12 @@ function Class:OnShowState(data)
         self.resultPanelData.songdengData = songdengData
     end
     self.resultPanelData.color_id = winColor
+    assert(winColor)
     self.resultPanelData.animal_id = winAnimal
     self.resultPanelData.exType = exType
     
-
+    -- 小老虎机转动
+    ui.slot:Run111(winEnjoyGameType)
     -- 停止动物动画
     self:StopIdleStateAnim()
     local anim_result_list = data.anim_result_list
@@ -807,7 +822,7 @@ function Class:OnReceiveBetAck(data)
         print("下注成功返回玩家当前分数：data.self_score")
         self:OnMoneyChange(data.self_score)
         -- 统计当前总下注
-        self.ui.betText.text = SubGame_Env.ConvertNumberToString(self:GetContinueBetScore())
+        self.ui.mainUI:SetCurBetScore(self:GetContinueBetScore())
     else
         local errStr = GameConfig.BetErrorTip[data.errcode]
         if not string.IsNullOrEmpty(data.errParam) then

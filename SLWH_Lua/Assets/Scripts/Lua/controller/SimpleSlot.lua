@@ -31,6 +31,7 @@ function Class:__init(slotPanelInitHelper)
     slotPanelInitHelper:ObjectsSetToLuaTable(self.sprs)
     --
     self.slotScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
+    self.slotScrollView:Init()
     self.slotScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
         print("简单老虎机：ChangeItemsCountCallback....")
     end
@@ -45,32 +46,60 @@ function Class:__init(slotPanelInitHelper)
     end
 
     self.slotScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
-        print("简单老虎机：UpdateViewItemHandler....")
-        viewItemData.sprite = itemdata.sprite
+        print("简单老虎机：UpdateViewItemHandler index = ", index)
+        viewItemData.image.sprite = itemdata.sprite
+        self.updateIndex = index
     end
 
     --
-    self.slotScrollView:InsertItem({sprite = self.sprs[1]})
-    self.slotScrollView:InsertItem({sprite = self.sprs[2]})
-    self.slotScrollView:InsertItem({sprite = self.sprs[3]})
+    local data = {
+        {sprite = self.sprs[1]},
+        {sprite = self.sprs[2]},
+        {sprite = self.sprs[3]},
+    }
+    self.slotScrollView:ReplaceItems(data)
+    -- self.slotScrollView:InsertItem({sprite = self.sprs[1]})
+    -- self.slotScrollView:InsertItem({sprite = self.sprs[2]})
+    -- self.slotScrollView:InsertItem({sprite = self.sprs[3]})
 
     -- 惯性（0-1）
-    self.slotScrollView.BaseParameters.effects.inertiaDecelerationRate = 0.865
-    self.slotScrollView.Velocity = 0
+    self.OSAScrollViewCom.BaseParameters.effects.InertiaDecelerationRate = 0.865
+    self.OSAScrollViewCom.Velocity = 0
     -- 转动力度：正数为从下向上转，负数为从上向下转
-    self.Volicity = Vector2(0, -5000)
+    self.Volicity = Vector2(0, -2000)
 end
 
 
-function Class:Run(ret, time)
+function Class:Run111(ret, time)
+    print("简单老虎机开始 ret = ", ret)
+    ret = ret -1
     CoroutineHelper.StartCoroutine(function ()
-        self.slotScrollView.Velocity = self.Volicity
-        while self.slotScrollView.Velocity > -200 do
-            self.slotScrollView:SmoothScrollTo(ret, 0.1, nil, nil)
+        self.OSAScrollViewCom.Velocity = self.Volicity
+        while true do
+            if self.OSAScrollViewCom.Velocity.y > -50 then
+                 if (self.updateIndex -1) == ret then
+                    self.slotScrollView:SmoothScrollTo(ret, 1.5, nil, nil)
+                    print("老虎机结束....")
+                    break
+                 else
+                    self.OSAScrollViewCom.Velocity = Vector2(0, -50)
+                 end
+            else
+                yield()
+            end
+
         end
+
+        
+        -- while self.OSAScrollViewCom.Velocity.y > -200 do
+        --     print("Velocity.y = ", self.OSAScrollViewCom.Velocity.y)
+        --     self.slotScrollView:SmoothScrollTo(ret, 0.1, nil, nil)
+        --     break
+        -- end
     end)
     
 end
+
 
 
 

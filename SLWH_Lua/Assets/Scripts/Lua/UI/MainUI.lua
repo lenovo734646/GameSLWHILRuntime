@@ -1,7 +1,7 @@
-local _G = _G
+local _G, g_Env = _G, g_Env
 local class = class
-local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
-      print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
+local print, tostring, SysDefines, typeof, debug, LogE, LogW,string, assert,pairs =
+      print, tostring, SysDefines, typeof, debug, LogE, LogW,string, assert,pairs
 
 local DOTween = CS.DG.Tweening.DOTween
 
@@ -52,8 +52,27 @@ function Class:__init(panel, roomdata, loader)
     -- 计时器
     self.timeCounter = TimerCounterUI.Create(self.timecounter_luainithelper)
 
+    -- 统计数据
+    self.statisicalData  = {}
+    self.statisticalInitHelper:Init(self.statisicalData)
+
+    self.betText.text = "0"
+    self:SetStatisticData(0, 0, 0, 0, 0, 0)
+
 end
 
+-- 设置统计数据
+function Class:SetStatisticData(sixiCount, sanyuanCount, zhuangCount, xianCount, heCount, allGameCount)
+    self.statisicalData.sixiText.text = "大四喜x"..tostring(sixiCount)
+    self.statisicalData.sixiText.text = "大三元x"..tostring(sanyuanCount)
+    self.statisicalData.sixiText.text = "庄x"..tostring(zhuangCount)
+    self.statisicalData.sixiText.text = "闲x"..tostring(xianCount)
+    self.statisicalData.sixiText.text = "和x"..tostring(heCount)
+    self.statisicalData.sixiText.text = "总局数x"..tostring(allGameCount)
+end
+
+
+-- 设置等待下局提示
 function Class:SetWaitNextStateTip(bShow)
     if bShow then
         self.WaitNextStateTipSpineHelper.gameObject:SetActive(true)
@@ -64,9 +83,33 @@ function Class:SetWaitNextStateTip(bShow)
     end
 end
 
+function Class:SetCurBetScore(betScore)
+    self.betText.text = SubGame_Env.ConvertNumberToString(betScore)
+end
+
+-- 以下代码为自动生成代码，请勿更改
 function Class:On_btn_PlayerList_Event(btn_PlayerList)
-    print("发送完结列表请求")
+    print("发送玩家列表请求")
     self.playerListPanel:OnSendPlayerListReq()
+end
+
+
+function Class:On_btn_Bank_Event(btn_Bank)
+    print("打开银行...")
+    if g_Env then
+        if g_Env.gamePlayer.Phone == nil then
+            g_Env.hintMessage:CreateHintMessage("请先到个人中心绑定手机号")
+        else
+            local isLogined = g_Env.mainModule:GetBankLogined()
+            if isLogined then
+                g_Env.uiManager:OpenUI("BankMain.BankMainPanelUI")
+            else
+                g_Env.uiManager:OpenUI("BankLogin.BankLoginPanelUI")
+            end
+        end
+    else
+        LogW("独立小游戏无法打开银行...")
+    end
 end
 
 

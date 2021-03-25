@@ -92,9 +92,20 @@ namespace SLWH
             print("LogOut: "+s);
         }
 
+        private void Awake()
+        {
+            print("Test Awake....");
+        }
+
+        private void OnEnable()
+        {
+            print("Test OnEnable....");
+        }
+
         // Start is called before the first frame update
         void Start()
         {
+            print("Test Start....");
             //var exWinTyp = default(ColorType);
             //print("default exWinTyp = " + exWinTyp);
             //var rate = ExWinRateMap[ExWinType.CaiJin];
@@ -123,7 +134,7 @@ namespace SLWH
             //    print("Array = " + val);
 
             //}
-            
+
 
 
             transform.eulerAngles = new Vector3(1, 1, 1);
@@ -281,21 +292,25 @@ namespace SLWH
                 //    materialIndex = 0;
                 //tweenAnimation.DOPlayForward();
 
-                //// 顺时针旋转
+                //// DOTween.DORotate 顺时针旋转
                 //var rot = rotate + Root.transform.localEulerAngles.y;
                 //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
                 //Root.transform.DORotate(new Vector3(0, rot, 0), duration, RotateMode.FastBeyond360);
                 //print("DORotate = " + rot + "  dur = " + duration);
 
-                // 逆时针旋转
-                var rot2 = rotate - Root.transform.localEulerAngles.y;
-                print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
-                Root.transform.DORotate(new Vector3(0, -rot2, 0), duration, RotateMode.FastBeyond360);
-                print("DORotate = " + rot2 + "  dur = " + duration);
+                //// DOTween.DORotate 逆时针旋转
+                //var rot2 = rotate - Root.transform.localEulerAngles.y;
+                //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
+                //Root.transform.DORotate(new Vector3(0, -rot2, 0), duration, RotateMode.FastBeyond360);
+                //print("DORotate = " + rot2 + "  dur = " + duration);
+
+                // DOTween 控制toggle状态
+                tweenAnimation.DOPlayForward();
+
             }
 
 
-                if (GUI.Button(new Rect(10, 450, 100, 50), "Backwards"))
+            if (GUI.Button(new Rect(10, 450, 100, 50), "Backwards"))
             {
                 //tweenAnimation.hasOnComplete = true;
                 //tweenAnimation.onComplete = new UnityEngine.Events.UnityEvent();
@@ -307,7 +322,7 @@ namespace SLWH
                 //    Debug.Log("左键点击按钮");
 
                 //Debug.Log("1111111"+ CallLuaByGameObjectName);
-                
+
             }
 
             

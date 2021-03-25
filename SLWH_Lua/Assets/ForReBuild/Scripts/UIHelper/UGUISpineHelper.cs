@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿// update data : 2021.03.25
+// 重新封装了UGUISpine的方法，方便XLua 脚本调用
+//
+
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
@@ -160,6 +166,10 @@ namespace ForReBuild.UIHelper
         // 停止动画
         public void StopByName(string name, bool bUnActive = true)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
             if (gameObject.activeSelf == false || entryAnim == null)
                 return;
             var duration = GetTimeByName(name);

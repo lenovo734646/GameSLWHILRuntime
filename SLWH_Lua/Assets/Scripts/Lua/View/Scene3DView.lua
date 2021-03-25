@@ -26,6 +26,7 @@ local OSACore = CS.Com.TheFallenGames.OSA.Core
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
 
 local MainUI =  require'UI.MainUI'
+local SimpleSlot = require'controller.SimpleSlot'
 
 
 
@@ -47,6 +48,9 @@ function Class:__init(roomdata)
     initHelper:Init(self)
     self.colorMeshMaterialList = {}
     initHelper:ObjectsSetToLuaTable(self.colorMeshMaterialList)
+
+    -- EnjoyGame 小老虎机
+    self.slot = SimpleSlot.Create(self.slotPanelInitHelper)
 
     -- UI
     self.mainUI = MainUI.Create(self.mainUIInitHelper, roomdata, EditorAssetLoader)

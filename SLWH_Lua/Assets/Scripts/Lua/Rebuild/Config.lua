@@ -1,3 +1,7 @@
+
+-- 小游戏独立运行时使用Config
+print'此文件只在小游戏编辑器模式使用 Config.lua'
+
 local persistentDataPath = Application.persistentDataPath
 
 local debugSubGamePath = {
@@ -41,9 +45,9 @@ local Config = {
     debugUseLocalPath = false,
 
     debugPlatform = 'Win',
-
     
-
+    
+    RunWithoutNet = true,   -- 是否离线本地运行（不连接服务器）
     useHttps = false,
 
     isLoadFromEditor = true, -- 要从编辑器加载，需要在BuildSetting里面添加场景

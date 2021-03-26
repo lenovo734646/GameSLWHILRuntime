@@ -102,6 +102,11 @@ namespace SLWH
             print("Test OnEnable....");
         }
 
+        private void OnDisable()
+        {
+            print("Test OnDisable....");
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -292,21 +297,27 @@ namespace SLWH
                 //    materialIndex = 0;
                 //tweenAnimation.DOPlayForward();
 
-                //// DOTween.DORotate 顺时针旋转
+                // DOTween.DORotate 顺时针旋转
                 //var rot = rotate + Root.transform.localEulerAngles.y;
-                //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
-                //Root.transform.DORotate(new Vector3(0, rot, 0), duration, RotateMode.FastBeyond360);
-                //print("DORotate = " + rot + "  dur = " + duration);
+                var rot = rotate;
+                print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
+                Root.transform.DORotate(new Vector3(0, rot, 0), duration, RotateMode.LocalAxisAdd);
+                print("DORotate = " + rot + "  dur = " + duration);
 
+                
                 //// DOTween.DORotate 逆时针旋转
                 //var rot2 = rotate - Root.transform.localEulerAngles.y;
                 //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
                 //Root.transform.DORotate(new Vector3(0, -rot2, 0), duration, RotateMode.FastBeyond360);
                 //print("DORotate = " + rot2 + "  dur = " + duration);
 
-                // DOTween 控制toggle状态
-                tweenAnimation.DOPlayForward();
+                // DOTween 重复播放一个DOTweenAnimation（每次都从头播放，不用reverse） 
+                // OnStart回调只第一次播放调用一次 OnStart => OnPlay =》OnComplete
+                // 之后再次播放会调用 OnRewind  => OnPlay =》OnComplete
+                // tweenAnimation.DORestart();
 
+                //AudioManager.Instance.PlaySoundEff2D("dasanyuan");
+                //AudioManager.Instance.PlaySoundEff2D("dasixi");
             }
 
 
@@ -315,7 +326,7 @@ namespace SLWH
                 //tweenAnimation.hasOnComplete = true;
                 //tweenAnimation.onComplete = new UnityEngine.Events.UnityEvent();
                 //tweenAnimation.onComplete.AddListener(() => { tweenAnimation.gameObject.SetActive(false); print("播放结束！"); });
-                tweenAnimation.DOPlayBackwards();
+                //tweenAnimation.DOPlayBackwards();
                 //if(bright)
                 //    Debug.Log("右键点击按钮");
                 //if(bleft)
@@ -323,6 +334,10 @@ namespace SLWH
 
                 //Debug.Log("1111111"+ CallLuaByGameObjectName);
 
+                //AudioManager.Instance.StopSoundEff("dasanyuan");
+                
+                //AudioManager.Instance.StopAllSoudEff();
+                //AudioManager.Instance.PlaySoundEff2D("dasixi");
             }
 
             

@@ -30,6 +30,7 @@ print('运行在无网络测试模式')
 
 require "LuaUtil/LuaRequires"
 Config = Config or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
+local GameConfig = require'GameConfig'
 local Loader = require 'Rebuild.LuaAssetLoader'
 
 
@@ -49,12 +50,6 @@ if SUBGAME_EDITOR then
         return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(Sprite))
     end
     print("SUBGAME_EDITOR!")
-    -- PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
-    --     print("111111111111111111")
-    --     if data.res_type == 2 then
-    --         playerRes.currency = data.res_value
-    --     end
-    -- end)
 end
 SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
 SubGame_Env.loader:LoadSoundsPackage('Assets/AssetsFinal/SLWHSounds.prefab')
@@ -73,8 +68,8 @@ local roomdata = {
     normal_show_time = 13000,
     shark_more_show_time = 5000,
 
-    last_color_index = 11,
-    last_animal_index = 16,
+    last_color_index = 2,
+    last_animal_index = 1,
 }
 function OnSceneLoaded(scene, mode)
     if scene.name == "MainScene" then
@@ -88,8 +83,9 @@ function OnSceneLoaded(scene, mode)
                 local betStateData = {
                     left_time = 5000,
                     state = 1,
-                    color_array = {3,3,1,2,3,3,2,1,2,2,2,3,1,2,3,3,1,3,1,3,1,3,2,3},
-                    ratio_array = {46,23,13,8,40,20,11,7,25,12,7,4,2,8,2},
+                 -- animal_Array = 2,1,3,4,2,  1,3,4,2,1,   3,4,2,1,3,   4,2,1,3,4,   2,1,3,4
+                    color_array = {3,3,1,2,3,  3,2,1,2,2,   2,3,1,2,3,   3,1,3,1,3,   1,3,2,3},
+                    ratio_array = {10,20,30,40, 11,22,33,44,     111,222,333,444,  110,220,330},
                 }
                 ctrl:OnStateChangeNtf(betStateData)
                 
@@ -97,34 +93,33 @@ function OnSceneLoaded(scene, mode)
     
                 local resultAnimIndex = {
                     {
-                        color_form = 11,
-                        color_to = 12,
-                        animal_form = 16,
-                        animal_to = 17,
-                        color_id = 3,
-                        animal_id = 2,
-                    }
-                }
-    
-                local historyRecord = {
-                    ressult_info_list = { 
-                        {  
-                            winColor = 3,
-                            winAnimal = 2,
-                        } 
+                        color_form = 2,
+                        color_to = 3,
+                        animal_form = 1,
+                        animal_to = 2,
+
+                        color_id = 1,
+                        animal_id = 1,
+                        sanyuan_color_id = 0,
                     },
-                    win_enjoyGameType = 1,
-                    win_exType = 5,
-    
+                    -- 送灯
+                    {
+                        color_form = 3,
+                        color_to = 23,
+                        animal_form = 2,
+                        animal_to = 24,
+
+                        color_id = 2,
+                        animal_id = 4,
+                    }
                 }
     
                 local showStateData = {
                     left_time = 13000,
                     state = 2,
                     anim_result_list = resultAnimIndex,
-                    history_record = historyRecord,
-                    enjoy_game_ret = 1,
-                    ex_ret = 5,
+                    enjoy_game_ret = 2,
+                    ex_ret = GameConfig.ExWinType.SongDeng,
                     caijin_ratio = 0,
                     shandian_ratio = 0,
     

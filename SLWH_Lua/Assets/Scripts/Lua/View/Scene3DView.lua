@@ -153,8 +153,6 @@ function Class:__init(roomdata)
             animalImg:SetNativeSize()
         end
 
-        viewItemData.colorImg.sprite = itemdata.colorSpr
-        SetAnimalImg(viewItemData.animalImg, itemdata.animalSpr)
         viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
         print("itemdata.colorSpr = ", itemdata.colorSpr, itemdata.animalSpr, itemdata.enjoyTypeSpr)
         --
@@ -180,6 +178,10 @@ function Class:__init(roomdata)
             sxData.animal_2.sprite = itemdata.siXiInfo.animalSpr
             sxData.animal_3.sprite = itemdata.siXiInfo.animalSpr
             viewItemData.siXiInitHelper.gameObject:SetActive(true)
+        else
+            viewItemData.colorImg.sprite = itemdata.colorSpr
+            SetAnimalImg(viewItemData.animalImg, itemdata.animalSpr)
+            viewItemData.animalImg.gameObject:SetActive(true)
         end
         --
         if itemdata.shanDianRatio ~= nil then
@@ -238,7 +240,7 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
 
-    print("HistroyData: " ,color_id, animal_id, enjoyType_id)
+    print("HistroyData: " ,color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID)
 
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
     local sanYuanInfo = nil

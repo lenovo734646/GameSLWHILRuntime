@@ -33,7 +33,12 @@ local Config={
         Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
     },
 
-    EnjoyGameRatio = {2, 8, 2}, --下标从1开始
+    -- 游戏状态 1=下注 2=开奖 3=空闲 
+    GameState = {
+        BET = 1,
+        SHOW = 2,
+        FREE = 3,
+    },
 
     ColorType = {
         Red = 1,

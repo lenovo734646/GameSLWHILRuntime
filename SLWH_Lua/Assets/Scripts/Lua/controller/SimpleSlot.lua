@@ -33,12 +33,12 @@ function Class:__init(slotPanelInitHelper)
     self.slotScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
     self.slotScrollView:Init()
     self.slotScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
-        print("简单老虎机：ChangeItemsCountCallback....")
+        --print("简单老虎机：ChangeItemsCountCallback....")
     end
 
     --itemRoot : RectTransform类型
     self.slotScrollView.OnCreateViewItemData = function (itemRoot, itemIndex)
-        print("简单老虎机创建庄闲和：itemIndex = ", itemIndex)
+        --print("简单老虎机创建庄闲和：itemIndex = ", itemIndex)
         local viewItemData = {
             image = itemRoot:GetComponent(typeof(Image))
         }
@@ -46,7 +46,7 @@ function Class:__init(slotPanelInitHelper)
     end
 
     self.slotScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
-        print("简单老虎机：UpdateViewItemHandler index = ", index)
+        --print("简单老虎机：UpdateViewItemHandler index = ", index)
         viewItemData.image.sprite = itemdata.sprite
         self.updateIndex = index
     end

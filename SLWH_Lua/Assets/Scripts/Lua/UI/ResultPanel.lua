@@ -67,7 +67,7 @@ function Class:ShowResult(resultPanelData)
     if resultPanelData.enjoyGameData == nil then
         return
     end
-    print("显示结算界面，功能待实现")
+
     self.resultPanel:SetActive(true)
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType

@@ -93,6 +93,8 @@ function Class:__init(ui,View,roomdata)
     self.ratioArray = {}
     self.resultPanelData = {}
 
+    self.gameCount = 0
+
     self:InitAnimalAnimation()
 end
 
@@ -116,7 +118,6 @@ function Class:OnSceneReady()
     -- 网络消息监听
     -- 游戏状态变化
     PBHelper.AddListener('StateChangeNtf', function (data)
-        --print("StateChangeNtf ", data.state)
         self:OnStateChangeNtf(data)
     end)
     
@@ -207,7 +208,7 @@ function Class:OnSceneReady()
     end
 
     self:OnStateChangeNtf({ left_time = left_time, state = state })
-    if state ~= 1 then
+    if state ~= GameConfig.GameState.BET then
         self.ui.mainUI:SetWaitNextStateTip(true)
     end
  
@@ -314,15 +315,7 @@ function Class:InitAnimalAnimation()
                 AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
             end
             
-            -- 等待显示中奖结算
-            local resultPanel = self.ui.mainUI.resultPanel
-            yield(WaitForSeconds(resultPanel:ShowResult(self.resultPanelData)))
-            resultPanel:HideResult()
-            print("清空结果数据避免冗余干扰")
-            self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
-            -- 同步玩家分数
-            self:OnMoneyChange(self.selfScore)
-            winShowData.gameObject:SetActive(false)
+            yield(WaitForSeconds(winShowData.animatorHelper:GetDuration("Victory")))
             data.PlayIdle()
         end
 
@@ -340,26 +333,26 @@ function Class:OnCustumEvent(params)
 end
 
 function Class:IsBetState()
-    return self.state == 1
+    return self.state == GameConfig.GameState.BET
 end
 
 function Class:IsShowState()
-    return self.state == 2
+    return self.state == GameConfig.GameState.SHOW
 end
 
 function Class:IsFreeState()
-    return self.state == 3
+    return self.state == GameConfig.GameState.FREE
 end
 
 function Class:OnStateChangeNtf(data)
     local state = data.state
     self.state = state
-    if state == 1 then --下注
+    if self:IsBetState() then --下注
         self.ui.mainUI:SetWaitNextStateTip(false)
         self:OnBetState(data)
-    elseif state == 2 then --开奖
+    elseif self:IsShowState() then --开奖
         self:OnShowState(data)
-    else -- state == 3 空闲
+    else -- 空闲
         self:OnFreeState()
     end
     --
@@ -390,13 +383,13 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     local arrow_transform = ui.arrow_transform
     local colorStartRot = (colorFromindex - 1)*15
     arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
-    local arrowTotalRot = colorTotalWillRunCount*15 - arrow_transform.eulerAngles.y    -- 指针逆时针转
+    local arrowTotalRot = colorTotalWillRunCount*15
     --
 
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
     print("TODO：指针开转", arrowTotalRot, time, GameConfig.ShowResultTime)
     CoroutineHelper.StartCoroutine(function ()
-        yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), time-GameConfig.ShowResultTime, RotateMode.FastBeyond360)
+        yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), time-GameConfig.ShowResultTime, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         local colordata = colorDataList[colorToindex]
         colordata.animator.enabled = true  -- 播放闪烁动画
@@ -417,7 +410,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     local animalStartRot = (animalFromindex)*15
     local animalRotRoot_transform = ui.animal_rotate_root_transform
     animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
-    local animalTotalRot = animalTotalWillRunCount*15 + animalRotRoot_transform.eulerAngles.y
+    local animalTotalRot = animalTotalWillRunCount*15
     
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
 
@@ -425,7 +418,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     return CoroutineHelper.StartCoroutine(function ()
         local dur = time-GameConfig.ShowResultTime
         print("动物开转 = ", dur, time)
-        yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), dur+1, RotateMode.FastBeyond360)
+        yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), dur+1, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         local animaldata = runItemDataList[animalToindex]
         
@@ -437,6 +430,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         yield(animaldata.PlayShowAsync())
         animaldata.animatorHelper:Play("Idel1")
         ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+        ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
         local colordata = colorDataList[colorToindex]
         colordata.animator:Play("BaoshiFlash", 0, 0)
         colordata.animator:Update(0)
@@ -568,7 +562,7 @@ function Class:OnShowState(data)
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
 
-     if data.history_record == nil then
+     if data.anim_result_list == nil then
         -- 结算阶段进入
          return
      end
@@ -577,18 +571,13 @@ function Class:OnShowState(data)
     local ExWinType = GameConfig.ExWinType
     local AnimalType = GameConfig.AnimalType
     --
-    if data.history_record == nil then
-      return
-    end
-    --
-    local recordData = data.history_record
-    local resultInfo = recordData.ressult_info_list[1]
-    local songDengInfo = recordData.ressult_info_list[2]
-    local winColor = resultInfo.winColor
-    local winSanYuanColor = resultInfo.winSanYuanColor
-    local winAnimal = resultInfo.winAnimal
-    local winEnjoyGameType = recordData.win_enjoyGameType
-    local exType = recordData.win_exType
+    local resultInfo = data.anim_result_list[1]
+    local songDengInfo = data.anim_result_list[2]
+    local winColor = resultInfo.color_id
+    local winSanYuanColor = resultInfo.sanyuan_color_id
+    local winAnimal = resultInfo.animal_id
+    local winEnjoyGameType = data.enjoy_game_ret
+    local exType = data.ex_ret
     print("=====OnShowState=======:")
     local ratio = ""
     for i = 1, #self.ratioArray, 1 do
@@ -603,7 +592,7 @@ function Class:OnShowState(data)
     print("彩金倍率：", data.caijin_ratio)
     print("闪电倍率：", data.shandian_ratio)
     if exType == ExWinType.SongDeng then
-        print("送灯奖励：", songDengInfo.winColor, songDengInfo.winAnimal, self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal))
+        print("送灯奖励：", songDengInfo.color_id, songDengInfo.animal_id, self:__GetRatio(songDengInfo.color_id, songDengInfo.animal_id))
     end
     
 
@@ -611,7 +600,7 @@ function Class:OnShowState(data)
     -- 庄闲和小游戏
     local enjoyGameData = {
         enjoyGame_id = winEnjoyGameType,
-        enjoyGameRatio = GameConfig.EnjoyGameRatio[winEnjoyGameType],
+        enjoyGameRatio = self:__GetEnjoyGameRatio(winEnjoyGameType),
     }
     self.resultPanelData.enjoyGameData = enjoyGameData
     -- 颜色(普通中奖+三元四喜)
@@ -652,9 +641,9 @@ function Class:OnShowState(data)
         self.resultPanelData.shandian_ratio = data.shandian_ratio
     elseif exType == ExWinType.SongDeng then
         local songdengData = {
-            songDengColorID = songDengInfo.winColor,
-            songDengAnimalID = songDengInfo.winAnimal,
-            songDengRatio = self:__GetRatio(songDengInfo.winColor, songDengInfo.winAnimal)
+            songDengColorID = songDengInfo.color_id,
+            songDengAnimalID = songDengInfo.animal_id,
+            songDengRatio = self:__GetRatio(songDengInfo.color_id, songDengInfo.animal_id)
         }
         self.resultPanelData.songdengData = songdengData
     end
@@ -684,11 +673,24 @@ function Class:OnShowState(data)
                 yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime/1000))--播放转盘动画
                 
             end
+
+            -- 显示中奖结算界面
+            local resultPanel = self.ui.mainUI.resultPanel
+            yield(WaitForSeconds(resultPanel:ShowResult(self.resultPanelData)))
+            resultPanel:HideResult()
+            if winColor == GameConfig.ColorType.SanYuan or winColor == GameConfig.ColorType.SiXi then
+                AudioManager.Instance:StopAllSoudEff()   -- 三元四喜音乐太长这里截断（或看情况做其他处理）
+            end
+            print("清空结果数据避免冗余干扰")
+            self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
+            -- 同步玩家分数
+            self:OnMoneyChange(self.selfScore)
+
             -- 开奖结束再更新record，避免剧透
             local sdColor, sdAnimal = nil,nil
             if songDengInfo ~= nil then
-                sdColor = songDengInfo.winColor
-                sdAnimal = songDengInfo.winAnimal
+                sdColor = songDengInfo.color_id
+                sdAnimal = songDengInfo.animal_id
             end
             ui.roadScrollView:InsertItem(ui:GetHistoryIconData(winColor, winSanYuanColor, winAnimal, winEnjoyGameType, exType,
                                                                 sdColor, sdAnimal))
@@ -703,6 +705,9 @@ function Class:OnFreeState()
     self:PlayIdleStateAnim()
     self:__ResetBetScore()
     AudioManager.Instance:PlaySoundEff2D("vs_alert")
+
+    self.gameCount = self.gameCount +1
+    self.ui.mainUI:SetGameCount(self.gameCount)
 end
 
 function Class:__ResetBetScore()
@@ -832,9 +837,21 @@ function Class:OnReceiveBetAck(data)
     end
 end
 
+-- 获取中奖动物倍率
 function Class:__GetRatio(color_id, animal_id)
-    local index = color_id * 4 + animal_id;
-    return index;
+    color_id = color_id -1
+    animal_id = animal_id -1
+    local index = color_id * 4 + animal_id +1;
+    local ratio = self.ratioArray[index]
+    print("获取中奖倍率：", color_id, animal_id, index, self.ratioArray, ratio)
+    return ratio
+end
+
+-- 获取中奖庄闲和倍率
+function Class:__GetEnjoyGameRatio(ret)
+    local index = 12 + ret
+    local ratio = self.ratioArray[index]
+    return ratio
 end
 
 -- 获取下注项的Index（lua数组下标从1开始）
@@ -844,7 +861,7 @@ function Class:__GetBetItemLuaIndex(color_id, animal_id)
     color_id = color_id -1
     animal_id = animal_id -1
     local index = color_id * GameConfig.AnimalCount + animal_id;
-    return index;
+    return index +1;
 end
 
 

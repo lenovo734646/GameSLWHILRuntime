@@ -64,6 +64,11 @@ namespace ForReBuild.UIHelper
             }
         }
 
+        private void OnDisable()
+        {
+            Stop();
+        }
+
         public float GetDuration(string animName)
         {
             AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;

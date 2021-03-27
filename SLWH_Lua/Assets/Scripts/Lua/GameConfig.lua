@@ -3,7 +3,8 @@ local Tweening = CS.DG.Tweening
 local Config={
     debug = true,
     ShowAnimationTime = 8,
-    ShowResultTime = 5,
+    ShowZhanShiTime = 3,    --中奖动物展示动画时间（固定3秒，Victory动画长度不是3秒的进行了速度调整）
+    ShowResultTime = 5,     --结算界面显示时间（可调整）
     RunItemCount = 24,
     AnimalCount = 4,
     -- 胜利音效名字（根据itemID）
@@ -26,11 +27,11 @@ local Config={
 
     Ease = {
         Tweening.Ease.InOutSine, Tweening.Ease.InOutQuad,
-        Tweening.Ease.InOutQuad, Tweening.Ease.InOutCubic,
-        Tweening.Ease.InOutCubic, Tweening.Ease.InOutQuart,
-        Tweening.Ease.InOutQuart, Tweening.Ease.InOutQuint,
-        Tweening.Ease.InOutExpo, Tweening.Ease.InOutFlash,
-        Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
+        -- Tweening.Ease.InOutQuad, Tweening.Ease.InOutCubic,
+        -- Tweening.Ease.InOutCubic, Tweening.Ease.InOutQuart,
+        -- Tweening.Ease.InOutQuart, Tweening.Ease.InOutQuint,
+        -- Tweening.Ease.InOutExpo, Tweening.Ease.InOutFlash,
+        -- Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
     },
 
     -- 游戏状态 1=下注 2=开奖 3=空闲 

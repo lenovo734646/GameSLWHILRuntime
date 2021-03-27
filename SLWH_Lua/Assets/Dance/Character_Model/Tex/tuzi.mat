@@ -117,7 +117,7 @@ Material:
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutLineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RimColor: {r: 1, g: 0.49779737, b: 0, a: 0}
+    - _RimColor: {r: 1, g: 0.49803925, b: 0, a: 0}
     - _ShadowColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0}
     - _ShadowColor1: {r: 0.36489853, g: 0.3680746, b: 0.3773585, a: 0}
     - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}

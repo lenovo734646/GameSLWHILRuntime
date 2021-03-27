@@ -183,7 +183,7 @@ function Class:__init(roomdata)
             SetAnimalImg(viewItemData.animalImg, itemdata.animalSpr)
             viewItemData.animalImg.gameObject:SetActive(true)
         end
-        --
+        -- 特殊大奖
         if itemdata.shanDianRatio ~= nil then
             local sdData = {}
             viewItemData.shanDianInitHelper:Init(sdData)
@@ -195,6 +195,11 @@ function Class:__init(roomdata)
             songDengData.colorImg.sprite = itemdata.songDengInfo.songDengColorSpr
             songDengData.animalImg.sprite = itemdata.songDengInfo.songDengAnimalSpr
             viewItemData.songDengInitHelper.gameObject:SetActive(true)
+        elseif itemdata.caijinRatio ~= nil then
+            local caijinData = {}
+            viewItemData.caiJinInitHelper:Init(caijinData)
+            caijinData.ratio.text = "x"..tostring(itemdata.caijinRatio)
+            viewItemData.caiJinInitHelper.gameObject:SetActive(true)
         end
         
     end
@@ -236,17 +241,18 @@ end
 -- color_id 中奖颜色id
 -- type_id 庄闲和 id
 -- sp_id 特殊中奖id（大三元，大四喜）
-function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID)
+function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
 
-    print("HistroyData: " ,color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID)
+    print("HistroyData: " ,color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
 
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
     local sanYuanInfo = nil
     local siXiInfo = nil
     local songDengInfo = nil
     local shanDianRatio = nil
+    local caijinRatio = nil
     if color_id == ColorType.SanYuan then   -- 大三元处理
         colorSpr = self.roadColorSprites[sanYuanColor_id]
         sanYuanInfo = {
@@ -265,7 +271,9 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
         }
     end
     -- 特殊大奖处理
-    if ex_id == ExWinType.LiangBei then
+    if ex_id == ExWinType.CaiJin then
+        caijinRatio = caijinRotio_
+    elseif ex_id == ExWinType.LiangBei then
         shanDianRatio = 2
     elseif ex_id == ExWinType.SanBei then
         shanDianRatio = 3
@@ -288,7 +296,8 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
         --
         shanDianRatio = shanDianRatio,
         songDengInfo = songDengInfo,
-        
+        --
+        caijinRatio = caijinRatio,
 
     }
 end

@@ -81,7 +81,7 @@ function OnSceneLoaded(scene, mode)
         local co = coroutine.create(function ()
             while true do
                 local betStateData = {
-                    left_time = 5000,
+                    left_time = 5,
                     state = 1,
                  -- animal_Array = 2,1,3,4,2,  1,3,4,2,1,   3,4,2,1,3,   4,2,1,3,4,   2,1,3,4
                     color_array = {3,3,1,2,3,  3,2,1,2,2,   2,3,1,2,3,   3,1,3,1,3,   1,3,2,3},
@@ -94,34 +94,40 @@ function OnSceneLoaded(scene, mode)
                 local resultAnimIndex = {
                     {
                         color_form = 2,
-                        color_to = 3,
+                        color_to = 8,
                         animal_form = 1,
-                        animal_to = 2,
+                        animal_to = 12,
 
                         color_id = 1,
-                        animal_id = 1,
+                        animal_id = 4,
                         sanyuan_color_id = 0,
                     },
                     -- 送灯
-                    {
-                        color_form = 3,
-                        color_to = 23,
-                        animal_form = 2,
-                        animal_to = 24,
+                    -- {
+                    --     color_form = 3,
+                    --     color_to = 23,
+                    --     animal_form = 2,
+                    --     animal_to = 24,
 
-                        color_id = 2,
-                        animal_id = 4,
-                    }
+                    --     color_id = 2,
+                    --     animal_id = 4,
+                    -- }
                 }
     
+                local winExType = GameConfig.ExWinType.SanBei
+                local songDengTime = 0
+                if winExType == GameConfig.ExWinType.SongDeng then
+                    songDengTime = 5
+                end
+                local showStateTime = 13 + songDengTime
                 local showStateData = {
-                    left_time = 13000,
+                    left_time = showStateTime,
                     state = 2,
                     anim_result_list = resultAnimIndex,
-                    enjoy_game_ret = 2,
-                    ex_ret = GameConfig.ExWinType.SongDeng,
+                    enjoy_game_ret = 3,
+                    ex_ret = winExType,
                     caijin_ratio = 0,
-                    shandian_ratio = 0,
+                    shandian_ratio = 3,
     
                 }
     

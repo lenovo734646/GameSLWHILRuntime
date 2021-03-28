@@ -123,6 +123,7 @@ function Class:__init(roomdata)
     local betAreaList = {}
     for i = 1, betAreaBtnInitHelpers.Length do
         local helper = betAreaBtnInitHelpers[i-1]
+        print("helper = ", i, helper)
         local item_id = tonumber(helper.name)
         
         if helper.t==nil then
@@ -239,7 +240,7 @@ end
 -- 获取路单item信息
 -- item_id 中奖动物id
 -- color_id 中奖颜色id
--- type_id 庄闲和 id
+-- type_id 庄和闲 id
 -- sp_id 特殊中奖id（大三元，大四喜）
 function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
     local ColorType = GameConfig.ColorType

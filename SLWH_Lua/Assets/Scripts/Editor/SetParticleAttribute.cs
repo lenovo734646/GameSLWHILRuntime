@@ -184,6 +184,8 @@ public class SetParticleAttribute : EditorWindow
 
     TMP_Text[] GetTMPTextTargets(string targetName)
     {
+        if (root == null)
+            root = Selection.activeTransform;
         var targetTexts = root.GetComponentsInChildren<TMP_Text>();
         if (string.IsNullOrEmpty(targetName))
             return targetTexts;

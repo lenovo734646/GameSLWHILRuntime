@@ -66,7 +66,7 @@ function Class:__init(slotPanelInitHelper)
     self.OSAScrollViewCom.BaseParameters.effects.InertiaDecelerationRate = 0.865
     self.OSAScrollViewCom.Velocity = 0
     -- 转动力度：正数为从下向上转，负数为从上向下转
-    self.Volicity = Vector2(0, -2000)
+    self.Volicity = Vector2(0, -1500)
 end
 
 
@@ -76,13 +76,13 @@ function Class:Run111(ret, time)
     CoroutineHelper.StartCoroutine(function ()
         self.OSAScrollViewCom.Velocity = self.Volicity
         while true do
-            if self.OSAScrollViewCom.Velocity.y > -50 then
+            if self.OSAScrollViewCom.Velocity.y > -100 then
                  if (self.updateIndex -1) == ret then
                     self.slotScrollView:SmoothScrollTo(ret, 1.5, nil, nil)
-                    print("老虎机结束....")
+                    --print("老虎机结束....")
                     break
                  else
-                    self.OSAScrollViewCom.Velocity = Vector2(0, -50)
+                    self.OSAScrollViewCom.Velocity = Vector2(0, -100)
                  end
             else
                 yield()

@@ -146,7 +146,7 @@ function Class:OnSceneReady()
     PBHelper.AddListener('OtherPlayerSetBetNtf', function (data)
         local item_id = data.info.index_id
         
-        --print("OtherPlayerSetBetNtf...", item_id, total_bet)
+        --print("OtherPlayerSetBetNtf...", item_id)
         if item_id == -1 then   -- 清除筹码返回
             local totalBetInfoList = data.room_tatol_bet_info_list
             for key, betInfo in pairs(totalBetInfoList) do
@@ -175,7 +175,7 @@ function Class:OnSceneReady()
 
     -- 统计数据
     PBHelper.AddListener("StatisticDataNtf", function (data)
-        print("统计数据："..json.encode(data))
+        --print("统计数据："..json.encode(data))
         self.ui.mainUI:SetStatisticData(data.SixiCount, data.SanYuanCount, data.ZhuangCount, 
                                         data.XianCount, data.HeCount, data.AllGameCount)
     end)
@@ -189,8 +189,8 @@ function Class:OnSceneReady()
         animalIndex = animalIndex + GameConfig.RunItemCount
     end
     local animalRot = (animalIndex)*15
-    print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
-    print("同步动物角度:", roomdata.last_animal_index, animalIndex, animalRot)
+    -- print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
+    -- print("同步动物角度:", roomdata.last_animal_index, animalIndex, animalRot)
     self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
     self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
 
@@ -462,7 +462,7 @@ function Class:OnBetState(data)
         end
     end
     if ratioArray ~= nil then
-        -- 设置倍率（包含庄闲和）
+        -- 设置倍率（包含庄和闲）
         local count = #ui.betAreaList
         for i = 1, count, 1 do
             print("设置倍率：", i,ratioArray[i])
@@ -483,7 +483,8 @@ function Class:OnShowState(data)
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
 
-     if data.anim_result_list == nil then
+    print("self.ratioArray = ", #self.ratioArray)
+     if #self.ratioArray <= 0 then
         -- 结算阶段进入
          return
      end
@@ -584,7 +585,7 @@ function Class:OnShowState(data)
                 local indexdata = anim_result_list[i]
                 local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
                 local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
-                print("data.left_time = ", data.left_time)
+                --print("data.left_time = ", data.left_time)
                 local round = 2
                 local showTime = data.left_time - GameConfig.ShowResultTime - GameConfig.ShowZhanShiTime
                 -- 送灯特殊处理
@@ -661,7 +662,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     --
 
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-    print("TODO：指针开转", arrowTotalRot, time, GameConfig.ShowResultTime)
+    --print("TODO：指针开转", arrowTotalRot, time, GameConfig.ShowResultTime)
     CoroutineHelper.StartCoroutine(function ()
         yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), time - 1, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
@@ -690,7 +691,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
 
     return CoroutineHelper.StartCoroutine(function ()
         local dur = time  -- 错开一点不同时停止
-        print("动物开转 = ", animalTotalRot, dur, time)
+        --print("动物开转 = ", animalTotalRot, dur, time)
         yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), dur, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         local animaldata = runItemDataList[animalToindex]
@@ -862,10 +863,11 @@ function Class:__GetRatio(color_id, animal_id)
     return ratio
 end
 
--- 获取中奖庄闲和倍率
+-- 获取中奖庄和闲倍率
 function Class:__GetEnjoyGameRatio(ret)
     local index = 12 + ret
     local ratio = self.ratioArray[index]
+    print("获取庄闲和倍率：", ret, index, ratio)
     return ratio
 end
 

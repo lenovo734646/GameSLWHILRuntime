@@ -80,10 +80,11 @@ function Class:ShowResult(resultPanelData)
     --
     self.betText.text = tostring(betScore)
     self.winText.text = self:__GetNumString(winScore)
-    --庄和闲小游戏
+    --庄闲和小游戏
     local enjoyGameData = resultPanelData.enjoyGameData
+    print("显示结算界面 enjoyGame_id：", enjoyGameData.enjoyGame_id)
     self.enjoyGameData.winColorBG = self.bgColors[enjoyGameData.enjoyGame_id]
-    self.enjoyGameData.enjoyImg = self.enjoyTypeSprs[enjoyGameData.enjoyGame_id]
+    self.enjoyGameData.enjoyImg.sprite = self.enjoyTypeSprs[enjoyGameData.enjoyGame_id]
     self.enjoyGameData.ratioText.text = "x"..enjoyGameData.enjoyGameRatio
     self.enjoyGameData.winEnjoyGameGO:SetActive(true)
     -- 颜色(普通中奖+三元四喜)

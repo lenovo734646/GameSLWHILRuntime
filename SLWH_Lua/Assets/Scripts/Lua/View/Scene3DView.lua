@@ -123,7 +123,7 @@ function Class:__init(roomdata)
     local betAreaList = {}
     for i = 1, betAreaBtnInitHelpers.Length do
         local helper = betAreaBtnInitHelpers[i-1]
-        print("helper = ", i, helper)
+        --print("下注区域helper = ", i, helper)
         local item_id = tonumber(helper.name)
         
         if helper.t==nil then
@@ -155,7 +155,6 @@ function Class:__init(roomdata)
         end
 
         viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
-        print("itemdata.colorSpr = ", itemdata.colorSpr, itemdata.animalSpr, itemdata.enjoyTypeSpr)
         --
         if itemdata.sanYuanInfo ~= nil then
             local syData = {}

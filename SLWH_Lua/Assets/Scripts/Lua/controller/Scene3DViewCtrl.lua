@@ -1,8 +1,8 @@
 
 local _G, g_Env = _G, g_Env
 local class = class
-local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE,tonumber =
-      print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE,tonumber
+local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber =
+      print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber
 
 local logError = logError
 local math,pairs = math,pairs
@@ -59,12 +59,9 @@ function Class:__init(ui,View,roomdata)
     self.shark_more_show_time = roomdata.shark_more_show_time / 1000 -- 服务器那边是毫秒
     self.betid = roomdata.last_bet_id
     --
-    self.betSnapShot = {} -- 上一局押注数据
 
     self.lastSeletedToggleIndex = 1
     self.lastCurrecy = SubGame_Env.playerRes.currency
-
-    self:OnMoneyChange(SubGame_Env.playerRes.currency)
 
     self.timeStamp = clock()
 
@@ -93,8 +90,10 @@ function Class:__init(ui,View,roomdata)
     self.ratioArray = {}
     self.resultPanelData = {}
 
-    self.gameCount = 0
+    self.gameCount = 0   -- 本次进入游戏局数
 
+    self.betSnapShot = {} -- 上一局押注数据
+    self:OnMoneyChange(SubGame_Env.playerRes.currency)
     self:InitAnimalAnimation()
 end
 
@@ -152,17 +151,15 @@ function Class:OnSceneReady()
             for key, betInfo in pairs(totalBetInfoList) do
                 local id = betInfo.index_id
                 local total_bet = betInfo.total_bet
-                --print("清除下注 id = ", id, total_bet)
-                self.TotalBet[id] = total_bet
                 local betAreaData = self.ui.betAreaList[id]
-                betAreaData.totalBetScore.text = ConvertNumberToString(total_bet)
+                --print("清除下注 id = ", id, total_bet)
+                self:__SetTotalBetScore(betAreaData, total_bet)
             end
         else
             local total_bet = data.info.total_bet or 0
             -- 同步总押分
-            self.TotalBet[item_id] = total_bet or 0 
             local betAreaData = self.ui.betAreaList[item_id]
-            betAreaData.totalBetScore.text = ConvertNumberToString(total_bet)
+            self:__SetTotalBetScore(betAreaData, total_bet)
         end
     end)
 
@@ -195,16 +192,18 @@ function Class:OnSceneReady()
     self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
 
     -- 状态处理
-    
     local state = roomdata.state
     local left_time = roomdata.left_time
     local selfTotalBet = roomdata.self_bet_list
     local totalBet = roomdata.room_tatol_bet_info_list
+    -- 同步下注
     for _, info in pairs(selfTotalBet) do
-        self.selfTotalBet[info.index_id] = info.total_bet
+        local betAreaData = ui.betAreaList[info.index_id]
+        self:__SetSelfBetScore(betAreaData, info.total_bet)
     end
     for _, info in pairs(totalBet) do
-        self.TotalBet[info.index_id] = info.total_bet
+        local betAreaData = ui.betAreaList[info.index_id]
+        self:__SetTotalBetScore(betAreaData, info.total_bet)
     end
 
     self:OnStateChangeNtf({ left_time = left_time, state = state })
@@ -223,27 +222,27 @@ function Class:OnSceneReady()
         end)
     end
     
-    -- 本地无网络调试，发送消息会报错
-    -- -- 发送请求历史路单数据
-    -- CLSLWHSender.Send_HistoryReq(function (data)
-    --     print('HistoryAck:'..json.encode(data))
-    --     local record_list = data.record_list
-    --     local list = {}
-    --     for _,info in ipairs(record_list)do
-    --         local result = info.ressult_info_list[1] -- 暂时只使用一个值
-    --         local songDengInfo = info.ressult_info_list[2]
-    --         local songDengColorID = nil
-    --         local songDengAnimalID = nil
-    --         if songDengInfo ~= nil then
-    --             songDengColorID = songDengInfo.winColor
-    --             songDengAnimalID =  songDengInfo.winAnimal
-    --         end
-    --         local itemData = ui:GetHistoryIconData(result.winColor, result.winSanYuanColor, result.winAnimal, info.win_enjoyGameType, info.win_exType,
-    --                                                 songDengColorID, songDengAnimalID)
-    --         tinsert(list, itemData)
-    --     end
-    --     ui.roadScrollView:ReplaceItems(list)
-    -- end)
+    --LogW("本地无网络调试，发送消息会报错")
+    -- 发送请求历史路单数据
+    CLSLWHSender.Send_HistoryReq(function (data)
+        print('HistoryAck:'..json.encode(data))
+        local record_list = data.record_list
+        local list = {}
+        for _,info in ipairs(record_list)do
+            local result = info.ressult_info_list[1] 
+            local songDengInfo = info.ressult_info_list[2]
+            local songDengColorID = nil
+            local songDengAnimalID = nil
+            if songDengInfo ~= nil then
+                songDengColorID = songDengInfo.winColor
+                songDengAnimalID =  songDengInfo.winAnimal
+            end
+            local itemData = ui:GetHistoryIconData(result.winColor, result.winSanYuanColor, result.winAnimal, info.win_enjoyGameType, info.win_exType,
+                                                    songDengColorID, songDengAnimalID)
+            tinsert(list, itemData)
+        end
+        ui.roadScrollView:ReplaceItems(list)
+    end)
 end
 
 
@@ -418,10 +417,6 @@ function Class:OnClearBtnClicked()
     self:OnSendBet(-1)
 end
 
-function Class:ResetBetSnapShot()
-    self.betSnapShot = {}
-end
-
 -- 把押注分数转换为筹码数量
 function Class:ConvertBetScoreToBetIndex(betScore)
     local betScoreList = self.bet_config_array -- 下标 1-6
@@ -456,8 +451,8 @@ function Class:OnBetState(data)
     local ratioArray = data.ratio_array
     if colorArray ~= nil then
         -- 设置颜色
+        print("颜色表：", json.encode(colorArray))
         for index, value in ipairs(colorArray) do
-            print("设置颜色：" , index,value)
             ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
         end
     end
@@ -465,11 +460,11 @@ function Class:OnBetState(data)
         -- 设置倍率（包含庄和闲）
         local count = #ui.betAreaList
         for i = 1, count, 1 do
-            print("设置倍率：", i,ratioArray[i])
             ui.betAreaList[i].ratioText.text = ratioArray[i]
         end
     end
     if ratioArray ~= nil then
+        print("倍率表：", json.encode(ratioArray))
         self.ratioArray = ratioArray   
     end
      
@@ -483,7 +478,7 @@ function Class:OnShowState(data)
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
 
-    print("self.ratioArray = ", #self.ratioArray)
+    print("倍率表数量 = ", #self.ratioArray)
      if #self.ratioArray <= 0 then
         -- 结算阶段进入
          return
@@ -501,11 +496,6 @@ function Class:OnShowState(data)
     local winEnjoyGameType = data.enjoy_game_ret
     local exType = data.ex_ret
     print("=====OnShowState=======:")
-    local ratio = ""
-    for i = 1, #self.ratioArray, 1 do
-        ratio = ratio..self.ratioArray[i]..","
-    end
-    print("倍率表：", ratio)
     print("庄和闲结果: ", winEnjoyGameType)
     print("颜色结果: ", winColor)
     print("动物结果: ", winAnimal)
@@ -719,20 +709,18 @@ function Class:OnFreeState()
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
     self:PlayIdleStateAnim()
+    -- 如果上一局有下注，则刷新续押数据，否则不变
+    if self:__GetSelfAllBetScore() > 0 then
+        self.betSnapShot = {}   -- 清空原数据
+        for key, value in pairs(self.selfTotalBet) do
+            self.betSnapShot[key] = value
+        end
+    end
     self:__ResetBetScore()
     AudioManager.Instance:PlaySoundEff2D("vs_alert")
 
     self.gameCount = self.gameCount +1
     self.ui.mainUI:SetGameCount(self.gameCount)
-end
-
-function Class:__ResetBetScore()
-    for _, betAreadata in pairs(self.ui.betAreaList)do
-        betAreadata.selfBetScore.text = '0'
-        betAreadata.totalBetScore.text = '0'
-        self.selfTotalBet[betAreadata.item_id] = 0
-        self.TotalBet[betAreadata.item_id] = 0
-    end
 end
 
 function Class:OnNetWorkReConnect()
@@ -801,14 +789,7 @@ function Class:DoCheckForBetButtonState(currency)
     self.dontRecordPlayerSeletBet = false
 end
 
--- 获取续押需要消耗的总分
-function Class:GetContinueBetScore()
-    local totalBetScore = 0
-    for _,v in pairs(self.betSnapShot) do
-        totalBetScore=totalBetScore+v
-    end
-    return totalBetScore
-end
+
 
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
@@ -826,24 +807,19 @@ function Class:OnReceiveBetAck(data)
         local item_id = self_bet_info.index_id
         if item_id == -1 then
             for _, betAreaData in pairs(betAreaList) do
-                betAreaData.selfBetScore.text = '0'
-                self.selfTotalBet[betAreaData.item_id] = 0
+                self:__SetSelfBetScore(betAreaData, 0)
             end
-            self:ResetBetSnapShot()
         else
+            local total_bet = self_bet_info.total_bet
             local betAreaData = betAreaList[item_id]
             --
-            local total_bet = self_bet_info.total_bet
-            print("betAreaData.selfBetScore = ", betAreaData.selfBetScore)
-            betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
+            self:__SetSelfBetScore(betAreaData, total_bet)
             self.betSnapShot[item_id] = total_bet
-            self.selfTotalBet[item_id] = 0
             AudioManager.Instance:PlaySoundEff2D("betSound")
         end
         print("下注成功返回玩家当前分数：data.self_score")
         self:OnMoneyChange(data.self_score)
-        -- 统计当前总下注
-        self.ui.mainUI:SetCurBetScore(self:GetContinueBetScore())
+        self:__UpdateSelfAllBetScore()
     else
         local errStr = GameConfig.BetErrorTip[data.errcode]
         if not string.IsNullOrEmpty(data.errParam) then
@@ -857,7 +833,7 @@ end
 function Class:__GetRatio(color_id, animal_id)
     color_id = color_id -1
     animal_id = animal_id -1
-    local index = color_id * 4 + animal_id +1;
+    local index = color_id * 4 + animal_id +1
     local ratio = self.ratioArray[index]
     print("获取中奖倍率：", color_id, animal_id, index, self.ratioArray, ratio)
     return ratio
@@ -881,5 +857,50 @@ function Class:__GetBetItemLuaIndex(color_id, animal_id)
     return index +1;
 end
 
+-- 设置自己下注分数
+function Class:__SetSelfBetScore(betAreaData, total_bet)
+    assert(betAreaData)
+    betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
+    local item_id = betAreaData.item_id
+    self.selfTotalBet[item_id] = total_bet
+end
+-- 设置全体下注分数
+function Class:__SetTotalBetScore(betAreaData, total_bet)
+    assert(betAreaData)
+    betAreaData.totalBetScore.text = ConvertNumberToString(total_bet)
+    local item_id = betAreaData.item_id
+    self.TotalBet[item_id] = total_bet
+end
+
+-- 重置所有下注分数
+function Class:__ResetBetScore()
+    for _, betAreadata in pairs(self.ui.betAreaList)do
+        self:__SetSelfBetScore(betAreadata, 0)
+        self:__SetTotalBetScore(betAreadata, 0)
+    end
+end
+
+-- 获取自己当前总下注
+function Class:__GetSelfAllBetScore()
+    local score = 0
+    for key, value in pairs(self.selfTotalBet) do
+        score = score + value
+    end
+    return score
+end
+function Class:__UpdateSelfAllBetScore()
+    local score = self:__GetSelfAllBetScore()
+    self.ui.mainUI:SetCurBetScore(score)
+    
+end
+
+-- 获取续押需要消耗的总分
+function Class:GetContinueBetScore()
+    local totalBetScore = 0
+    for _,v in pairs(self.betSnapShot) do
+        totalBetScore=totalBetScore+v
+    end
+    return totalBetScore
+end
 
 return _ENV

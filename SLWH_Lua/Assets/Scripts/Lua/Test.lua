@@ -76,10 +76,17 @@ function OnSceneLoaded(scene, mode)
         local View = SceneView.Create(roomdata)
         local ctrl = View.ctrl
 
+
+
         local KeyListener = View.gameObject:GetComponent(typeof(CS.KeyListener))
         KeyListener.keyDownList:Add(UnityEngine.KeyCode.A)
         local co = coroutine.create(function ()
             while true do
+                for i = 1, 10, 1 do
+                    View.roadScrollView:InsertItem(View:GetHistoryIconData(1, nil, 1, 1, 5,
+                    nil, nil, nil))
+                end
+                
                 local betStateData = {
                     left_time = 5,
                     state = 1,

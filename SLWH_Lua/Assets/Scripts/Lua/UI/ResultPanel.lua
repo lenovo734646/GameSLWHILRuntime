@@ -122,7 +122,7 @@ function Class:ShowResult(resultPanelData)
         self.winCaiJinData.ratio.text = " x"..tostring(resultPanelData.caijin_ratio)
     elseif exType == ExWinType.LiangBei or exType == ExWinType.SanBei then
         self.winShanDianData.winShandianGO:SetActive(true)
-        self.winShanDianData.ratio.text = " x"..tostring(resultPanelData.shandian_ratio)
+        self.winShanDianData.ratio.text = tostring(resultPanelData.shandian_ratio)
 
     elseif exType == ExWinType.SongDeng then
         self.winSongDengData.winSongDengGO:SetActive(true)

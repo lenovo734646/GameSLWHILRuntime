@@ -26,7 +26,8 @@ function Create(...)
 end
 
 function Class:__init(slotPanelInitHelper)
-    slotPanelInitHelper:Init(self)
+    slotPanelInitHelper:Init(self, false)
+    print("简单老虎机初始化：", self.OSAScrollViewCom)
     self.sprs = {}
     slotPanelInitHelper:ObjectsSetToLuaTable(self.sprs)
     --
@@ -64,7 +65,8 @@ function Class:__init(slotPanelInitHelper)
 
     -- 惯性（0-1）
     self.OSAScrollViewCom.BaseParameters.effects.InertiaDecelerationRate = 0.865
-    self.OSAScrollViewCom.Velocity = 0
+    print("简单老虎机初始化222：", self.OSAScrollViewCom.Velocity)
+    self.OSAScrollViewCom.Velocity = Vector2(0, 0)
     -- 转动力度：正数为从下向上转，负数为从上向下转
     self.Volicity = Vector2(0, -1500)
 end

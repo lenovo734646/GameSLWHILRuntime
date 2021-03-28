@@ -153,6 +153,7 @@ function OnSceneLoaded(scene, mode)
             for k, v in pairs(LoadList) do
                 if k == 1 then
                     for _, assetPath in pairs(v) do
+                        print("加载Asset：path = ", assetPath)
                         loader:LoadAsync(assetPath)
                         updateProgress()
                     end

@@ -16,9 +16,9 @@ SubGame_Env.ConvertNumberToString = function (n)
     return n..unit
 end
 
-SubGame_Env.ShotHintMessage = function (contentStr)
+SubGame_Env.ShowHintMessage = function (contentStr)
     if g_Env then
-        g_Env.ShotHintMessage(contentStr)
+        g_Env.ShowHitMessage(contentStr)
     else
         print(contentStr)
     end
@@ -103,7 +103,7 @@ CLSLWHSender.Send_EnterRoomReq(function (data)
     if data.errcode ~= 0 then
         if g_Env then
             local errorstr = GameConfig.EnterRoomErrorTip[data.errcode]
-            --g_Env.ShotHintMessage(errorstr)
+            --g_Env.ShowHintMessage(errorstr)
             g_Env.MessageBox{
                 content = errorstr,
                 onOK = function()

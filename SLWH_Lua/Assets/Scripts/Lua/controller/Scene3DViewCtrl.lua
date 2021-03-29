@@ -380,7 +380,7 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        SubGame_Env.ShotHintMessage("金币不足,当前金币:"..SubGame_Env.playerRes.currency)
+        SubGame_Env.ShowHintMessage("金币不足,当前金币:"..SubGame_Env.playerRes.currency)
         return
     end
     --发送下注
@@ -393,7 +393,7 @@ function Class:OnContinueBtnClicked()
     --     self.betSnapShot[i] = 1000
     -- end
     if self:__GetContinueBetScore() <= 0 then
-        SubGame_Env.ShotHintMessage("上局无下注")
+        SubGame_Env.ShowHintMessage("上局无下注")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
@@ -820,7 +820,7 @@ function Class:OnReceiveBetAck(data)
         if not string.IsNullOrEmpty(data.errParam) then
             errStr = errStr..": "..data.errParam
         end
-        SubGame_Env.ShotHintMessage(errStr)
+        SubGame_Env.ShowHintMessage(errStr)
     end
 end
 

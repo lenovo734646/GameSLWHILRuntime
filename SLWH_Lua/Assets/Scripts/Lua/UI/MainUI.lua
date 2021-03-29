@@ -61,6 +61,8 @@ function Class:__init(panel, roomdata, loader)
     self.tog_Music.isOn = not AudioManager.Instance.MusicAudio.mute
     self.tog_Effect.isOn = not AudioManager.Instance.EffectAudio.mute
 
+    self.gameStateSpineHelper.gameObject:SetActive(true)
+
 end
 
 -- 设置统计数据

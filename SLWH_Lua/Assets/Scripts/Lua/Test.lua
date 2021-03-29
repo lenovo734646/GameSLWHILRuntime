@@ -16,9 +16,9 @@ SubGame_Env.ConvertNumberToString = function (n)
     return n..unit
 end
 
-SubGame_Env.ShotHintMessage = function (contentStr)
+SubGame_Env.ShowHintMessage = function (contentStr)
     if g_Env then
-        g_Env.ShotHintMessage(contentStr)
+        g_Env.ShowHintMessage(contentStr)
     else
         print(contentStr)
     end

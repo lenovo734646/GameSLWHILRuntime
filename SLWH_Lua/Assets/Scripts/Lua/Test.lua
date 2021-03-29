@@ -16,9 +16,9 @@ SubGame_Env.ConvertNumberToString = function (n)
     return n..unit
 end
 
-SubGame_Env.ShowHitMessage = function (contentStr)
+SubGame_Env.ShotHintMessage = function (contentStr)
     if g_Env then
-        g_Env.ShowHitMessage(contentStr)
+        g_Env.ShotHintMessage(contentStr)
     else
         print(contentStr)
     end
@@ -86,7 +86,7 @@ function OnSceneLoaded(scene, mode)
                     View.roadScrollView:InsertItem(View:GetHistoryIconData(1, nil, 1, 1, 5,
                     nil, nil, nil))
                 end
-                
+
                 local betStateData = {
                     left_time = 5,
                     state = 1,

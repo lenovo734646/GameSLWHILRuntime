@@ -6,15 +6,17 @@ using UnityEditor;
 using UnityEngine;
 
 
-public class SetParticleAttribute : EditorWindow
+public class SetObjectAttribute : EditorWindow
 {
     public Transform root;
     public string targetName;
     bool bLoop = false;
-    //
+    // 设置值
     string textValue = "";
-    //
+    // 设置颜色
     Color color;
+    // 替换TMP_Text字体
+    TMP_FontAsset targetFont;
     //
     float scale = 1;
 
@@ -25,17 +27,17 @@ public class SetParticleAttribute : EditorWindow
     bool yAxis = true;
     bool zAxis = false;
     //
-    SetParticleAttribute()
+    SetObjectAttribute()
     {
-        titleContent = new GUIContent("3D圆形布局");
+        titleContent = new GUIContent("通用小工具（脚本名：SetObjectAttribute）");
     }
 
-    [MenuItem("Tools/设置Root下所有粒子属性")]
+    [MenuItem("Tools/设置Root下所有Object属性")]
     static void ShowWindow()
     {
         Debug.Log("SetParticleAttribute ShowWindows");
         //获取窗口并打开
-        EditorWindow.GetWindow((typeof(SetParticleAttribute)));
+        EditorWindow.GetWindow((typeof(SetObjectAttribute)));
     }
 
     private void OnEnable()
@@ -49,48 +51,55 @@ public class SetParticleAttribute : EditorWindow
 
         GUILayout.Label("设置Root下所有粒子属性");
         root = (Transform)EditorGUILayout.ObjectField("根节点", root, typeof(Transform), true);
+        if (root == null)
+        {
+            root = Selection.activeTransform;
+            if (root == null)
+            {
+                Debug.LogError("请设置或选中根节点");
+                return;
+            }
+        }
         GUILayout.Space(10);
         targetName = EditorGUILayout.TextField("名字筛选", targetName);
         bLoop = GUILayout.Toggle(bLoop, "粒子是否循环");
         if (GUILayout.Button("设置"))
         {
             SetParticlesLoop(bLoop, targetName);
+            Debug.Log("设置完毕");
         }
 
-        GUILayout.Space(20);
+        GUILayout.Label("==============================================================");
+        GUILayout.Label("==============================================================");
         GUILayout.Label("设置Root下所有TMP_Text的值");
-        GUILayout.Space(10);
+        GUILayout.Space(5);
         textValue = GUILayout.TextField(textValue);
-        GUILayout.Space(10);
         if (GUILayout.Button("设置"))
         {
             SetTMPTextValue(textValue, targetName);
+            Debug.Log("设置完毕");
         }
 
-        GUILayout.Space(20);
+        GUILayout.Space(10);
+        GUILayout.Label("-----------------------------------------------------------------");
         GUILayout.Label("设置Root下所有TMP_Text的颜色");
-        GUILayout.Space(10);
+        GUILayout.Space(5);
         color = EditorGUILayout.ColorField(color);
-        GUILayout.Space(10);
         if (GUILayout.Button("设置"))
         {
             SetTMPTextColor(color, targetName);
+            Debug.Log("设置完毕");
         }
 
         GUILayout.Space(10);
-        GUILayout.Label("逆向重新排列子对象，并重新命名");
-        if (GUILayout.Button("反向重命名"))
+        GUILayout.Label("-----------------------------------------------------------------");
+        GUILayout.Label("设置Root下所有TMP_Text的字体");
+        GUILayout.Space(5);
+        targetFont = (TMP_FontAsset)EditorGUILayout.ObjectField("被替换字体", targetFont, typeof(TMP_FontAsset), true);
+        if (GUILayout.Button("设置"))
         {
-            var count = root.childCount;
-            for (var i = 0; i < count; i++)
-            {
-                root.GetChild(i).name = (count - i).ToString();
-            }
-
-            for (var i = 0; i < count; i++)
-            {
-                root.GetChild(0).SetSiblingIndex(count - i - 1); // 设置层级关系SetAsFirstSibling()最上SetAsLastSibling()最下
-            }
+            SetTMPTextFont(targetFont, targetName);
+            Debug.Log("设置完毕");
         }
 
 
@@ -179,6 +188,15 @@ public class SetParticleAttribute : EditorWindow
         foreach (var text in tmpTexts)
         {
             text.color = color;
+        }
+    }
+
+    void SetTMPTextFont(TMP_FontAsset font, string targetName = null)
+    {
+        var tmpTexts = GetTMPTextTargets(targetName);
+        foreach (var text in tmpTexts)
+        {
+            text.font = font;
         }
     }
 

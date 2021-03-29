@@ -206,10 +206,11 @@ function Class:OnSceneReady()
         self:__SetTotalBetScore(betAreaData, info.total_bet)
     end
 
-    self:OnStateChangeNtf({ left_time = left_time, state = state })
-    if state ~= GameConfig.GameState.BET then
-        self.ui.mainUI:SetWaitNextStateTip(true)
-    end
+    print("OnSceneReady: 状态 = ", state, left_time)
+    --self:OnStateChangeNtf({ left_time = left_time, state = state })
+    --需要下注阶段发来的倍率表和颜色表，
+    --所以刚进入无论什么状态都要等到下一轮下注状态，才能正常进行游戏
+    self.ui.mainUI:SetWaitNextStateTip(true)
  
     
     --修正时间差
@@ -379,16 +380,7 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        if _G.ShotHitMessage then
-            local errorstr = ''
-            _G.ShotHitMessage(errorstr)
-        else
-            if _G.HALL then
-                print('TODO 没有实现全局方法ShotHitMessage')
-            else
-                print('金币不足,当前金币:',SubGame_Env.playerRes.currency)
-            end
-        end
+        SubGame_Env.ShotHintMessage("金币不足,当前金币:"..SubGame_Env.playerRes.currency)
         return
     end
     --发送下注
@@ -400,6 +392,10 @@ function Class:OnContinueBtnClicked()
     -- for i = 1, 8, 1 do
     --     self.betSnapShot[i] = 1000
     -- end
+    if self:__GetContinueBetScore() <= 0 then
+        SubGame_Env.ShotHintMessage("上局无下注")
+        return 
+    end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
         local betData = self:ConvertBetScoreToBetIndex(betScore)
         for _, data in pairs(betData) do    -- 共有几种筹码需要下注
@@ -440,7 +436,7 @@ function Class:OnBetState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('betState')
     AudioManager.Instance:PlaySoundEff2D("start_bet")
-    self:DoCheckForBetButtonState()--判断并禁用不能钱不够的筹码按钮
+    self:DoCheckForBetButtonState()--判断并禁用钱不够的可选筹码按钮
 
     if data.ratio_array == nil then
         -- 下注阶段进入
@@ -783,7 +779,7 @@ function Class:DoCheckForBetButtonState(currency)
     ui.SelectEffect:SetActive(not disableAllToggle)
 
     -- 判断金币是否足够续押
-    ui.continue_button.interactable = self:GetContinueBetScore() <= currency
+    ui.continue_button.interactable = self:__GetContinueBetScore() <= currency
     self.notEnoughMoney = currency < bet_config_array[1]
 
     self.dontRecordPlayerSeletBet = false
@@ -814,7 +810,6 @@ function Class:OnReceiveBetAck(data)
             local betAreaData = betAreaList[item_id]
             --
             self:__SetSelfBetScore(betAreaData, total_bet)
-            self.betSnapShot[item_id] = total_bet
             AudioManager.Instance:PlaySoundEff2D("betSound")
         end
         print("下注成功返回玩家当前分数：data.self_score")
@@ -825,7 +820,7 @@ function Class:OnReceiveBetAck(data)
         if not string.IsNullOrEmpty(data.errParam) then
             errStr = errStr..": "..data.errParam
         end
-        SubGame_Env.ShowHitMessage(errStr)
+        SubGame_Env.ShotHintMessage(errStr)
     end
 end
 
@@ -895,12 +890,12 @@ function Class:__UpdateSelfAllBetScore()
 end
 
 -- 获取续押需要消耗的总分
-function Class:GetContinueBetScore()
-    local totalBetScore = 0
+function Class:__GetContinueBetScore()
+    local score = 0
     for _,v in pairs(self.betSnapShot) do
-        totalBetScore=totalBetScore+v
+        score=score+v
     end
-    return totalBetScore
+    return score
 end
 
 return _ENV

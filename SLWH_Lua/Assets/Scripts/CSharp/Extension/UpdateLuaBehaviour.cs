@@ -3,7 +3,7 @@ using XLua;
 
 namespace XLuaExtension
 {
-    [LuaCallCSharp]
+    //[LuaCallCSharp]
     public class UpdateLuaBehaviour : BaseLuaBehaviour<UpdateLuaBehaviour>
     {
         private Action<LuaTable> luaUpdate;

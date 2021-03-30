@@ -55,8 +55,7 @@ public class KeyEventListener : MonoBehaviour
         }
         if (obj1 != null && obj2 != null) {
             f.Call(self, obj1, obj2);
-        }
-        if (obj1 != null)
+        } else if (obj1 != null)
             f.Call(self, obj1);
         else
             f.Call(self);

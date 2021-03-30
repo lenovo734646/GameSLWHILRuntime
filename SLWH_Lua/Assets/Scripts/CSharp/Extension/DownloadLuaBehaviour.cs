@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine.Networking;
 using XLua;
 
-#pragma warning disable 0672,0618
+#pragma warning disable 0672, 0618
 
 namespace XLuaExtension
 {
@@ -35,7 +35,6 @@ namespace XLuaExtension
         public void StartDownload(string url, string path, int firstBytePos = -1, int streamFragmentSize = 0, int totalSize = 0)
         {
             Clear();
-
             m_totalSize = totalSize;
             m_filePath = path;
 

@@ -42,7 +42,7 @@ public class EventBroadcaster : MonoBehaviour
             }
             
         } else {
-            Debug.LogWarning($"事件 {evetName} 不存在");
+            Debug.LogWarning($"事件 {evetName} 不存在，或组件未激活（GameObject UnActive）");
         }
     }
 

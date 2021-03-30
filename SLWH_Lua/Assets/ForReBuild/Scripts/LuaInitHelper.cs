@@ -26,6 +26,8 @@ public class LuaInitHelper :MonoBehaviour{
 
     public bool HasInit { get { return t != null; } }
 
+    public bool showlog = false;
+
 
     private void Awake() {
         if (sortByName) {
@@ -54,7 +56,7 @@ public class LuaInitHelper :MonoBehaviour{
 
     public LuaTable Init(LuaTable self, bool autoDestroy = true) {
         InitValuesToLua(self, autoDestroy);
-        return t;
+        return self;
     }
 
     public void InitValuesToLua(LuaTable self, bool autoDestroy = true, bool withChildInitHelper = false) {
@@ -63,14 +65,16 @@ public class LuaInitHelper :MonoBehaviour{
             var data = initList[i];
             var name = string.IsNullOrEmpty(data.name) ? data.manualName : data.name;
             if (string.IsNullOrEmpty(data.name)) {
-                Debug.LogError($"index:{i} name没有值！");
+                Debug.LogError($"index:{i} name没有值！ at {gameObject}");
                 continue;
             }
             if (!data.anyType) {
-                Debug.LogError($"{name}没有值！");
+                Debug.LogError($"{name}没有值！at {gameObject}");
                 continue;
             }
             self.Set(name, data.anyType);
+            if(showlog)
+                Debug.Log($"{name}设置了值！");
             if(withChildInitHelper && (data.anyType is LuaInitHelper)) {
                 var hp = data.anyType as LuaInitHelper;
                 hp.InitValuesToLua(self.NewTable(hp.name+"_ct"),autoDestroy,withChildInitHelper);
@@ -92,4 +96,16 @@ public class LuaInitHelper :MonoBehaviour{
             Destroy(this);
     }
 
+    public void InitListToMap(LuaTable self, bool autoDestroy = true) {
+        t = self;
+        for (int i = 0; i < objects.Length; i++) {
+            if(self.ContainsKey(objects[i].name)) {
+                Debug.LogWarning($"重复的key {objects[i].name} at {gameObject}");
+                continue;
+            }
+            self.Set(objects[i].name, objects[i]);
+        }
+        if (autoDestroy)
+            Destroy(this);
+    }
 }

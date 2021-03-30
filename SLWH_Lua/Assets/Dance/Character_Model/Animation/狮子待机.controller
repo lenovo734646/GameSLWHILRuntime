@@ -8,7 +8,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Victory
-  m_Speed: 1
+  m_Speed: 1.3
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -90,13 +90,13 @@ AnimatorStateMachine:
     m_Position: {x: 426.61816, y: 75.76016, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3423269149741731194}
-    m_Position: {x: 422.00647, y: 188.00162, z: 0}
+    m_Position: {x: 420, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8616499891175813781}
     m_Position: {x: 457.3625, y: -11.654526, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5422515107784456028}
-    m_Position: {x: 394.3366, y: 339.1444, z: 0}
+    m_Position: {x: 390, y: 340, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

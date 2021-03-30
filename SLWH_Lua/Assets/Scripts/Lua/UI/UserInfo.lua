@@ -12,9 +12,8 @@ local tonumber = tonumber
 local CoroutineHelper = require'CoroutineHelper'
 local yield = coroutine.yield
 
-local Destroy = Destroy
-local Instantiate = Instantiate
-local GameObject = GameObject
+local SubGame_Env=SubGame_Env
+local ConvertNumberToString = SubGame_Env.ConvertNumberToString
 
 local GameConfig = require'GameConfig'
 
@@ -29,17 +28,17 @@ end
 
 function Class:__init(userInfoInitHelper, roomData)
     userInfoInitHelper:Init(self)
-    self.userInfoEventListener:Init(self)
+    self.eventListener:Init(self)
 
     self.selfUserID = roomData.self_user_id
-    self.userName.text = roomData.self_user_name
+    self.TMP_f_UserNickName.text = roomData.self_user_name
     self:OnChangeMoney(roomData.self_score)
     self:OnChangeHead(roomData.self_user_Head)
     self:OnChangeHeadFrame(roomData.self_user_HeadFrame)
 end
 
 function Class:OnChangeMoney(currency)
-    self.userMoney.text = tostring(currency)
+    self.TMP_f_UserMoney.text = ConvertNumberToString(currency)
 end
 
 function Class:OnChangeHead(headID)
@@ -50,7 +49,9 @@ function Class:OnChangeHeadFrame(headFrameID)
     --self.headFrameImg.sprite = GetHeadFrameSprite(headFrameID)
 end
 
-function Class:On_btnUserInfo_Event(btnUserInfo)
+
+-- 以下为自动生成代码
+function Class:On_btn_UserInfo_Event(btn_UserInfo)
     print("On_btnUserInfo Click....打开个人信息窗口....")
 end
 

@@ -19,6 +19,7 @@ using UnityEngine;
 
 public class AssetInfo<T> where T: UnityEngine.Object
 {
+
     private T loadObj;
     public string Path { get; set; }
     public int RefCount { get; set; }
@@ -40,7 +41,7 @@ public class AssetInfo<T> where T: UnityEngine.Object
         }
     }
 
-    #region public function
+    //#region public function
     //协程加载
     public IEnumerator GetObjectByCoroutine(Action<T> loaded)
     {
@@ -75,36 +76,62 @@ public class AssetInfo<T> where T: UnityEngine.Object
         }
         yield return request;
         if (ReferenceEquals(request.asset, null))
-            Debug.LogErrorFormat($"Resources Load Failure! Path:{Path}");
+        {
+            if (ReferenceEquals(loadObj, null))
+                Debug.LogErrorFormat($"Resources Load Failure! Path:{Path}");
+            else
+            {
+                loadObj = request.asset as T;
+                loaded?.Invoke(loadObj);
+                yield return request;
+            }
+        }
         else
         {
             loadObj = request.asset as T;
             loaded?.Invoke(loadObj);
             yield return request;
         }
+        
+        //if (ReferenceEquals(request.asset, null))
+        //    Debug.LogErrorFormat($"Resources Load Failure! Path:{Path}");
+        //else
+        //{
+        //    loadObj = request.asset as T;
+        //    loaded?.Invoke(loadObj);
+        //    yield return request;
+        //}
     }
-    #endregion
+    //#endregion
 
-    #region private function
+    //#region private function
     private void resourcesLoad()
     {
         try
         {
-            loadObj = Resources.Load<T>(Path);
+            var objs = GLuaSharedHelper.g_Env.Get<XLua.LuaFunction>("LoadFromCSharp").Call(Path);
+            loadObj = objs[0] as T;
+            //var logerror = ResManager.Instance.isHallResExist;
+            //loadObj = Resources.Load<T>(Path);
             //if (ReferenceEquals(loadObj, null))
-                //Debug.LogErrorFormat($"Resources Load Failure! Path:{Path}");
+            //    loadObj = loader.LoadAsset<T>($"Assets/Resources_HotUpdate/{Path}.prefab", logerror);
+            //if (logerror && ReferenceEquals(loadObj, null))
+            //    Debug.LogErrorFormat($"Resources Load Failure! Path:{Path}");
         }
         catch (Exception e)
         {
             Debug.LogError(e.ToString());
         }
     }
-    #endregion
+    //#endregion
 }
 
 
 public class ResManager : Singleton<ResManager>
 {
+
+    //public bool isHallResExist = true;
+
     //资源缓存集合
     private Hashtable hashTable;
 
@@ -112,15 +139,13 @@ public class ResManager : Singleton<ResManager>
     public override void Init()
     {
         hashTable = new Hashtable();
+        ////Context _context = new Context(); 
+        ////Loader = new AssetLoader(_context);
     }
 
-    #region public function
+    //#region public function
 
-    public bool HasCache<T>(string path)where T:UnityEngine.Object
-    {
-        string hashKey = string.Format($"{path}{typeof(T)}");
-        return hashTable.ContainsKey(hashKey);
-    }
+    
 
     //load
     public GameObject LoadPrefab(string path)
@@ -136,6 +161,22 @@ public class ResManager : Singleton<ResManager>
     public Font LoadFont(string path)
     {
         return Load<Font>(path);
+    }
+    //Instance & Coroutine
+    public void LoadInstanceCoroutine(string path, Action<GameObject> loaded) {
+        LoadInstanceCoroutine<GameObject>(path, loaded);
+    }
+
+    public void LoadInstanceAsync(string path, Action<GameObject> loaded) {
+        LoadInstanceAsync<GameObject>(path, loaded);
+    }
+    public void LoadInstanceAsync(string path, Action<GameObject> loaded, Action<float> progress) {
+        LoadInstanceAsync<GameObject>(path, loaded, progress);
+    }
+
+    public bool HasCache<T>(string path) where T : UnityEngine.Object {
+        string hashKey = string.Format($"{path}{typeof(T)}");
+        return hashTable.ContainsKey(hashKey);
     }
 
     public T Load<T>(string path) where T : UnityEngine.Object
@@ -153,11 +194,7 @@ public class ResManager : Singleton<ResManager>
         return Instantiate(obj);
     }
 
-    //Instance & Coroutine
-    public void LoadInstanceCoroutine(string path, Action<GameObject> loaded)
-    {
-        LoadInstanceCoroutine<GameObject>(path, loaded);
-    }
+   
 
     public void LoadInstanceCoroutine<T>(string path, Action<T> loaded) where T : UnityEngine.Object
     {
@@ -172,20 +209,14 @@ public class ResManager : Singleton<ResManager>
     }
 
     //Instance & Async
-    public void LoadInstanceAsync(string path, Action<GameObject> loaded)
-    {
-        LoadInstanceAsync<GameObject>(path, loaded);
-    }
+   
 
     public void LoadInstanceAsync<T>(string path, Action<T> loaded) where T : UnityEngine.Object
     {
         LoadAsync<T>(path, obj => { Instantiate<T>(obj, loaded); });
     }
 
-    public void LoadInstanceAsync(string path, Action<GameObject> loaded, Action<float> progress)
-    {
-        LoadInstanceAsync<GameObject>(path, loaded, progress);
-    }
+    
 
     public void LoadInstanceAsync<T>(string path, Action<T> loaded, Action<float> progress) where T : UnityEngine.Object
     {
@@ -208,10 +239,15 @@ public class ResManager : Singleton<ResManager>
     public void UnloadUnusedAssets()
     {
         Resources.UnloadUnusedAssets();
+    }  //释放资源
+    public void UnloadTrueAB(string path)
+    {
+        ////Loader.UnloadTrueAB(path);
+        ////Resources.UnloadUnusedAssets();//触发一次自动释放
     }
-    #endregion
+    //#endregion
 
-    #region private function
+    //#region private function
 
     private AssetInfo<T> getAssetInfo<T>(string path) where T : UnityEngine.Object
     {
@@ -261,5 +297,5 @@ public class ResManager : Singleton<ResManager>
             Debug.LogError("Error: null Resources Load return obj.");
         return retObj;
     }
-    #endregion
+    //#endregion
 }

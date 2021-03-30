@@ -104,5 +104,5 @@ Material:
     - _ColorCubeMap: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
     - _CubeMapColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FreshnelColor: {r: 1, g: 0.69943273, b: 0, a: 1}
+    - _FreshnelColor: {r: 0.9150943, g: 0.8888479, b: 0.40143287, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

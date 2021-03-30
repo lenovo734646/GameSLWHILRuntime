@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 [ExecuteInEditMode]
-public class LookAtOneAxis : MonoBehaviour
-{
+public class LookAtOneAxis : MonoBehaviour {
     public Transform target;
-    public bool targetIsMainCam = true;
     public bool keepX = false;
     public bool keepY = true;
     public bool keepZ = true;
 
     Vector3 originalRot;
     // Start is called before the first frame update
-    void Start()
-    {
-        if (targetIsMainCam)
-            target = Camera.main.transform;
-
+    void Start() {
         originalRot = transform.eulerAngles;
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         if (!target) return;
         if (keepX && keepY && keepZ) return;
         var pos = transform.position;

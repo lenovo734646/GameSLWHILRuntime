@@ -10,7 +10,6 @@ using Object = UnityEngine.Object;
 [CustomEditor(typeof(LuaInitHelper)), CanEditMultipleObjects]
 public class LuaInitHelperEditor : Editor {
 
-
     //float time = 0;
     string findchildstr = "";
     public override void OnInspectorGUI() {
@@ -63,6 +62,7 @@ public class LuaInitHelperEditor : Editor {
                         var spr = AssetDatabase.LoadAssetAtPath<Sprite>(path);
                         targetcom.objects[i] = spr;
                     }
+                    EditorUtility.SetDirty(target);
                 }
             } else {
                 if (((obj_ is Component) || (obj_ is GameObject)) && targets.Length == 1 && GUILayout.Button("转换Objects到可选类型")) {
@@ -172,10 +172,12 @@ public class LuaInitHelperEditor : Editor {
                     TypeData typeData = new TypeData();
                     if (selectedType != null) {
                         typeData.anyType = obj.GetComponent(selectedType);
+                        typeData.name = (typeData.anyType.name + "_" + selectedType.Name).ToLower();
                     } else {
                         typeData.anyType = obj;
                     }
                     targetcom.initList.Add(typeData);
+                    EditorUtility.SetDirty(targetcom);
                 }
             };
         }

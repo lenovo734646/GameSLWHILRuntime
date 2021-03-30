@@ -21,7 +21,7 @@ public class LuaInitHelperHelper : MonoBehaviour{
                     var name = data.monoType.name;
                     if (luaTable.ContainsKey(name)) {
                         name += "_1";
-                        Debug.LogWarning($"重复的key 重命名为 {name} 父级:{data.monoType.transform.parent.name}");
+                        Debug.LogWarning($"重复的key 重命名为 {name} 父级:{data.monoType.transform.parent.name} at {gameObject}");
                     }
                     var initHelepr_ = data.monoType as LuaInitHelper;
                     if(!initHelepr_.HasInit)
@@ -69,7 +69,7 @@ public class LuaInitHelperHelper : MonoBehaviour{
                 var name = t.name;
                 if (table.ContainsKey(name)) {
                     name += "_1";
-                    Debug.LogWarning($"重复的key 重命名为 {name} 父级:{t.parent.name}");
+                    Debug.LogWarning($"重复的key 重命名为 {name} 父级:{t.parent.name} at {gameObject}");
                 }
                 ForeachChildren(table.NewTable(name), t, action);
             }

@@ -125,6 +125,9 @@ class SetAnyTypeWindow : EditorWindow {
     Vector2 scrollPos;
     Dictionary<string, bool> checkDic = new Dictionary<string, bool>();
     private void OnGUI() {
+        //GUI.skin.label.normal.textColor = Color.red;
+        EditorGUILayout.LabelField("若不希望自动命名可右键单击选择类型，不必取消勾选");
+        //GUI.skin.label.normal.textColor = Color.white;
         Component[] list;
         GameObject gameObject;
         if (target is Component) {
@@ -155,9 +158,16 @@ class SetAnyTypeWindow : EditorWindow {
             if (!checkDic.ContainsKey(p.Key))
                 checkDic.Add(p.Key, true);
             var b = checkDic[p.Key] = GUILayout.Toggle(checkDic[p.Key], "自动设置名字");
-            if (clickbtn) {
-                
+
+            if (clickbtn && Event.current.button == (int)MouseButton.LeftMouse)
+            {
                 setTargetFunc(p.Value, b);
+                Close();
+            }
+
+            if (clickbtn && Event.current.button == (int)MouseButton.RightMouse)
+            {
+                setTargetFunc(p.Value, false);
                 Close();
             }
             GUILayout.EndHorizontal();

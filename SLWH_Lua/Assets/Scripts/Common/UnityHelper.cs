@@ -29,9 +29,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using XLua;
 using ZXing;
+using static XLua.LuaEnv;
 
 public static class UnityHelper
 {
+    static UnityHelper() {
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+    }
+
     /// <summary>
     /// CA3加密算法：高效快速，自带校验功能
     /// </summary>
@@ -97,6 +102,11 @@ public static class UnityHelper
     //是否点击在UI控件上，用于判断UI点穿
     public static bool IsPointerOverUIObject()
     {
+        return IsPointerOverUnityUIObject();
+    }
+
+    //UI层是5
+    public static bool IsPointerOverUnityUIObject(int filterLayer = 5) {
         if (EventSystem.current == null)
             return false;
 
@@ -109,13 +119,14 @@ public static class UnityHelper
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
 
         var count = results.Count - 1;
-        for (int i = count; i >= 0; i--)
-        {
-            if (results[i].gameObject.layer != 5)
-                results.RemoveAt(i);
+        var rcount = 0;
+        if (filterLayer > 0) {
+            for (int i = count; i >= 0; i--) {
+                if (results[i].gameObject.layer == filterLayer)
+                    rcount++;
+            }
         }
-
-        return results.Count > 0;
+        return rcount > 0;
     }
 
     /// <summary>
@@ -459,11 +470,6 @@ public static class UnityHelper
         return str + end;
     }
 
-    public static int RandomInt(int a, int b)
-    {
-        return UnityEngine.Random.Range(a, b);
-    }
-
     public static string NumberFormatByThousand(long number, int dec = 2)
     {
         var str = string.Empty;
@@ -657,7 +663,7 @@ public static class UnityHelper
         return result.ToString();
     }
     public static string CalFileMd5(string filename) {
-        return CalMd5(File.ReadAllBytes(filename));
+        return CalMd5(ReadAllBytes(filename));
     }
     public static string CalStringMd5(string str) {
         return CalMd5(Encoding.UTF8.GetBytes(str));
@@ -937,7 +943,7 @@ public static class UnityHelper
     /// <param name="cipherText">密文字节数组</param>  
     /// <param name="strKey">密钥</param>  
     /// <returns>返回解密后的字符串</returns>  
-    public static byte[] AESDecrypt(byte[] cipherText, byte[] keyBytes) {
+    public static byte[] fck(byte[] cipherText, byte[] keyBytes) {
         SymmetricAlgorithm des = Rijndael.Create();
         des.Key = keyBytes;
         des.IV = _offsetkey1;
@@ -951,14 +957,12 @@ public static class UnityHelper
         return decryptBytes;
     }
 
+    // 此函数小游戏单独用不到，注释掉了，避免报错
+    // 不要同步到大厅
     //public class WaitLuaRequest : CustomYieldInstruction {
     //    bool ok = false;
     //    public string body;
-    //    public override bool keepWaiting {
-    //        get {
-    //            return !ok;
-    //        }
-    //    }
+    //    public override bool keepWaiting => !ok;
 
     //    public WaitLuaRequest(QLUploadRequest request) {
     //        NetController.Instance.PostLuaRequest(request, obj=> {
@@ -974,7 +978,108 @@ public static class UnityHelper
     //    }
     //}
 
+    public class WaitUnZip : CustomYieldInstruction {
+        public override bool keepWaiting => !ok;
+        bool ok = false;
+
+        public WaitUnZip(string srcpath, string dstpath, byte[] bytes = null) {
+            UnZip(srcpath, dstpath, bytes);
+        }
+        async void UnZip(string srcpath, string dstpath, byte[] bytes) {
+            await Task.Run(()=> {
+                if (bytes != null) {
+                    File.WriteAllBytes(srcpath, bytes);
+                }
+                new FastZip().ExtractZip(srcpath, dstpath, "");
+            });
+        }
+    }
+
     public static bool IsUnityObjectValid(UnityEngine.Object @object) {
         return @object;
+    }
+
+    public static bool IsDir(string path) {
+        // get the file attributes for file or directory
+        FileAttributes attr = File.GetAttributes(path);
+        return attr.HasFlag(FileAttributes.Directory);
+    }
+
+    public static void ForeachFile(string dir, Action<string> filehandler) {
+        try {
+            string[] files = Directory.GetFiles(dir);
+            foreach (string file in files) {
+                filehandler(file);
+            }
+
+            string[] dirs = Directory.GetDirectories(dir);
+            foreach (string dir_ in dirs) {
+                ForeachFile(dir_, filehandler);
+            }
+        } catch (Exception ex) {
+            Debug.LogError(ex);
+        }
+    }
+
+    public static void CopyDirectory(string sourceDirPath, string saveDirPath, 
+        Action<string> filehandler = null) {
+        try {
+            if (!Directory.Exists(saveDirPath)) {
+                Directory.CreateDirectory(saveDirPath);
+            }
+            string[] files = Directory.GetFiles(sourceDirPath);
+            foreach (string file in files) {
+                string pFilePath = saveDirPath + "/" + Path.GetFileName(file);
+                if (File.Exists(pFilePath))
+                    continue;
+                File.Copy(file, pFilePath, true);
+                filehandler?.Invoke(pFilePath);
+            }
+
+            string[] dirs = Directory.GetDirectories(sourceDirPath);
+            foreach (string dir in dirs) {
+                CopyDirectory(dir, saveDirPath + "/" + Path.GetFileName(dir), filehandler);
+            }
+        } catch (Exception ex) {
+            Debug.LogError(ex);
+        }
+    }
+
+
+    // 添加EventTrigger类型事件
+    public static void AddTriggersListener(GameObject obj, EventTriggerType eventTriggerType, Action callback) {
+        EventTrigger trigger = obj.GetComponent<EventTrigger>();
+        if (trigger == null) {
+            trigger = obj.AddComponent<EventTrigger>();
+        }
+        if (trigger.triggers.Count == 0) {
+            trigger.triggers = new List<EventTrigger.Entry>();
+        }
+
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = eventTriggerType;
+        entry.callback.AddListener((baseEventData) => { callback?.Invoke(); });
+
+        trigger.triggers.Add(entry);
+    }
+
+    public static float RandomFloat(float min, float max) {
+        return UnityEngine.Random.Range(min,max);
+    }
+    public static int RandomInt(int min, int max) {
+        return UnityEngine.Random.Range(min, max);
+    }
+
+    public static string CalHash128(byte[] bytes) {
+        var has128 = new Hash128();
+        HashUtilities.ComputeHash128(bytes, ref has128);
+        return has128.ToString();
+    }
+    public static string CalHash128UTF8(string str) {
+        return CalHash128(Encoding.UTF8.GetBytes(str));
+    }
+    public static string CalHash128ASCII(string str) {
+        return CalHash128(Encoding.ASCII.GetBytes(str));
     }
 }

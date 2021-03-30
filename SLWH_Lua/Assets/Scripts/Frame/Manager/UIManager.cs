@@ -40,14 +40,23 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    private Dictionary<EnumUIType, GameObject> dicOpenUIs = null;
-    private Stack<UIInfoData> stackOpenUIs = null;
+    HashSet<string> redirectToLua = new HashSet<string>();
 
-    public override void Init()
-    {
-        dicOpenUIs = new Dictionary<EnumUIType, GameObject>();
-        stackOpenUIs = new Stack<UIInfoData>();
+
+    public void AddToRedirectToLua(string messageName) {
+        redirectToLua.Add(messageName);
     }
+    public void RemoveFromRedirectToLua(string messageName) {
+        redirectToLua.Remove(messageName);
+    }
+
+    public void ClearRedirectToLua() {
+        redirectToLua.Clear();
+    }
+
+    private Dictionary<EnumUIType, GameObject> dicOpenUIs = new Dictionary<EnumUIType, GameObject>();
+
+
 
     public T GetUI<T>(EnumUIType uiType) where T : BaseUI
     {
@@ -57,30 +66,14 @@ public class UIManager : Singleton<UIManager>
         return null;
     }
 
-    public GameObject GetUIObject(EnumUIType uiType)
-    {
+    public GameObject GetUIObject(EnumUIType uiType) {
         GameObject retObj = null;
-        if (!dicOpenUIs.TryGetValue(uiType, out retObj))
-        {
-            var msg = string.Format("dicOpenUIs TryGetValue Failure! uiType :{0}", uiType);
-            throw new Exception(msg);
+        if (dicOpenUIs.TryGetValue(uiType, out retObj)) {
+            return retObj;
         }
-        return retObj;
+        return null;
     }
 
-    public void PreloadUI(EnumUIType[] uiTypes, string[] componentType)
-    {
-        var len = uiTypes.Length;
-        if (len != componentType.Length)
-        {
-            Debug.LogErrorFormat($"uiTypes Length != componentType Length.uiTypes Length{len},componentType Length{componentType.Length}");
-            return;
-        }
-        for (int i = 0; i < len; i++)
-        {
-            PreloadUI(uiTypes[i], componentType[i]);
-        }
-    }
 
     public void PreloadUI(EnumUIType[] uITypes)
     {
@@ -91,16 +84,6 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    /// <summary>
-    /// 预加载
-    /// </summary>
-    /// <param name="uiType">UI类型</param>
-    /// <param name="componentType">组件类型</param>
-    public void PreloadUI(EnumUIType uiType,string componentType)
-    {
-        string path = UIPathDefines.GetPrefabPathByType(uiType, componentType);
-        ResManager.Instance.LoadAsync<GameObject>(path, null);
-    }
 
     /// <summary>
     /// 预加载
@@ -120,7 +103,6 @@ public class UIManager : Singleton<UIManager>
         OpenMessageBoxUI(null, content, countTime, type, btnOK, btnOKParam, btnRelease, btnReleaseParam, uiParams);
     }
 
-
     //打开两个按钮的弹窗
     public void OpenMessageBoxUI(string title, string content, int countTime = 10, EnumMessageBoxType type = EnumMessageBoxType.OK_CANCEL,
                                  MethodAction btnOK = null, object btnOKParam = null,
@@ -139,14 +121,6 @@ public class UIManager : Singleton<UIManager>
         OpenUI(EnumUIType.MessageBoxUI, uiParams);
     }
 
-    /// <summary>
-    /// 打开多个UI面板不关闭已打开的UI面板
-    /// </summary>
-    /// <param name="uITypes">打开面板的UI类型数组</param>
-    public void OpenUI(EnumUIType[] uITypes)
-    {
-        OpenUI(false, uITypes, string.Empty, null);
-    }
 
     /// <summary>
     /// 打开UI面板不关闭已打开的UI面板
@@ -155,8 +129,7 @@ public class UIManager : Singleton<UIManager>
     /// <param name="uiParams">可变参数</param>
     public void OpenUI(EnumUIType uiType, params object[] uiParams)
     {
-        EnumUIType[] uiTypes = new EnumUIType[] { uiType };
-        OpenUI(false, uiTypes, string.Empty, uiParams);
+        OpenUI(false, uiType, string.Empty, uiParams);
     }
 
     /// <summary>
@@ -167,18 +140,9 @@ public class UIManager : Singleton<UIManager>
     /// <param name="uiParams">可变参数</param>
     public void OpenUI(EnumUIType uiType, string componentType, params object[] uiParams)
     {
-        EnumUIType[] uiTypes = new EnumUIType[] { uiType };
-        OpenUI(false, uiTypes, componentType, uiParams);
+        OpenUI(false, uiType, componentType, uiParams);
     }
 
-    /// <summary>
-    /// 打开多个UI面板兵关闭其他面板
-    /// </summary>
-    /// <param name="uiTypes">打开面板的UI类型数组</param>
-    public void OpenUICloseOthers(EnumUIType[] uiTypes)
-    {
-        OpenUI(true, uiTypes, string.Empty, null);
-    }
 
     /// <summary>
     /// 打开多个UI面板兵关闭其他面板
@@ -187,8 +151,7 @@ public class UIManager : Singleton<UIManager>
     /// <param name="uiParams">可变参数</param>
     public void OpenUICloseOthers(EnumUIType uiType, params object[] uiParams)
     {
-        EnumUIType[] uiTypes = new EnumUIType[] { uiType };
-        OpenUI(true, uiTypes, string.Empty, uiParams);
+        OpenUI(true, uiType, string.Empty, uiParams);
     }
 
     /// <summary>
@@ -199,8 +162,7 @@ public class UIManager : Singleton<UIManager>
     /// <param name="uiParams">可变参数</param>
     public void OpenUICloseOthers(EnumUIType uiType, string componentType, params object[] uiParams)
     {
-        EnumUIType[] uiTypes = new EnumUIType[] { uiType };
-        OpenUI(true, uiTypes, componentType, uiParams);
+        OpenUI(true, uiType, componentType, uiParams);
     }
 
     /// <summary>
@@ -210,61 +172,48 @@ public class UIManager : Singleton<UIManager>
     /// <param name="uiTypes">UI类型数组</param>
     /// <param name="componentType">组件类型</param>
     /// <param name="uiParams">可变参数</param>
-    public void OpenUI(bool isCloseOthers, EnumUIType[] uiTypes, string componentType, params object[] uiParams)
-    {
+    public void OpenUI(bool isCloseOthers, EnumUIType uiType, string componentType, params object[] uiParams) {
+
+        var uiname = uiType.ToString();
+        if (redirectToLua.Contains(uiname)) {//让Lua可以做到事件拦截处理
+            var objs = GLuaSharedHelper.CallLua("OpenUI", uiname, componentType, isCloseOthers, uiParams);
+            if (objs == null) return;
+            if (objs.Length < 0 || (bool)objs[0] == false) {
+                return;
+            }
+        }
+
         if (isCloseOthers)
             CloseUIAll();
-        for (int i = 0; i < uiTypes.Length; i++)
-        {
-            EnumUIType uiType = uiTypes[i];
-            if (!dicOpenUIs.ContainsKey(uiType))
-                stackOpenUIs.Push(new UIInfoData().GetUIInfoData(uiType, componentType, uiParams));
-        }
-        if (stackOpenUIs.Count > 0)
-        {
-            CoroutineController.Instance.StartCoroutine(AsyncLoadData());
+
+        var uiInfoData = new UIInfoData().GetUIInfoData(uiType, componentType, uiParams);
+        var prefabObj = ResManager.Instance.LoadPrefab(uiInfoData.Path);
+        if (prefabObj != null) {
+            var uiObj = UnityEngine.Object.Instantiate(prefabObj) as GameObject;
+            BaseUI baseUI = uiObj.GetComponent<BaseUI>();
+            if (baseUI == null)
+                baseUI = uiObj.AddComponent(uiInfoData.ScriptType) as BaseUI;
+            baseUI.SetUIWhenOpening(uiInfoData.UIparams);
+            dicOpenUIs.Add(uiInfoData.UIType, uiObj);
         }
     }
 
-    private IEnumerator<int> AsyncLoadData()
-    {
-        UIInfoData uiInfoData;
-        UnityEngine.Object prefabObj = null;
-        GameObject uiObj = null;
-        if (!ReferenceEquals(stackOpenUIs, null) && stackOpenUIs.Count > 0)
-        {
-            do
-            {
-                uiInfoData = stackOpenUIs.Pop();
-                prefabObj = ResManager.Instance.LoadPrefab(uiInfoData.Path);
-                if (!ReferenceEquals(prefabObj, null))
-                {
-                    uiObj = UnityEngine.Object.Instantiate(prefabObj) as GameObject;
-                    BaseUI baseUI = uiObj.GetComponent<BaseUI>();
-                    if (ReferenceEquals(baseUI, null))
-                        baseUI = uiObj.AddComponent(uiInfoData.ScriptType) as BaseUI;
-                    baseUI.SetUIWhenOpening(uiInfoData.UIparams);
-                    dicOpenUIs.Add(uiInfoData.UIType, uiObj);
-                }
-            } while (stackOpenUIs.Count > 0);
-        }
-        yield return 0;
-    }
-
-    public void CloseUIAll()
+    public void CloseUIAll(EnumUIType exclude = EnumUIType.None)
     {
         List<EnumUIType> listKey = new List<EnumUIType>(dicOpenUIs.Keys);
         for (int i = 0; i < listKey.Count; i++)
         {
+            if (listKey[i] == exclude) continue;
             CloseUI(listKey[i]);
         }
-        dicOpenUIs.Clear();
+        GLuaSharedHelper.CallLua("CloseUIAll", "Lua" + exclude.ToString());
     }
 
-    public void CloseUI(EnumUIType[] uiTypes)
+    public void CloseUI(EnumUIType[] uiTypes, EnumUIType exclude = EnumUIType.None)
     {
         for (int i = 0; i < uiTypes.Length; i++)
         {
+            if (uiTypes[i] == exclude) continue;
             CloseUI(uiTypes[i]);
         }
     }
@@ -272,12 +221,10 @@ public class UIManager : Singleton<UIManager>
     public void CloseUI(EnumUIType uiType)
     {
         GameObject uiObj = GetUIObject(uiType);
-        if (null == uiObj)
+        if (null != uiObj)
         {
-            dicOpenUIs.Remove(uiType);
-        }
-        else
-        {
+            string path = UIPathDefines.GetPrefabPathByType(uiType, string.Empty);
+            ResManager.Instance.UnloadTrueAB(path);
             BaseUI baseUI = uiObj.GetComponent<BaseUI>();
             if (null == baseUI)
             {
@@ -289,6 +236,8 @@ public class UIManager : Singleton<UIManager>
                 baseUI.StateChanged += CloseUIHandle;
                 baseUI.Release();
             }
+        } else {
+            GLuaSharedHelper.CallLua("CloseUI", "Lua" + uiType.ToString());
         }
     }
 
@@ -323,13 +272,15 @@ public class UIManager : Singleton<UIManager>
         return dicOpenUIs.ContainsKey(uiType);
     }
 
-    #region HotUpdate
+    //#region HotUpdate
     private Dictionary<string, GameObject> dicOpenUIsLua = new Dictionary<string, GameObject>();
-    public void BindLuaUIObject(GameObject uiObj, string name)
+    public void BindLuaUIObject(GameObject uiObj, string name, RectTransform UIParent)
     {
         var script = uiObj.GetOrAddComponent<LuaBaseUI>();
         script.UIName = name;
-        uiObj.transform.SetParent(GameController.Instance.UIParent, false);
+        if (UIParent) {
+            uiObj.transform.SetParent(UIParent, false);
+        }
         dicOpenUIsLua.Add(name, uiObj);
     }
 
@@ -339,5 +290,14 @@ public class UIManager : Singleton<UIManager>
         script.Release();
         dicOpenUIsLua.Remove(name);
     }
-    #endregion
+
+    public void ClearLuaUIObject()
+    {
+        foreach (var ui in dicOpenUIsLua.Values)
+        {
+            UnityEngine.Object.Destroy(ui);
+        }
+        dicOpenUIsLua.Clear();
+    }
+    //#endregion
 }

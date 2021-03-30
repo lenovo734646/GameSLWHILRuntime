@@ -25,9 +25,10 @@ end
 function Class:__init(OSAScrollViewCom)
     -- 
     self.OSAScrollViewCom = OSAScrollViewCom
-    if not self.OSAScrollViewCom.IsInitialized then
-        self.OSAScrollViewCom:Init()
-    end
+    -- OSAScrollView内部会自动Init，这里手动Init如果GameObject没有Active会报错
+    -- if not self.OSAScrollViewCom.IsInitialized and self.OSAScrollViewCom.gameObject.activeSelf == true then
+    --     self.OSAScrollViewCom:Init()
+    -- end
     -- self.OSAScrollViewCom.exView = self
     --
     OSAScrollViewCom.StartCallback = function (paramters_)
@@ -61,7 +62,9 @@ end
 
 -- 回调
 function Class:Init(osaView_)
-    local osaView = osaView_
+    if not self.OSAScrollViewCom.IsInitialized then
+        self.OSAScrollViewCom:Init()
+    end
 end
 
 function Class:UpdateView(osaView_)

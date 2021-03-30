@@ -175,8 +175,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 00:11
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8e2bfab179cb95048ac320c1057cc4db, type: 2}
-  m_sharedMaterial: {fileID: 6474102129645208075, guid: 8e2bfab179cb95048ac320c1057cc4db,
+  m_fontAsset: {fileID: 11400000, guid: e76f369a907abd44a8877aed4182d0df, type: 2}
+  m_sharedMaterial: {fileID: -6154365902734378556, guid: e76f369a907abd44a8877aed4182d0df,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -611,8 +611,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u6211\u662F\u4E00\u4E2A\u5C0F\u767D\u5154\uFF0C\u4F60\u662F\u4E00\u4E2A\u5C0F\u7070\u5154"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8e2bfab179cb95048ac320c1057cc4db, type: 2}
-  m_sharedMaterial: {fileID: 6474102129645208075, guid: 8e2bfab179cb95048ac320c1057cc4db,
+  m_fontAsset: {fileID: 11400000, guid: e76f369a907abd44a8877aed4182d0df, type: 2}
+  m_sharedMaterial: {fileID: -6154365902734378556, guid: e76f369a907abd44a8877aed4182d0df,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1081,7 +1081,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 30}
-  m_SizeDelta: {x: 500, y: 10}
+  m_SizeDelta: {x: 500, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &8921445257626346456
 MonoBehaviour:
@@ -1215,6 +1215,7 @@ MonoBehaviour:
     anyType: {fileID: 125609769113080384}
     sType: 
     manualName: 
+  showlog: 0
 --- !u!1 &8921445257835862747
 GameObject:
   m_ObjectHideFlags: 0

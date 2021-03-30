@@ -121,6 +121,72 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &14390878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 14390880}
+  - component: {fileID: 14390879}
+  m_Layer: 0
+  m_Name: testRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &14390879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14390878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d52ea184b98c4ef469f1878af5fc5b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Root: {fileID: 0}
+  rotate: 0
+  duration: 0
+  par: {fileID: 0}
+  button: {fileID: 0}
+  btnText: {fileID: 0}
+  audioClips: []
+  audioSource: {fileID: 0}
+  clip: {fileID: 0}
+  toggle: {fileID: 0}
+  scrollRect: {fileID: 0}
+  spineHelper: {fileID: 0}
+  tweenAnimation: {fileID: 0}
+  spr: {fileID: 0}
+  img: {fileID: 0}
+  eventBroadcaster: {fileID: 0}
+  padCount: 2
+  aa: 1
+  baoshi: {fileID: 0}
+  materials: []
+  animator: {fileID: 0}
+  animatorHelper: {fileID: 0}
+  oSAScrollView: {fileID: 0}
+--- !u!4 &14390880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14390878}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 50, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &52992584
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +306,6 @@ GameObject:
   m_Component:
   - component: {fileID: 348218373}
   - component: {fileID: 348218372}
-  - component: {fileID: 348218371}
   m_Layer: 0
   m_Name: 2DCamera
   m_TagString: Untagged
@@ -248,14 +313,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &348218371
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 348218370}
-  m_Enabled: 1
 --- !u!20 &348218372
 Camera:
   m_ObjectHideFlags: 0
@@ -629,8 +686,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0a
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 0}
+  m_fontAsset: {fileID: 11400000, guid: e76f369a907abd44a8877aed4182d0df, type: 2}
+  m_sharedMaterial: {fileID: -6154365902734378556, guid: e76f369a907abd44a8877aed4182d0df,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -703,7 +761,7 @@ MonoBehaviour:
     linkCount: 0
     lineCount: 1
     pageCount: 1
-    materialCount: 2
+    materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}

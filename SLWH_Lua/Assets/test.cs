@@ -280,6 +280,7 @@ namespace SLWH
         {
             if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
             {
+                spineHelper.Play("kaishixiazhu");
                 // 替换图片精灵并设置原尺寸
                 //img.sprite = spr;
                 //img.SetNativeSize();
@@ -299,12 +300,12 @@ namespace SLWH
 
                 // DOTween.DORotate 顺时针旋转
                 //var rot = rotate + Root.transform.localEulerAngles.y;
-                var rot = rotate;
-                print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
-                Root.transform.DORotate(new Vector3(0, rot, 0), duration, RotateMode.LocalAxisAdd);
-                print("DORotate = " + rot + "  dur = " + duration);
+                //var rot = rotate;
+                //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);
+                //Root.transform.DORotate(new Vector3(0, rot, 0), duration, RotateMode.LocalAxisAdd);
+                //print("DORotate = " + rot + "  dur = " + duration);
 
-                
+
                 //// DOTween.DORotate 逆时针旋转
                 //var rot2 = rotate - Root.transform.localEulerAngles.y;
                 //print("rotate = " + rotate + "  y = " + Root.transform.localEulerAngles.y);

@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 101912822}
   - component: {fileID: 101912821}
   - component: {fileID: 101912820}
+  - component: {fileID: 101912823}
   m_Layer: 0
   m_Name: LuaRuntime
   m_TagString: Untagged
@@ -197,3 +198,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _updatePlatform: 0
   _gameAssetSource: 0
+--- !u!114 &101912823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101912818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ddb0c6341fed4046b31ee0b99498276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TestLang: EN

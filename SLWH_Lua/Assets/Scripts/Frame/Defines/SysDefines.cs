@@ -541,4 +541,6 @@ public class SysDefines
     public static int NetMaxHandlePackPerFrame = 10;//每帧最多处理的数据包
 
     public static string AB_BASE_PATH = "Assets/AssetsFinal/";
+
+    public static string curLanguage = "CN";
 }

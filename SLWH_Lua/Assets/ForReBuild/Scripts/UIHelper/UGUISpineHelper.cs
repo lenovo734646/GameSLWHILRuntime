@@ -43,12 +43,24 @@ namespace ForReBuild.UIHelper
             state = spine.AnimationState;
             entryAnim = null;
             complete = null;
-
         }
+
+        //private void Start()
+        //{
+
+        //}
 
         private void OnEnable()
         {
-            if(playOnActive)
+            if (spine == null)
+            {
+                spine = GetComponent<SkeletonGraphic>();
+            }
+            if (state == null)
+            {
+                state = spine.AnimationState;
+            }
+            if (playOnActive)
                 Play(null, spine.startingLoop);
         }
 
@@ -64,18 +76,23 @@ namespace ForReBuild.UIHelper
         // 获取当前动画时长
         public float GetTimeByName(string name)
         {
-            if (gameObject.activeSelf == false)
-                gameObject.SetActive(true);
             if (string.IsNullOrEmpty(name))
             {
-                Debug.LogError("name is null or empty");
+                Debug.LogError($"animState name is null or empty on {gameObject.name}");
+                return 0;
+            }
+            if (gameObject.activeSelf == false)
+                gameObject.SetActive(true);
+            if (state == null)
+            {
+                Debug.LogError($"state is null on {gameObject.name}");
                 return 0;
             }
             var anim = state.Data.SkeletonData.FindAnimation(name);
             if (anim != null)
                 return anim.Duration;
             else
-                Debug.LogError("animation not found :"+name);
+                Debug.LogError($"animation {name} not found on {gameObject.name}");
             return 0;
         }
 
@@ -110,6 +127,7 @@ namespace ForReBuild.UIHelper
 
         public void Play(string name)
         {
+            
             PlayByName(name, null);
         }
 

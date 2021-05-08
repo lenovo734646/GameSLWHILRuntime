@@ -37,7 +37,7 @@ public class ReNameWindow : EditorWindow
     public int count = 1;
     ReNameWindow()
     {
-        this.titleContent = new GUIContent("重命名root下所有子对象");
+        this.titleContent = new GUIContent("重命名（脚本名：ReNameWindow）");
     }
     [MenuItem("Tools/重命名和复制")]
     static void ShowWindow()
@@ -134,6 +134,22 @@ public class ReNameWindow : EditorWindow
             }
             ReName(ret.transform.parent);
             Debug.Log("复制成功...");
+        }
+
+        GUILayout.Space(10);
+        GUILayout.Label("逆向重新排列子对象，并重新命名");
+        if (GUILayout.Button("反向重命名"))
+        {
+            var count = root.childCount;
+            for (var i = 0; i < count; i++)
+            {
+                root.GetChild(i).name = (count - i).ToString();
+            }
+
+            for (var i = 0; i < count; i++)
+            {
+                root.GetChild(0).SetSiblingIndex(count - i - 1); // 设置层级关系SetAsFirstSibling()最上SetAsLastSibling()最下
+            }
         }
 
         ////复制指定路径的资源文件到一个新的路径, 所有的路径都是相对于工程目录文件， 例如Assets/MyTextures/hello.png

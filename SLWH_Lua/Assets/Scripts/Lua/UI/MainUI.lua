@@ -61,6 +61,8 @@ function Class:__init(panel, roomdata, loader)
     self.tog_Music.isOn = not AudioManager.Instance.MusicAudio.mute
     self.tog_Effect.isOn = not AudioManager.Instance.EffectAudio.mute
 
+    self.gameStateSpineHelper.gameObject:SetActive(true)
+
 end
 
 -- 设置统计数据
@@ -97,7 +99,7 @@ function Class:SetGameCount(count)
 end
 
 -- 以下代码为自动生成代码，请勿更改
-function Class:On_btn_PlayerList_Event(btn_PlayerList)
+function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)
     print("发送玩家列表请求")
     self.playerListPanel:OnSendPlayerListReq()
 end

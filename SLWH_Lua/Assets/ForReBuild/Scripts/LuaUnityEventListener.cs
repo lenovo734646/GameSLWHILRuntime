@@ -65,8 +65,7 @@ public class LuaUnityEventListener : MonoBehaviour
         }
         if (obj1 != null && obj2 != null) {
             f.Call(self, obj1, obj2);
-        }
-        if(obj1!=null)
+        } else if (obj1!=null)
             f.Call(self, obj1);
         else
             f.Call(self);
@@ -80,7 +79,8 @@ public class LuaUnityEventListener : MonoBehaviour
         callparams(tablefuncName);
     }
     public void CallLuaByGameObjectName(Object @object) {
-        Debug.Log("点击的是"+($"On_{@object.name}_Event", @object));
+        if(showLog)
+            Debug.Log("点击的是"+($"On_{@object.name}_Event", @object));
         callparams($"On_{@object.name}_Event", @object);
     }
 

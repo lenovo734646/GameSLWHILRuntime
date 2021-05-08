@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameName: GameSLWH
-  runWithoutNet: 1
+  runWithoutNet: 0
 --- !u!114 &101912821
 MonoBehaviour:
   m_ObjectHideFlags: 0

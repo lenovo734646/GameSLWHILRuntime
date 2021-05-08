@@ -65,11 +65,11 @@ public class LuaInitHelper :MonoBehaviour{
             var data = initList[i];
             var name = string.IsNullOrEmpty(data.name) ? data.manualName : data.name;
             if (string.IsNullOrEmpty(data.name)) {
-                Debug.LogError($"index:{i} name没有值！");
+                Debug.LogError($"index:{i} name没有值！ at {gameObject}");
                 continue;
             }
             if (!data.anyType) {
-                Debug.LogError($"{name}没有值！");
+                Debug.LogError($"{name}没有值！at {gameObject}");
                 continue;
             }
             self.Set(name, data.anyType);
@@ -100,7 +100,7 @@ public class LuaInitHelper :MonoBehaviour{
         t = self;
         for (int i = 0; i < objects.Length; i++) {
             if(self.ContainsKey(objects[i].name)) {
-                Debug.LogWarning($"重复的key {objects[i].name}");
+                Debug.LogWarning($"重复的key {objects[i].name} at {gameObject}");
                 continue;
             }
             self.Set(objects[i].name, objects[i]);

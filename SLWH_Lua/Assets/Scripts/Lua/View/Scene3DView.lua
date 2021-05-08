@@ -245,7 +245,7 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
 
-    print("HistroyData: " ,color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
+    --print("HistroyData: " ,color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
 
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
     local sanYuanInfo = nil

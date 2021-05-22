@@ -1,4 +1,4 @@
-﻿// update data : 2021.03.25
+﻿// update data : 2021.04.05
 // 重新封装了UGUISpine的方法，方便XLua 脚本调用
 //
 
@@ -13,16 +13,16 @@ using System;
 
 namespace ForReBuild.UIHelper
 {
-    [XLua.LuaCallCSharp]
     public class UGUISpineHelper : MonoBehaviour
     {
+        public bool languageChange = false;
         [HideInInspector]
         public SkeletonGraphic spine;
         [HideInInspector]
         public Spine.AnimationState state;
         [HideInInspector]
         public Spine.TrackEntry entryAnim = null;
-        [HideInInspector]
+        //[HideInInspector]
         //public bool IsPlay { get { return state. } }
 
         private TrackEntryDelegate complete = null;
@@ -37,6 +37,8 @@ namespace ForReBuild.UIHelper
         public bool playOnActive = true;
 
         public string defaultName = "animation";
+        private string languageFix = ""; // 默认中文无后缀
+
         private void Awake()
         {
             spine = GetComponent<SkeletonGraphic>();
@@ -45,10 +47,20 @@ namespace ForReBuild.UIHelper
             complete = null;
         }
 
-        //private void Start()
-        //{
-
-        //}
+        private string LanguageSwitch(string name)
+        {
+            if (!languageChange) return name;
+            if (SysDefines.curLanguage != "CN")
+            {
+                languageFix = "_EN";
+            }
+            else
+            {
+                languageFix = "";
+            }
+            var fixName = name + languageFix;
+            return fixName;
+        }
 
         private void OnEnable()
         {
@@ -58,10 +70,11 @@ namespace ForReBuild.UIHelper
             }
             if (state == null)
             {
+                spine.Initialize(false);
                 state = spine.AnimationState;
             }
             if (playOnActive)
-                Play(null, spine.startingLoop);
+                PlayByName(defaultName);
         }
 
         private void OnDisable()
@@ -85,14 +98,14 @@ namespace ForReBuild.UIHelper
                 gameObject.SetActive(true);
             if (state == null)
             {
-                Debug.LogError($"state is null on {gameObject.name}");
                 return 0;
             }
-            var anim = state.Data.SkeletonData.FindAnimation(name);
+            var fixName = LanguageSwitch(name);
+            var anim = state.Data.SkeletonData.FindAnimation(fixName);
             if (anim != null)
                 return anim.Duration;
             else
-                Debug.LogError($"animation {name} not found on {gameObject.name}");
+                Debug.LogError($"animation {fixName} not found on {gameObject.name}");
             return 0;
         }
 
@@ -105,8 +118,9 @@ namespace ForReBuild.UIHelper
         {
             if (entryAnim == null)
                 return false;
+            var fixName = LanguageSwitch(name);
             var playingAnimName = entryAnim.ToString();
-            return playingAnimName == name;
+            return playingAnimName == fixName;
         }
 
 
@@ -118,49 +132,50 @@ namespace ForReBuild.UIHelper
         public float GetPlayPercentByName(string name)
         {
             var duration = GetTimeByName(name);
-            if(duration > 0)
+            if (duration > 0)
             {
-                return entryAnim.TrackTime/duration;
+                return entryAnim.TrackTime / duration;
             }
             return 0;
         }
 
         public void Play(string name)
         {
-            
+
             PlayByName(name, null);
         }
 
         // 播放默认动画并返回动画时间
-        public float Play(bool bLoop = false)
+        public float Play()
         {
-            return Play(null, bLoop);
+            return PlayByName(defaultName, null);
         }
 
         // 播放默认动画无返回值（适合添加到编辑器）
-        public void PlayVoidReturn(bool bLoop = false)
+        public void PlayVoidReturn()
         {
-            Play(null, bLoop);
+            PlayByName(defaultName, null);
         }
 
-        public float Play(Action completeAct, bool bloop = false)
+        public float Play(Action completeAct)
         {
-            return PlayByName(defaultName, completeAct, bloop);
+            return PlayByName(defaultName, completeAct);
         }
         // 播放动画
-        public float PlayByName(string name, Action completeAct, bool bloop = false)
+        public float PlayByName(string name, Action completeAct = null)
         {
             var duration = GetTimeByName(name);
-            if(duration > 0)
+            if (duration > 0)
             {
-                if(!bloop && autoUnActive)
+                var bloop = spine.startingLoop;
+                if (!bloop && autoUnActive)
                 {
-                    if(completeAct == null)
+                    if (completeAct == null)
                         completeAct = () => { spine.gameObject.SetActive(false); };
                 }
 
                 //
-                if(!bloop && completeAct != null)
+                if (!bloop && completeAct != null)
                 {
                     complete = delegate {
                         completeAct?.Invoke();
@@ -171,7 +186,8 @@ namespace ForReBuild.UIHelper
                     state.Complete += complete;
                 }
                 //
-                entryAnim = state.SetAnimation(0, name, bloop);
+                var fixName = LanguageSwitch(name);
+                entryAnim = state.SetAnimation(0, fixName, bloop);
             }
             return duration;
         }

@@ -27,3 +27,5 @@ StreamingAssets
 /obj
 /*.user
 /Logs
+/.vsconfig
+/UnityCMDBuild.log

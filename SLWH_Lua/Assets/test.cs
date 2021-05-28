@@ -280,7 +280,8 @@ namespace SLWH
         {
             if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
             {
-                spineHelper.Play("kaishixiazhu");
+                toggle.isOn = true;
+                // spineHelper.Play("kaishixiazhu");
                 // 替换图片精灵并设置原尺寸
                 //img.sprite = spr;
                 //img.SetNativeSize();
@@ -315,7 +316,7 @@ namespace SLWH
                 // DOTween 重复播放一个DOTweenAnimation（每次都从头播放，不用reverse） 
                 // OnStart回调只第一次播放调用一次 OnStart => OnPlay =》OnComplete
                 // 之后再次播放会调用 OnRewind  => OnPlay =》OnComplete
-                // tweenAnimation.DORestart();
+                //tweenAnimation.DOPlayForward();
 
                 //AudioManager.Instance.PlaySoundEff2D("dasanyuan");
                 //AudioManager.Instance.PlaySoundEff2D("dasixi");

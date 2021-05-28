@@ -8736,7 +8736,7 @@ MonoBehaviour:
             m_StringArgument: "\u70B9\u51FB\u4E0B\u6CE8\u53F0\u7A7A\u767D\u533A\u57DF..."
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 2041610121}
+        - m_Target: {fileID: 0}
           m_MethodName: LogOut
           m_Mode: 5
           m_Arguments:
@@ -11612,12 +11612,12 @@ PrefabInstance:
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -55
       objectReference: {fileID: 0}
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
@@ -11637,7 +11637,7 @@ PrefabInstance:
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
@@ -11647,7 +11647,7 @@ PrefabInstance:
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6255477838474916422, guid: 07bfed771a8ef58458241501afe59a63,
         type: 3}
@@ -12477,7 +12477,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 2000
+  m_Text: 0
 --- !u!222 &858685495
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21553,7 +21553,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: -200
+  m_Text: 0
 --- !u!222 &1980970277
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -22148,72 +22148,6 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 114aecdf621fa394e9f0126988f6cc74, type: 3}
     - {fileID: 21300000, guid: 840dc0c384bfb484fbf0a57ea5572ec7, type: 3}
     - {fileID: 21300000, guid: 2ef301c61c7772341a148b92e25e0dfa, type: 3}
---- !u!1 &2041610119
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2041610120}
-  - component: {fileID: 2041610121}
-  m_Layer: 0
-  m_Name: TestRoot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2041610120
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2041610119}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2041610121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2041610119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d52ea184b98c4ef469f1878af5fc5b92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Root: {fileID: 0}
-  rotate: 0
-  duration: 0
-  par: {fileID: 0}
-  button: {fileID: 0}
-  btnText: {fileID: 0}
-  audioClips: []
-  audioSource: {fileID: 0}
-  clip: {fileID: 0}
-  toggle: {fileID: 1991156215}
-  scrollRect: {fileID: 0}
-  spineHelper: {fileID: 0}
-  tweenAnimation: {fileID: 537922504}
-  spr: {fileID: 0}
-  img: {fileID: 0}
-  eventBroadcaster: {fileID: 0}
-  padCount: 2
-  aa: 1
-  baoshi: {fileID: 0}
-  materials: []
-  animator: {fileID: 0}
-  animatorHelper: {fileID: 0}
-  oSAScrollView: {fileID: 0}
 --- !u!1 &2072736549
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ namespace SLWH
     public class test : MonoBehaviour
     {
         public GameObject Root;
+        public string animName = "Idel";
         public float rotate;
         public float duration;
         public ParticleSystem par;
@@ -278,9 +279,19 @@ namespace SLWH
         int materialIndex = 0;
         private void OnGUI()
         {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                var animators = Root.GetComponentsInChildren<Animator>();
+                foreach (var animator in animators)
+                {
+                    animator.Play(animName);
+
+                }
+            }
             if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
             {
-                toggle.isOn = true;
+   
+                //toggle.isOn = true;
                 // spineHelper.Play("kaishixiazhu");
                 // 替换图片精灵并设置原尺寸
                 //img.sprite = spr;

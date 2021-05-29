@@ -61,8 +61,6 @@ function Class:__init(panel, roomdata, loader)
     
     self.tog_Music.isOn = AudioManager.Instance.MusicVolum ~= 0
     self.tog_Effect.isOn = AudioManager.Instance.EffectVolm ~= 0
-    print("设置音乐音效 1：", AudioManager.Instance.MusicVolum, self.tog_Music.isOn)
-    print("设置音乐音效 2：", AudioManager.Instance.EffectVolm, self.tog_Effect.isOn)
 
     self.gameStateSpineHelper.gameObject:SetActive(true)
 

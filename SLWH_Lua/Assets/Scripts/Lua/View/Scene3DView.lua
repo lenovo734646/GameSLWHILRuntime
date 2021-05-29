@@ -48,7 +48,8 @@ function Class:__init(roomdata)
     initHelper:Init(self)
     self.colorMeshMaterialList = {}
     initHelper:ObjectsSetToLuaTable(self.colorMeshMaterialList)
-
+    -- 进入即播放背景音乐，因为是否静音使用音量调节，所以这里一直播放就行了
+    AudioManager.Instance:PlayMusic("BGMusic")
     -- EnjoyGame 小老虎机
     self.slot = SimpleSlot.Create(self.slotPanelInitHelper)
 

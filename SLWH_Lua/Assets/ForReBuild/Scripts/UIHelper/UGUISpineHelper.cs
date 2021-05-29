@@ -132,16 +132,16 @@ namespace ForReBuild.UIHelper
         public float GetPlayPercentByName(string name)
         {
             var duration = GetTimeByName(name);
-            if(duration > 0)
+            if (duration > 0)
             {
-                return entryAnim.TrackTime/duration;
+                return entryAnim.TrackTime / duration;
             }
             return 0;
         }
 
         public void Play(string name)
         {
-            
+
             PlayByName(name, null);
         }
 
@@ -154,7 +154,7 @@ namespace ForReBuild.UIHelper
         // 播放默认动画无返回值（适合添加到编辑器）
         public void PlayVoidReturn()
         {
-            PlayByName(defaultName,null);
+            PlayByName(defaultName, null);
         }
 
         public float Play(Action completeAct)
@@ -165,17 +165,17 @@ namespace ForReBuild.UIHelper
         public float PlayByName(string name, Action completeAct = null)
         {
             var duration = GetTimeByName(name);
-            if(duration > 0)
+            if (duration > 0)
             {
                 var bloop = spine.startingLoop;
-                if(!bloop && autoUnActive)
+                if (!bloop && autoUnActive)
                 {
-                    if(completeAct == null)
+                    if (completeAct == null)
                         completeAct = () => { spine.gameObject.SetActive(false); };
                 }
 
                 //
-                if(!bloop && completeAct != null)
+                if (!bloop && completeAct != null)
                 {
                     complete = delegate {
                         completeAct?.Invoke();

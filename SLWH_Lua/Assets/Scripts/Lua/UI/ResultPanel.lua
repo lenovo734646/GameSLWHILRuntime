@@ -79,10 +79,10 @@ function Class:ShowResult(resultPanelData)
     local exType = resultPanelData.exType
     --
     self.betText.text = tostring(betScore)
+    print("self:__GetNumString(winScore) = ", self:__GetNumString(winScore))
     self.winText.text = self:__GetNumString(winScore)
     --庄闲和小游戏
     local enjoyGameData = resultPanelData.enjoyGameData
-    print("显示结算界面 enjoyGame_id：", enjoyGameData.enjoyGame_id)
     self.enjoyGameData.winColorBG = self.bgColors[enjoyGameData.enjoyGame_id]
     self.enjoyGameData.enjoyImg.sprite = self.enjoyTypeSprs[enjoyGameData.enjoyGame_id]
     self.enjoyGameData.ratioText.text = "x"..enjoyGameData.enjoyGameRatio

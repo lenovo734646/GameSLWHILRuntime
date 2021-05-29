@@ -444,7 +444,8 @@ public class SysDefines
 
     //#region 静态变量
     public static int outScreenOffset = 10;
-    public static Dictionary<string, int> outScreenOffsetDic = new Dictionary<string, int>() {
+    public static Dictionary<string, int> outScreenOffsetDic = new Dictionary<string, int>()
+    {
 
     };
     //射线获得指定的层级
@@ -518,7 +519,7 @@ public class SysDefines
         "dropBombOther",
         "fishComeTips",
     };
-//#endregion
+    //#endregion
 
     //#region 游戏内提示文字
     public const string DiamondInsufficient = "钻石不足";
@@ -541,6 +542,5 @@ public class SysDefines
     public static int NetMaxHandlePackPerFrame = 10;//每帧最多处理的数据包
 
     public static string AB_BASE_PATH = "Assets/AssetsFinal/";
-
     public static string curLanguage = "CN";
 }

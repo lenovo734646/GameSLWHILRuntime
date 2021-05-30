@@ -58,8 +58,9 @@ function Class:__init(panel, roomdata, loader)
 
     self.betText.text = "0"
     self:SetStatisticData(0, 0, 0, 0, 0, 0)
-    self.tog_Music.isOn = not AudioManager.Instance.MusicAudio.mute
-    self.tog_Effect.isOn = not AudioManager.Instance.EffectAudio.mute
+    
+    self.tog_Music.isOn = AudioManager.Instance.MusicVolum ~= 0
+    self.tog_Effect.isOn = AudioManager.Instance.EffectVolm ~= 0
 
     self.gameStateSpineHelper.gameObject:SetActive(true)
 
@@ -140,11 +141,11 @@ function Class:On_btn_Exit_Event(btn_Exit)
 end
 
 function Class:On_tog_Music_Event(tog_Music)
-    AudioManager.Instance:SetMusicMute(not tog_Music.isOn)
+    AudioManager.Instance.MusicVolum = tog_Music.isOn and 1 or 0
 end
 
 function Class:On_tog_Effect_Event(tog_Effect)
-    AudioManager.Instance:SetEffectMute(not tog_Effect.isOn)
+    AudioManager.Instance.EffectVolm = tog_Effect.isOn and 1 or 0
 end
 
 

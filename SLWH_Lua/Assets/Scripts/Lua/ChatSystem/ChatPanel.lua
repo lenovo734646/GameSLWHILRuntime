@@ -183,25 +183,16 @@ function Class:OnSendPhrase(phraseData)
     -- 显示自己发送的信息，自己的消息服务器也会转发给自己，这里使用服务器返回的
     --self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
     --
+    CoroutineHelper.StartCoroutine(function ()
+        CLCHATROOMSender.Send_SendChatMessageReq_Async(2, 
+        tostring(phraseData.index), tostring(timeStampSec),SubGame_Env.ShowErrorByHint)
+    end)
     CLCHATROOMSender.Send_SendChatMessageReq(function (data)
         self:SendChatMsgAck(data)
     end,  2, tostring(phraseData.index), tostring(timeStampSec))
     -- 关闭界面
     self.tog_Phrase.isOn = false;
 end
-
-function Class:SendChatMsgAck(data)
-    if data.errcode == 1 then
-        print("发送消息失败：你不在房间中")
-    elseif data.errcode == 2 then
-        print("发送消息失败：发送内容太长")
-    elseif data.errcode == 3 then
-        print("发送消息失败：不支持的消息类型")
-    else
-        print("发送消息成功")
-    end
-end
-
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
 function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, headSpr)

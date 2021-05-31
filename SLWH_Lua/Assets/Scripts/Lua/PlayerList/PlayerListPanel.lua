@@ -78,12 +78,9 @@ end
 -- 发送 玩家列表请求
 function Class:OnSendPlayerListReq()
     print("发送玩家列表请求")
-    CLCHATROOMSender.Send_QueryPlayerListReq(function (data)
-        print("收到玩家列表返回：", data.errcode)
-        if data.errcode == 1 then
-            print("你不在房间中")
-            return
-        end
+    CoroutineHelper.StartCoroutineAuto(self.eventListener,function ()
+        local data = CLCHATROOMSender.Send_QueryPlayerListReq_Async(0, 100,
+        SubGame_Env.ShowErrorByHint)
         --
         local items = {}
         local count = data.total_amount
@@ -98,8 +95,7 @@ function Class:OnSendPlayerListReq()
             tinsert(items, itemData)
         end
         self.playerListScrollView:ReplaceItems(items)
-     
-    end, 0, 100)
+    end)
 end
 
 

@@ -48,6 +48,7 @@ end
 function Class:__init(ui,View,roomdata)
     print("3D View Ctrl Init...roomdata.last_bet_id = ", roomdata.last_bet_id)
     self.ui = ui
+    self.View = View
     self.roomdata = roomdata
     _G.PrintTable(self.histroyList)
     View:GetComponent(typeof(LuaUnityEventListener)):Init(self)
@@ -785,37 +786,32 @@ end
 
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
-    CLSLWHSender.Send_SetBetReq(function (data)
-        self:OnReceiveBetAck(data)
-    end, item_id, betid)
+    CoroutineHelper.StartCoroutineGo(self.View, function()
+        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SubGame_Env.ShowErrorByHint)
+        if data then
+            self:OnReceiveBetAck(data)
+        end
+    end)
 end
 
 function Class:OnReceiveBetAck(data)
     local betAreaList = self.ui.betAreaList
-    if data.errcode == 0 then
-        local self_bet_info = data.self_bet_info
-        local item_id = self_bet_info.index_id
-        if item_id == -1 then
-            for _, betAreaData in pairs(betAreaList) do
-                self:__SetSelfBetScore(betAreaData, 0)
-            end
-        else
-            local total_bet = self_bet_info.total_bet
-            local betAreaData = betAreaList[item_id]
-            --
-            self:__SetSelfBetScore(betAreaData, total_bet)
-            AudioManager.Instance:PlaySoundEff2D("betSound")
+    local self_bet_info = data.self_bet_info
+    local item_id = self_bet_info.index_id
+    if item_id == -1 then
+        for _, betAreaData in pairs(betAreaList) do
+            self:__SetSelfBetScore(betAreaData, 0)
         end
-        self:OnMoneyChange(data.self_score)
-        local score = self:__GetSelfAllBetScore()
-        self.ui.mainUI:SetCurBetScore(score)
     else
-        local errStr = GameConfig.BetErrorTip[data.errcode]
-        if not string.IsNullOrEmpty(data.errParam) then
-            errStr = errStr..": "..data.errParam
-        end
-        SubGame_Env.ShowHintMessage(errStr)
+        local total_bet = self_bet_info.total_bet
+        local betAreaData = betAreaList[item_id]
+        --
+        self:__SetSelfBetScore(betAreaData, total_bet)
+        AudioManager.Instance:PlaySoundEff2D("betSound")
     end
+    self:OnMoneyChange(data.self_score)
+    local score = self:__GetSelfAllBetScore()
+    self.ui.mainUI:SetCurBetScore(score)
 end
 
 -- 获取中奖动物倍率

@@ -24,6 +24,14 @@ SubGame_Env.ShowHintMessage = function (contentStr)
     end
 end
 
+SubGame_Env.ShowErrorByHint = function (errcode,msgName)
+    if g_Env then
+        g_Env.ShowHitMessage(g_Env.GetServerErrorMsg(errcode,msgName))
+    else
+        print('服务器返回错误 errcode=',errcode,'msgName=',msgName)
+    end
+end
+
 require "LuaUtil/LuaRequires"
 local Config = Config or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
 local g_Env = g_Env
@@ -96,42 +104,38 @@ local GetLoadCount = function ()
     return count
 end
 
-
-
-CLSLWHSender.Send_EnterRoomReq(function (data)
-    print('Send_EnterRoomAck:'..json.encode(data))
-    if data.errcode ~= 0 then
+CoroutineHelper.StartCoroutine(function ()
+    local data,err = CLSLWHSender.Send_EnterRoomReq_Async()
+    if err then
+        print('Send_EnterRoomAck:'..json.encode(data))
         if g_Env then
-            local errorstr = GameConfig.EnterRoomErrorTip[data.errcode]
-            --g_Env.ShowHintMessage(errorstr)
             g_Env.MessageBox{
-                content = errorstr,
+                content = err,
                 onOK = function()
                     g_Env.SubGameCtrl.Leave()
                 end
             }
-            
         else
-            print('TODO 获取错误提示 data.errcode=', data.errcode)
+            print('错误 data.errcode=', data.errcode)
         end
-        return
-    end
-    roomdata = data
-    for key, value in pairs(roomdata.bet_config_array) do
-        print("bet_config_array: "..key..",  "..value)
-    end
+    else
+        roomdata = data
+        for key, value in pairs(roomdata.bet_config_array) do
+            print("bet_config_array: "..key..",  "..value)
+        end
+        
+        SubGame_Env.playerRes.currency = roomdata.self_score
+        SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
+        SubGame_Env.playerRes.userName = roomdata.self_user_name
+        SubGame_Env.playerRes.headID = roomdata.self_user_Head
+        SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
+        print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
+        --
+        SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
     
-    SubGame_Env.playerRes.currency = roomdata.self_score
-    SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
-    SubGame_Env.playerRes.userName = roomdata.self_user_name
-    SubGame_Env.playerRes.headID = roomdata.self_user_Head
-    SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
-    print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
-    --
-    SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
-
-    print("开始加载LoadingScene....")
-    SubGame_Env.loader:LoadScene('LoadingScene')
+        print("开始加载LoadingScene....")
+        SubGame_Env.loader:LoadScene('LoadingScene')
+    end
 end)
 
 local gameView

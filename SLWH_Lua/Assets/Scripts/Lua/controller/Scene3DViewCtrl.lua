@@ -4,7 +4,7 @@ local class = class
 local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber =
       print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber
 
-local logError = logError
+local _STR_ = _STR_
 local math,pairs = math,pairs
 local Vector3 = CS.UnityEngine.Vector3
 local DOTween = CS.DG.Tweening.DOTween
@@ -381,7 +381,7 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        SubGame_Env.ShowHintMessage("金币不足,当前金币:"..SubGame_Env.playerRes.currency)
+        SubGame_Env.ShowHintMessage(string.Format2(_STR_"金币不足,当前金币:{1}",SubGame_Env.playerRes.currency))
         return
     end
     --发送下注
@@ -394,7 +394,7 @@ function Class:OnContinueBtnClicked()
     --     self.betSnapShot[i] = 1000
     -- end
     if self:__GetContinueBetScore() <= 0 then
-        SubGame_Env.ShowHintMessage("上局无下注")
+        SubGame_Env.ShowHintMessage(_STR_"上局无下注")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注

@@ -68,39 +68,6 @@ function import(moduleName, currentModuleName)
     return require(moduleFullName)
 end
 
-functional = {}
-
-function functional.bind(func, count, ...)
-    local args_origin = {...}
-    return function(...)
-        local args = {...}
-        local num = table.maxn(args)
-        for i = num, 1, -1 do
-            args[i + count] = args[i]
-        end
-        for i = 1, count do
-            args[i] = args_origin[i]
-        end
-        return func(table.unpack(args))
-    end
-end
-
-function functional.bindself(self, fname)
-    return functional.bind1(self[fname], self)
-end
-
-function functional.bind1(func, obj1)
-    return function(...)
-        return func(obj1, ...)
-    end
-end
-
-function functional.bind2(func, obj1, obj2)
-    return function(...)
-        return func(obj1, obj2, ...)
-    end
-end
-
 function table.print(t)
     local str = "["
     for k, v in pairs(t) do
@@ -775,3 +742,13 @@ math.floor2 = function (value)
     return value / 100
 end
 
+-- 类似C#的格式化，但是下标从1开始
+function string.Format2(fmt, ...)
+    assert(fmt ~= nil, "Format error:Invalid Format String")
+    local parms = {...}
+    local function search(k)
+        k = tonumber(k)
+        return tostring(parms[k])
+    end
+    return (string.gsub(fmt, "{(%d)}", search))
+end

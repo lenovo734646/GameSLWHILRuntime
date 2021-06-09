@@ -1,39 +1,53 @@
 
-local tostring,math=tostring,math
+local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
+typeof, type, print, table, tonumber, CS.SysDefines
+
+local DestroyImmediate = DestroyImmediate
+local CS = CS
+local getmetatable = getmetatable
+local assert=assert
+local select=select
 _ENV = {}
 
 --转换成万或者亿
-function GameNumberFormat(n,isEn)
+function GameNumberFormat(n)
+    local isEn = SysDefines.curLanguage ~= 'CN'
+    local unit = ''
     if isEn then
-        local unit = ''
+        if n >= 1000000000 then
+            n = n / 1000000000
+            n = math.floor(n*100)/100
+            unit = 'G'
+            return n..unit
+        end
+        if n >= 1000000 then
+            n = n / 1000000
+            n = math.floor(n*100)/100
+            unit = 'M'
+            return n..unit
+        end
         if n >= 1000 then
             n = n / 1000
             n = math.floor(n*100)/100
             unit = 'K'
-        elseif n >= 1000000 then
-            n = n / 1000000
-            n = math.floor(n*100)/100
-            unit = 'M'
-        elseif n >= 1000000000 then
-            n = n / 1000000000
-            n = math.floor(n*100)/100
-            unit = 'G'
+            return n..unit
         end
-        return n..unit
     else
         local unit = ''
+        if n >= 100000000 then
+            n = n / 100000000
+            n = math.floor(n*100)/100
+            unit = '亿'
+            return n..unit
+        end
         if n >= 10000 then
             n = n / 10000
             n = math.floor(n*100)/100
             unit = '万'
-        elseif n >= 100000000 then
-            n = n / 100000000
-            n = math.floor(n*100)/100
-            unit = '亿'
+            return n..unit
         end
-        return n..unit
     end
-    
+    return n..unit
 end
 
 --自动加上空格

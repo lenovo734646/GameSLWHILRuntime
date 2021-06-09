@@ -1,20 +1,9 @@
-SubGame_Env = SubGame_Env or {}
-SubGame_Env.ConvertNumberToString = function (n)
-    if n == nil then
-        return ""
-    end
-    local unit = ''
-    if n >= 100000000 then
-        n = n / 100000000
-        n = math.floor(n*100)/100
-        unit = '亿'
-    elseif n >= 10000 then
-        n = n / 10000
-        n = math.floor(n*100)/100
-        unit = '万'
-    end
-    return n..unit
+_STR_=_STR_ or function (str)
+    return str
 end
+local Helpers = require'LuaUtil.Helpers'
+SubGame_Env = SubGame_Env or {}
+SubGame_Env.ConvertNumberToString = Helpers.GameNumberFormat
 
 SubGame_Env.ShowHintMessage = function (contentStr)
     if g_Env then

@@ -20,7 +20,7 @@ local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
 local SubGame_Env = SubGame_Env
 local PlayerListItemData = require'PlayerList.PlayerListItemData'
 local PlayerListItemView = require'PlayerList.PlayerListItemView'
-
+local _STR_=_STR_
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -86,7 +86,7 @@ function Class:OnSendPlayerListReq()
         local count = data.total_amount
         print("count = ", count)
         local players = data.players
-        self.onlineCount.text = "在线人数："..count
+        self.onlineCount.text = string.Format2(_STR_"在线人数：{1}",count)
         for key, info in pairs(players) do
             print("玩家列表：", key, info.nickname, info.user_id, info.head)
             local rankImageSpr = self.rankImages[key]

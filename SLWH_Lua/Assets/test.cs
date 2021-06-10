@@ -52,7 +52,9 @@ namespace SLWH
         int [,]array = new int[3, 5];
 
         public AnimatorHelper animatorHelper;
+        public float delayTime = 0.5f;
         public OSAScrollView oSAScrollView;
+
 
         public enum ColorType
         {
@@ -218,9 +220,29 @@ namespace SLWH
             //gameObject.AddComponent<AudioListener>();
         }
 
+        IEnumerator PlayIdle()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(delayTime);
+                animatorHelper.Play("Idel1");
+                yield return new WaitForSeconds(animatorHelper.GetDuration("Idel1"));
+            }
+        }
+
         // Update is called once per frame
         void Update()
         {
+#if UNITY_EDITOR
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                StartCoroutine("PlayIdle");
+            }
+
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                StartCoroutine("PlayIdle");
+            }
             //if (Input.GetMouseButtonDown(0))
             //{
             //    bleft = true;
@@ -242,6 +264,7 @@ namespace SLWH
             //    bright = false;
             //    Debug.Log("你抬起了鼠标左键");
             //}
+#endif
         }
 
         public void OnTest()

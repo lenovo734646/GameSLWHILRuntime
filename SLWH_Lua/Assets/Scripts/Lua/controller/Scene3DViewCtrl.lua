@@ -393,7 +393,7 @@ function Class:OnContinueBtnClicked()
     --     self.betSnapShot[i] = 1000
     -- end
     if self:__GetContinueBetScore() <= 0 then
-        SubGame_Env.ShowHintMessage("上局无下注")
+        SubGame_Env.ShowHintMessage("上局没有下注记录")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注

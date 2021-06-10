@@ -96,6 +96,9 @@ function Class:__init(ui,View,roomdata)
     self.betSnapShot = {} -- 上一局押注数据
     self:OnMoneyChange(SubGame_Env.playerRes.currency)
     self:InitAnimalAnimation()
+
+    ui.directionallight_animationhelper:PlayByIndex(1)
+    ui.pointlight_animationhelper:PlayByIndex(1)
 end
 
 -- showRedNuber: 是否显示红色数字，下注状态就显示，这里其实是gameState
@@ -474,6 +477,8 @@ function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
+    ui.directionallight_animationhelper:PlayByIndex(1)
+    ui.pointlight_animationhelper:PlayByIndex(1)
 
      if #self.ratioArray <= 0 then
         -- 结算阶段进入
@@ -700,6 +705,8 @@ end
 function Class:OnFreeState()
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
+    ui.directionallight_animationhelper:PlayByIndex(2)
+    ui.pointlight_animationhelper:PlayByIndex(2)
     self:PlayIdleStateAnim()
     -- 如果上一局有下注，则刷新续押数据，否则不变
     if self:__GetSelfAllBetScore() > 0 then

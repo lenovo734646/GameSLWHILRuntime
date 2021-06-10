@@ -11,6 +11,10 @@ _ENV = {}
 
 --转换成万或者亿
 function GameNumberFormat(n)
+    if n==nil then
+        -- _G.LogW('n==nil')
+        return ''
+    end
     local isEn = SysDefines.curLanguage ~= 'CN'
     local unit = ''
     if isEn then

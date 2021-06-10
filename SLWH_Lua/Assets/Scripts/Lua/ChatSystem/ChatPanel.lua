@@ -187,9 +187,6 @@ function Class:OnSendPhrase(phraseData)
         CLCHATROOMSender.Send_SendChatMessageReq_Async(2, 
         tostring(phraseData.index), tostring(timeStampSec),SubGame_Env.ShowErrorByHint)
     end)
-    CLCHATROOMSender.Send_SendChatMessageReq(function (data)
-        self:SendChatMsgAck(data)
-    end,  2, tostring(phraseData.index), tostring(timeStampSec))
     -- 关闭界面
     self.tog_Phrase.isOn = false;
 end

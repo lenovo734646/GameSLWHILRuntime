@@ -127,8 +127,18 @@ CoroutineHelper.StartCoroutine(function ()
     end
 end)
 
-local gameView
 
+local loadMatTexByLangAsync = function(matpath,texpath_without_ext,texidname)
+    local loader = SubGame_Env.loader
+    local mat = loader:LoadAsync(matpath)
+    local mask = SysDefines.curLanguage=='EN' and '_EN' or ''
+    local texpath = texpath_without_ext .. mask .. '.png'
+    local tex = loader:LoadAsync(texpath)
+    return mat:SetTexture(texidname, tex)
+end
+
+
+local gameView
 function OnSceneLoaded(scene, mode)
     if scene.name == "LoadingScene" then
         local sliderGo = GameObject.Find("Slider")
@@ -143,6 +153,9 @@ function OnSceneLoaded(scene, mode)
             --print("加载进度：", loadedCount, allLoadCount, slider.value)
         end
         CoroutineHelper.StartCoroutine(function ()
+            loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/庄1.mat','Assets/Dance/Xiazhu/Tex/Zhuang','_MainTex')
+            loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/闲1.mat','Assets/Dance/Xiazhu/Tex/Xian','_MainTex')
+            loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/和1.mat','Assets/Dance/Xiazhu/Tex/He','_MainTex')
             for k, v in pairs(LoadList) do
                 if k == 1 then
                     for _, assetPath in pairs(v) do

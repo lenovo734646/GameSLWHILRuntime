@@ -21,7 +21,7 @@ end
 --root:RectTransform类型
 function Class:__init(view)
     self.view = view
-    view:GetComponent(typeof(LuaInitHelper)):Init(self)
+    view:GetComponent(typeof(LuaInitHelper)):InitWithList(self,'rangimglist')
     self.onClick = nil
 end
 
@@ -43,15 +43,24 @@ function Class:UpdateFromData(data)
         self.frame_image.sprite = SubGame_Env.GetHeadFrameSprite(data.headFrameID)
     end
     
+    for i = 1, #self.rangimglist do
+        self.rangimglist[i].gameObject:SetActive(false)
+    end
+    local img = self.rangimglist[data.rankid]
+    if img then
+        img.gameObject:SetActive(true)
+    end
+
     if data.rankImageSpr ~= nil then
-        self.rankImage.sprite = data.rankImageSpr
-        self.rankImage.gameObject:SetActive(true)
+        -- self.rankImage.sprite = data.rankImageSpr
+        -- self.rankImage.gameObject:SetActive(true)
         self.rankText.gameObject:SetActive(false)
     else
-        self.rankImage.gameObject:SetActive(false)
+        -- self.rankImage.gameObject:SetActive(false)
         self.rankText.gameObject:SetActive(true)
         self.rankText.text = tostring(data.rank)
     end
+    
     self.betScoreText.text = ConvertNumberToString(data.betScore)
     self.winCountText.text = ConvertNumberToString(data.winCount)
 end

@@ -1,7 +1,7 @@
 local _G, g_Env = _G, g_Env
 local class = class
-local print, tostring, SysDefines, typeof, debug, LogE, LogW,string, assert,pairs =
-      print, tostring, SysDefines, typeof, debug, LogE, LogW,string, assert,pairs
+local print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs =
+      print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs
 
 local DOTween = CS.DG.Tweening.DOTween
 
@@ -69,12 +69,12 @@ end
 -- 设置统计数据
 function Class:SetStatisticData(sixiCount, sanyuanCount, zhuangCount, xianCount, heCount, allGameCount)
     print("设置统计数据：", sixiCount, sanyuanCount, zhuangCount, xianCount, heCount, allGameCount)
-    self.statisicalData.sixiText.text = "大四喜x"..tostring(sixiCount)
-    self.statisicalData.sanyuanText.text = "大三元x"..tostring(sanyuanCount)
-    self.statisicalData.zhuangText.text = "庄x"..tostring(zhuangCount)
-    self.statisicalData.xianText.text = "闲x"..tostring(xianCount)
-    self.statisicalData.heText.text = "和x"..tostring(heCount)
-    self.statisicalData.allText.text = "总局数x"..tostring(allGameCount)
+    self.statisicalData.sixiText.text =  string.Format2(_STR_" 大四喜x{1} ",(sixiCount))
+    self.statisicalData.sanyuanText.text =  string.Format2(_STR_" 大三元x{1} ",(sanyuanCount))
+    self.statisicalData.zhuangText.text =  string.Format2(_STR_" 庄x{1} ",(zhuangCount))
+    self.statisicalData.xianText.text =  string.Format2(_STR_" 闲x{1} ",(xianCount))
+    self.statisicalData.heText.text =  string.Format2(_STR_" 和x{1} ",(heCount))
+    self.statisicalData.allText.text =  string.Format2(_STR_" 总局数x{1} ",(allGameCount))
 end
 
 
@@ -109,7 +109,7 @@ function Class:On_btn_Bank_Event(btn_Bank)
     print("打开银行...")
     if g_Env then
         if g_Env.gamePlayer.Phone == nil then
-            g_Env.hintMessage:CreateHintMessage("请先到个人中心绑定手机号")
+            g_Env.hintMessage:CreateHintMessage(_STR_"请先到个人中心绑定手机号")
         else
             local isLogined = g_Env.mainModule:GetBankLogined()
             if isLogined then
@@ -127,7 +127,7 @@ function Class:On_btn_Exit_Event(btn_Exit)
     print("OnExitClick...", g_Env)
     if g_Env then
         g_Env.MessageBox {
-            content = "您正在游戏中，确定要退出游戏吗？",
+            content = _STR_"您正在游戏中，确定要退出游戏吗？",
             showCancel = true,
             onOK = function()
                 g_Env.SubGameCtrl.Leave()

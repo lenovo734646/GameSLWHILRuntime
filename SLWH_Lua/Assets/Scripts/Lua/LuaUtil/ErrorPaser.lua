@@ -1,16 +1,10 @@
-local _G = _G
-local g_Env,class = g_Env,class
-local print, tostring, SysDefines, typeof, debug, LogE,LogW,string, assert =
-      print, tostring, SysDefines, typeof, debug, LogE,LogW,string, assert
-
-local BuildStr = require'LuaUtil.Helpers'.BuildStr
-
+local tostring = tostring
+--想要方便测试，就在这里加上转换表
 _ENV = {}
-
-function Paser(errCode, ackname)
-    local str = BuildStr('错误',errCode, ackname)
-    LogW('TODO 通用的错误解析器 '..tostring(str))
-    return str
+local convertTable = {
+}
+Paser = g_Env and g_Env.GetServerErrorMsg or function(errCode, ackname)
+    local errstr = convertTable[ackname] and convertTable[ackname][errCode] or nil
+    return errstr or ('服务器返回错误errCode='..tostring(errCode)..' ackname='..tostring(ackname))
 end
-
 return _ENV

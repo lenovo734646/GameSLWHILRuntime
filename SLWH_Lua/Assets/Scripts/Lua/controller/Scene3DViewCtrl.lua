@@ -4,7 +4,7 @@ local class = class
 local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber =
       print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber
 
-local logError = logError
+local _STR_ = _STR_
 local math,pairs = math,pairs
 local Vector3 = CS.UnityEngine.Vector3
 local DOTween = CS.DG.Tweening.DOTween
@@ -48,6 +48,7 @@ end
 function Class:__init(ui,View,roomdata)
     print("3D View Ctrl Init...roomdata.last_bet_id = ", roomdata.last_bet_id)
     self.ui = ui
+    self.View = View
     self.roomdata = roomdata
     _G.PrintTable(self.histroyList)
     View:GetComponent(typeof(LuaUnityEventListener)):Init(self)
@@ -95,6 +96,9 @@ function Class:__init(ui,View,roomdata)
     self.betSnapShot = {} -- 上一局押注数据
     self:OnMoneyChange(SubGame_Env.playerRes.currency)
     self:InitAnimalAnimation()
+
+    ui.directionallight_animationhelper:PlayByIndex(1)
+    ui.pointlight_animationhelper:PlayByIndex(1)
 end
 
 -- showRedNuber: 是否显示红色数字，下注状态就显示，这里其实是gameState
@@ -380,7 +384,7 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        SubGame_Env.ShowHintMessage("金币不足,当前金币:"..SubGame_Env.playerRes.currency)
+        SubGame_Env.ShowHintMessage(string.Format2(_STR_"金币不足,当前金币:{1}",SubGame_Env.playerRes.currency))
         return
     end
     --发送下注
@@ -393,7 +397,7 @@ function Class:OnContinueBtnClicked()
     --     self.betSnapShot[i] = 1000
     -- end
     if self:__GetContinueBetScore() <= 0 then
-        SubGame_Env.ShowHintMessage("上局没有下注记录")
+        SubGame_Env.ShowHintMessage(_STR_"上局无下注")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
@@ -473,6 +477,8 @@ function Class:OnShowState(data)
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
+    ui.directionallight_animationhelper:PlayByIndex(1)
+    ui.pointlight_animationhelper:PlayByIndex(1)
 
      if #self.ratioArray <= 0 then
         -- 结算阶段进入
@@ -699,6 +705,8 @@ end
 function Class:OnFreeState()
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
+    ui.directionallight_animationhelper:PlayByIndex(2)
+    ui.pointlight_animationhelper:PlayByIndex(2)
     self:PlayIdleStateAnim()
     -- 如果上一局有下注，则刷新续押数据，否则不变
     if self:__GetSelfAllBetScore() > 0 then
@@ -785,37 +793,32 @@ end
 
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
-    CLSLWHSender.Send_SetBetReq(function (data)
-        self:OnReceiveBetAck(data)
-    end, item_id, betid)
+    CoroutineHelper.StartCoroutineGo(self.View, function()
+        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SubGame_Env.ShowErrorByHint)
+        if data then
+            self:OnReceiveBetAck(data)
+        end
+    end)
 end
 
 function Class:OnReceiveBetAck(data)
     local betAreaList = self.ui.betAreaList
-    if data.errcode == 0 then
-        local self_bet_info = data.self_bet_info
-        local item_id = self_bet_info.index_id
-        if item_id == -1 then
-            for _, betAreaData in pairs(betAreaList) do
-                self:__SetSelfBetScore(betAreaData, 0)
-            end
-        else
-            local total_bet = self_bet_info.total_bet
-            local betAreaData = betAreaList[item_id]
-            --
-            self:__SetSelfBetScore(betAreaData, total_bet)
-            AudioManager.Instance:PlaySoundEff2D("betSound")
+    local self_bet_info = data.self_bet_info
+    local item_id = self_bet_info.index_id
+    if item_id == -1 then
+        for _, betAreaData in pairs(betAreaList) do
+            self:__SetSelfBetScore(betAreaData, 0)
         end
-        self:OnMoneyChange(data.self_score)
-        local score = self:__GetSelfAllBetScore()
-        self.ui.mainUI:SetCurBetScore(score)
     else
-        local errStr = GameConfig.BetErrorTip[data.errcode]
-        if not string.IsNullOrEmpty(data.errParam) then
-            errStr = errStr..": "..data.errParam
-        end
-        SubGame_Env.ShowHintMessage(errStr)
+        local total_bet = self_bet_info.total_bet
+        local betAreaData = betAreaList[item_id]
+        --
+        self:__SetSelfBetScore(betAreaData, total_bet)
+        AudioManager.Instance:PlaySoundEff2D("betSound")
     end
+    self:OnMoneyChange(data.self_score)
+    local score = self:__GetSelfAllBetScore()
+    self.ui.mainUI:SetCurBetScore(score)
 end
 
 -- 获取中奖动物倍率

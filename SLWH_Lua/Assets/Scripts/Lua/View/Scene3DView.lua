@@ -155,7 +155,12 @@ function Class:__init(roomdata)
             animalImg:SetNativeSize()
         end
 
-        viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
+        -- viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
+            for i = 1, 3 do
+                local active = i==itemdata.enjoyType_id
+                viewItemData['enjoyTypeImg'..itemdata.enjoyType_id].gameObject:SetActive(active)
+            end
+            
         --
         if itemdata.sanYuanInfo ~= nil then
             local syData = {}
@@ -290,7 +295,8 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
         -- ex_id = ex_id,
         colorSpr = colorSpr,
         animalSpr = self.roadAnimalSprites[animal_id],
-        enjoyTypeSpr = self.roadEnjoyTypeSprites[enjoyType_id],
+        -- enjoyTypeSpr = self.roadEnjoyTypeSprites[enjoyType_id],
+        enjoyType_id = enjoyType_id,
         --
         sanYuanInfo = sanYuanInfo,
         siXiInfo = siXiInfo,

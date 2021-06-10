@@ -9,7 +9,9 @@ function MessageCenter:AddListener(msgType, func, target)
     if self.dicMsgBind[msgType] == nil then
         self.dicMsgBind[msgType] = {}
     end
-    local bindFunc = functional.bind1(func, target)
+    local bindFunc = function (...)
+        return func(target,...)
+    end
     table.insert(self.dicMsgBind[msgType], {
         bind = bindFunc,
         func = func,

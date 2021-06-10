@@ -1,29 +1,30 @@
-
 local _G, g_Env, print, log, LogE, os, math = _G, g_Env, print, log, LogE, os, math
-local class, typeof, type, string, utf8, pairs= class, typeof, type, string, utf8, pairs
+local class, typeof, type, string, assert, pairs = class, typeof, type, string, assert, pairs
 
 local tostring, tonumber = tostring, tonumber
 local table = table
 local tinsert = table.insert
 local tremove = table.remove
 
-local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
+local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset,
+    UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local DOTweenAnimation = CS.DG.Tweening.DOTweenAnimation
 
 local CoroutineHelper = require 'CoroutineHelper'
 local yield = coroutine.yield
 local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
-local InfinityScroView = require'OSAScrollView.InfinityScroView'
+local InfinityScroView = require 'OSAScrollView.InfinityScroView'
 
 local PBHelper = require 'protobuffer.PBHelper'
-local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
+local CLCHATROOMSender = require 'protobuffer.CLCHATROOMSender'
 local SubGame_Env = SubGame_Env
-local PlayerListItemData = require'PlayerList.PlayerListItemData'
-local PlayerListItemView = require'PlayerList.PlayerListItemView'
+local PlayerListItemData = require 'PlayerList.PlayerListItemData'
+local PlayerListItemView = require 'PlayerList.PlayerListItemView'
+local _STR_ = _STR_
 
-
-_ENV = moduledef { seenamespace = CS }
-
+_ENV = moduledef {
+    seenamespace = CS
+}
 
 local Class = class()
 
@@ -40,7 +41,7 @@ function Class:__init(panel)
     self.rankImages = {}
     initHelper:ObjectsSetToLuaTable(self.rankImages)
     self.initHelper = nil
-    --Item scroll view
+    -- Item scroll view
     self.playerListScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
     -- self.playerListScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
     --     if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
@@ -54,12 +55,12 @@ function Class:__init(panel)
     --         self.playerListScrollView:SmoothScrollTo(tarIndex, 0.1, nil, DoneFunc)
     --     end
     -- end
-    --itemRoot : RectTransform类型
-    self.playerListScrollView.OnCreateViewItemData = function (itemRoot, itemIndex)
+    -- itemRoot : RectTransform类型
+    self.playerListScrollView.OnCreateViewItemData = function(itemRoot, itemIndex)
         return PlayerListItemView.Create(itemRoot)
     end
 
-    self.playerListScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
+    self.playerListScrollView.UpdateViewItemHandler = function(itemdata, index, viewItemData)
         viewItemData:UpdateFromData(itemdata)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
     end
@@ -74,35 +75,29 @@ function Class:__init(panel)
     -- self.popUpDOTweenAnim.hasOnComplete = true;
 end
 
-
 -- 发送 玩家列表请求
 function Class:OnSendPlayerListReq()
     print("发送玩家列表请求")
-    CLCHATROOMSender.Send_QueryPlayerListReq(function (data)
-        print("收到玩家列表返回：", data.errcode)
-        if data.errcode == 1 then
-            print("你不在房间中")
-            return
-        end
+    CoroutineHelper.StartCoroutineAuto(self.eventListener, function()
+        local data = CLCHATROOMSender.Send_QueryPlayerListReq_Async(0, 100, SubGame_Env.ShowErrorByHint)
         --
         local items = {}
         local count = data.total_amount
         print("count = ", count)
         local players = data.players
-        self.onlineCount.text = "在线人数："..count
+        self.onlineCount.text = string.Format2(_STR_ "在线人数：{1}", count)
         for key, info in pairs(players) do
+            -- assert(info.betScore)
             print("玩家列表：", key, info.nickname, info.user_id, info.head)
             local rankImageSpr = self.rankImages[key]
-            local itemData = PlayerListItemData.Create(info.user_id, info.nickname, info.head, info.headFrame, 
-                                                        info.currency, info.betScore, info.winCount, key, rankImageSpr)
+            local itemData = PlayerListItemData.Create(info.user_id, info.nickname, info.head, info.headFrame,
+                                 info.currency, info.betScore, info.winCount, key, rankImageSpr)
+
+            itemData.rankid = key
             tinsert(items, itemData)
         end
         self.playerListScrollView:ReplaceItems(items)
-     
-    end, 0, 100)
+    end)
 end
-
-
-
 
 return _ENV

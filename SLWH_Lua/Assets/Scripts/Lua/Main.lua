@@ -93,40 +93,6 @@ local GetLoadCount = function ()
     return count
 end
 
-CoroutineHelper.StartCoroutine(function ()
-    local data,err = CLSLWHSender.Send_EnterRoomReq_Async()
-    if err then
-        print('Send_EnterRoomAck:'..json.encode(data))
-        if g_Env then
-            g_Env.MessageBox{
-                content = err,
-                onOK = function()
-                    g_Env.SubGameCtrl.Leave()
-                end
-            }
-        else
-            print('错误 data.errcode=', data.errcode)
-        end
-    else
-        roomdata = data
-        for key, value in pairs(roomdata.bet_config_array) do
-            print("bet_config_array: "..key..",  "..value)
-        end
-        
-        SubGame_Env.playerRes.currency = roomdata.self_score
-        SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
-        SubGame_Env.playerRes.userName = roomdata.self_user_name
-        SubGame_Env.playerRes.headID = roomdata.self_user_Head
-        SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
-        print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
-        --
-        SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
-    
-        print("开始加载LoadingScene....")
-        SubGame_Env.loader:LoadScene('LoadingScene')
-    end
-end)
-
 
 local loadMatTexByLangAsync = function(matpath,texpath_without_ext,texidname)
     local loader = SubGame_Env.loader
@@ -141,18 +107,49 @@ end
 local gameView
 function OnSceneLoaded(scene, mode)
     if scene.name == "LoadingScene" then
-        local sliderGo = GameObject.Find("Slider")
-        local slider = sliderGo:GetComponent("Slider")
-        slider.value = 0.25
-        local loader = SubGame_Env.loader
-        local allLoadCount = GetLoadCount()
-        local loadedCount = 0
-        local updateProgress = function ()
-            loadedCount = loadedCount+1
-            slider.value = (loadedCount/allLoadCount)
-            --print("加载进度：", loadedCount, allLoadCount, slider.value)
-        end
         CoroutineHelper.StartCoroutine(function ()
+            local data,err = CLSLWHSender.Send_EnterRoomReq_Async()
+            if err then
+                print('Send_EnterRoomAck:'..json.encode(data))
+                if g_Env then
+                    g_Env.MessageBox{
+                        content = err,
+                        onOK = function()
+                            g_Env.SubGameCtrl.Leave()
+                        end
+                    }
+                else
+                    print('错误 data.errcode=', data.errcode)
+                end
+            else
+                roomdata = data
+                for key, value in pairs(roomdata.bet_config_array) do
+                    print("bet_config_array: "..key..",  "..value)
+                end
+                
+                SubGame_Env.playerRes.currency = roomdata.self_score
+                SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
+                SubGame_Env.playerRes.userName = roomdata.self_user_name
+                SubGame_Env.playerRes.headID = roomdata.self_user_Head
+                SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
+                print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
+                --
+                SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
+            
+                print("开始加载LoadingScene....")
+                
+            end
+            local sliderGo = GameObject.Find("Slider")
+            local slider = sliderGo:GetComponent("Slider")
+            slider.value = 0.25
+            local loader = SubGame_Env.loader
+            local allLoadCount = GetLoadCount()
+            local loadedCount = 0
+            local updateProgress = function ()
+                loadedCount = loadedCount+1
+                slider.value = (loadedCount/allLoadCount)
+                --print("加载进度：", loadedCount, allLoadCount, slider.value)
+            end
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/庄1.mat','Assets/Dance/Xiazhu/Tex/Zhuang','_MainTex')
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/闲1.mat','Assets/Dance/Xiazhu/Tex/Xian','_MainTex')
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/和1.mat','Assets/Dance/Xiazhu/Tex/He','_MainTex')
@@ -202,7 +199,7 @@ function OnCloseSubGame()
 end
 
 
-
+SubGame_Env.loader:LoadScene('LoadingScene')
 
 
 

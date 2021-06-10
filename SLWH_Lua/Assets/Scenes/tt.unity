@@ -1689,6 +1689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Root: {fileID: 306575823}
+  animName: Idel
   rotate: 420
   duration: 5
   par: {fileID: 0}
@@ -1709,7 +1710,8 @@ MonoBehaviour:
   baoshi: {fileID: 0}
   materials: []
   animator: {fileID: 0}
-  animatorHelper: {fileID: 0}
+  animatorHelper: {fileID: 1523378481}
+  delayTime: 1
   oSAScrollView: {fileID: 0}
 --- !u!1 &389190757
 GameObject:
@@ -3499,6 +3501,75 @@ Transform:
   m_Father: {fileID: 635271086}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &810147192
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7122296338861328325, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_Name
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -15.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.04750143
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.8304325
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.55099744
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.06728652
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -112.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -8.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610144817969192319, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -180.7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: efb0a6770aeed0a4cb47a52852d8f0b5, type: 3}
 --- !u!1 &811409249
 GameObject:
   m_ObjectHideFlags: 0
@@ -6357,6 +6428,18 @@ Transform:
   m_Father: {fileID: 2038913586}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1523378481 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7122296338861328324, guid: efb0a6770aeed0a4cb47a52852d8f0b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 810147192}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1536433285
 GameObject:
   m_ObjectHideFlags: 0
@@ -9638,6 +9721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08112bfda46165c4c9df9da3a9073cef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  languageChange: 0
   spine: {fileID: 0}
   autoUnActive: 0
   playOnActive: 1

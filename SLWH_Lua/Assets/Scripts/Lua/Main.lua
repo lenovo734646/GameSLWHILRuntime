@@ -134,7 +134,7 @@ function OnSceneLoaded(scene, mode)
                 SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
                 print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
                 --
-                SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
+
             
                 print("开始加载LoadingScene....")
                 
@@ -198,7 +198,7 @@ function OnCloseSubGame()
     print("退出小游戏 OnCloseSubGame...")
 end
 
-
+SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
 SubGame_Env.loader:LoadScene('LoadingScene')
 
 

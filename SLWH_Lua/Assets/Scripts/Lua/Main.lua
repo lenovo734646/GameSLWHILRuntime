@@ -1,26 +1,23 @@
-SubGame_Env = SubGame_Env or {}
-SubGame_Env.ConvertNumberToString = function (n)
-    if n == nil then
-        return ""
-    end
-    local unit = ''
-    if n >= 100000000 then
-        n = n / 100000000
-        n = math.floor(n*100)/100
-        unit = '亿'
-    elseif n >= 10000 then
-        n = n / 10000
-        n = math.floor(n*100)/100
-        unit = '万'
-    end
-    return n..unit
+_STR_=_STR_ or function (str)
+    return str
 end
+local Helpers = require'LuaUtil.Helpers'
+SubGame_Env = SubGame_Env or {}
+SubGame_Env.ConvertNumberToString = Helpers.GameNumberFormat
 
 SubGame_Env.ShowHintMessage = function (contentStr)
     if g_Env then
         g_Env.ShowHitMessage(contentStr)
     else
         print(contentStr)
+    end
+end
+
+SubGame_Env.ShowErrorByHint = function (errcode,msgName)
+    if g_Env then
+        g_Env.ShowHitMessage(g_Env.GetServerErrorMsg(errcode,msgName))
+    else
+        print('服务器返回错误 errcode=',errcode,'msgName=',msgName)
     end
 end
 
@@ -97,59 +94,65 @@ local GetLoadCount = function ()
 end
 
 
+local loadMatTexByLangAsync = function(matpath,texpath_without_ext,texidname)
+    local loader = SubGame_Env.loader
+    local mat = loader:LoadAsync(matpath)
+    local mask = SysDefines.curLanguage=='EN' and '_EN' or ''
+    local texpath = texpath_without_ext .. mask .. '.png'
+    local tex = loader:LoadAsync(texpath)
+    return mat:SetTexture(texidname, tex)
+end
 
-CLSLWHSender.Send_EnterRoomReq(function (data)
-    print('Send_EnterRoomAck:'..json.encode(data))
-    if data.errcode ~= 0 then
-        if g_Env then
-            local errorstr = GameConfig.EnterRoomErrorTip[data.errcode]
-            --g_Env.ShowHintMessage(errorstr)
-            g_Env.MessageBox{
-                content = errorstr,
-                onOK = function()
-                    g_Env.SubGameCtrl.Leave()
-                end
-            }
-            
-        else
-            print('TODO 获取错误提示 data.errcode=', data.errcode)
-        end
-        return
-    end
-    roomdata = data
-    for key, value in pairs(roomdata.bet_config_array) do
-        print("bet_config_array: "..key..",  "..value)
-    end
-    
-    SubGame_Env.playerRes.currency = roomdata.self_score
-    SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
-    SubGame_Env.playerRes.userName = roomdata.self_user_name
-    SubGame_Env.playerRes.headID = roomdata.self_user_Head
-    SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
-    print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
-    --
-    SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
-
-    print("开始加载LoadingScene....")
-    SubGame_Env.loader:LoadScene('LoadingScene')
-end)
 
 local gameView
-
 function OnSceneLoaded(scene, mode)
     if scene.name == "LoadingScene" then
-        local sliderGo = GameObject.Find("Slider")
-        local slider = sliderGo:GetComponent("Slider")
-        slider.value = 0.25
-        local loader = SubGame_Env.loader
-        local allLoadCount = GetLoadCount()
-        local loadedCount = 0
-        local updateProgress = function ()
-            loadedCount = loadedCount+1
-            slider.value = (loadedCount/allLoadCount)
-            --print("加载进度：", loadedCount, allLoadCount, slider.value)
-        end
         CoroutineHelper.StartCoroutine(function ()
+            local data,err = CLSLWHSender.Send_EnterRoomReq_Async()
+            if err then
+                print('Send_EnterRoomAck:'..json.encode(data))
+                if g_Env then
+                    g_Env.MessageBox{
+                        content = err,
+                        onOK = function()
+                            g_Env.SubGameCtrl.Leave()
+                        end
+                    }
+                else
+                    print('错误 data.errcode=', data.errcode)
+                end
+            else
+                roomdata = data
+                for key, value in pairs(roomdata.bet_config_array) do
+                    print("bet_config_array: "..key..",  "..value)
+                end
+                
+                SubGame_Env.playerRes.currency = roomdata.self_score
+                SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
+                SubGame_Env.playerRes.userName = roomdata.self_user_name
+                SubGame_Env.playerRes.headID = roomdata.self_user_Head
+                SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
+                print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
+                --
+                SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
+            
+                print("开始加载LoadingScene....")
+                
+            end
+            local sliderGo = GameObject.Find("Slider")
+            local slider = sliderGo:GetComponent("Slider")
+            slider.value = 0.25
+            local loader = SubGame_Env.loader
+            local allLoadCount = GetLoadCount()
+            local loadedCount = 0
+            local updateProgress = function ()
+                loadedCount = loadedCount+1
+                slider.value = (loadedCount/allLoadCount)
+                --print("加载进度：", loadedCount, allLoadCount, slider.value)
+            end
+            loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/庄1.mat','Assets/Dance/Xiazhu/Tex/Zhuang','_MainTex')
+            loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/闲1.mat','Assets/Dance/Xiazhu/Tex/Xian','_MainTex')
+            loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/和1.mat','Assets/Dance/Xiazhu/Tex/He','_MainTex')
             for k, v in pairs(LoadList) do
                 if k == 1 then
                     for _, assetPath in pairs(v) do
@@ -196,7 +199,7 @@ function OnCloseSubGame()
 end
 
 
-
+SubGame_Env.loader:LoadScene('LoadingScene')
 
 
 

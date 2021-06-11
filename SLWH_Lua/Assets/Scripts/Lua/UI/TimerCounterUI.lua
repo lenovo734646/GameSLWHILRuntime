@@ -22,17 +22,19 @@ function Class:__init(initHelper)
     self.gameObject = initHelper.gameObject
     self.gameObject:SetActive(true)
     initHelper:Init(self)
-    self.stateSprites = {}
-    initHelper:ObjectsSetToLuaTable(self.stateSprites)
-    --
-    
 end
 
 function Class:StartCountDown(time, state, playSoundFunc)
     if self.co then
         CoroutineHelper.StopCoroutine(self.co)
     end
-    self.stateImg.sprite = self.stateSprites[state]
+    for i=1,3 do
+        if i==state then
+            self['gamestate_'..i..'_image'].gameObject:SetActive(true)
+        else
+            self['gamestate_'..i..'_image'].gameObject:SetActive(false)
+        end
+    end
     local timeText = self.timeText
     timeText.text = tostring(floor(time+0.5))
     --

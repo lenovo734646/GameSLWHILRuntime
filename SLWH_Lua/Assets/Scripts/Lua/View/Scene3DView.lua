@@ -48,7 +48,8 @@ function Class:__init(roomdata)
     initHelper:Init(self)
     self.colorMeshMaterialList = {}
     initHelper:ObjectsSetToLuaTable(self.colorMeshMaterialList)
-
+    -- 进入即播放背景音乐，因为是否静音使用音量调节，所以这里一直播放就行了
+    AudioManager.Instance:PlayMusic("BGMusic")
     -- EnjoyGame 小老虎机
     self.slot = SimpleSlot.Create(self.slotPanelInitHelper)
 
@@ -154,7 +155,12 @@ function Class:__init(roomdata)
             animalImg:SetNativeSize()
         end
 
-        viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
+        -- viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
+            for i = 1, 3 do
+                local active = i==itemdata.enjoyType_id
+                viewItemData['enjoyTypeImg'..itemdata.enjoyType_id].gameObject:SetActive(active)
+            end
+            
         --
         if itemdata.sanYuanInfo ~= nil then
             local syData = {}
@@ -289,7 +295,8 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
         -- ex_id = ex_id,
         colorSpr = colorSpr,
         animalSpr = self.roadAnimalSprites[animal_id],
-        enjoyTypeSpr = self.roadEnjoyTypeSprites[enjoyType_id],
+        -- enjoyTypeSpr = self.roadEnjoyTypeSprites[enjoyType_id],
+        enjoyType_id = enjoyType_id,
         --
         sanYuanInfo = sanYuanInfo,
         siXiInfo = siXiInfo,

@@ -171,9 +171,9 @@ function Class:OnSendText(inputField)
     -- 显示自己发送的信息，自己的消息服务器也会转发给自己，这里使用服务器返回的
     --self:OnReceiveMsg(timeStampSec, 0012, 1, text, nil, self.faceSpr)   
     --
-    CLCHATROOMSender.Send_SendChatMessageReq(function (data)
-        self:SendChatMsgAck(data)
-    end,  1, text, tostring(timeStampSec))
+    CoroutineHelper.StartCoroutine(function ()
+        CLCHATROOMSender.Send_SendChatMessageReq_Async(1, text, tostring(timeStampSec),SubGame_Env.ShowErrorByHint)
+    end)
     self.inputField.text = ""
 end
 -- 发送常用语

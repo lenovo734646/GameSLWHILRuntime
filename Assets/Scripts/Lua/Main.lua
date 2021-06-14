@@ -5,11 +5,26 @@ local Helpers = require'LuaUtil.Helpers'
 SubGame_Env = SubGame_Env or {}
 SubGame_Env.ConvertNumberToString = Helpers.GameNumberFormat
 
-SubGame_Env.ShowHintMessage = function (contentStr)
+-- print = function() -- 屏蔽日志
+-- end
+
+SubGame_Env.ShowHintMessage = function(contentStr)
     if g_Env then
         g_Env.ShowHitMessage(contentStr)
     else
         print(contentStr)
+    end
+end
+-- 显示一个短暂停留的提示
+SubGame_Env.ShowHintMessageByErrCode = function (errTipTable, errcode)
+    if errcode <= 0 then
+        return
+    end
+    local errStr = errTipTable[errcode]
+    if g_Env then
+        g_Env.ShowHitMessage(errStr)
+    else
+        print(errStr)
     end
 end
 
@@ -119,8 +134,10 @@ function OnSceneLoaded(scene, mode)
                         end
                     }
                 else
-                    print('错误 data.errcode=', data.errcode)
+                    print('进入房间失败 data.errcode=', data.errcode)
                 end
+                return
+
             else
                 roomdata = data
                 for key, value in pairs(roomdata.bet_config_array) do
@@ -133,11 +150,6 @@ function OnSceneLoaded(scene, mode)
                 SubGame_Env.playerRes.headID = roomdata.self_user_Head
                 SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
                 print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
-                --
-
-            
-                print("开始加载LoadingScene....")
-                
             end
             local sliderGo = GameObject.Find("Slider")
             local slider = sliderGo:GetComponent("Slider")
@@ -150,6 +162,7 @@ function OnSceneLoaded(scene, mode)
                 slider.value = (loadedCount/allLoadCount)
                 --print("加载进度：", loadedCount, allLoadCount, slider.value)
             end
+            --先加载和设置多语言纹理
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/庄1.mat','Assets/Dance/Xiazhu/Tex/Zhuang','_MainTex')
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/闲1.mat','Assets/Dance/Xiazhu/Tex/Xian','_MainTex')
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/和1.mat','Assets/Dance/Xiazhu/Tex/He','_MainTex')

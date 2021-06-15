@@ -56,11 +56,11 @@ public class AssetBundleTool
     }
 
     static void clearOldFiles() {
-        // DirectoryInfo directoryInfo = new DirectoryInfo(curbuildpath);
-        // if (directoryInfo.Exists) {
-        //     directoryInfo.Delete(true);
-        // }
-        // directoryInfo.Create();
+        //DirectoryInfo directoryInfo = new DirectoryInfo(curbuildpath);
+        //if (directoryInfo.Exists) {
+        //    directoryInfo.Delete(true);
+        //}
+        //directoryInfo.Create();
     }
 
     static void BuildAllAssetBundles(BuildTarget target)

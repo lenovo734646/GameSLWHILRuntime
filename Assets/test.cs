@@ -236,12 +236,35 @@ namespace SLWH
 #if UNITY_EDITOR
             if (Input.GetKeyUp(KeyCode.A))
             {
-                StartCoroutine("PlayIdle");
+                animatorHelper = tweenAnimation.gameObject.GetComponent<AnimatorHelper>();
+                var infoArray = animatorHelper.GetAnimator().GetCurrentAnimatorClipInfo(0);
+                foreach (var info in infoArray)
+                {
+                    info.clip.wrapMode = WrapMode.Loop;
+                }
+
+                animatorHelper.Play("ShiZiJumpTo");
+                //var clip = animatorHelper.GetAnimationClip("Jump");
+                //if (clip)
+                //{
+                //    clip.wrapMode = WrapMode.Once;
+                //    animatorHelper.Play("Jump");
+                //    //tweenAnimation.DOPlayForward();
+                //}
+                
             }
 
             if (Input.GetKeyUp(KeyCode.S))
             {
-                StartCoroutine("PlayIdle");
+                animatorHelper = tweenAnimation.gameObject.GetComponent<AnimatorHelper>();
+                var clip = animatorHelper.GetAnimationClip("Jump");
+                if (clip)
+                {
+                    clip.wrapMode = WrapMode.Loop;
+                    animatorHelper.Play("Jump");
+                    //tweenAnimation.DOPlayBackwards();
+                }
+                //tweenAnimation.DOPlayBackwards();
             }
             //if (Input.GetMouseButtonDown(0))
             //{
@@ -304,12 +327,7 @@ namespace SLWH
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                var animators = Root.GetComponentsInChildren<Animator>();
-                foreach (var animator in animators)
-                {
-                    animator.Play(animName);
-
-                }
+                
             }
             if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
             {

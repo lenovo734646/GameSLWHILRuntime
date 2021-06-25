@@ -195,7 +195,7 @@ namespace ForReBuild.UIHelper
             return null;
         }
 
-        private AnimationClip GetAnimationClip(string animName)
+        public AnimationClip GetAnimationClip(string animName)
         {
             AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)

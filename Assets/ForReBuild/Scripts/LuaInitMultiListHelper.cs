@@ -48,4 +48,9 @@ public class LuaInitMultiListHelper : MonoBehaviour
                 t.Set(i + 1, objects[i]);
         }
     }
+
+    private void OnDestroy() {
+        t?.Dispose();
+        t = null;
+    }
 }

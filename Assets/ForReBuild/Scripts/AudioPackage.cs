@@ -25,13 +25,24 @@ namespace ForReBuild {
         public Dictionary<string, AudioClip> AudioDic { get; private set; }
             = new Dictionary<string, AudioClip>(); //音效文件缓存 
 
+        public bool initOnStart = false;
+
         void Awake() {
+            if (initOnStart) return;
             //print("AudioPackage Awake");
+            init();
+        }
+        private void Start() {
+            if (!initOnStart) return;
+            init();
+        }
+
+        private void init() {
             foreach (var data in audioClipDatas) {
                 AudioDic.Add(data.pathOrName, data.clip);
             }
             if (autoAddToAudioManager)
-                if(AudioManager.Instance)
+                if (AudioManager.Instance)
                     AudioManager.Instance.AddAudioPackage(this);
         }
 
@@ -43,10 +54,12 @@ namespace ForReBuild {
             if (AudioDic.TryGetValue(pathOrName, out audioClip)) {
                 return true;
             }
-            Array.Find(audioClips, clip=> {
+            if (audioClips == null) throw new Exception($"使用了未初始化的音频包{gameObject.name}");
+            audioClip = Array.Find(audioClips, clip=> {
+                if (!clip) return false;
                 return clip.name == pathOrName;
             });
-            audioClip = null;
+            if (audioClip) return true;
             return false;
         }
 

@@ -45,7 +45,7 @@ namespace SP
         {
             if (Microphone.devices.Length <= 0)
             {
-                Debug.LogError("未检测到麦克风输入设备");
+                Debug.LogWarning("未检测到麦克风输入设备");
                 return;
             }
 

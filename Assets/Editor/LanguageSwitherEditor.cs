@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CustomEditor(typeof(LanguageSwither))]
+[CanEditMultipleObjects]
 public class LanguageSwitherEditor : Editor {
 
 

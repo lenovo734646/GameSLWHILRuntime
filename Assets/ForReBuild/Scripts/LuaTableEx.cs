@@ -9,6 +9,7 @@ namespace XLua {
     public partial class LuaTable : LuaBase {
 
         public LuaTable NewTable<TKey>(TKey key) {
+            LuaTable t;
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
             {
@@ -26,7 +27,7 @@ namespace XLua {
             }
             LuaAPI.lua_settop(L, oldTop);
 
-            var t = Get<TKey,LuaTable>(key);
+            t = Get<TKey,LuaTable>(key);
 
 #if THREAD_SAFE || HOTFIX_ENABLE
             }

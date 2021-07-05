@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -9,6 +10,38 @@ using UnityEngine.Events;
 using Object = UnityEngine.Object;
 public static class EditorUtil 
 {
+
+    //获取ALLPrefab
+    public static List<Object> GetAllPrefabs(string directory)
+    {
+        string[] subFolders = Directory.GetDirectories(directory);
+        List<Object> objlist = new List<Object>();
+        getobjsindir(directory, objlist);
+        foreach (var folder in subFolders)
+        {
+            getobjsindir(folder, objlist);
+        }
+
+        return objlist;
+    }
+
+    static void getobjsindir(string dir, List<Object> objlist)
+    {
+        var guids = AssetDatabase.FindAssets("t:Prefab", new string[] { dir });
+        var assetPaths = new string[guids.Length];
+        int i;
+        int iMax;
+        for (i = 0, iMax = assetPaths.Length; i < iMax; ++i)
+        {
+            assetPaths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
+            string[] arr = assetPaths[i].Split('/');
+            string prefabName = arr[arr.Length - 1].Split('.')[0];
+            GameObject obj = AssetDatabase.LoadMainAssetAtPath(assetPaths[i]) as GameObject;
+            obj.name = prefabName;
+            objlist.Add(obj);
+        }
+    }
+
     public static object GetParent(SerializedProperty prop) {
         var path = prop.propertyPath.Replace(".Array.data[", "[");
         object obj = prop.serializedObject.targetObject;

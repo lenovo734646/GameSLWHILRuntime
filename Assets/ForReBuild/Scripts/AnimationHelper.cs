@@ -18,7 +18,7 @@ public class AnimationHelper : MonoBehaviour
         return 0;
     }
 
-    public float PlayByIndex(int index, PlayMode mode = PlayMode.StopSameLayer) {
+    public float PlayByIndex(int index, PlayMode mode) {
         index -= 1;//映射到Lua index
         if (index >= 0 && index < animationClips.Length) {
             animationTarget.Play(animationClips[index].name, mode);
@@ -27,6 +27,11 @@ public class AnimationHelper : MonoBehaviour
             Debug.LogWarning("index error index:" + index);
         }
         return 0;
+    }
+
+    public float PlayByIndex(int index)
+    {
+        return PlayByIndex(index, PlayMode.StopSameLayer);
     }
 
     public void StopByIndex(int index) {

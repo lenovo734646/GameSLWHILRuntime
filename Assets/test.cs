@@ -256,15 +256,7 @@ namespace SLWH
 
             if (Input.GetKeyUp(KeyCode.S))
             {
-                animatorHelper = tweenAnimation.gameObject.GetComponent<AnimatorHelper>();
-                var clip = animatorHelper.GetAnimationClip("Jump");
-                if (clip)
-                {
-                    clip.wrapMode = WrapMode.Loop;
-                    animatorHelper.Play("Jump");
-                    //tweenAnimation.DOPlayBackwards();
-                }
-                //tweenAnimation.DOPlayBackwards();
+
             }
             //if (Input.GetMouseButtonDown(0))
             //{

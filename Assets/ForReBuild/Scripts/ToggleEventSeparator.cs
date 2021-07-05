@@ -14,4 +14,8 @@ public class ToggleEventSeparator : MonoBehaviour
             toggleFalseEvent?.Invoke();
         }
     }
+    private void OnDestroy() {
+        toggleTrueEvent.RemoveAllListeners();
+        toggleFalseEvent.RemoveAllListeners();
+    }
 }

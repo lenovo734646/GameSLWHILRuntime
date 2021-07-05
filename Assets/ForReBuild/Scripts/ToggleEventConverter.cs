@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-[RequireComponent(typeof(Toggle))]
+//[RequireComponent(typeof(Toggle))]
 public class ToggleEventConverter : MonoBehaviour {
     [CustomEditorName("在True的时候发送")]
     public bool playWithTrue = true;
@@ -25,5 +25,10 @@ public class ToggleEventConverter : MonoBehaviour {
         if (!b) {
             onValueChangedReverse?.Invoke(b);
         }
+    }
+
+    private void OnDestroy() {
+        unityEvent.RemoveAllListeners();
+        onValueChangedReverse.RemoveAllListeners();
     }
 }

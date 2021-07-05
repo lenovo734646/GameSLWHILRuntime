@@ -26,6 +26,13 @@ public class EventBroadcasterWithParam : MonoBehaviour
         Init();
     }
 
+    private void OnDestroy() {
+        eventMap.Clear();
+        foreach (var e in events) {
+            e.UnityEvent.RemoveAllListeners();
+        }
+    }
+
     public void Broadcast(string eveName, object param) {
         if (eventMap.TryGetValue(eveName,out CustomObjectEvent @event)) {
             @event?.Invoke(param);

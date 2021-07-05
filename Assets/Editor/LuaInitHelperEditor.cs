@@ -27,6 +27,12 @@ public class LuaInitHelperEditor : Editor {
                 EditorGUILayout.HelpBox($"警告！index:{i} name没有值！", MessageType.Warning);
             } else if (!data.anyType) {
                 EditorGUILayout.HelpBox($"警告！{name}没有值！", MessageType.Warning);
+            } else if (data.monoType) {
+                Debug.LogWarning($"删除多余的赋值 name:{data.name} value:{data.monoType}");
+                data.monoType = null;
+            } else if (data.t) {
+                Debug.LogWarning($"删除多余的赋值 name:{data.name} value:{data.t} root:{data.t.transform.root.name}");
+                data.t = null;
             }
 
         }

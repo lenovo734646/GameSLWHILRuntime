@@ -10,4 +10,8 @@ public class MoveToByEvent : MonoBehaviour
         transform.position = t.position;
         trigger?.Invoke();
     }
+
+    private void OnDestroy() {
+        trigger.RemoveAllListeners();
+    }
 }

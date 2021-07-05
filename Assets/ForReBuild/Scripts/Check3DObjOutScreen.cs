@@ -53,4 +53,8 @@ public class Check3DObjOutScreen : MonoBehaviour {
             lastInscreen = b;
         }
     }
+
+    private void OnDestroy() {
+        OutScreenCheck.RemoveAllListeners();
+    }
 }

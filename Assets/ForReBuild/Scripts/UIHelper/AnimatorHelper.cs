@@ -195,7 +195,7 @@ namespace ForReBuild.UIHelper
             return null;
         }
 
-        public AnimationClip GetAnimationClip(string animName)
+        private AnimationClip GetAnimationClip(string animName)
         {
             AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
@@ -206,6 +206,10 @@ namespace ForReBuild.UIHelper
                 }
             }
             return null;
+        }
+
+        private void OnDestroy() {
+            curAnimatorStateInfoEvent = null;
         }
     }
 }

@@ -24,9 +24,9 @@ public class LuaObjectsExInitHelper : MonoBehaviour
         }
     }
 
-    public void ObjectsSetToLuaTable(LuaTable t, bool autoDestroy = false)
+    public void ObjectsSetToLuaTable(LuaTable self, bool autoDestroy = false)
     {
-        this.t = t;
+        t = self;
         for (int i = 0; i < objects.Length; i++)
         {
             t.Set(i + 1, objects[i]);
@@ -46,4 +46,8 @@ public class LuaObjectsExInitHelper : MonoBehaviour
             Destroy(this);
     }
 
+    private void OnDestroy() {
+        t?.Dispose();
+        t = null;
+    }
 }

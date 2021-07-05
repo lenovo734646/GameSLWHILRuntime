@@ -7905,6 +7905,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337338149574989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8240,6 +8251,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337338165656505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8416,6 +8438,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Anxia
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &744337338202818568
@@ -10736,6 +10769,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337338813670080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11071,6 +11115,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337338845002105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11248,6 +11303,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Anxia
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &744337338877069024
@@ -11605,6 +11671,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337339084141447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11938,6 +12015,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Anxia
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &744337339205110980
@@ -12297,6 +12385,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Anxia
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &744337339226714440
@@ -13596,6 +13695,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337339484514692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14246,6 +14356,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &744337339585617558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14858,6 +14979,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Anxia
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &744337339714377110
@@ -15821,6 +15953,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Anxia
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &744337339945784341
@@ -26743,6 +26886,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1304461324758692786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26985,6 +27139,8 @@ GameObject:
   - component: {fileID: 1304461324910240661}
   - component: {fileID: 1304461324910240663}
   - component: {fileID: 1304461324910240656}
+  - component: {fileID: 1304461324567764638}
+  - component: {fileID: 1304461324567764639}
   m_Layer: 15
   m_Name: View
   m_TagString: Untagged
@@ -27345,6 +27501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90da319fe2cdc3a41b8f41b147375961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showLog: 0
   keyEvents:
   - keyCode: 271
     keyEventType: 1
@@ -27415,6 +27572,47 @@ MonoBehaviour:
   onMouseButtonDownList: 
   onMouseButtonUpList: 
   onMouseButtonList: 
+--- !u!114 &1304461324567764638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304461324910240665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47ac479767a1044db97607632422bf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1304461324567764639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304461324910240665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e8e1d8448891a4b8aa2429be4e9fd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleTrueEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
+  toggleFalseEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1304461325074310309
 GameObject:
   m_ObjectHideFlags: 0
@@ -55703,6 +55901,17 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6746968398490329511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58955,6 +59164,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764639}
+        m_MethodName: OnToggleValueChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!114 &8402688882823736300
 MonoBehaviour:
@@ -59268,6 +59488,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764639}
+        m_MethodName: OnToggleValueChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &8402688882922665868
 MonoBehaviour:
@@ -59486,6 +59717,17 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8402688882935313222}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764639}
+        m_MethodName: OnToggleValueChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -59974,6 +60216,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8402688883236620683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60448,6 +60701,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764639}
+        m_MethodName: OnToggleValueChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &8402688883486894238
 MonoBehaviour:
@@ -60857,6 +61121,17 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8402688883672858973}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764639}
+        m_MethodName: OnToggleValueChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -61747,6 +62022,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1304461324567764638}
+        m_MethodName: PlaySoundEff2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: btnSound
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8402688884562965632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62193,6 +62479,17 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8402688884853873888}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1304461324567764639}
+        m_MethodName: OnToggleValueChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -81680,15 +81977,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 534d170c881d792448fb4d0cae40a3b4, type: 3}
---- !u!4 &1553981379073206655 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 534d170c881d792448fb4d0cae40a3b4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1304461324424023700}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2223381252802261957 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 534d170c881d792448fb4d0cae40a3b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1304461324424023700}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1553981379073206655 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 534d170c881d792448fb4d0cae40a3b4,
     type: 3}
   m_PrefabInstance: {fileID: 1304461324424023700}
   m_PrefabAsset: {fileID: 0}
@@ -82046,15 +82343,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0c9cbc7f6b29f14284041745fdc0167, type: 3}
---- !u!1 &2223381252119934940 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b0c9cbc7f6b29f14284041745fdc0167,
-    type: 3}
-  m_PrefabInstance: {fileID: 1304461324814781069}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1553981378657217894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b0c9cbc7f6b29f14284041745fdc0167,
+    type: 3}
+  m_PrefabInstance: {fileID: 1304461324814781069}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2223381252119934940 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b0c9cbc7f6b29f14284041745fdc0167,
     type: 3}
   m_PrefabInstance: {fileID: 1304461324814781069}
   m_PrefabAsset: {fileID: 0}
@@ -82397,15 +82694,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74f4545d37be9ab49ad1adcbabf5a91f, type: 3}
---- !u!1 &2223381252500952388 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 74f4545d37be9ab49ad1adcbabf5a91f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1304461325331081237}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1553981378165821438 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 74f4545d37be9ab49ad1adcbabf5a91f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1304461325331081237}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2223381252500952388 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 74f4545d37be9ab49ad1adcbabf5a91f,
     type: 3}
   m_PrefabInstance: {fileID: 1304461325331081237}
   m_PrefabAsset: {fileID: 0}
@@ -82584,15 +82881,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccd14661536ac9f43aa84cc660cfd483, type: 3}
---- !u!4 &744337338420947686 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6290405036518850880, guid: ccd14661536ac9f43aa84cc660cfd483,
-    type: 3}
-  m_PrefabInstance: {fileID: 6708226891400817574}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &744337338421155282 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6290405036519079540, guid: ccd14661536ac9f43aa84cc660cfd483,
+    type: 3}
+  m_PrefabInstance: {fileID: 6708226891400817574}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &744337338420947686 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6290405036518850880, guid: ccd14661536ac9f43aa84cc660cfd483,
     type: 3}
   m_PrefabInstance: {fileID: 6708226891400817574}
   m_PrefabAsset: {fileID: 0}

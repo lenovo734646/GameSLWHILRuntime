@@ -63,12 +63,6 @@ if SUBGAME_EDITOR then
         return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(Sprite))
     end
     print("SUBGAME_EDITOR!")
-    -- PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
-    --     print("111111111111111111")
-    --     if data.res_type == 2 then
-    --         playerRes.currency = data.res_value
-    --     end
-    -- end)
 end
 
 
@@ -212,6 +206,11 @@ function OnCloseSubGame()
 end
 
 SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
+if SUBGAME_EDITOR then
+    -- 在大厅中将使用大厅的环境
+    local commonSounds = SubGame_Env.loader:Load("Assets/Resources/commonSounds.prefab")
+    CS.UnityEngine.Object.DontDestroyOnLoad(_G.Instantiate(commonSounds)) -- 公共音频资源
+end
 SubGame_Env.loader:LoadScene('LoadingScene')
 
 

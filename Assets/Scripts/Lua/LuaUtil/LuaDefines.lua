@@ -19,7 +19,7 @@ SceneManager = CS.UnityEngine.SceneManagement.SceneManager
 Math = CS.UnityEngine.Mathf
 Vector3 = CS.UnityEngine.Vector3
 Vector2 = CS.UnityEngine.Vector2
-PlayerPrefs = CS.UnityEngine.PlayerPrefs
+
 AudioClip = CS.UnityEngine.AudioClip
 Input = CS.UnityEngine.Input
 

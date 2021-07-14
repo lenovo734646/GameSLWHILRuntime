@@ -136,7 +136,7 @@ function Class:OnSceneReady()
 
     -- 本局自己输赢和庄家输赢
     PBHelper.AddListener('SelfWinResultNtf', function (data)
-        print("SelfWinResultNtf", data.self_score, data.win_score, data.bet_score)
+        print("结算：玩家分数: ", data.self_score, data.win_score, data.bet_score)
         self.resultPanelData.winScore = data.win_score -- 本局输赢
         self.resultPanelData.betScore = data.bet_score  -- 总输赢
         self.selfScore = data.self_score
@@ -611,6 +611,7 @@ function Class:OnShowState(data)
             self.ui.Baoshi_1_animator.enabled = true
             self.ui.SpotLight_Animal_animator.gameObject:SetActive(true)
             -- 同步玩家分数
+            print("同步玩家分数: ", self.selfScore)
             self:OnMoneyChange(self.selfScore)
 
             -- 开奖结束再更新record，避免剧透

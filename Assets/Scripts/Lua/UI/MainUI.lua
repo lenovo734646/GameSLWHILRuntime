@@ -77,6 +77,10 @@ function Class:SetStatisticData(sixiCount, sanyuanCount, zhuangCount, xianCount,
     self.statisicalData.allText.text =  string.Format2(_STR_" 总局数x{1} ",(allGameCount))
 end
 
+function Class:SetCaiJinCount(caijin_count)
+    self.caiJinText.text = tostring(caijin_count)
+end
+
 
 -- 设置等待下局提示
 function Class:SetWaitNextStateTip(bShow)

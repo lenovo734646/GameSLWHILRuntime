@@ -123,6 +123,11 @@ function Class:OnSceneReady()
     PBHelper.AddListener('StateChangeNtf', function (data)
         self:OnStateChangeNtf(data)
     end)
+
+    PBHelper.AddListener('CaiJinNtf', function (data)
+        print("彩金消息: caijin_count = ", data.caijin_count)
+        ui.mainUI:SetCaiJinCount(data.caijin_count)
+    end)
     
     -- 玩家资源变化(金币,钻石，点卷，道具数)
     PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
@@ -350,6 +355,7 @@ end
 
 function Class:OnStateChangeNtf(data)
     local state = data.state
+    print("OnStateChangeNtf state = ", state)
     self.state = state
     if self:IsBetState() then --下注
         self.ui.mainUI:SetWaitNextStateTip(false)

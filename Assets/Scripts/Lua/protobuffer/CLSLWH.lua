@@ -136,6 +136,12 @@ return [[
         //int64 betMaxLimit = 10;                          // 本局下注最大限制（防止超过庄家分数）
     }
     
+	// 游戏彩金数
+	message CaiJinNtf
+	{
+	    int64 caijin_count = 1;
+	}
+    
     // 请求历史记录
     message HistoryReq
     {

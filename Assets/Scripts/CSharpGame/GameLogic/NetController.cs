@@ -27,7 +27,7 @@ using SubGameNet;
 
 public class NetController : DDOLSingleton<NetController> 
 {
-    public string serverUrl = "http://47.104.147.168:8000/router/rest";
+    public string serverUrl = "http://101.36.116.254:8000/router/rest";//"http://47.104.147.168:8000/router/rest";
     private DefaultQLClient webClient;
     public DefaultQLClient WebClient
     {

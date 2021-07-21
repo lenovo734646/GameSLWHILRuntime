@@ -28,12 +28,12 @@ public class LuaUnityEventListenerEditor : Editor {
         //}
 
         findAllRef(targetcom);
-        if (uiobjs.Count>0)
+        if (uiobjs.Count > 0)
             GUILayout.Label("此监听被以下组件引用(前面是被引用的函数)");
 
         foreach (var p in uiobjs) {
             var uiobj = p.Value;
-            EditorGUILayout.ObjectField(p.Key,uiobj,uiobj.GetType(),false);
+            EditorGUILayout.ObjectField(p.Key, uiobj, uiobj.GetType(), false);
         }
 
         if (GUILayout.Button("添加Btton事件监听(CallLuaByGameObjectName)")) {
@@ -50,7 +50,7 @@ public class LuaUnityEventListenerEditor : Editor {
                     }
                 }
             }
-            
+
             window.onClose = obj => {
                 var btn = obj as Button;
                 UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.CallLuaByGameObjectName, btn);
@@ -82,37 +82,39 @@ public class LuaUnityEventListenerEditor : Editor {
             };
             window.Show();
         }
-        //if (GUILayout.Button("添加Children的全部Btton事件监听(CallLuaByGameObjectName)")) {
-        //    List<Button> buttons = new List<Button>();
-        //    targetcom.GetComponentsInChildren(true,buttons);
-        //    foreach (var p in uiobjs) {
-        //        foreach (var btn in buttons) {
-        //            if (btn == p.Value) {
-        //                buttons.Remove(btn);
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    foreach(var btn in buttons) {
-        //        UnityEventTools.AddObjectPersistentListener(btn.onClick, targetcom.CallLuaByGameObjectName, btn);
-        //    }
-        //    EditorUtility.SetDirty(targetcom);
-        //    uiobjs.Clear();
-        //}
+        if (GUILayout.Button("添加TMP_InputField onSubmit事件监听(OnCustumEvent)")) {
+            findAllRef(targetcom);
+            var root = targetcom.transform.root;
+            var objs = root.GetComponentsInChildren<TMPro.TMP_InputField>(true);
+            var window = (ObjectsSeletWindow)EditorWindow.GetWindow(typeof(ObjectsSeletWindow));
+            window.targetList.AddRange(objs);
+            foreach (var p in uiobjs) {
+                foreach (var btn in window.targetList) {
+                    if (btn == p.Value) {
+                        window.targetList.Remove(btn);
+                        break;
+                    }
+                }
+            }
+
+            window.onClose = obj => {
+                var cobj = obj as TMPro.TMP_InputField;
+                UnityEventTools.AddStringPersistentListener(cobj.onSubmit, targetcom.OnCustumEvent, cobj.name + "_onSubmit");
+                uiobjs.Clear();
+                EditorUtility.SetDirty(targetcom);
+            };
+            window.Show();
+        }
         // 手动添加需要监听CallLuaByGameObjectName函数的组件
-        if (GUILayout.Button("手动添加需要监听（CallLuaByGameObjectName）函数的组件"))
-        {
+        if (GUILayout.Button("手动添加需要监听（CallLuaByGameObjectName）函数的组件")) {
             findAllRef(targetcom);
             var root = targetcom.transform.root;
             //var btns = root.GetComponentsInChildren<Button>(true);
             var window = (ObjectsDragSelectWindow)EditorWindow.GetWindow(typeof(ObjectsDragSelectWindow));
             //window.targetList.AddRange(btns);
-            foreach (var p in uiobjs)
-            {
-                foreach (var btn in window.targetList)
-                {
-                    if (btn == p.Value)
-                    {
+            foreach (var p in uiobjs) {
+                foreach (var btn in window.targetList) {
+                    if (btn == p.Value) {
                         window.targetList.Remove(btn);
                         break;
                     }
@@ -121,11 +123,9 @@ public class LuaUnityEventListenerEditor : Editor {
 
             window.onClose = go => {
                 var btn = go.GetComponent<Button>();
-                if(btn)
-                {
+                if (btn) {
                     Debug.Log("btn = " + btn.name);
-                    if (IsAddedMethedName(btn.onClick, "CallLuaByGameObjectName"))
-                    {
+                    if (IsAddedMethedName(btn.onClick, "CallLuaByGameObjectName")) {
                         Debug.LogWarning($"{btn.name} 已添加 CallLuaByGameObjectName 跳过执行");
                         return;
                     }
@@ -134,42 +134,42 @@ public class LuaUnityEventListenerEditor : Editor {
                     EditorUtility.SetDirty(targetcom);
                 }
                 var tog = go.GetComponent<Toggle>();
-                if(tog)
-                {
+                if (tog) {
                     Debug.Log("tog = " + tog.name);
-                    if (IsAddedMethedName(tog.onValueChanged, "CallLuaByGameObjectName"))
-                    {
+                    if (IsAddedMethedName(tog.onValueChanged, "CallLuaByGameObjectName")) {
                         Debug.LogWarning($"{tog.name} 已添加 CallLuaByGameObjectName 跳过执行");
                         return;
                     }
-                        
+
                     UnityEventTools.AddObjectPersistentListener(tog.onValueChanged, targetcom.CallLuaByGameObjectName, tog);
                     uiobjs.Clear();
                     EditorUtility.SetDirty(targetcom);
                 }
-                if(btn == null && tog == null)
-                {
+                var tmpinput = go.GetComponent<TMPro.TMP_InputField>();
+                if (tmpinput) {
+                    var cobj = tmpinput;
+                    UnityEventTools.AddStringPersistentListener(cobj.onSubmit, targetcom.OnCustumEvent, cobj.name + "_onSubmit");
+                    uiobjs.Clear();
+                    EditorUtility.SetDirty(targetcom);
+                }
+                if (btn == null && tog == null && tmpinput == null) {
                     Debug.LogError($"GameObject {go.name} 不包含Button组件或Toggle组件！");
                 }
             };
             window.Show();
         }
 
-        if (GUILayout.Button("删除所有Button中[None]和[Missing]事件"))
-        {
+        if (GUILayout.Button("删除所有Button中[None]和[Missing]事件")) {
             List<Button> buttons = new List<Button>();
             targetcom.GetComponentsInChildren(true, buttons);
 
-            foreach (var btn in buttons)
-            {
+            foreach (var btn in buttons) {
                 var e = btn.onClick;
-                for (var i = 0; i < e.GetPersistentEventCount(); )
-                {
+                for (var i = 0; i < e.GetPersistentEventCount();) {
                     var targetObj = e.GetPersistentTarget(i);
                     var actionName = e.GetPersistentMethodName(i);
-                    
-                    if (targetObj == null)
-                    {
+
+                    if (targetObj == null) {
                         Debug.LogWarning($"组件{btn.name}onClick Mathod Target is Missing MethonName = {actionName}，事件已移除");
                         UnityEventTools.RemovePersistentListener(e, i);
                     }
@@ -205,7 +205,7 @@ public class LuaUnityEventListenerEditor : Editor {
             string s = "";
             foreach (var p in uiobjs) {
                 var uiobj = p.Value;
-                if(p.Key== "CallLuaByGameObjectName") {
+                if (p.Key == "CallLuaByGameObjectName") {
                     if (eventNameSet.Contains(uiobj.name)) continue;
                     eventNameSet.Add(uiobj.name);
                     s += $"function Class:On_{uiobj.name}_Event({uiobj.name})\n    \n";
@@ -215,7 +215,7 @@ public class LuaUnityEventListenerEditor : Editor {
             GUIUtility.systemCopyBuffer = s;
         }
 
-        }
+    }
 
     void findAllRef(LuaUnityEventListener luaUnityEventListener) {
         if (uiobjs.Count != 0) return;
@@ -232,12 +232,18 @@ public class LuaUnityEventListenerEditor : Editor {
                 uiobjs.Add(new KeyValuePair<string, Object>(refname, toggle));
             }
         }
+        var TMP_InputFields = root.GetComponentsInChildren<TMPro.TMP_InputField>(true);
+        foreach (var obj in TMP_InputFields) {
+            if (isContainListener(luaUnityEventListener, obj.onSubmit, out string refname)) {
+                uiobjs.Add(new KeyValuePair<string, Object>(refname, obj));
+            }
+        }
     }
 
     bool isContainListener(LuaUnityEventListener luaUnityEventListener, UnityEventBase unityEventBase, out string refname) {
         refname = "";
-        for (var i = 0;i< unityEventBase.GetPersistentEventCount(); i++) {
-           if(unityEventBase.GetPersistentTarget(i)==luaUnityEventListener) {
+        for (var i = 0; i < unityEventBase.GetPersistentEventCount(); i++) {
+            if (unityEventBase.GetPersistentTarget(i) == luaUnityEventListener) {
                 refname = unityEventBase.GetPersistentMethodName(i);
                 return true;
             }
@@ -247,14 +253,11 @@ public class LuaUnityEventListenerEditor : Editor {
     }
 
     // 
-    private bool IsAddedMethedName(UnityEvent e, string methodName)
-    {
+    private bool IsAddedMethedName(UnityEvent e, string methodName) {
         bool isHave = false;
-        for (var i = 0; i < e.GetPersistentEventCount(); i++)
-        {
+        for (var i = 0; i < e.GetPersistentEventCount(); i++) {
             var targetObj = e.GetPersistentTarget(i);
-            if (targetObj == null)
-            {
+            if (targetObj == null) {
                 Debug.LogError($"Mathod Target is Missing");
             }
             var addedMethodName = e.GetPersistentMethodName(i);
@@ -264,19 +267,15 @@ public class LuaUnityEventListenerEditor : Editor {
         return isHave;
     }
 
-    private bool IsAddedMethedName(UnityEvent<bool> e, string methodName)
-    {
+    private bool IsAddedMethedName(UnityEvent<bool> e, string methodName) {
         return CheckAddedEvent(e, methodName);
     }
 
-    private bool CheckAddedEvent<T>(UnityEvent<T> e, string methodName)
-    {
+    private bool CheckAddedEvent<T>(UnityEvent<T> e, string methodName) {
         bool isHave = false;
-        for (var i = 0; i < e.GetPersistentEventCount(); i++)
-        {
+        for (var i = 0; i < e.GetPersistentEventCount(); i++) {
             var targetObj = e.GetPersistentTarget(i);
-            if (targetObj == null)
-            {
+            if (targetObj == null) {
                 Debug.LogError($"Mathod Target is Missing");
             }
             var addedMethodName = e.GetPersistentMethodName(i);

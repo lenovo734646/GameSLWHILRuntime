@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Newtonsoft.Json;
-using QL.Parser;
+//using QL.Parser;
 
 namespace QL.Core
 {
-    public class DefaultQLClient : IQLClient
+    public class DefaultQLClient 
     {
         public const string APP_KEY = "app_key";
         public const string SIGN = "sign";
@@ -32,7 +32,6 @@ namespace QL.Core
 
         public DefaultQLClient()
         {
-            ServerUrl = "http://47.104.147.168:8000/router/rest";
             client_ = new QLWebClient();
             Format = QLResponseFormat.Json;
         }
@@ -56,26 +55,22 @@ namespace QL.Core
             set { client_.ReadWriteTimeout = value; }
         }
 
-        #region IQLClient Members
+        //#region IQLClient Members
 
-        public T Execute<T>(IQLRequest<T> request) where T : QLResponse
-        {
-            return Execute<T>(request, null);
+        public class TimeInfo {
+            public DateTime timestamp = DateTime.Now;
         }
 
-        public T Execute<T>(IQLRequest<T> request, string session) where T : QLResponse
+        public T Execute<T>(IQLRequest request, string session = null, TimeInfo timeinfo = null) where T : QLResponse
         {
-            return Execute<T>(request, session, DateTime.Now);
+            if (timeinfo == null)
+                timeinfo = new TimeInfo();
+            return DoExecute<T>(request, session, timeinfo.timestamp);
         }
 
-        public T Execute<T>(IQLRequest<T> request, string session, DateTime timestamp) where T : QLResponse
-        {
-            return DoExecute<T>(request, session, timestamp);
-        }
+        //#endregion
 
-        #endregion
-
-        private T DoExecute<T>(IQLRequest<T> request, string session, DateTime timestamp) where T : QLResponse
+        private T DoExecute<T>(IQLRequest request, string session, DateTime timestamp) where T : QLResponse
         {
             // 提前检查业务参数
             try
@@ -109,9 +104,9 @@ namespace QL.Core
             try
             {
                 string body;
-                if (request is IQLUploadRequest<T>) // 是否需要上传文件
+                if (request is IQLUploadRequest) // 是否需要上传文件
                 {
-                    IQLUploadRequest<T> uRequest = (IQLUploadRequest<T>)request;
+                    IQLUploadRequest uRequest = (IQLUploadRequest)request;
                     body = client_.DoPost(
                         ServerUrl,
                         txtParams,
@@ -121,6 +116,7 @@ namespace QL.Core
                 }
                 else
                 {
+                    UnityEngine.Debug.Log("ServerUrl="+ ServerUrl);
                     body = client_.DoPost(
                         ServerUrl,
                         txtParams,
@@ -129,17 +125,19 @@ namespace QL.Core
                 }
 
                 // 解释响应结果
-                T rsp;
-                if (Format == QLResponseFormat.Xml)
-                {
-                    IQLParser tp = new QLXmlParser();
-                    rsp = tp.Parse<T>(body);
-                }
-                else
-                {
-                    IQLParser tp = new QLJsonParser();
-                    rsp = tp.Parse<T>(body);
-                }
+                T rsp = null;
+                //if (Format == QLResponseFormat.Xml)
+                //{
+                //    var tp = new QLXmlParser();
+                //    rsp = tp.Parse<T>(body);
+                //}
+                //else
+                //{
+                //    var tp = new QLJsonParser();
+                //    rsp = tp.Parse<T>(body);
+                //    UnityEngine.Debug.Log(rsp.GetType());
+                //    UnityEngine.Debug.Log(body);
+                //}
 
                 return rsp;
             }
@@ -182,6 +180,57 @@ namespace QL.Core
                     });
             }
             return rsp;
+        }
+
+        public T Execute<T>(IQLRequest request, string session, DateTime timestamp, ref string body) where T : QLResponse {
+            // 提前检查业务参数
+            try {
+                request.Validate();
+            } catch (QLException e) {
+                return CreateErrorResponse<T>(e.ErrorCode, e.ErrorMsg);
+            }
+
+            // 添加协议级请求参数
+            QLDictionary txtParams = new QLDictionary(request.GetParameters());
+            txtParams.Add(METHOD, request.GetApiName());
+            txtParams.Add(SIGN_METHOD, QLConstants.SIGN_METHOD_MD5);
+            txtParams.Add(APP_KEY, Key);
+            txtParams.Add(FORMAT, Format.ToString());
+            txtParams.Add(SDK_VERSION, SDK_VERSION_VALUE);
+            txtParams.Add(TIMESTAMP, timestamp);
+            txtParams.Add(SESSION, session);
+
+            // 添加签名参数
+            txtParams.Add(SIGN, QLUtil.SignRequestByMd5Method(txtParams, Password));
+
+            // 添加头部参数
+            if (this.UseGZipEncoding) {
+                request.GetHeaderParameters()[QLConstants.ACCEPT_ENCODING] = QLConstants.CONTENT_ENCODING_GZIP;
+            }
+
+            try {
+                if (request is IQLUploadRequest) // 是否需要上传文件
+                {
+                    IQLUploadRequest uRequest = (IQLUploadRequest)request;
+                    body = client_.DoPost(
+                        ServerUrl,
+                        txtParams,
+                        uRequest.GetFileParameters(),
+                        request.GetHeaderParameters()
+                        );
+                } else {
+                   // UnityEngine.Debug.Log("ServerUrl=" + ServerUrl);
+                    body = client_.DoPost(
+                        ServerUrl,
+                        txtParams,
+                        request.GetHeaderParameters()
+                        );
+                }
+
+                return null;
+            } catch (Exception e) {
+                throw e;
+            }
         }
     }
 }

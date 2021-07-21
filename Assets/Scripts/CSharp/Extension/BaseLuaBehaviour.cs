@@ -6,7 +6,6 @@ namespace XLuaExtension
     public abstract class BaseLuaBehaviour<T> : MonoBehaviour where T : BaseLuaBehaviour<T>
     {
         public LuaTable self;
-
         public virtual void Init() { }
 
         public static T Bind(GameObject go, LuaTable self)

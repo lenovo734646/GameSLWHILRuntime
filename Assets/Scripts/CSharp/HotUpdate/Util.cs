@@ -4,7 +4,7 @@ using System.Text;
 using System.Security.Cryptography;
 using XLua;
 
-[LuaCallCSharp]
+//[LuaCallCSharp]
 public class Util
 {
     public static string md5(string source)

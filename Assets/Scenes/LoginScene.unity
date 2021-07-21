@@ -131,8 +131,6 @@ GameObject:
   m_Component:
   - component: {fileID: 101912819}
   - component: {fileID: 101912822}
-  - component: {fileID: 101912821}
-  - component: {fileID: 101912820}
   - component: {fileID: 101912823}
   m_Layer: 0
   m_Name: LuaRuntime
@@ -155,35 +153,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &101912820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101912818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f49ed26e8a205ac4e899bd248fcc27d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameName: GameSLWH
-  runWithoutNet: 0
---- !u!114 &101912821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101912818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c931f3c5c300aa94585ac20b91d9e6f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  luaBoot: Main
-  luaAssetPath: Assets/Scripts/Lua/
-  InitOnAwake: 0
 --- !u!114 &101912822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,11 +162,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 101912818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e0ebe521d188ef4ab6e068751ab0723, type: 3}
+  m_Script: {fileID: 11500000, guid: 05fcc2c7ee4d27a4284da179242a7270, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updatePlatform: 0
-  _gameAssetSource: 0
+  test: 0
+  useEncrypted: 0
+  useUpdateScript: 1
+  testEntry: test
+  entry: Entry
+  gameName: GameSLWH
+  GCInterval: 1
 --- !u!114 &101912823
 MonoBehaviour:
   m_ObjectHideFlags: 0

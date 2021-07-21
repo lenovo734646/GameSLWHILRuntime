@@ -16,9 +16,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+public delegate void OnTouchEventHandle(GameObject listener, object eventData, params object[] args);
 
 public class TouchHandle
 {
+    
     private event OnTouchEventHandle eventHandle = null;
     private object[] handleargs;
     private Hashtable hashtable;
@@ -54,12 +56,12 @@ public class TouchHandle
                     case EnumHashtableParamsType.LockAllClick:
                         var strAllTime = hashtable[EnumHashtableParamsType.LockAllClick].ToString();
                         waitTime = string.IsNullOrEmpty(strAllTime) ? waitTime : float.Parse(strAllTime);
-                        CoroutineController.Instance.StartCoroutine(lockAllClick());
+                        //CoroutineController.Instance.StartCoroutine(lockAllClick());
                         break;
                     case EnumHashtableParamsType.LockSelfClick:
                         var strSelfTime = hashtable[EnumHashtableParamsType.LockSelfClick].ToString();
                         waitTime = string.IsNullOrEmpty(strSelfTime) ? waitTime : float.Parse(strSelfTime);
-                        CoroutineController.Instance.StartCoroutine(lockSelfClick(eventTrigger));
+                        //CoroutineController.Instance.StartCoroutine(lockSelfClick(eventTrigger));
                         break;
                 }
             }

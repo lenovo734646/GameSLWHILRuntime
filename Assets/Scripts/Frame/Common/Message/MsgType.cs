@@ -141,8 +141,8 @@ public class MsgType
     public const string NET_HAND_ACK                        = "NET_HAND_ACK";                       //握手回应
     public const string NET_LOGIN_PLATFORM_ACK              = "NET_LOGIN_PLATFORM_ACK";             //登录大厅回应
     public const string NET_ACCESSSERVICE_ACK               = "NET_ACCESSSERVICE_ACK";              //连接或断开服务器回应
-    public const string NET_ENTERSITE_ACK                   = "NET_ENTERSITE_ACK";                  //加入玩法
-    public const string NET_EXITSITE_ACK                    = "NET_EXITSITE_ACK";                   //退出玩法
+    //public const string NET_ENTERSITE_ACK                   = "NET_ENTERSITE_ACK";                  //加入玩法
+    //public const string NET_EXITSITE_ACK                    = "NET_EXITSITE_ACK";                   //退出玩法
     public const string NET_SHOP_BUYCOUNT_QUERY             = "NET_SHOP_BUYCOUNT_QUERY";            //商城购买次数查询
     public const string NET_ITEM_BUY_ACK                    = "NET_ITEM_BUY_ACK";                   //单独购买物品
     public const string NET_SHOP_BUY                        = "NET_SHOP_BUY";                       //商城购买

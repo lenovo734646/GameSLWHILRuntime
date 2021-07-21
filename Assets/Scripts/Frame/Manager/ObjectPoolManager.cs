@@ -95,7 +95,7 @@ public class ObjectPoolManager : DDOLSingleton<ObjectPoolManager>
         }
         else
         {
-            Pool pool = new Pool();
+            Pool pool = new Pool(GetOPMTransform());
             pool.prefab = obj;
             pool.MachObjectCount(count);
             poolList.Add(pool);
@@ -137,12 +137,18 @@ public class Pool
     public List<GameObject> activeList = new List<GameObject>();
     public int max = 1000;
 
+    Transform transformUnspawn;
+
+    public Pool(Transform transformUnspawn) {
+        this.transformUnspawn = transformUnspawn;
+    }
+
     public GameObject Spawn(Vector3 pos, Quaternion rot, Transform parent = null)
     {
-        GameObject obj = null;
+        GameObject obj;
         if (inactiveList.Count == 0)
         {
-            obj = (GameObject)MonoBehaviour.Instantiate(prefab, pos, rot);
+            obj = UnityEngine.Object.Instantiate(prefab, pos, rot);
         }
         else
         {
@@ -168,7 +174,7 @@ public class Pool
         if (activeList.Contains(obj))
         {
             obj.SetActive(false);
-            obj.transform.SetParent(ObjectPoolManager.Instance.GetOPMTransform());
+            obj.transform.SetParent(transformUnspawn);
             inactiveList.Add(obj);
             activeList.Remove(obj);
             return true;
@@ -184,8 +190,8 @@ public class Pool
         int currentCount = activeList.Count + inactiveList.Count;
         for (int i = currentCount; i < count; i++)
         {
-            GameObject obj = (GameObject)MonoBehaviour.Instantiate(prefab);
-            obj.transform.SetParent(ObjectPoolManager.Instance.GetOPMTransform());
+            GameObject obj = UnityEngine.Object.Instantiate(prefab);
+            obj.transform.SetParent(transformUnspawn);
             obj.SetActive(false);
             inactiveList.Add(obj);
         }
@@ -196,13 +202,13 @@ public class Pool
         for (int i = 0, imax = inactiveList.Count; i < imax; i++)
         {
             if (inactiveList[i] != null)
-                MonoBehaviour.Destroy(inactiveList[i]);
+                UnityEngine.Object.Destroy(inactiveList[i]);
         }
 
         for (int i = 0, imax = activeList.Count; i < imax; i++)
         {
             if (activeList[i] != null)
-                MonoBehaviour.Destroy(activeList[i]);
+                UnityEngine.Object.Destroy(activeList[i]);
         }
 
         inactiveList.Clear();

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
-using System.IO.Compression;
+using Unity.IO.Compression;
 using UnityEngine.Networking;
 
 namespace QL.Core
@@ -54,7 +54,7 @@ namespace QL.Core
         public string DoPost(string url, IDictionary<string, string> textParams, IDictionary<string, string> headerParams)
         {
             HttpWebRequest req = GetWebRequest(url, "POST", headerParams);
-            req.ContentType = "application/x-www-form-urlencoded;charset=utf-8";
+            req.ContentType = SysDefines.QLPostContentType;
 
             byte[] postData = Encoding.UTF8.GetBytes(BuildQuery(textParams));
             System.IO.Stream reqStream = req.GetRequestStream();
@@ -181,8 +181,8 @@ namespace QL.Core
             req.ServicePoint.Expect100Continue = false;
             req.Method = method;
             req.KeepAlive = true;
-            req.UserAgent = "ql-sdk-net";
-            req.Accept = "text/xml,text/javascript";
+            req.UserAgent = SysDefines.QLUserAgent;
+            req.Accept = SysDefines.QLAccept;
             req.Timeout = this.timeout_;
             req.ReadWriteTimeout = this.rw_timeout_;
 

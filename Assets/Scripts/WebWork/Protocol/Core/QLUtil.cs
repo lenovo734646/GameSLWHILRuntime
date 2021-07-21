@@ -169,7 +169,7 @@ namespace QL.Core
             }
             if (intranet_ip_ == null)
             {
-                intranet_ip_ = "127.0.0.1";
+                intranet_ip_ = "";
             }
             return intranet_ip_;
         }

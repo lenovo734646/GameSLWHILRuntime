@@ -20,12 +20,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-//全局委托
-public delegate void StateChangeEvent(object sender, EnumObjectState newState, EnumObjectState oldState);
-public delegate void MessageEvent(Message msg);
-public delegate void OnTouchEventHandle(GameObject listener, object eventData, params object[] args);
-public delegate void MethodAction(object args);
-
 
 /// <summary>
 /// 对象当前状态
@@ -97,7 +91,7 @@ public enum EnumUIType
     FishingFreeMatchResultUI,           //免费赛成绩
     FishingRewardMatchResultUI,         //大奖赛成绩
     DailyChargeUI,                      //每日充值礼包
-    SystemNoticeUI,                     //系统消息
+    //SystemNoticeUI,                     //系统消息
     WelfarePigUI,                       //砸金猪
     WelfarePigAwardUI,                  //砸金猪奖励界面
     InvestUI,                           //投资界面
@@ -108,7 +102,6 @@ public enum EnumUIType
     VIPPrivilegeUI,                     //VIP特权界面
     NuclearBombUI,                      //弹头目标选择界面
     RoomSelectUI,                       //选房间界面
-    WaitResponseUI,                     //等待回应界面
     MessageLeaveFishUI,                 //退出渔场等待界面
     VIPLevelUpUI,                       //VIP升级界面
     SailGiftUI,                         //起航礼包
@@ -164,127 +157,13 @@ public enum EnumTouchEventType
 //场景类型
 public enum EnumSceneType
 {
-    None = 0,
-    LoginScene,
+    Entry = 0,
+    FishScene,
     LoadingScene,
     MainScene,
-    FishScene,
 }
 
-//UI打开效果
-public enum EnumAnimationType
-{
-    None,
-    Scale,
-}
 
-//服务器连接状态
-public enum EnumNetConnectState
-{
-    None = 0,
-    Error,
-    Established,
-    Disconnect,
-}
-
-//弹窗类型
-public enum EnumMessageBoxType
-{
-    OK,
-    OK_CANCEL,
-}
-
-//鱼的类型
-public enum EnumFishType
-{
-    None = 0,
-    Small,                   //小
-    Midle,                   //中
-    Big,                     //大
-    Special,                 //特殊
-    Gold,                    //金
-    Boss,                    //Boss
-    Max,
-}
-
-//鱼的附属类型
-public enum EnumFishSecType
-{
-    None = 0,
-    Combine,                //组合鱼
-    King,                   //鱼王
-}
-
-//鱼组件类型
-public enum EnumFishScriptType
-{
-    None = 0,
-    Normal,                 //普通鱼
-    WorldBoss,              //世界Boss
-}
-
-public enum EnumFishPicType
-{
-    None = 0,
-    Common,                  //普通
-    Bonus,                   //赏金
-    Special,                 //特殊
-    Max,                     //最大
-}
-
-public enum EnumAccessServiceType
-{
-    None = 0,
-    JoinGame,                //加入游戏
-    QuitGame,                //退出游戏
-}
-
-//item的效果类型
-public enum EnumItemEffectType
-{
-    None = 0,
-    Lock,                    //锁定
-    Frozen,                  //冰冻
-    Summon,                  //召唤葫芦
-    Rage,                    //狂暴卡
-    Cloned,                  //分身卡
-    Bomb,                    //弹头
-    Muiltiple,              //倍击
-}
-
-//item的大类型分类
-public enum EnumItemType
-{
-    None = -1,
-    Platform,                //平台
-    Fish,                    //捕鱼
-}
-
-//游戏玩法
-public enum EnumSiteType
-{
-    None = 0,
-    Fishing,
-}
-
-//捕鱼玩法的类型
-public enum EnumFishingMatchType
-{
-    None = -1,
-    Common,
-    FreeMatch,
-    RewardMatch,
-}
-
-//捕鱼玩法的房间类型
-public enum EnumFishingRoomType
-{
-    None = 0,
-    Common,
-    FreeMatch,
-    RewardMatch,
-    Energy,
-}
 
 //按钮点击可变参数的键值类型
 public enum EnumHashtableParamsType
@@ -295,30 +174,11 @@ public enum EnumHashtableParamsType
     LockSelfClick,
 }
 
-public enum EnumNoticeType
-{
-    KillGetGold = 1,         //击杀得金币
-    KillGetBomb,             //击杀得弹头
-    DrawGetBomb,             //抽奖得弹头
-}
 
-//鱼死亡原因
-public enum EnumCreateBombType
-{
-    CommonFish,              //普通鱼
-    SlotMachineFish,         //老虎机鱼
-    TurntableFish,           //转盘鱼
-    HornBossFish,           //号角boss
-}
 
-//爆金效果
-public enum EnumFishEffect
-{
-    Common = 0,              //普通
-    Roulette,                //轮盘
-    Rich,                    //发财了
-    Zillionaire,             //大富翁
-}
+
+
+
 
 /// <summary>
 /// 玩家性别
@@ -330,56 +190,16 @@ public enum EnumPlayerGenderType
     Female,                   //女
 }
 
-//鱼死亡后需处理的效果
-public enum EnumFishDieEvent
-{
-    None = -1,
-    Die,                    //鱼死亡特效
-    GoldPop,                //金币(积分)和数字弹出
-    Bonus,                  //爆金
-}
-
-public class UIPathDefines
-{
-    public static string GetPrefabPathByType(EnumUIType uiType, string componentType)
-    {
-        var prefabName = string.IsNullOrEmpty(componentType) ? uiType.ToString() : componentType;
-        var path = string.Format($"{SysDefines.UIPREFAB}{prefabName}");
-        var msg = string.Empty;
-        if (uiType == EnumUIType.None)
-            msg = string.Format($"没有该类型的预制:{uiType.ToString()}");
-        if (!string.IsNullOrEmpty(msg))
-            Debug.LogWarning(msg);
-        return path;
-    }
-
-    public static Type GetUIScriptByType(EnumUIType uiType, string componentType)
-    {
-        var msg = string.Empty;
-        var scriptType = Type.GetType(string.IsNullOrEmpty(componentType) ? uiType.ToString() : componentType);
-        if (uiType == EnumUIType.None)
-            msg = string.Format($"没有该类型对应的脚本:{uiType.ToString()}");
-        if (!string.IsNullOrEmpty(msg))
-            Debug.LogWarning(msg);
-        return scriptType;
-    }
-}
-
 public class SysDefines
 {
-    //#region 只读变量
-    //UI预设
-    public const string UIPREFAB = "UIPrefab/";
-    //UI小控件预设
-    public const string UICONTROLSPREFAB = "UIControl/";
-    //UI子页面预设
-    public const string UISUBUIPREFAB = "UIPrefab/SubUI/";
+
     //icon 路径
     public const string UIICONPATH = "UI/";
-    //item路径
-    public const string UIITEM = UIICONPATH + "Icon/Item/";
+
     //头像路径
     public const string UIHEAD = UIICONPATH + "Icon/Head/";
+    //头像框路径
+    public const string UIFRAME = UIICONPATH + "Icon/Frame/";
     //排行标志
     public const string UIRANK = UIICONPATH + "Icon/Rank/";
     //徽章
@@ -389,11 +209,11 @@ public class SysDefines
     //鱼图鉴
     public const string UIHANDBOOK = UIICONPATH + "HandBook/";
     //鱼预制路径
-    public const string FISH = "Fish/";
+    public const string FISH = "fish/";
     //音频路径
     public const string AUDIO = "AudioPrefab/";
     //渔场背景图
-    public const string FISHBACKGROUND = "FishBackground/";
+    public const string FISHBACKGROUND = "fish/BG/";
     //特效路径
     public const string FISHEFFECT = "Effect/";
     //区服预设路径
@@ -428,8 +248,7 @@ public class SysDefines
     public const int GameID_Hall = 1001;
     //捕鱼服务组Id
     public const int GroupId_Fish = 1;
-    //小游戏读取线上配置表
-    public const bool IsInnerGameLoadFromNet = false;
+
     //CA3加密固定密钥
     public const int CA3Key = 19357;
     //手机短信验证间隔
@@ -444,24 +263,21 @@ public class SysDefines
 
     //#region 静态变量
     public static int outScreenOffset = 10;
-    public static Dictionary<string, int> outScreenOffsetDic = new Dictionary<string, int>()
-    {
+    public static Dictionary<string, int> outScreenOffsetDic = new Dictionary<string, int>() {
 
     };
     //射线获得指定的层级
     public static int FishLayer = 1 << LayerMask.NameToLayer("Fish");
     //是否检测过版本信息
     public static bool IsCheckVersion = false;
-    public static string Ip = string.Empty;
-    public static long Port;
-    public static string OssUrl = string.Empty;
+    //public static string Ip = string.Empty;
+    //public static long Port;
+    //public static string OssUrl = string.Empty;
     public static string HotUpdateUrl = string.Empty;
     public static string PopularizeUrl = string.Empty;
-    public static string OpeninstallToken = string.Empty;
+    //public static string OpeninstallToken = string.Empty;
     // 运行平台 1:IOS 2:ANDRIOD 3:WINDOWS 4:LINUX 5:MAC
     public static uint Platform;
-    //登录方式 1游客 2三方平台 3QQ 4微信 5Facebook 6GooglePlay 7GameCenter
-    public static byte LoginType = 0;
     //登录标识
     public static string LoginToken;
     //本次进入游戏是否首次登录      0是1否
@@ -470,11 +286,17 @@ public class SysDefines
     public static int FirstEnterHall = 0;
     //加入玩法
     //public static EnumSiteType SiteId = EnumSiteType.None;
-    public static int SiteId = -1;
+    //public static int SiteId = -1;
     //加入房间的ID
     public static int RoomConfigID = 0;
     //当前房间视角    1侧视角 2斜俯
     public static int RoomViewAngle = 1;
+    //是否固定零点捕鱼碰撞边框比率为16:9
+    public static bool isFixedScreen = true;
+    //渔场碰撞边框宽度
+    public static float DesignWidth = 1920;
+    //渔场碰撞边框高度
+    public static float DesignHeight = 1080;
     //普通模式发炮速度倍率
     public static double NormalBulletShootRate = 1;
     //穿透模式发炮速度倍率
@@ -485,12 +307,11 @@ public class SysDefines
     public static double NormalBulletSpeedRate = 1;
     //穿透模式子弹速度倍率
     public static double PenetrateBulletSpeedRate = 1;
-    //是否断开连接
-    public static bool IsDisconnect;
+
     //是否在渔场中
     public static bool IsInFishingGame;
     //当前场景
-    public static EnumSceneType SceneType = EnumSceneType.None;
+    public static EnumSceneType SceneType = EnumSceneType.Entry;
     //预加载界面 大小大于1M的都加入预加载
     public static EnumUIType[] preloadUIArray = new EnumUIType[]
     {
@@ -519,28 +340,33 @@ public class SysDefines
         "dropBombOther",
         "fishComeTips",
     };
-    //#endregion
+//#endregion
 
-    //#region 游戏内提示文字
-    public const string DiamondInsufficient = "钻石不足";
-    public const string QuitGame = "确定要退出游戏？";
-    public const string QuitFishScene = "确定离开捕鱼界面";
-    public const string QuitMainScene = "确定返回登录界面";
-    public const string UnLock = "至少解锁{0}倍炮台才可进入游戏！";
-    public const string ShortGold = "金币不足";
-    public const string ForgeUnLock = "解锁到{0}倍即可开启锻造功能";
-    public const string ForgeEssenceCount = "水晶精华不足";
-    public const string SelectGifts = "请选择礼物";
-    public const string SelectPlayer = "请填写赠送玩家ID";
-    public const string DontGiveGiftsToSelf = "不能赠送礼物给自己";
-    public const string GiveGiftsSuccess = "赠送成功";
-    public const string PlayerIDError = "ID输入错误";
-    public const string NewInvestAddTip = "请先进行投资";
-    public const string CheckPlayer = "请先检测赠送玩家是否存在";
-    //#endregion
+
 
     public static int NetMaxHandlePackPerFrame = 10;//每帧最多处理的数据包
 
     public static string AB_BASE_PATH = "Assets/AssetsFinal/";
+
+    public static bool Relogin = false;
+
     public static string curLanguage = "CN";
+
+    public static string tempStr = "";
+
+    public static bool throwErrMsg = false;
+
+    public static string QLPostContentType = "application/x-www-form-urlencoded;charset=utf-8";
+    public static string QLUserAgent = "ql-sdk-net";
+    public static string QLAccept = "text/xml,text/javascript";
+
+    public static void LogError(string err)
+    {
+        if (throwErrMsg)
+            throw new Exception(err);
+        else
+        {
+            Debug.LogError(err);
+        }
+    }
 }

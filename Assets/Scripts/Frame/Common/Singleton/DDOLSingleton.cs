@@ -41,15 +41,30 @@ public abstract class DDOLSingleton<T> : MonoBehaviour where T : DDOLSingleton<T
         }
     }
 
-    public void OnApplicationQuit()
-    {
+
+    void reset() {
+        go = null;
         _Instance = null;
+    }
+
+    private void OnApplicationQuit()
+    {
+        reset();
         onApplicationQuit();
+    }
+
+    private void OnDestroy() {
+        reset();
+        onDestroy();
     }
 
     public virtual void Init() { }
 
     protected virtual void onApplicationQuit() {
+
+    }
+
+    protected virtual void onDestroy() {
 
     }
 }

@@ -168,7 +168,9 @@ namespace XLua
                 if (!typeof(Delegate).IsAssignableFrom(type))
                 {
 #if !XLUA_GENERAL
-                    UnityEngine.Debug.LogWarning(string.Format("{0} not gen, using reflection instead", type));
+                    var block = type.FullName == "System.RuntimeType" || type.FullName == "System.Reflection.BindingFlags";
+                    if (!block)
+                        UnityEngine.Debug.LogWarning(string.Format("{0} not gen, using reflection instead", type));
 #else
                     System.Console.WriteLine(string.Format("Warning: {0} not gen, using reflection instead", type));
 #endif
@@ -467,7 +469,41 @@ namespace XLua
             throw new InvalidCastException("This type must add to CSharpCallLua: " + delegateType.GetFriendlyName());
         }
         Dictionary<int, WeakReference> delegate_bridges = new Dictionary<int, WeakReference>();
+
+#if UNITY_EDITOR
+        // 保存weakReference的hash
+        private List<int> bridgeLuaRefs = new List<int>();
+        // 保存对应的lua stack info
+        private List<string> bridgeLuaRefs2 = new List<string>();
+        // 开关
+        public bool debugDelegateBridgeRelease = false;
+#endif
+
         public object CreateDelegateBridge(RealStatePtr L, Type delegateType, int idx)
+        {
+            WeakReference weakRef = null;
+#if UNITY_EDITOR
+            object obj;
+            if (this.debugDelegateBridgeRelease)
+            {
+                string luaStack = this._GetLuaStack(L);
+                obj = this._CreateDelegateBridge(L, delegateType, idx, out weakRef);
+                if (weakRef != null)
+                {
+                    bridgeLuaRefs.Add(weakRef.GetHashCode());
+                    bridgeLuaRefs2.Add(luaStack);
+                }
+            }
+            else
+            {
+                obj = this._CreateDelegateBridge(L, delegateType, idx, out weakRef);
+            }
+            return obj;
+#else
+            return this._CreateDelegateBridge(L, delegateType, idx, out weakRef);
+#endif
+        }
+        private object _CreateDelegateBridge(RealStatePtr L, Type delegateType, int idx, out WeakReference weakRef)
         {
             LuaAPI.lua_pushvalue(L, idx);
             LuaAPI.lua_rawget(L, LuaIndexes.LUA_REGISTRYINDEX);
@@ -476,13 +512,14 @@ namespace XLua
                 int referenced = LuaAPI.xlua_tointeger(L, -1);
                 LuaAPI.lua_pop(L, 1);
 
-                if (delegate_bridges[referenced].IsAlive)
+                weakRef = delegate_bridges[referenced];
+                if (weakRef.IsAlive)
                 {
                     if (delegateType == null)
                     {
-                        return delegate_bridges[referenced].Target;
+                        return weakRef.Target;
                     }
-                    DelegateBridgeBase exist_bridge = delegate_bridges[referenced].Target as DelegateBridgeBase;
+                    DelegateBridgeBase exist_bridge = weakRef.Target as DelegateBridgeBase;
                     Delegate exist_delegate;
                     if (exist_bridge.TryGetDelegate(delegateType, out exist_delegate))
                     {
@@ -520,7 +557,7 @@ namespace XLua
                     bridge = new DelegateBridge(reference, luaEnv);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 LuaAPI.lua_pushvalue(L, idx);
                 LuaAPI.lua_pushnil(L);
@@ -531,37 +568,99 @@ namespace XLua
             }
             if (delegateType == null)
             {
-                delegate_bridges[reference] = new WeakReference(bridge);
+                weakRef = new WeakReference(bridge);
+                delegate_bridges[reference] = weakRef;
                 return bridge;
             }
-            try {
+            try
+            {
                 var ret = getDelegate(bridge, delegateType);
                 bridge.AddDelegate(delegateType, ret);
-                delegate_bridges[reference] = new WeakReference(bridge);
+                weakRef = new WeakReference(bridge);
+                delegate_bridges[reference] = weakRef;
                 return ret;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 bridge.Dispose();
                 throw e;
             }
         }
+#if UNITY_EDITOR
+        private string _GetLuaStack(RealStatePtr L)
+        {
+            var oldTop = LuaAPI.lua_gettop(L);
+
+            // @see https://www.lua.org/pil/25.2.html
+            int debug = LuaAPI.xlua_getglobal(L, "debug");
+            // LuaAPI.xlua_pushasciistring(L, "getinfo");
+            // LuaAPI.xlua_pgettable(L, -2); // 获取getinfo function
+            // LuaAPI.xlua_pushinteger(L, 2); // 传入getinfo()第1个参数
+            // LuaAPI.xlua_pushasciistring(L, "Sl"); // 传入getinfo()第2个参数
+            // var strIndex = LuaAPI.lua_pcall(L, 2, 1, 0); // 执行函数,此时在栈上的结果是一个table
+            // // @see https://www.lua.org/pil/25.1.html
+            // LuaAPI.lua_pushstring(L, "source"); // 要获取一个table某个key下的值, 要先传入key的值='source'
+            // LuaAPI.xlua_pgettable(L, -2); // 获取table[key]返回的值,此时是一个string
+            // var luasource = LuaAPI.lua_tostring(L, -1);
+            // LuaAPI.lua_pop(L, 1); // 弹出结果
+
+            // LuaAPI.lua_pushstring(L, "currentline");
+            // LuaAPI.xlua_pgettable(L, -2);
+            // var currentline = LuaAPI.lua_tostring(L, -1);
+            // LuaAPI.lua_pop(L, 1);
+            // LuaAPI.lua_settop(L, oldTop);
+            // string luaStack = luasource + ":" + currentline;
+
+            // 修改为使用traceback()的信息
+            LuaAPI.xlua_pushasciistring(L, "traceback");
+            LuaAPI.xlua_pgettable(L, -2);
+            var strIndex = LuaAPI.lua_pcall(L, 0, 1, 0);
+            string luaStack = LuaAPI.lua_tostring(L, -1);
+            LuaAPI.lua_pop(L, 1);
+            LuaAPI.lua_settop(L, oldTop);
+
+            return luaStack;
+        }
+#endif
 
         public bool AllDelegateBridgeReleased()
         {
+#if UNITY_EDITOR
+            var _bridgeLuaRefs = this.bridgeLuaRefs;
+            var _bridgeLuaRefs2 = this.bridgeLuaRefs2;
+            this.bridgeLuaRefs = new List<int>();
+            this.bridgeLuaRefs2 = new List<string>();
+#endif
             foreach (var kv in delegate_bridges)
             {
                 if (kv.Value.IsAlive)
                 {
+#if UNITY_EDITOR
+                    if (this.debugDelegateBridgeRelease)
+                    {
+                        var hash = kv.Value.GetHashCode();
+                        for (int i = 0; i < _bridgeLuaRefs.Count; i++)
+                        {
+                            if (_bridgeLuaRefs[i] == hash)
+                            {
+                                UnityEngine.Debug.LogError("未释放lua引用: " + _bridgeLuaRefs2.Count + " : " + _bridgeLuaRefs2[i]);
+                                break;
+                            }
+                        }
+                    }
+#endif
                     return false;
                 }
             }
             return true;
         }
 
+        public void ClearAllDelegateBridge() {
+            delegate_bridges.Clear();
+        }
         public void ReleaseLuaBase(RealStatePtr L, int reference, bool is_delegate)
         {
-            if(is_delegate)
+            if (is_delegate)
             {
                 LuaAPI.xlua_rawgeti(L, LuaIndexes.LUA_REGISTRYINDEX, reference);
                 if (LuaAPI.lua_isnil(L, -1))
@@ -586,7 +685,26 @@ namespace XLua
                 }
 
                 LuaAPI.lua_unref(L, reference);
+
+                WeakReference weakRef = null;
+                delegate_bridges.TryGetValue(reference, out weakRef);
                 delegate_bridges.Remove(reference);
+
+#if UNITY_EDITOR
+                if (this.debugDelegateBridgeRelease && weakRef != null)
+                {
+                    var hash = weakRef.GetHashCode();
+                    for (int i = 0; i < this.bridgeLuaRefs.Count; i++)
+                    {
+                        if (bridgeLuaRefs[i] == hash)
+                        {
+                            bridgeLuaRefs.RemoveAt(i);
+                            bridgeLuaRefs2.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+#endif
             }
             else
             {
@@ -594,7 +712,7 @@ namespace XLua
             }
         }
 
-		public object CreateInterfaceBridge(RealStatePtr L, Type interfaceType, int idx)
+        public object CreateInterfaceBridge(RealStatePtr L, Type interfaceType, int idx)
         {
             Func<int, LuaEnv, LuaBase> creator;
 

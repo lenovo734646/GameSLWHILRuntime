@@ -1,81 +1,65 @@
 local _G = _G
-local g_Env,class = g_Env,class
-local print, tostring, log, typeof, debug, pairs,string, assert =
-      print, tostring, log, typeof, debug, pairs,string, assert
+local SEnv, class = SEnv, class
+local print, tostring, Log, LogE, debug, pairs, string, assert = print, tostring, Log, LogE, debug, pairs, string,
+    assert
 
 local logError = logError
-
-local UnityEngine = CS.UnityEngine
-local AssetBundle = UnityEngine.AssetBundle
+-- local AssetBundle = UnityEngine.AssetBundle
+local config = require 'Config'
 local yield = coroutine.yield
-local SceneManager = CS.UnityEngine.SceneManagement.SceneManager
+local SceneManager = SceneManager
 -- local Resources = UnityEngine.Resources
 
+require 'LuaUtil.Functions'
 
-local Config = require'Config'
-
-_ENV = moduledef { seenamespace = CS }
+_ENV = moduledef {
+    seenamespace = CS
+}
 -----------------------------------------
 
-local function LogE(str)
-    logError('[LuaAssetLoader]'..str..'\n'..debug.traceback())
-end
 
-local function Log(str)
-    log('[LuaAssetLoader]'..str..'\n'..debug.traceback())
+local function Log(...)
+    -- log('[LuaAssetLoader]' .. str .. '\n' .. debug.traceback())
 end
 
 local Class = class()
 
-function Create(...)
-    return Class(...)
+function Create()
+    return Class()
 end
 
-function Class:__init(basepath,name)
-    self.sceneCache = {}
-    self.basepath = basepath
-    self.getFullPathFunc = function (filename)
-        return basepath .. filename
-    end
-    self.bundleManager = BundleManager(self.getFullPathFunc, true)
-    self.bundleManager.name = name or 'noname'--目前是为了调试
-end
+-- notCache在大厅运行时有用
+function Class:Load(path, type)
 
-function Class:Load(path,type)
-    Log('Load'..path)
-    if Config:IsLoadFromEditor() then
-        local r
-        if type then
-            r = ResHelper.Load(path, type)
-        else
-            r = ResHelper.Load(path)
-        end
-        if r then 
-            return r 
-        else
-            LogE('can not load from editor '..path..'\nbasePath='..self.basepath)
-        end
-    end
-
-    local bundle = self.bundleManager:LoadAssetBundleByPath(path)
-    if bundle then
-        local r
-        if type then
-            r = bundle:LoadAsset(path, type)
-        else
-            r = bundle:LoadAsset(path)
-        end
-        
-        if r then 
-            return r 
-        else
-            LogE('can not load res '..path..'\nbasePath='..self.basepath)
-        end
+    local isRawPath = path:Contains('Assets/')
+    Log('Load from editor ' ,path, isRawPath)
+    local r
+    if type then
+        r = ResHelper.Load(path, type, isRawPath)
     else
-        LogE('can not load bundle '..path..'\nbasePath='..self.basepath)
+        r = ResHelper.Load(path, isRawPath)
     end
-    
-    
+    if r then
+        return r
+    else
+        LogE('can not load from editor ' .. path )
+    end
+    return Log('Load ' .. path)
+end
+
+-- 载入所有
+function Class:LoadAll(path, type)
+    local isRawPath = path:Contains('Assets/')
+
+    Log('LoadAll from editor ' ,path, isRawPath)
+    local r
+    r = ResHelper.LoadAll(path, isRawPath)
+    if r then
+        return r
+    else
+        LogE('can not load from editor ' .. path )
+    end
+    return Log('LoadAll ' .. path)
 end
 
 local function doDone(req, assert)
@@ -87,133 +71,74 @@ local function doDone(req, assert)
     end
     return assert
 end
-
-
-local function getBundleAsync(self, bundleHashName, bundleManager)
-    assert(bundleHashName)
-    assert(bundleManager)
-    local assetBundle = bundleManager:GetAssetBundleFromCache(bundleHashName)
-    if not assetBundle then
-        local bundlefullpath = self.getFullPathFunc(bundleHashName)
-        local reqab = AssetBundle.LoadFromFileAsync(bundlefullpath)
-        yield(reqab)
-        if(reqab.assetBundle==nil) then
-            LogE('AssetBundle.LoadFromFileAsync failed. path:'..bundlefullpath)
-            return
-        end
-        assetBundle = reqab.assetBundle
-        bundleManager:AddCache(bundleHashName, assetBundle)
-    end
-    return assetBundle
+--异步加载，在编辑器模式下看不出效果，但是建议使用此方法以提升加载流畅度
+function Class:LoadAsync(path, infoOut)
+    yield()
+    local isRawPath = path:Contains('Assets/')
+    infoOut = infoOut or {}
+    infoOut.progress = 0
+    return doDone(infoOut, ResHelper.Load(path, isRawPath))
 end
-
+-- 可以根据bundlename进行加载，在编辑器模式下无效
+function Class:LoadBundle(bundlename)
+    assert(bundlename)
+end
+-- 可以根据bundlename进行加载，在编辑器模式下无效
 function Class:LoadBundleAsync(bundlename)
-    if  g_Env.Config:IsLoadFromEditor() then 
-        yield()
-        return 
-    end
-    local bundleManager = self.bundleManager
-    local bundleHashName = bundleManager:GetAssetBundleHashName(bundlename)
-    if string.isNullOrEmpty(bundleHashName) then
-        LogE('can not find '..bundlename)
-        return
-    end
-    local assetBundle = getBundleAsync(self, bundleHashName, bundleManager)
-    if not assetBundle then
-        return
-    end
-    
-    return assetBundle
+    assert(bundlename)
+    yield()
+    return
 end
 
 function Class:LoadBundleAllAsync(bundlename)
-    local assetBundle = self:LoadBundleAsync(bundlename)
-    if not assetBundle then
-        return
-    end
     
-    local allnames = assetBundle:GetAllAssetNames()
-    local len = allnames.Length-1
-    for i = 0, len do
-        local name = allnames[i]
-        local req = assetBundle:LoadAssetAsync(name)
-        yield(req)
-        
-    end
-    return assetBundle
 end
-
-function Class:LoadSceneAsync(name)
-    if not g_Env.Config:IsLoadFromEditor() then
-        self:LoadBundleAsync('scene')
-    end
-    yield(SceneManager.LoadSceneAsync(name))
-    self.sceneCache[name] = true
-end
-
-function Class:LoadAsync(path, req)
-    req.progress = 0
-    local bundleManager = self.bundleManager
-    local bundlename = bundleManager:GetAssetBundleName(path)
-    if string.isNullOrEmpty(bundlename) then
-        return doDone(req, ResHelper.Load(path))
-    end
-    local bundleHashName = bundleManager:GetAssetBundleHashName(bundlename)
-    if string.isNullOrEmpty(bundleHashName) then
-        return doDone(req, ResHelper.Load(path))
-    end
-    if req.withDependencies then
-        local strs = bundleManager:GetAllDependencies(bundleHashName)
-        if strs then
-            local len = strs.Length-1
-            for i=0,len do
-                local s = strs[i]
-                getBundleAsync(self, s, bundleManager)
-            end
-        end
-    end
-    
-    local assetBundle = getBundleAsync(self, bundleHashName, bundleManager)
-    if not assetBundle then return doDone(req, ResHelper.Load(path)) end
-
-    local passedpro = req.progress
-    local leftpro = 1-passedpro
-    local reqab = assetBundle:LoadAssetAsync(path)
-    while not reqab.isDone do
-        yield()
-        req.progress = passedpro + reqab.progress * leftpro
-    end
-    return doDone(req, reqab.asset)
-end
-
 
 function Class:LoadScene(name)
-    if Config:IsLoadFromEditor() then
+    if config.isLoadFromEditor then
         SceneManager.LoadScene(name)
         return
     end
-    if self.sceneCache[name] then
-        SceneManager.LoadScene(name)
-        return
-    end
-    local path = [[Assets/Scenes/]]..name..'.unity'
-    assert(self.bundleManager:LoadAssetBundleByPath(path),path)
-    SceneManager.LoadScene(name)
-    self.sceneCache[name] = true
+    local path = [[Assets/Scenes/]] .. name .. '.unity'
+    self:Load(path)
+    return SceneManager.LoadScene(name)
 end
 
+function Class:LoadSceneAsync(name, infoOut)
+    if not config.isLoadFromEditor then
+        local path = [[Assets/Scenes/]] .. name .. '.unity'
+        self:LoadAsync(path)
+    end
+    local req = SceneManager.LoadSceneAsync(name)
+    if infoOut then
+        infoOut.progress = 0
+        while not req.isDone do
+            if infoOut.UpdateInfo then
+                infoOut:UpdateInfo(req.progress)
+            else
+                infoOut.progress = req.progress
+            end
+        end
+        infoOut.progress = 1
+    else
+        yield(req)
+    end
+
+    -- self.sceneCache[name] = true
+end
+
+function Class:LoadSoundsPackageAsync(path)
+    local prefab = self:LoadAsync(path)
+    return _G.Instantiate(prefab) -- 声音装载
+end
+
+function Class:LoadSoundsPackage(path)
+    local prefab = self:Load(path)
+    return _G.Instantiate(prefab) -- 声音装载
+end
+-- 释放所有资源
 function Class:Clear()
-    self.sceneCache = {}
-    return self.bundleManager:Clear()
-end
 
---兼容旧Loader
-function Class:LoadTextAsset(path)
-    return self:Load(path)
-end
---兼容旧Loader
-function Class:LoadAsset(path, type)
-    return self:Load(path, type)
 end
 
 return _ENV

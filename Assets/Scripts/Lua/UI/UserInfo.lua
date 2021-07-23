@@ -1,22 +1,9 @@
-local _G = _G
+local _G, g_Env = _G, g_Env
 local class = class
 local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
       print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
 
-local DOTween = CS.DG.Tweening.DOTween
-
-local tinsert = table.insert
-local tremove = table.remove
-local tonumber = tonumber
-
-local CoroutineHelper = require'CoroutineHelper'
-local yield = coroutine.yield
-
-local SubGame_Env=SubGame_Env
-local ConvertNumberToString = SubGame_Env.ConvertNumberToString
-
-local GameConfig = require'GameConfig'
-
+local Helpers = require'LuaUtil.Helpers'
 _ENV = moduledef { seenamespace = CS }
 
 local Class = class()
@@ -30,16 +17,21 @@ function Class:__init(userInfoInitHelper, roomData)
     userInfoInitHelper:Init(self)
     self.eventListener:Init(self)
 
-    self.selfUserID = roomData.self_user_id
-    self.TMP_f_UserNickName.text = roomData.self_user_name
-    self:OnChangeMoney(roomData.self_score)
-    self:OnChangeHead(roomData.self_user_Head)
-    self:OnChangeHeadFrame(roomData.self_user_HeadFrame)
+    if g_Env and g_Env.CommonUICtrl then  -- 使用GamePlayer 大厅数据
+        g_Env.CommonUICtrl.SetPlayerValues(self)
+    else    -- 使用进入房间返回的数据(独立运行不能设置头像和头像框)
+        self.selfUserID = roomData.self_user_id
+        self.TMP_f_UserNickName.text = roomData.self_user_name
+        self:OnChangeMoney(roomData.self_score)
+        self:OnChangeHead(roomData.self_user_Head)
+        self:OnChangeHeadFrame(roomData.self_user_HeadFrame)
+    end
+
 end
 
 function Class:OnChangeMoney(currency)
     print("玩家分数改变，当前分数：", currency)
-    self.TMP_f_UserMoney.text = currency--ConvertNumberToString(currency)
+    self.TMP_f_UserMoney.text = currency--Helpers.GameNumberFormat(currency)
 end
 
 function Class:OnChangeHead(headID)

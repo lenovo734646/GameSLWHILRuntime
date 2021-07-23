@@ -8,6 +8,9 @@ local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
 local LanguageHelper = require 'LuaUtil.LanguageHelper'
 
 local DDOLGameObject = GameObject.Find('DDOLGameObject')
+if not DDOLGameObject then
+    DDOLGameObject = GameObject('DDOLGameObject')
+end
 DDOLGameObject:AddComponent(typeof(CS.MessageCenter))
 DDOLGameObject:AddComponent(typeof(CS.AudioManager))
 DDOLGameObject:AddComponent(typeof(CS.NetController))
@@ -34,6 +37,5 @@ end)
 local hintMessage = require'LuaHintMessage'.Create()
 ShotHintMessage = function (...)
     print('HintMessage:',...)
-    return hintMessage:CreateHintMessage(...)
+    return hintMessage:ShowHintMessage(...)
 end
-

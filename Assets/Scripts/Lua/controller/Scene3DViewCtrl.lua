@@ -13,13 +13,14 @@ local table = table
 local tinsert = table.insert
 local tremove = table.remove
 
-local CoroutineHelper = require'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local yield = coroutine.yield
 
 local PBHelper = require 'protobuffer.PBHelper'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local GameConfig = require 'GameConfig'
+local Helpers = require'LuaUtil.Helpers'
 
 local Destroy = Destroy
 local Instantiate = Instantiate
@@ -31,13 +32,10 @@ local Input = UnityEngine.Input
 local clock = os.clock
 
 local AudioManager = AudioManager or CS.AudioManager
-local SubGame_Env=SubGame_Env
-local ConvertNumberToString = SubGame_Env.ConvertNumberToString
+local SEnv=SEnv
 
 _ENV = moduledef { seenamespace = CS }
 local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
-
-
 
 local Class = class()
 
@@ -50,7 +48,7 @@ function Class:__init(ui,View,roomdata)
     self.ui = ui
     self.View = View
     self.roomdata = roomdata
-    _G.PrintTable(self.histroyList)
+    
     View:GetComponent(typeof(LuaUnityEventListener)):Init(self)
     View:GetComponent(typeof(KeyEventListener)):Init(self)
     --
@@ -62,7 +60,7 @@ function Class:__init(ui,View,roomdata)
     --
 
     self.lastSeletedToggleIndex = 1
-    self.lastCurrecy = SubGame_Env.playerRes.currency
+    self.lastCurrecy = SEnv.playerRes.currency
 
     self.timeStamp = clock()
 
@@ -94,7 +92,7 @@ function Class:__init(ui,View,roomdata)
     self.gameCount = 0   -- 本次进入游戏局数
 
     self.betSnapShot = {} -- 上一局押注数据
-    self:OnMoneyChange(SubGame_Env.playerRes.currency)
+    self:OnMoneyChange(SEnv.playerRes.currency)
     self:InitAnimalAnimation()
 
     ui.directionallight_animationhelper:PlayByIndex(1)
@@ -390,7 +388,7 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        SubGame_Env.ShowHintMessage(string.Format2(_STR_"金币不足,当前金币:{1}",SubGame_Env.playerRes.currency))
+        SEnv.ShotHintMessage(string.Format2(_STR_"金币不足,当前金币:{1}",SEnv.playerRes.currency))
         return
     end
     --发送下注
@@ -403,7 +401,7 @@ function Class:OnContinueBtnClicked()
     --     self.betSnapShot[i] = 1000
     -- end
     if self:__GetContinueBetScore() <= 0 then
-        SubGame_Env.ShowHintMessage(_STR_"上局无下注")
+        SEnv.ShotHintMessage(_STR_"上局无下注")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
@@ -749,7 +747,7 @@ function Class:DoCheckForBetButtonState(currency)
     local ui = self.ui
     local betSelectToggles = ui.betSelectToggles
     local bet_config_array = self.bet_config_array
-    currency = currency or SubGame_Env.playerRes.currency
+    currency = currency or SEnv.playerRes.currency
     
 
     local toggleCanOnTable = {true, true, true, true, true, true}
@@ -801,7 +799,7 @@ end
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
     CoroutineHelper.StartCoroutineGo(self.View, function()
-        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SubGame_Env.ShowErrorByHint)
+        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SEnv.ShowErrorByHintHandler)
         if data then
             self:OnReceiveBetAck(data)
         end
@@ -857,14 +855,14 @@ end
 -- 设置自己下注分数
 function Class:__SetSelfBetScore(betAreaData, total_bet)
     assert(betAreaData)
-    betAreaData.selfBetScore.text = ConvertNumberToString(total_bet)
+    betAreaData.selfBetScore.text = Helpers.GameNumberFormat(total_bet)
     local item_id = betAreaData.item_id
     self.selfTotalBet[item_id] = total_bet
 end
 -- 设置全体下注分数
 function Class:__SetTotalBetScore(betAreaData, total_bet)
     assert(betAreaData)
-    betAreaData.totalBetScore.text = ConvertNumberToString(total_bet)
+    betAreaData.totalBetScore.text = Helpers.GameNumberFormat(total_bet)
     local item_id = betAreaData.item_id
     self.TotalBet[item_id] = total_bet
 end

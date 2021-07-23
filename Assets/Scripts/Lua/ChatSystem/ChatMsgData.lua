@@ -3,11 +3,6 @@
 local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
 local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
-local UnityEngine, GameObject, System, Sprite, AudioClip = UnityEngine, GameObject, System, UnityEngine.Sprite, UnityEngine.AudioClip
-local CoroutineHelper = require 'CoroutineHelper'
-local yield = coroutine.yield
-
-
 _ENV = {}
 
 local Class = class()

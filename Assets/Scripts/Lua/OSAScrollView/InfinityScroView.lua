@@ -4,7 +4,7 @@ local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject = UnityEngine, GameObject
 local EditorAssetLoader = CS.EditorAssetLoader
-local CoroutineHelper = require 'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 
 local OSA = CS.OSAHelper
@@ -13,6 +13,8 @@ local OSAItemViewHolder = OSA.ItemViewHolder
 local OSAScrollView = require 'OSAScrollView.OSAScrollView'
 local ScrollItemViewDataHelper = require 'OSAScrollView.ScrollItemViewDataHelper'
 
+local table = table
+local pairs = pairs
 
 _ENV = {}
 
@@ -39,6 +41,8 @@ function Class:__init(OSAScrollViewCom)
         end
     end
 
+    self.vhList = {}
+
     OSAScrollViewCom.CreateViewsHolderCallback = function (paramters_)
         local itemIndex = paramters_[1]
         local osaParam = OSAScrollViewCom.Parameters
@@ -48,6 +52,7 @@ function Class:__init(OSAScrollViewCom)
                 viewsHolder.bindData = self.OnCreateViewItemData(viewsHolder.root,itemIndex)
             end
         end
+        table.insert(self.vhList, viewsHolder)
         viewsHolder:Init(osaParam.ItemPrefab, osaParam.Content, itemIndex)
 
         return viewsHolder
@@ -128,6 +133,26 @@ end
 
 function Class:ReplaceItems(items, freezeEndEdge)
     return self.viewDataHelper:ResetItems(items, freezeEndEdge)
+end
+
+function Class:Release()
+    -- local vhCount = self.OSAScrollViewCom.VisibleItemsCount
+    -- print("vhCount = ", vhCount)
+    -- for i = 0, vhCount-1, 1 do
+    --     local vh = self.OSAScrollView:GetItemViewsHolder(i)
+    --     if vh then
+    --         vh.CollectViewsCallback = nil
+    --     end
+    -- end
+    for key, vh in pairs(self.vhList) do
+        vh.CollectViewsCallback = nil
+    end
+    
+    self.OSAScrollViewCom.UpdateViewsHolderCallback = nil
+    self.OSAScrollViewCom.CreateViewsHolderCallback = nil
+    self.OSAScrollView:Release()
+    self.OSAScrollView = nil
+    self.OSAScrollViewCom = nil
 end
 
 return _ENV

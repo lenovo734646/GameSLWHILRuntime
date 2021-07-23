@@ -1,9 +1,9 @@
-
 local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
-typeof, type, print, table, tonumber, CS.SysDefines
+    typeof, type, print, table, tonumber, SysDefines
+local LuaInitHelper = CS.LuaInitHelper
 
 local DestroyImmediate = DestroyImmediate
-local CS = CS
+local CS,AssertUnityObjValid = CS,AssertUnityObjValid
 local getmetatable = getmetatable
 local assert=assert
 local select=select
@@ -11,10 +11,6 @@ _ENV = {}
 
 --转换成万或者亿
 function GameNumberFormat(n)
-    if n==nil then
-        -- _G.LogW('n==nil')
-        return ''
-    end
     local isEn = SysDefines.curLanguage ~= 'CN'
     local unit = ''
     if isEn then
@@ -54,38 +50,50 @@ function GameNumberFormat(n)
     return n..unit
 end
 
---自动加上空格
+-- 检查手机号码位数是否有效
+-- 目前账号手机号格式为：国家码+手机号（如果0开头，则不需要输入0）
+function IsPhoneNumValid(phoneStr)
+    print("phoneStr = ", phoneStr)
+    if string.IsNullOrEmpty(phoneStr) or string.len(phoneStr) < 10 then
+        return false
+    end
+    return true
+end
+
+-- 自动加上空格
 function BuildStr(...)
     local t = {...}
+    --这里使用select函数获取变参列表长度
+    --#t获取长度可能会由于数组中某个变量是nil而中断
+    local len = select('#', ...)
     local s = ''
-    for i = 1, #t do
+    for i = 1, len do
         local v = t[i]
-        s = s..' '..tostring(v)
+        s = s .. ' ' .. tostring(v)
     end
     return s
 end
 
 function GetFileNameFromPath(path)
-	path=path:replace('\\','/')
+    path = path:replace('\\', '/')
     return path:match("^.+/(.+)$") or ''
 end
 
 function Enum(t, start)
-	local enStart = start or 1
+    local enStart = start or 1
 
-	local args = t
-	local enum = {}
-	for i=1,#args do
-		enum[args[i]] = enStart
-		enStart = enStart + 1
-	end
+    local args = t
+    local enum = {}
+    for i = 1, #args do
+        enum[args[i]] = enStart
+        enStart = enStart + 1
+    end
 
-	return enum
+    return enum
 end
 
 -- Array转table
-function ArrayToTab(rspArr)
-    local arr = rspArr
+function ArrayToTab(arr)
     local len = arr.Length
     local table = {}
     for i = 1, len do
@@ -129,5 +137,62 @@ function GetDicInValue(dic, key)
     return value
 end
 
+function GetInitHelperWithTable(obj, autoDestroy)
+    local t = {}
+    if autoDestroy == nil then
+        autoDestroy = true
+    end
+    return obj:GetComponent(typeof(LuaInitHelper)):Init(t, autoDestroy)
+end
+
+function PrintTable(t, spacestr)
+    spacestr = spacestr or ''
+    for key, value in pairs(t) do
+        print(spacestr .. 'k:' .. tostring(key) .. ' v:' .. tostring(value))
+        if type(value) == "table" then
+            PrintTable(value, spacestr .. ' ')
+        end
+    end
+end
+-- 数值转换为金额格式
+function NumberToMoney(n)
+    local numInterval = SysDefines.curLanguage == "CN" and 3 or 4
+    local lowLimit = SysDefines.curLanguage == "CN" and 999 or 9999
+    if n <= lowLimit then
+        return tostring(n)
+    else
+        local numStr = tostring(n)
+        local len = string.len(numStr)
+        local spiltCount = math.ceil(len / numInterval)
+        local spiltTab = {}
+        for i = 1, spiltCount do
+            if string.len(numStr) >= numInterval then
+                local spiltStr = string.sub(numStr, string.len(numStr) - (numInterval - 1), string.len(numStr))
+                table.insert(spiltTab, spiltStr)
+                numStr = string.sub(numStr, 1, string.len(numStr) - numInterval)
+            else
+                table.insert(spiltTab, numStr)
+            end
+        end
+        local moneyStr = ''
+        for i = 1, #spiltTab do
+            if i ~= #spiltTab then
+                moneyStr = "," .. spiltTab[i] .. moneyStr
+            else
+                moneyStr = spiltTab[i] .. moneyStr
+            end
+        end
+        return moneyStr
+    end
+end
+
+function MoneyToNumber(str)
+    local numStr = string.replace(str, ',', '')
+    if numStr ~= '' then
+        return tonumber(numStr)
+    else
+        return 0
+    end
+end
 
 return _ENV

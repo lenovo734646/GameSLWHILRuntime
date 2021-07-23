@@ -3,7 +3,7 @@ local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logErro
 local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local CoroutineHelper = require 'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local IsMouseCorveredTarget = CS.UnityHelper.IsMouseCorveredTarget
@@ -59,6 +59,11 @@ function Class:ByteToAudioClip(clipData)
     end
 
     return self.recorder:ByteToAudioClip(clipData)
+end
+
+function Class:Release()
+    self.btnPressRecording.OnTouchDown:RemoveAllListeners()
+    self.btnPressRecording.OnTouchUp:RemoveAllListeners()
 end
 
 return _ENV

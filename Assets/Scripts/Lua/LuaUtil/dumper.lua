@@ -22,6 +22,8 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 ]]
+local table=table
+local string=string
 
 local dumplua_closure = [[
 local closures = {}
@@ -74,7 +76,7 @@ for _,lib in pairs{'_G', 'string', 'table', 'math',
 end
 
 function DataDumper(value, varname, fastmode, ident)
-  local defined, dumplua = {}
+  local defined, dumplua = {},nil
   -- Local variables for speed optimization
   local string_format, type, string_dump, string_rep = 
         string.format, type, string.dump, string.rep

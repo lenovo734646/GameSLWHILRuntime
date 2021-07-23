@@ -124,8 +124,8 @@ public class LuaEntry : MonoBehaviour
         SceneManager.sceneUnloaded += OnSceneUnloaded;
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
 
-        //if (MessageCenter.Instance)
-        //    MessageCenter.Instance.AddListener(MsgType.NET_RECEIVE_DATA, OnReceiveNetData);
+        if (MessageCenter.Instance)
+            MessageCenter.Instance.AddListener(MsgType.NET_RECEIVE_DATA, OnReceiveNetData);
 
 
 

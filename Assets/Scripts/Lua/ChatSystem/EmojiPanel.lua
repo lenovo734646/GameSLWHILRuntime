@@ -3,10 +3,6 @@ local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logErro
 local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local CoroutineHelper = require 'CoroutineHelper'
-local yield = coroutine.yield
-local WaitForSeconds = UnityEngine.WaitForSeconds
-
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -37,7 +33,7 @@ function Class:__init(panel, inputField, emojis, itemPrefab)
             end)
         end
     end
-
+    print("EmojiPanel self.scrollView.content = ", self.scrollView.content)
 end
 
 function Class:OnEmojiClick(index)
@@ -58,5 +54,17 @@ function Class:OnShow(isOn)
     end
 end
 
+function Class:Release()
+    print("EmojiPanel Release", self.scrollView.content)
+    --AssertUnityObjValid(self.scrollView.content)
+    for i = 0, self.scrollView.content.transform.childCount-1 do
+        local go = self.scrollView.content.transform:GetChild(i)
+        go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
+    end
+end
+
+function Class:OnDestroy()
+    print("1111111111111")
+end
 
 return _ENV

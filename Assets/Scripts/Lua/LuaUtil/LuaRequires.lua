@@ -1,4 +1,3 @@
-
 function moduledef(paramT)
     local t = paramT.t
     local name = paramT.name
@@ -21,7 +20,8 @@ end
 _G.json = require "LuaUtil.dkjson"
 require "LuaUtil.Functions"
 require "LuaUtil.LuaDefines"
-
+require'LuaUtil.Logger'
+SysDf = require'LuaUtil.LuaSystemDefine'
 
 --Message
 require "Message.MessageCenter"

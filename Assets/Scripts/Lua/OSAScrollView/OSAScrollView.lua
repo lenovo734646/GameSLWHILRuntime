@@ -10,7 +10,7 @@ local OSAScrollView = OSA.OSAScrollView
 local MyParam = OSA.MyParam
 local MyItemViewHolder = OSA.MyItemViewHolder
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
-
+local OSAItemViewHolder = OSA.ItemViewHolder
 
 
 _ENV = {}
@@ -130,7 +130,9 @@ function Class:GetItemsCount()
 end
 
 function Class:GetItemViewsHolder(index)
-    --print("GetItemViewsHolder index = ", index)
+    -- local vh = self.OSAScrollViewCom:GetItemViewsHolder(index)
+    -- local bindData = vh.bindData
+    -- print("GetItemViewsHolder index = ", index, vh, bindData)
     return self.OSAScrollViewCom:GetItemViewsHolder(index).bindData -- 
 end
 
@@ -145,7 +147,18 @@ function Class:SmoothScrollTo(itemIndex, duration, normalizedOffsetFromViewportS
     normalizedPositionOfItemPivotToUse, onProgressFunc, onDoneFunc, overrideCurrentScrollingAnimation)
 end
 
-
-
+function Class:Release()
+    self.OSAScrollViewCom.StartCallback = nil
+    self.OSAScrollViewCom.UpdateCallback = nil
+    
+    self.OSAScrollViewCom.OnBeforeRecycleOrDisableViewsHolderCallback = nil
+    self.OSAScrollViewCom.RebuildLayoutDueToScrollViewSizeChangeCallback = nil
+    self.OSAScrollViewCom.ChangeItemsCountCallback = nil
+    
+    self.OSAScrollViewCom.DisposeCallback = nil
+    self.OSAScrollViewCom.OnItemHeightChangedPreTwinPassCallback = nil
+    self.OSAScrollViewCom.OnItemWidthChangedPreTwinPassCallback = nil
+    self.OSAScrollViewCom = nil
+end
 
 return _ENV

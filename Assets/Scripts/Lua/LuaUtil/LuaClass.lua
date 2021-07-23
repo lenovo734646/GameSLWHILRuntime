@@ -1,6 +1,6 @@
 local LuaClass = class(nil,{
-	transform,
-	gameObject,
+	transform=nil,
+	gameObject=nil,
 	})
 
 function LuaClass:New(go)

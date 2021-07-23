@@ -1,68 +1,63 @@
-_STR_=_STR_ or function (str)
-    return str
-end
-local Helpers = require'LuaUtil.Helpers'
-SubGame_Env = SubGame_Env or {}
-SubGame_Env.ConvertNumberToString = Helpers.GameNumberFormat
-
--- print = function() -- 屏蔽日志
+SEnv = SubGame_Env
+-- if g_Env then
+--     print = function (...)--日志屏蔽
+--     end
 -- end
 
-SubGame_Env.ShowHintMessage = function(contentStr)
+ShowErrorByHint = function (msgName,errcode)
     if g_Env then
-        g_Env.ShowHitMessage(contentStr)
+        g_Env.ShowTips(g_Env.GetServerErrorMsg(errcode,msgName))
     else
-        print(contentStr)
-    end
-end
--- 显示一个短暂停留的提示
-SubGame_Env.ShowHintMessageByErrCode = function (errTipTable, errcode)
-    if errcode <= 0 then
-        return
-    end
-    local errStr = errTipTable[errcode]
-    if g_Env then
-        g_Env.ShowHitMessage(errStr)
-    else
-        print(errStr)
+        print('服务器返回错误代码','msgName=',msgName,'errcode=',errcode)
     end
 end
 
-SubGame_Env.ShowErrorByHint = function (errcode,msgName)
+ShowErrorByHintHandler = function (errcode, msgName)
     if g_Env then
         g_Env.ShowHitMessage(g_Env.GetServerErrorMsg(errcode,msgName))
     else
         print('服务器返回错误 errcode=',errcode,'msgName=',msgName)
     end
 end
-
+require'Prepare'
 require "LuaUtil/LuaRequires"
-local Config = Config or require'Rebuild.Config' -- 在大厅模式下会传给小游戏这个数值
-local g_Env = g_Env
-local GameConfig require'GameConfig'
 local PBHelper = require'protobuffer.PBHelper'
+local MessageCenter = require'Message.MessageCenter'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SceneView = require'View.Scene3DView'
-local Loader = require 'Rebuild.LuaAssetLoader'
 --
 local yield = coroutine.yield
-local CoroutineHelper = require 'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 
 local Sprite = UnityEngine.Sprite
 local GameObject = UnityEngine.GameObject
-if SUBGAME_EDITOR then
-    -- 在大厅中将使用大厅的环境
-    local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
-    SubGame_Env.playerRes = playerRes
 
-    SubGame_Env.GetHeadSprite = function (headID)
-        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..(headID+1)..".png", typeof(Sprite))
-    end
 
-    SubGame_Env.GetHeadFrameSprite = function (headFrameID)
-        return SubGame_Env.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(Sprite))
+
+function Main()
+    print("SLWH Lua Main")
+    PBHelper.Init('CLSLWH')
+    PBHelper.AddPbPkg('CLCHATROOM')
+    _WaitSubGameLoadDone = true
+
+    if g_Env == nil then
+        -- 在大厅中将使用大厅的环境
+        local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
+        SEnv.playerRes = playerRes
+    
+        SEnv.GetHeadSprite = function (headID)
+            return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..(headID+1)..".png", typeof(Sprite))
+        end
+    
+        SEnv.GetHeadFrameSprite = function (headFrameID)
+            return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(Sprite))
+        end
+        local commonSounds = SEnv.loader:Load("Assets/Resources/commonSounds.prefab")
+        CS.UnityEngine.Object.DontDestroyOnLoad(_G.Instantiate(commonSounds)) -- 公共音频资源
+        print("SUBGAME_EDITOR!")
     end
-    print("SUBGAME_EDITOR!")
+    SEnv.loader:LoadScene('LoadingScene')
+    _WaitSubGameLoadDone = false
 end
 
 
@@ -80,11 +75,7 @@ local roomdata = {
     self_user_name = "",
     self_user_Head = 0,
     self_user_HeadFrame = 0,
-
 }
-PBHelper.Init('CLSLWH')
-PBHelper.AddPbPkg('CLPF')
-PBHelper.AddPbPkg('CLCHATROOM')
 
 local SceneList = {"MainScene"}
 local AssetList = {
@@ -104,7 +95,7 @@ end
 
 
 local loadMatTexByLangAsync = function(matpath,texpath_without_ext,texidname)
-    local loader = SubGame_Env.loader
+    local loader = SEnv.loader
     local mat = loader:LoadAsync(matpath)
     local mask = SysDefines.curLanguage=='EN' and '_EN' or ''
     local texpath = texpath_without_ext .. mask .. '.png'
@@ -112,43 +103,50 @@ local loadMatTexByLangAsync = function(matpath,texpath_without_ext,texidname)
     return mat:SetTexture(texidname, tex)
 end
 
+-- EnterRoomReq 回应处理
+local OnEnterRoomAck = function(data, err)
+    err = err or data.errcode
+    if err ~= 0 then
+        print('Send_EnterRoomAck:'..json.encode(data))
+        if g_Env then
+            g_Env.MessageBox{
+                content = err,
+                onOK = function()
+                    g_Env.SubGameCtrl.Leave()
+                end
+            }
+        else
+            print('进入房间失败: ', err)
+        end
+        return false
+    else
+        roomdata = data
+        for key, value in pairs(roomdata.bet_config_array) do
+            print("bet_config_array: "..key..",  "..value)
+        end
+        
+        SEnv.playerRes.currency = roomdata.self_score
+        SEnv.playerRes.selfUserID = roomdata.self_user_id
+        SEnv.playerRes.userName = roomdata.self_user_name
+        SEnv.playerRes.headID = roomdata.self_user_Head
+        SEnv.playerRes.headFrameID = roomdata.self_user_HeadFrame
+        print("进入房间成功:UserID = ", SEnv.playerRes.selfUserID, "headID = ", SEnv.playerRes.headID, "  headFrameID = ",SEnv.playerRes.headFrameID)
+    end
+    return true
+end
 
 local gameView
 function OnSceneLoaded(scene, mode)
     if scene.name == "LoadingScene" then
         CoroutineHelper.StartCoroutine(function ()
-            local data,err = CLSLWHSender.Send_EnterRoomReq_Async()
-            if err then
-                print('Send_EnterRoomAck:'..json.encode(data))
-                if g_Env then
-                    g_Env.MessageBox{
-                        content = err,
-                        onOK = function()
-                            g_Env.SubGameCtrl.Leave()
-                        end
-                    }
-                else
-                    print('进入房间失败 data.errcode=', data.errcode)
-                end
-                return
-
-            else
-                roomdata = data
-                for key, value in pairs(roomdata.bet_config_array) do
-                    print("bet_config_array: "..key..",  "..value)
-                end
-                
-                SubGame_Env.playerRes.currency = roomdata.self_score
-                SubGame_Env.playerRes.selfUserID = roomdata.self_user_id
-                SubGame_Env.playerRes.userName = roomdata.self_user_name
-                SubGame_Env.playerRes.headID = roomdata.self_user_Head
-                SubGame_Env.playerRes.headFrameID = roomdata.self_user_HeadFrame
-                print("SelfUserID = ", SubGame_Env.playerRes.selfUserID, SubGame_Env.playerRes.headID, SubGame_Env.playerRes.headFrameID)
-            end
+            -- 进入房间请求
+            local data, err = CLSLWHSender.Send_EnterRoomReq_Async()
+            OnEnterRoomAck(data, err)
+            -- 进度处理和资源加载
             local sliderGo = GameObject.Find("Slider")
             local slider = sliderGo:GetComponent("Slider")
             slider.value = 0.25
-            local loader = SubGame_Env.loader
+            local loader = SEnv.loader
             local allLoadCount = GetLoadCount()
             local loadedCount = 0
             local updateProgress = function ()
@@ -182,16 +180,13 @@ function OnSceneLoaded(scene, mode)
             end
             --#region
         end)
+        
     end
     if scene.name == "MainScene" then
+        SEnv.messageCenter = MessageCenter()
         gameView = SceneView.Create(roomdata)
     end
 end
---TODO 目前没有被调用，需要在大厅下测试与调用
-function OnNetWorkReConnect()
-    gameView.ctrl:OnNetWorkReConnect()
-end
-
 
 
 local OnReceiveNetData = PBHelper.OnReceiveNetData
@@ -203,15 +198,49 @@ end
 -- 退出游戏时调用：如果有必要可用来清理场景，关闭UI等
 function OnCloseSubGame()
     print("退出小游戏 OnCloseSubGame...")
+    --gameView:Release()
 end
 
-SubGame_Env.loader = SubGame_Env.loader or Loader.Create(Config:GetSavePath("SLWH"), Config.debug)
-if SUBGAME_EDITOR then
-    -- 在大厅中将使用大厅的环境
-    local commonSounds = SubGame_Env.loader:Load("Assets/Resources/commonSounds.prefab")
-    CS.UnityEngine.Object.DontDestroyOnLoad(_G.Instantiate(commonSounds)) -- 公共音频资源
+-- 网络断开时调用，此时小游戏应该立即停止所有正在进行的协程和游戏进程，等待网络恢复
+-- 这里的网络中断和g_Env._SubGameReconnection并不相同
+-- g_Env._SubGameReconnection是在玩家强制退出游戏或者意外退出游戏时恢复用
+-- 这里的中断是在游戏过程中网络中断，是互联网断开，不是与服务器断开
+function OnNetworkLost()
+    local LoadingUI = g_Env.uiManager:OpenUI('LoadingUI')
+    if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
+        LoadingUI:SetTipText(_STR_ '网络已断开，网络恢复将继续游戏...')
+        StopAllCoroutine()
+    else
+        LoadingUI:SetTipText(_STR_ '与服务器断开连接，等待恢复中...')
+        StopAllCoroutine()
+    end
 end
-SubGame_Env.loader:LoadScene('LoadingScene')
+
+-- 网络恢复时调用
+-- 与OnNetworkLost相对
+function OnNetworkReConnect()
+    PBHelper.Reset() -- 一定要重置网络模块
+    g_Env.uiManager:CloseUI('LoadingUI')
+    -- 先重新请求进入房间
+    CLSLWHSender.SendEnterRoomReq(OnEnterRoomAck)
+    -- 再请求服务器数据
+    CLSLWHSender.Send_GetServerDataReq(function(ack)
+        if ack._errmessage then
+            g_Env.CreateHintMessage(ack._errmessage)
+        else
+            gameView.ctrl:OnStateChangeNtf(ack)
+        end
+    end)
+end
+
+if IsRunInHall then
+    Main()
+else
+    return function ()
+        Main()
+    end
+end
+
 
 
 

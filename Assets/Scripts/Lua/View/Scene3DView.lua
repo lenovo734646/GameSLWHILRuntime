@@ -4,20 +4,11 @@ local class = class
 local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
       print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
 
-local DOTween = CS.DG.Tweening.DOTween
-
 local tinsert = table.insert
-local tremove = table.remove
 local tonumber = tonumber
 
-local CoroutineHelper = require'CoroutineHelper'
-local Destroy = Destroy
-local Instantiate = Instantiate
 local GameObject = GameObject
-local EditorAssetLoader = CS.EditorAssetLoader
 
-local yield = coroutine.yield
-local AudioManager = AudioManager or CS.AudioManager
 local Scene3DViewCtrl = require'controller.Scene3DViewCtrl'
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local GameConfig = require'GameConfig'
@@ -308,6 +299,16 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
 
     }
 end
+
+function Class:Release()
+    self.roadScrollView.OnCreateViewItemData = nil
+    self.roadScrollView.UpdateViewItemHandler = nil
+    self.roadScrollView:Release()
+    self.roadScrollView = nil
+
+    self.ctrl.mainUI:Release()
+end
+
 
 
 

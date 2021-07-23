@@ -4,7 +4,7 @@ local class = class
 local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,tonumber =
       print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,tonumber
 
-local CoroutineHelper = require'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local Time = UnityEngine.Time
 local WaitForSeconds = UnityEngine.WaitForSeconds

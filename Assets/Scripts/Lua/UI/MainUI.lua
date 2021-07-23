@@ -3,28 +3,17 @@ local class = class
 local print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs =
       print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs
 
-local DOTween = CS.DG.Tweening.DOTween
 
-local tinsert = table.insert
-local tremove = table.remove
-local tonumber = tonumber
-
-local CoroutineHelper = require'CoroutineHelper'
-local yield = coroutine.yield
-
-local Destroy = Destroy
-local Instantiate = Instantiate
-local GameObject = GameObject
-
-local SubGame_Env = SubGame_Env
 local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 local UserInfo = require'UI.UserInfo'
 local TimerCounterUI = require 'UI.TimerCounterUI'
 local PlayerListPanel = require'PlayerList.PlayerListPanel'
 local AudioManager = AudioManager or CS.AudioManager
-
+local Helpers = require'LuaUtil.Helpers'
+local SEnv = SEnv
 _ENV = moduledef { seenamespace = CS }
+
 
 
 local Class = class()
@@ -40,7 +29,7 @@ function Class:__init(panel, roomdata, loader)
     self.eventListener:Init(self)
 
     -- 聊天界面
-    self.chatPanel = ChatPanel.Create(self.ChatPanel, SubGame_Env.loader, SubGame_Env.playerRes)
+    self.chatPanel = ChatPanel.Create(self.ChatPanel, SEnv.loader, SEnv.playerRes)
     -- 玩家列表界面
     self.playerListPanel = PlayerListPanel.Create(self.playerListPanel)
 
@@ -95,13 +84,24 @@ end
 
 -- 设置当前下注
 function Class:SetCurBetScore(betScore)
-    self.betText.text = SubGame_Env.ConvertNumberToString(betScore)
+    self.betText.text = Helpers.GameNumberFormat(betScore)
 end
 
 -- 设置当前局数（自己游戏局数非服务器总局数）
 function Class:SetGameCount(count)
-    self.gameCountText.text = SubGame_Env.ConvertNumberToString(count)
+    self.gameCountText.text = Helpers.GameNumberFormat(count)
 end
+
+function Class:Release()
+    self.chatPanel:Release()
+    self.playerListPanel:Release()
+    self.ludanPanel:Release()
+
+    self.chatPanel = nil
+    self.playerListPanel = nil
+    self.ludanPanel = nil
+end
+
 
 -- 以下代码为自动生成代码，请勿更改
 function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)

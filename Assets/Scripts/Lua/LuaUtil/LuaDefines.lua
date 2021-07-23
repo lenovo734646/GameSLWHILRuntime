@@ -5,11 +5,14 @@ logError = CS.UnityEngine.Debug.LogError
 
 --UnityEngine
 UnityEngine = CS.UnityEngine
+DontDestroyOnLoad = UnityEngine.Object.DontDestroyOnLoad
+DestroyImmediate = UnityEngine.Object.DestroyImmediate
 Application = CS.UnityEngine.Application
 Instantiate = CS.UnityEngine.Object.Instantiate
 Destroy = CS.UnityEngine.Object.Destroy
 GameObject = CS.UnityEngine.GameObject
 Transform = CS.UnityEngine.Transform
+RectTransform = CS.UnityEngine.RectTransform
 Color = CS.UnityEngine.Color
 TextAsset = CS.UnityEngine.TextAsset
 Sprite = CS.UnityEngine.Sprite
@@ -19,9 +22,13 @@ SceneManager = CS.UnityEngine.SceneManagement.SceneManager
 Math = CS.UnityEngine.Mathf
 Vector3 = CS.UnityEngine.Vector3
 Vector2 = CS.UnityEngine.Vector2
-
+Quaternion = CS.UnityEngine.Quaternion
+PlayerPrefs = CS.UnityEngine.PlayerPrefs
 AudioClip = CS.UnityEngine.AudioClip
+DateTime = CS.System.DateTime
+TimeSpan = CS.System.TimeSpan
 Input = CS.UnityEngine.Input
+IsUnityObjectValid = CS.UnityHelper.IsUnityObjectValid
 
 --UnityEngine.UI
 Toggle = CS.UnityEngine.UI.Toggle
@@ -33,21 +40,11 @@ Button = CS.UnityEngine.UI.Button
 UpdateLuaBehaviour = CS.XLuaExtension.UpdateLuaBehaviour
 UGUIClickLuaBehaviour = CS.XLuaExtension.UGUIClickLuaBehaviour
 
---Global
-Timer = require "LuaUtil/Timer"
-LuaClass = require "LuaUtil/LuaClass"
-LuaBase = require "LuaUtil/LuaBase"
-require'LuaUtil.Logger'
+
 
 --CustomCSharp
 Context = CS.Context
 AssetConfig = CS.AssetConfig
-Loader = CS.Context.Game.Loader
-AppRoot = CS.AppRoot.Get()
---Loader = CS.ForRebuild.Loader(true)  -- param : 默认从大厅加载（强制update assets）
---log("DS Lua Defines  Loader")
---Loader = CS.AppRoot.Get().assetLoader
---log("DS Lua Defines  Loader  11")
 AsyncImageDownload = CS.AsyncImageDownload.Instance
 
 --Spine
@@ -62,7 +59,6 @@ SysDefines = CS.SysDefines
 UIManager = CS.UIManager
 GameController = CS.GameController
 ObjectPoolManager = CS.ObjectPoolManager.Instance
-CoroutineController = CS.CoroutineController.Instance
 UnityHelper = CS.UnityHelper
 
 -- OSAScrollVeiw 
@@ -72,6 +68,10 @@ OSA.MyParam = CS.OSAHelper.MyParam
 OSA.MyItemViewHolder = CS.OSAHelper.MyItemViewHolder
 OSA.ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 OSA.ContentGravity = CS.Com.TheFallenGames.OSA.Core.BaseParams.ContentGravity
-
+--Global
+Timer = require "LuaUtil/Timer"
+LuaClass = require "LuaUtil/LuaClass"
+LuaBase = require "LuaUtil/LuaBase"
+require'LuaUtil.Logger'
 
 

@@ -9,7 +9,7 @@ local tinsert = table.insert
 local tremove = table.remove
 local tonumber = tonumber
 
-local CoroutineHelper = require'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 
 local Destroy = Destroy

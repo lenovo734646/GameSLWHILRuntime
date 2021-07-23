@@ -4,7 +4,7 @@ local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject, System, Sprite, AudioClip = UnityEngine, GameObject, System, UnityEngine.Sprite, UnityEngine.AudioClip
 local Color = UnityEngine.Color
-local CoroutineHelper = require 'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local TextAnchor = UnityEngine.TextAnchor
 

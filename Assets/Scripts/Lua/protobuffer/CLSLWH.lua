@@ -65,7 +65,6 @@ message GetServerDataAck
     int32 state = 3;                //游戏状态：1、下注 2、开奖 3、空闲
     repeated int32 color_array = 4;                 // 颜色列表1-24
     repeated int32 ratio_array = 5;                 // 倍率列表1-12动物 13-15庄和闲
-    repeated int32 enjoyGame_ratio_array = 6;       // 暂时无用，待删除
     repeated ResultAnimIndex anim_result_list = 7;  //开奖结果列表（RunItem起始点和结束点）
     int32 enjoy_game_ret = 8;                       // 庄闲和开奖结果
     int32 ex_ret = 9;                               // 额外中奖结果（彩金，送灯，闪电翻倍）
@@ -146,12 +145,11 @@ message StateChangeNtf
     int32 state = 2;                                //状态 1=下注 2=开奖 3=空闲 
     repeated int32 color_array = 3;                 // 颜色列表1-24
     repeated int32 ratio_array = 4;                 // 倍率列表1-12动物 13-15庄和闲
-    repeated int32 enjoyGame_ratio_array = 5;       // 暂时无用，待删除
-    repeated ResultAnimIndex anim_result_list = 6;  //开奖结果列表（RunItem起始点和结束点）
-    int32 enjoy_game_ret = 7;                       // 庄闲和开奖结果
-    int32 ex_ret = 8;                               // 额外中奖结果（彩金，送灯，闪电翻倍）
-    int64 caijin_ratio = 9;                         // 彩金倍数
-    int64 shandian_ratio = 10;                        // 闪电翻倍倍数
+    repeated ResultAnimIndex anim_result_list = 5;  //开奖结果列表（RunItem起始点和结束点）
+    int32 enjoy_game_ret = 6;                       // 庄闲和开奖结果
+    int32 ex_ret = 7;                               // 额外中奖结果（彩金，送灯，闪电翻倍）
+    int64 caijin_ratio = 8;                         // 彩金倍数
+    int64 shandian_ratio = 9;                        // 闪电翻倍倍数
     //int64 betMaxLimit = 10;                          // 本局下注最大限制（防止超过庄家分数）
 }
 
@@ -170,7 +168,8 @@ message HistoryReq
 // 请求历史记录返回
 message HistoryAck 
 {
-    repeated HistoryRecord record_list = 1;    //历史记录列表
+    int32 errcode = 1;              //0成功
+    repeated HistoryRecord record_list = 2;    //历史记录列表
 }
 
 // 结算分数

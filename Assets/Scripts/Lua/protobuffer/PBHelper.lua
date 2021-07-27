@@ -154,7 +154,7 @@ function OnReceiveNetData(data, packName)
     -- if packName ~= 'CLGT.KeepAliveAck' then
     --     Log('OnReceiveNetData ' .. packName)
     -- end
-    print("packName = ", packName)
+    --print("packName = ", packName)
     local pbdata = data.pbdata
     local cblist = ackcallbackmap[packName]
     local decodeddata

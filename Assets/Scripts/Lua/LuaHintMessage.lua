@@ -16,14 +16,14 @@ function Create()
     local this = {
         showingMsgT = {}
     }
-    this.ShotHintMessage = function(self, ...)
-        return ShotHintMessage(self, ...)
+    this.ShowHintMessage = function(self, ...)
+        return ShowHintMessage(self, ...)
     end
     return this
 end
 
-function ShotHintMessage(this, msg)
-    Log('ShotHintMessage', msg, print(type(msg)))
+function ShowHintMessage(this, msg)
+    Log('ShowHintMessage', msg, print(type(msg)))
     if this.showingMsgT[msg] then
         return -- 同一个消息只显示一次
     end

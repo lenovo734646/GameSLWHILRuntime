@@ -54,9 +54,9 @@ function Class:__init(ui,View,roomdata)
     --
     self.bet_config_array = roomdata.bet_config_array
     self.self_user_id = roomdata.self_user_id
-    self.normal_show_time = roomdata.normal_show_time / 1000    -- 服务器那边是毫秒
-    self.shark_more_show_time = roomdata.shark_more_show_time / 1000 -- 服务器那边是毫秒
-    self.betid = roomdata.last_bet_id
+    self.normal_show_time = roomdata.normal_show_time / 1000    -- 毫秒转秒
+    self.shark_more_show_time = roomdata.shark_more_show_time / 1000 -- 毫秒转秒
+    self.betid = roomdata.last_bet_id or 0
     --
 
     self.lastSeletedToggleIndex = 1
@@ -80,7 +80,8 @@ function Class:__init(ui,View,roomdata)
         end
     }
 
-
+    --
+    self.betSnapShot = {} -- 上一局押注数据(续押使用)
     -- 玩家上一次下注总值
     self.selfTotalBet = {}
     self.TotalBet = {}
@@ -91,8 +92,6 @@ function Class:__init(ui,View,roomdata)
 
     self.gameCount = 0   -- 本次进入游戏局数
 
-    self.betSnapShot = {} -- 上一局押注数据
-    self:OnMoneyChange(SEnv.playerRes.currency)
     self:InitAnimalAnimation()
 
     ui.directionallight_animationhelper:PlayByIndex(1)
@@ -116,9 +115,14 @@ end
 function Class:OnSceneReady()
     print('OnSceneReady')
     local ui = self.ui
+    self.lastSeletedToggleIndex = 1
+    self:OnMoneyChange(SEnv.playerRes.currency)
+    -- 当前局输赢结果数据, 临时保存数据，结算结束再更新，避免刚进入结算界面就更新分数
+    self.curWinResultData = { win = 0, bet_score = 0, self_score = SEnv.playerRes.currency,}
     -- 网络消息监听
     -- 游戏状态变化
     PBHelper.AddListener('StateChangeNtf', function (data)
+        --print("StateChangeNtf ", data.state)
         self:OnStateChangeNtf(data)
     end)
 
@@ -129,8 +133,12 @@ function Class:OnSceneReady()
     
     -- 玩家资源变化(金币,钻石，点卷，道具数)
     PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
-        --print("分数变化ResChangedNtf...", data.res_type, data.res_value, self.state)
-
+        --print("分数变化ResChangedNtf...", data.res_type, data.res_value, data.res_delta, data.reason)
+        if data.res_type == 2 and data.reason == 42 then  -- 金币改变且是从银行取出
+            self.resultPanelData.winScore = self.resultPanelData.winScore or 0
+            self:OnMoneyChange(data.res_value - self.resultPanelData.winScore)
+            self.self_score = data.res_value -- 结算阶段缓存的玩家分数也要同步，不然分数会不同步
+        end
     end)
 
     PBHelper.AddListener('CLPF.ResSyncNtf', function (data)
@@ -187,7 +195,6 @@ function Class:OnSceneReady()
     local roomdata = self.roomdata
     -- 根据上局中奖下标同步转盘和指针角度
     local zhizhenRot = (roomdata.last_color_index -1)*15
-
     local animalIndex = roomdata.last_color_index - roomdata.last_animal_index 
     if animalIndex < 0 then
         animalIndex = animalIndex + GameConfig.RunItemCount
@@ -199,8 +206,6 @@ function Class:OnSceneReady()
     self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
 
     -- 状态处理
-    local state = roomdata.state
-    local left_time = roomdata.left_time
     local selfTotalBet = roomdata.self_bet_list
     local totalBet = roomdata.room_tatol_bet_info_list
     -- 同步下注
@@ -213,24 +218,6 @@ function Class:OnSceneReady()
         self:__SetTotalBetScore(betAreaData, info.total_bet)
     end
 
-    --print("OnSceneReady: 状态 = ", state, left_time)
-    --self:OnStateChangeNtf({ left_time = left_time, state = state })
-    --需要下注阶段发来的倍率表和颜色表，
-    --所以刚进入无论什么状态都要等到下一轮下注状态，才能正常进行游戏
-    self.ui.mainUI:SetWaitNextStateTip(true)
- 
-    
-    --修正时间差
-    local passTime = clock()-self.timeStamp
-    self.timeStamp = nil
-    local left_time = left_time-passTime
-    if left_time > 2 then
-        self.ui.mainUI.timeCounter:StartCountDown(left_time, state, function (time)
-            self:PlayCountDownSound(time)
-        end)
-    end
-    
-    --LogW("本地无网络调试，发送消息会报错")
     -- 发送请求历史路单数据
     CLSLWHSender.Send_HistoryReq(function (data)
         print('HistoryAck:'..json.encode(data))
@@ -251,6 +238,32 @@ function Class:OnSceneReady()
         end
         ui.roadScrollView:ReplaceItems(list)
     end)
+
+    -- 主动请求游戏状态数据
+    CLSLWHSender.Send_GetServerDataReq(function(ack)
+        if ack._errmessage then
+            g_Env.CreateHintMessage(ack._errmessage)
+        else
+            self:OnStateChangeNtf(ack)
+        end
+    end)
+    -- --print("OnSceneReady: 状态 = ", state, left_time)
+    -- --self:OnStateChangeNtf({ left_time = left_time, state = state })
+    -- --需要下注阶段发来的倍率表和颜色表，
+    -- --所以刚进入无论什么状态都要等到下一轮下注状态，才能正常进行游戏
+    -- self.ui.mainUI:SetWaitNextStateTip(true)
+ 
+    
+    -- --修正时间差
+    -- local passTime = clock()-self.timeStamp
+    -- self.timeStamp = nil
+    -- local left_time = left_time-passTime
+    -- if left_time > 2 then
+    --     self.ui.mainUI.timeCounter:StartCountDown(left_time, state, function (time)
+    --         self:PlayCountDownSound(time)
+    --     end)
+    -- end
+
 end
 
 
@@ -303,7 +316,7 @@ function Class:InitAnimalAnimation()
                 data.animco = nil
             end
         end
-        data.PlayShowAsync = function () -- 跟中奖同时播放
+        data.PlayShow = function () -- 跟中奖同时播放
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
             winShowData.animatorHelper:Play("Victory")
@@ -321,8 +334,9 @@ function Class:InitAnimalAnimation()
                 --print("PlayWin Sound ", color_id, animal_id, audioIndex)
                 AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
             end
-            
-            yield(WaitForSeconds(GameConfig.ShowZhanShiTime))
+        end
+        data.StopShow = function ()
+            --winShowData.gameObject:SetActive(false)-- 一直在显示，不需要隐藏
             data.PlayIdle()
         end
 
@@ -575,26 +589,74 @@ function Class:OnShowState(data)
     self:StopIdleStateAnim()
     local anim_result_list = data.anim_result_list
     if anim_result_list then
+        -- -- 检查剩余时间是否足够进行动画（断线重连可能在任意状态中任意时间恢复，会导致状态剩余时间不同）
+        -- -- 剩余时间小于(结算界面+动画展示 + 2)直接显示结果，不进行动画
+        local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
+        local winItemCount = #anim_result_list -- 中奖动物数量
+        local leftTime = data.left_time
+         -- 跑马灯动画时间
+        local ShowRunTime = leftTime - (GameConfig.ShowResultTime + GameConfig.ShowZhanShiTime*winItemCount)
+        if ShowRunTime <= 1 then -- 跑马灯时间小于1 就不跑了
+            bSkip = true
+        end
+        print("leftTime = ", leftTime, " bSkip = ", bSkip, "ShowRunTime = ", ShowRunTime, "winItemCount = ", winItemCount)
+        --
+        local ShowResultTime = GameConfig.ShowResultTime
+        local ShowZhanShiTime = GameConfig.ShowZhanShiTime
+        local ShowRunTime_Shark = self.shark_more_show_time - GameConfig.ShowZhanShiTime -- 减去展示时间，只要跑马灯时间
+        if bSkip == false then
+            if winItemCount > 1 then
+                local t1 = ShowRunTime - ShowRunTime_Shark
+                if t1 < 1 then -- 减掉送灯跑马灯时间，留给第一圈的时间小于 1 时间就平分
+                    ShowRunTime = ShowRunTime/2
+                    ShowRunTime_Shark = ShowRunTime
+                else
+                    ShowRunTime = t1
+                end
+            end
+        else
+            -- 结算界面显示时间
+            if leftTime <= GameConfig.ShowResultTime then
+                ShowZhanShiTime = 0
+                ShowResultTime = leftTime
+            else
+                ShowZhanShiTime = leftTime - GameConfig.ShowResultTime
+            end
+        end
+        --local winItemDataList = {} -- 记录本次所有中奖动物itemData
         CoroutineHelper.StartCoroutine(function ()
-            for i=1,#anim_result_list do
+            for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
                 local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
                 local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
+                local itemData = self.runItemDataList[animalTo]
                 --print("data.left_time = ", data.left_time)
-                local round = 2
-                local showTime = data.left_time - GameConfig.ShowResultTime - GameConfig.ShowZhanShiTime
-                -- 送灯特殊处理
-                if exType == ExWinType.SongDeng then
-                    if i == 1 then
-                        showTime = showTime - self.shark_more_show_time
-                    else
+                if not bSkip then
+                    local round = 2
+                    local showTime = ShowRunTime
+                    if i > 1 then -- 送灯
                         round = 0
-                        showTime = self.shark_more_show_time - GameConfig.ShowZhanShiTime
+                        showTime = ShowRunTime_Shark
                     end
+                    yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放转盘动画
+                    itemData.PlayShow() -- 播放动物胜利动画
+                    yield(WaitForSeconds(GameConfig.ShowZhanShiTime))
+                    ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+                    ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
+                    --
+                    local colordata = self.colorDataList[colorTo]
+                    colordata.animator:Play("BaoshiFlash", 0, 0)
+                    colordata.animator:Update(0)
+                    colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
+                else
+                    itemData.PlayShow() -- 播放动物胜利动画
                 end
-
-                yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放转盘动画
-                
+            end
+            -- 如果跳过了跑马灯动画，并且扣除结算界面显示时间，还有剩余，就等一等，避免结算界面提前消失
+            if bSkip then
+                if ShowZhanShiTime > 0 then
+                    yield(WaitForSeconds(ShowZhanShiTime))
+                end
             end
 
             -- 禁用聚光灯动画和宝石动画
@@ -603,7 +665,8 @@ function Class:OnShowState(data)
             self.ui.Baoshi_1_animator.enabled = false
             -- 显示中奖结算界面
             local resultPanel = self.ui.mainUI.resultPanel
-            yield(WaitForSeconds(resultPanel:ShowResult(self.resultPanelData)))
+            resultPanel:ShowResult(self.resultPanelData)
+            yield(WaitForSeconds(ShowResultTime))
             resultPanel:HideResult()
             if winColor == GameConfig.ColorType.SanYuan or winColor == GameConfig.ColorType.SiXi then
                 AudioManager.Instance:StopAllSoudEff()   -- 三元四喜音乐太长这里截断（或看情况做其他处理）
@@ -659,7 +722,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), time - 1, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         local colordata = colorDataList[colorToindex]
-        colordata.animator.enabled = true  -- 播放闪烁动画
+        colordata.animator.enabled = true  -- 播放中奖颜色闪烁动画
     end)
 
     -- 
@@ -692,15 +755,6 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
         ui.winStageAnimal:DOPlayForward()   -- 播放中奖动物升起动画
         yield()
-
-        yield(animaldata.PlayShowAsync())
-        animaldata.animatorHelper:Play("Idel1")
-        ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
-        ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
-        local colordata = colorDataList[colorToindex]
-        colordata.animator:Play("BaoshiFlash", 0, 0)
-        colordata.animator:Update(0)
-        colordata.animator.enabled = false  -- 停止播放闪烁动画
     end)
 
     

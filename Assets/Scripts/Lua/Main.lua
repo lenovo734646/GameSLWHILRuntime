@@ -130,7 +130,7 @@ local OnEnterRoomAck = function(data, err)
         SEnv.playerRes.userName = roomdata.self_user_name
         SEnv.playerRes.headID = roomdata.self_user_Head
         SEnv.playerRes.headFrameID = roomdata.self_user_HeadFrame
-        print("进入房间成功:UserID = ", SEnv.playerRes.selfUserID, "headID = ", SEnv.playerRes.headID, "  headFrameID = ",SEnv.playerRes.headFrameID)
+        print("进入房间成功:UserID = ", SEnv.playerRes.selfUserID, SEnv.playerRes.headID, SEnv.playerRes.headFrameID)
     end
     return true
 end
@@ -201,6 +201,7 @@ function OnCloseSubGame()
     --gameView:Release()
 end
 
+local LogW = LogW
 -- 网络断开时调用，此时小游戏应该立即停止所有正在进行的协程和游戏进程，等待网络恢复
 -- 这里的网络中断和g_Env._SubGameReconnection并不相同
 -- g_Env._SubGameReconnection是在玩家强制退出游戏或者意外退出游戏时恢复用
@@ -209,20 +210,23 @@ function OnNetworkLost()
     local LoadingUI = g_Env.uiManager:OpenUI('LoadingUI')
     if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
         LoadingUI:SetTipText(_STR_ '网络已断开，网络恢复将继续游戏...')
-        StopAllCoroutine()
+        CoroutineHelper.StopAllCoroutines()
+        LogW("网络连接断开...")
     else
         LoadingUI:SetTipText(_STR_ '与服务器断开连接，等待恢复中...')
-        StopAllCoroutine()
+        CoroutineHelper.StopAllCoroutines()
+        LogW("与服务器断开连接...")
     end
 end
 
 -- 网络恢复时调用
 -- 与OnNetworkLost相对
 function OnNetworkReConnect()
+    LogW("网络连接恢复...")
     PBHelper.Reset() -- 一定要重置网络模块
     g_Env.uiManager:CloseUI('LoadingUI')
     -- 先重新请求进入房间
-    CLSLWHSender.SendEnterRoomReq(OnEnterRoomAck)
+    CLSLWHSender.Send_EnterRoomReq(OnEnterRoomAck)
     -- 再请求服务器数据
     CLSLWHSender.Send_GetServerDataReq(function(ack)
         if ack._errmessage then

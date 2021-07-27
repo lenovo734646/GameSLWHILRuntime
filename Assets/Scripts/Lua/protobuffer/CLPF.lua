@@ -28,6 +28,7 @@ message ResChangedNtf
     int64 res_value = 2;            //资源值
     int64 res_delta = 3;            //资源变化量
     int64 res_id = 4;               //此次资源变化id，从客户端登录开始从0开始累加
+    int32 reason = 5;               //变化原因 reason=41是金库存入  reason=42是金库取出
 }
 //物品信息结构 STRUCT!!
 message ItemInfo

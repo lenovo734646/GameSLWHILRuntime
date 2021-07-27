@@ -30,8 +30,7 @@ function Class:__init(userInfoInitHelper, roomData)
 end
 
 function Class:OnChangeMoney(currency)
-    print("玩家分数改变，当前分数：", currency)
-    self.TMP_f_UserMoney.text = currency--Helpers.GameNumberFormat(currency)
+    self.TMP_f_UserMoney.text = tostring(currency)--Helpers.GameNumberFormat(currency)
 end
 
 function Class:OnChangeHead(headID)

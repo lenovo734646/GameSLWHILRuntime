@@ -120,7 +120,6 @@ end
 -- state                 游戏状态：1、下注 2、开奖 3、空闲
 -- color_array                   颜色列表1-24
 -- ratio_array                   倍率列表1-12动物 13-15庄和闲
--- enjoyGame_ratio_array         暂时无用，待删除
 -- anim_result_list   开奖结果列表（RunItem起始点和结束点）
 -- enjoy_game_ret                         庄闲和开奖结果
 -- ex_ret                                 额外中奖结果（彩金，送灯，闪电翻倍）
@@ -185,6 +184,7 @@ function Send_SetBetReq_Async(index_id, bet_id, err_paser)
 end
 
 --返回的表内容(协程方法Async同样适用):
+-- errcode               0成功
 -- record_list     历史记录列表
 function Send_HistoryReq(callback)
     local senddata = {}

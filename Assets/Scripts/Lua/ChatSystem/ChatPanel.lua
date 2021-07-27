@@ -54,7 +54,6 @@ function Class:__init(panel, loader, userData)
     self.msgItemBGInitHelper = nil
 
     --
-    print("headID = ", userData.headID)
     self.faceSpr = SEnv.GetHeadSprite(userData.headID)
 
     -- msg scroll view
@@ -276,10 +275,10 @@ function Class:On_btnSend_Event(btnSend)
 end
 
 function Class:OnCustumEvent(params)
-    -- 回车键
-    if params[0]=='msgInputField_onSubmit' then
-        self:OnSendText(self.inputField)
-    end
+    -- -- 回车键
+    -- if params[0]=='msgInputField_onSubmit' then
+    --     self:OnSendText(self.inputField)
+    -- end
 end
 
 function Class:Release()
@@ -307,7 +306,7 @@ end
 
 function Class:OnDestroy()
     print("ChatPanel OnDestroy")
-
+    self:Release()
 end
 
 return _ENV

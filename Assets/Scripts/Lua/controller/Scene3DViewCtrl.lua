@@ -368,7 +368,7 @@ end
 
 function Class:OnStateChangeNtf(data, isReconnection)
     if isReconnection then
-        self:__ResetState()
+        self.ui.mainUI.resultPanel:HideResult()
     end
     local state = data.state
     self.state = state
@@ -771,7 +771,9 @@ end
 
 -- 空闲阶段
 function Class:OnFreeState()
-    self:__ResetState()
+    self.resultPanelData.winScore = 0 -- 本局输赢
+    self.resultPanelData.betScore = 0  -- 总输赢
+    self.selfScore = 0
     --
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
@@ -959,11 +961,5 @@ function Class:__GetContinueBetScore()
     return score
 end
 
-function Class:__ResetState()
-    self.ui.mainUI.resultPanel:HideResult()
-    self.resultPanelData.winScore = 0 -- 本局输赢
-    self.resultPanelData.betScore = 0  -- 总输赢
-    self.selfScore = 0
-end
 
 return _ENV

@@ -136,8 +136,11 @@ function Class:OnSceneReady()
     PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
         --print("分数变化ResChangedNtf...", data.res_type, data.res_value, data.res_delta, data.reason)
         if data.res_type == 2 and data.reason == 42 then  -- 金币改变且是从银行取出
-            self.resultPanelData.winScore = self.resultPanelData.winScore or 0
-            self:OnMoneyChange(data.res_value - self.resultPanelData.winScore)
+            local win = 0
+            if self.resultPanelData and self.resultPanelData.winScore then
+                win = self.resultPanelData.winScore
+            end
+            self:OnMoneyChange(data.res_value - win)
             self.selfScore = data.res_value -- 结算阶段缓存的玩家分数也要同步，不然分数会不同步
         end
     end)
@@ -771,9 +774,11 @@ end
 
 -- 空闲阶段
 function Class:OnFreeState()
-    self.resultPanelData.winScore = 0 -- 本局输赢
-    self.resultPanelData.betScore = 0  -- 总输赢
-    self.selfScore = 0
+    if self.resultPanelData then
+        self.resultPanelData.winScore = 0 -- 本局输赢
+        self.resultPanelData.betScore = 0  -- 总输赢
+    end
+    self.selfScore = SEnv.playerRes.currency
     --
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
@@ -801,6 +806,7 @@ function Class:OnNetWorkReConnect()
 end
 
 function Class:OnMoneyChange(currency)
+    SEnv.playerRes.currency = currency
     self:DoCheckForBetButtonState(currency)
     self.lastCurrecy = currency
     self.ui.mainUI.userInfo:OnChangeMoney(currency)

@@ -141,6 +141,7 @@ function Class:OnSendText(inputField)
     local text = inputField.text
     --print("OnSendText text = ", "|"..text.."|")
     if string.IsNullOrEmpty(text) or text == " " or text == '\n' or text == '\r' or text == '\t' then
+        inputField.text = ""
         return
     end
     if self.tog_Emoji.isOn then

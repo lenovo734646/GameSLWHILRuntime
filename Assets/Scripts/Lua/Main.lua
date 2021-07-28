@@ -232,7 +232,7 @@ function OnNetworkReConnect()
         if ack._errmessage then
             g_Env.CreateHintMessage(ack._errmessage)
         else
-            gameView.ctrl:OnStateChangeNtf(ack)
+            gameView.ctrl:OnStateChangeNtf(ack, true)
         end
     end)
 end

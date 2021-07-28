@@ -103,6 +103,8 @@ namespace SLWH
         private void OnEnable()
         {
             print("Test OnEnable....");
+            var v = 2;
+            print("v = "+ (ExWinType)v);
         }
 
         private void OnDisable()

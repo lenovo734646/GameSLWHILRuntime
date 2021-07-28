@@ -12,6 +12,7 @@ local RotateMode = CS.DG.Tweening.RotateMode
 local table = table
 local tinsert = table.insert
 local tremove = table.remove
+local PrintTable = PrintTable
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local WaitForSeconds = UnityEngine.WaitForSeconds
@@ -137,7 +138,7 @@ function Class:OnSceneReady()
         if data.res_type == 2 and data.reason == 42 then  -- 金币改变且是从银行取出
             self.resultPanelData.winScore = self.resultPanelData.winScore or 0
             self:OnMoneyChange(data.res_value - self.resultPanelData.winScore)
-            self.self_score = data.res_value -- 结算阶段缓存的玩家分数也要同步，不然分数会不同步
+            self.selfScore = data.res_value -- 结算阶段缓存的玩家分数也要同步，不然分数会不同步
         end
     end)
 
@@ -336,7 +337,7 @@ function Class:InitAnimalAnimation()
             end
         end
         data.StopShow = function ()
-            --winShowData.gameObject:SetActive(false)-- 一直在显示，不需要隐藏
+            winShowData.gameObject:SetActive(false)-- 一直在显示，不需要隐藏
             data.PlayIdle()
         end
 
@@ -365,9 +366,11 @@ function Class:IsFreeState()
     return self.state == GameConfig.GameState.FREE
 end
 
-function Class:OnStateChangeNtf(data)
+function Class:OnStateChangeNtf(data, isReconnection)
+    if isReconnection then
+        self:__ResetState()
+    end
     local state = data.state
-    print("OnStateChangeNtf state = ", state)
     self.state = state
     if self:IsBetState() then --下注
         self.ui.mainUI:SetWaitNextStateTip(false)
@@ -452,56 +455,60 @@ function Class:ConvertBetScoreToBetIndex(betScore)
     end
     return betData
 end
-
--- 下注阶段
-function Class:OnBetState(data)
+-- 设置动物倍率和颜色（下注阶段或断线重连后）
+function Class:SetColorAndRatio(colorArray, ratioArray)
     local ui = self.ui
-    ui.viewEventBroadcaster:Broadcast('betState')
-    AudioManager.Instance:PlaySoundEff2D("start_bet")
-    self:DoCheckForBetButtonState()--判断并禁用钱不够的可选筹码按钮
-
-    if data.ratio_array == nil then
-        -- 下注阶段进入
-         return
-     end
-    -- 设置动物倍率和颜色(下注阶段进入颜色和倍率是nil，没传过来)
-    local colorArray = data.color_array
-    local ratioArray = data.ratio_array
-    if colorArray ~= nil then
+    if #colorArray ~= 0 then
         -- 设置颜色
         print("颜色表：", json.encode(colorArray))
         for index, value in ipairs(colorArray) do
             ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
         end
     end
-    if ratioArray ~= nil then
+    if #ratioArray ~= 0 then
+        print("倍率表：", json.encode(ratioArray))
+        self.ratioArray = ratioArray   
         -- 设置倍率（包含庄和闲）
         local count = #ui.betAreaList
         for i = 1, count, 1 do
             ui.betAreaList[i].ratioText.text = ratioArray[i]
         end
     end
-    if ratioArray ~= nil then
-        print("倍率表：", json.encode(ratioArray))
-        self.ratioArray = ratioArray   
-    end
-     
+end
 
-    --
+-- 下注阶段
+function Class:OnBetState(data)
+    print("进入下注阶段....")
+    local ui = self.ui
+    ui.viewEventBroadcaster:Broadcast('betState')
+    AudioManager.Instance:PlaySoundEff2D("start_bet")
+    self:DoCheckForBetButtonState()--判断并禁用钱不够的可选筹码按钮
+
+    if data.color_array == nil or data.ratio_array == nil then
+        LogE("OnBetState: data.color_array == nil or data.ratio_array == nil ")
+        return
+     end
+     self:SetColorAndRatio(data.color_array, data.ratio_array)
 end
 
 -- 游戏阶段（转和显示结果）
 function Class:OnShowState(data)
+    print("进入结算阶段....")
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
     ui.directionallight_animationhelper:PlayByIndex(1)
     ui.pointlight_animationhelper:PlayByIndex(1)
-
-     if #self.ratioArray <= 0 then
-        -- 结算阶段进入
-         return
-     end
+    --
+    if #data.color_array == 0 or #data.ratio_array == 0 then
+        if #self.ratioArray == 0 then
+            LogE("OnShowState: data.color_array == nil or data.ratio_array == nil self.ratioArray = nil")
+            return
+        end
+    else
+        self:SetColorAndRatio(data.color_array, data.ratio_array)
+        self.ratioArray = data.ratio_array
+    end
     --
     local ColorType = GameConfig.ColorType
     local ExWinType = GameConfig.ExWinType
@@ -644,21 +651,23 @@ function Class:OnShowState(data)
                     ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
                     ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
                     --
-                    local colordata = self.colorDataList[colorTo]
+                    local colordata = self.ui.colorDataList[colorTo]
                     colordata.animator:Play("BaoshiFlash", 0, 0)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
                 else
-                    itemData.PlayShow() -- 播放动物胜利动画
+                    -- 这里播放也看不到，需要把花瓣打开，舞台升起才能看到，但是时间可能不够，这里就暂时不显示了
+                    --itemData.PlayShow() -- 播放动物胜利动画
                 end
             end
             -- 如果跳过了跑马灯动画，并且扣除结算界面显示时间，还有剩余，就等一等，避免结算界面提前消失
             if bSkip then
                 if ShowZhanShiTime > 0 then
                     yield(WaitForSeconds(ShowZhanShiTime))
+                    --itemData.StopShow() -- 停止播放动物胜利动画
                 end
             end
-
+            
             -- 禁用聚光灯动画和宝石动画
             self.ui.SpotLight_Animal_animator.gameObject:SetActive(false)
             self.ui.SpotLight_Animal_animator.enabled = false
@@ -762,6 +771,8 @@ end
 
 -- 空闲阶段
 function Class:OnFreeState()
+    self:__ResetState()
+    --
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
     ui.directionallight_animationhelper:PlayByIndex(2)
@@ -946,6 +957,13 @@ function Class:__GetContinueBetScore()
         score=score+v
     end
     return score
+end
+
+function Class:__ResetState()
+    self.ui.mainUI.resultPanel:HideResult()
+    self.resultPanelData.winScore = 0 -- 本局输赢
+    self.resultPanelData.betScore = 0  -- 总输赢
+    self.selfScore = 0
 end
 
 return _ENV

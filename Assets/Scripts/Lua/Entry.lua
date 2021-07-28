@@ -16,7 +16,7 @@ DDOLGameObject:AddComponent(typeof(CS.AudioManager))
 DDOLGameObject:AddComponent(typeof(CS.NetController))
 AudioManager = CS.AudioManager.Instance
 UnityEngine.Object.DontDestroyOnLoad(DDOLGameObject)
-CS.NetController.Instance.serverUrl = [[http://47.104.147.168:8000/router/rest]]--[[http://101.36.116.254:8000/router/rest]]
+CS.NetController.Instance.serverUrl = [[http://101.36.116.254:8000/router/rest]]
 PBHelper.Init('CLSLWH')
 PBHelper.AddPbPkg('CLPF')
 SEnv.loader = require'LuaAssetLoader'.Create()

@@ -79,7 +79,6 @@ function Class:ShowResult(resultPanelData)
     local exType = resultPanelData.exType
     --
     self.betText.text = tostring(betScore)
-    print("self:__GetNumString(winScore) = ", self:__GetNumString(winScore))
     self.winText.text = self:__GetNumString(winScore)
     --庄闲和小游戏
     local enjoyGameData = resultPanelData.enjoyGameData

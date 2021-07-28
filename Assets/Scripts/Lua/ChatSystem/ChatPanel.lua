@@ -139,7 +139,8 @@ end
 -- 发送文字
 function Class:OnSendText(inputField)
     local text = inputField.text
-    if string.IsNullOrEmpty(text) then
+    --print("OnSendText text = ", "|"..text.."|")
+    if string.IsNullOrEmpty(text) or text == " " or text == '\n' or text == '\r' or text == '\t' then
         return
     end
     if self.tog_Emoji.isOn then

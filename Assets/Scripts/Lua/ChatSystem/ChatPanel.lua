@@ -154,7 +154,7 @@ function Class:OnSendText(inputField)
     -- self:OnReceiveMsg(timeStampSec, 0012, 1, text, nil, self.faceSpr)   
     --
     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        CLCHATROOMSender.Send_SendChatMessageReq_Async(1, text, tostring(timeStampSec),SEnv.ShowErrorByHintHandler)
+        CLCHATROOMSender.Send_SendChatMessageReq_Async(1, text, tostring(timeStampSec),_G.ShowErrorByHintHandler)
     end)
     self.inputField.text = ""
 end
@@ -166,7 +166,7 @@ function Class:OnSendPhrase(phraseData)
     -- self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
     --
     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        CLCHATROOMSender.Send_SendChatMessageReq_Async(2, tostring(phraseData.index), tostring(timeStampSec),SEnv.ShowErrorByHintHandler)
+        CLCHATROOMSender.Send_SendChatMessageReq_Async(2, tostring(phraseData.index), tostring(timeStampSec),_G.ShowErrorByHintHandler)
     end)
     -- 关闭界面
     self.tog_Phrase.isOn = false;

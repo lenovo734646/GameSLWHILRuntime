@@ -408,7 +408,12 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        SEnv.ShotHintMessage(string.Format2(_STR_"金币不足,当前金币:{1}",SEnv.playerRes.currency))
+        SEnv.MessageBox({ content = _STR_"金币不足，是否打开银行取款?", 
+            onOK = function()
+                self.ui.mainUI:On_btn_Bank_Event()
+            end,
+            showCancel = true,
+        })
         return
     end
     --发送下注
@@ -421,7 +426,7 @@ function Class:OnContinueBtnClicked()
     --     self.betSnapShot[i] = 1000
     -- end
     if self:__GetContinueBetScore() <= 0 then
-        SEnv.ShotHintMessage(_STR_"上局无下注")
+        _G.ShotHintMessage(_STR_"上局无下注")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
@@ -872,7 +877,7 @@ end
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
     CoroutineHelper.StartCoroutineGo(self.View, function()
-        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SEnv.ShowErrorByHintHandler)
+        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, _G.ShowErrorByHintHandler)
         if data then
             self:OnReceiveBetAck(data)
         end
@@ -880,6 +885,7 @@ function Class:OnSendBet(item_id, betid)
 end
 
 function Class:OnReceiveBetAck(data)
+    print("玩家下注返回：玩家分数: ", data.self_score)
     local betAreaList = self.ui.betAreaList
     local self_bet_info = data.self_bet_info
     local item_id = self_bet_info.index_id

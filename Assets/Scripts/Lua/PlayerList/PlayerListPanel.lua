@@ -80,7 +80,7 @@ end
 function Class:OnSendPlayerListReq()
     print("发送玩家列表请求")
     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        local data = CLCHATROOMSender.Send_QueryPlayerListReq_Async(0, 100, SEnv.ShowErrorByHintHandler)
+        local data = CLCHATROOMSender.Send_QueryPlayerListReq_Async(0, 100, _G.ShowErrorByHintHandler)
         if data then
             local items = {}
             local count = data.total_amount

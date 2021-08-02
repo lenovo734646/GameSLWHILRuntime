@@ -876,12 +876,23 @@ end
 
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
-    CoroutineHelper.StartCoroutineGo(self.View, function()
-        local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, _G.ShowErrorByHintHandler)
-        if data then
-            self:OnReceiveBetAck(data)
+    -- 用下面这个StartCoroutineGo发送会导致ack顺序不能保证，会导致下注ack返回顺序错误，导致玩家分数错误
+    -- CoroutineHelper.StartCoroutineGo(self.View, function()
+    --     local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, _G.ShowErrorByHintHandler)
+    --     if data then
+    --         self:OnReceiveBetAck(data)
+    --     end
+    -- end)
+    -- 暂时改用下面这种方法发送
+    CLSLWHSender.Send_SetBetReq(function (ack)
+        if ack._errmessage then
+            if g_Env then
+                g_Env.ShowHitMessage(ack._errmessage)
+            end
+        else
+            self:OnReceiveBetAck(ack)
         end
-    end)
+    end,item_id, betid)
 end
 
 function Class:OnReceiveBetAck(data)

@@ -357,8 +357,7 @@ function Class:InitAnimalAnimation()
                 data.transform.position = itemPos
                 data.transform.eulerAngles = Vector3(0,-180,0)
             else
-                print("Play Anim....true")
-                data.transform:DOMove(itemPos, 1.2):SetDelay(0.3)
+                data.transform:DOMove(itemPos, 1.0):SetDelay(0.3)
                 data.transform:DORotate(Vector3(0,-180,0), 0.2):SetDelay(1)
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetBool("bVictory", true)
@@ -370,8 +369,7 @@ function Class:InitAnimalAnimation()
                 data.transform.position = data.OriginalPos
                 data.transform.eulerAngles = data.OriginalRot
             else
-                print("Play Anim....false")
-                data.transform:DOMove(data.OriginalPos, 1.2):SetDelay(0.3)
+                data.transform:DOMove(data.OriginalPos, 1.0):SetDelay(0.3)
                 data.transform:DORotate(data.OriginalRot, 0.2)
                 data.animatorHelper:SetBool("bJumpToCenter", false)
                 data.animatorHelper:SetBool("bVictory", false)
@@ -692,9 +690,9 @@ function Class:OnShowState(data)
                     end
                     yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
                     ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
-                    -- TODO: 中奖动物跳入并播放胜利动画
+                    -- 中奖动物跳入并播放胜利动画
                     itemData.JumpToWinStage(winItemCount, i, bSkip)
-                    --itemData.PlayShow() -- 中间奖台播放动物胜利动画
+                    --
                     yield(WaitForSeconds(GameConfig.ShowZhanShiTime))
                     ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
                     --ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
@@ -704,9 +702,8 @@ function Class:OnShowState(data)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
                 else
-                    itemData.JumpToWinStage(winItemCount, i, bSkip)
-                    -- 这里播放也看不到，需要把花瓣打开，舞台升起才能看到，但是时间可能不够，这里就暂时不显示了
-                    --itemData.PlayShow() -- 播放动物胜利动画
+                    ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
+                    itemData.JumpToWinStage(winItemCount, i, bSkip) 
                 end
             end
             -- 如果跳过了跑马灯动画，并且扣除结算界面显示时间，还有剩余，就等一等，避免结算界面提前消失
@@ -727,6 +724,8 @@ function Class:OnShowState(data)
             for _, itemData in pairs(winItemDataList) do
                 itemData.JumpToOriginal(bSkip)
             end
+            ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+            --
             yield(WaitForSeconds(ShowResultTime))
             resultPanel:HideResult()
             if winColor == GameConfig.ColorType.SanYuan or winColor == GameConfig.ColorType.SiXi then

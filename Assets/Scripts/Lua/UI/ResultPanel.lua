@@ -34,7 +34,7 @@ function Class:__init(resultPanelGameObject)
     -- 结算界面
     local resultInitHelper = self.resultPanel:GetComponent(typeof(LuaInitHelper))
     resultInitHelper:Init(self)
-    self.resultAnimals = {}
+    self.resultAnimals = {} -- 普通中奖动物
     resultInitHelper:ObjectsSetToLuaTable(self.resultAnimals)
     --
     local multiList = {}
@@ -42,7 +42,10 @@ function Class:__init(resultPanelGameObject)
     multiListInitHelper:Init(multiList)
     --
     self.enjoyGameData = {}
+    self.winEnjoyResult = {}
     self.winEnjoyGameInitHelper:Init(self.enjoyGameData)
+    self.winEnjoyGameInitHelper:ObjectsSetToLuaTable(self.winEnjoyResult)
+
     self.winAnimalData = {}
     self.winAnimalInitHelper:Init(self.winAnimalData)
     self.winShanDianData = {}
@@ -57,7 +60,7 @@ function Class:__init(resultPanelGameObject)
     self.bgColors = multiList.bgColors
     self.animalNameSprs = multiList.animalNameSprs
     self.animalSprs = multiList.animalSprs
-    self.enjoyTypeSprs = multiList.enjoyTypeSprs
+    self.resultAnimals_Gold = multiList.resultAnimals_Gold -- 三元四喜黄金中奖动物
 
     self:HideResult()
 end
@@ -81,9 +84,11 @@ function Class:ShowResult(resultPanelData)
     self.betText.text = tostring(betScore)
     self.winText.text = self:__GetNumString(winScore)
     --庄闲和小游戏
+    for _, enjoyResult in pairs(self.winEnjoyResult) do
+        enjoyResult:SetActive(false)    -- 先重置一下
+    end
     local enjoyGameData = resultPanelData.enjoyGameData
-    self.enjoyGameData.winColorBG = self.bgColors[enjoyGameData.enjoyGame_id]
-    self.enjoyGameData.enjoyImg.sprite = self.enjoyTypeSprs[enjoyGameData.enjoyGame_id]
+    self.winEnjoyResult[enjoyGameData.enjoyGame_id]:SetActive(true)
     self.enjoyGameData.ratioText.text = "x"..enjoyGameData.enjoyGameRatio
     self.enjoyGameData.winEnjoyGameGO:SetActive(true)
     -- 颜色(普通中奖+三元四喜)
@@ -92,7 +97,7 @@ function Class:ShowResult(resultPanelData)
         local data = resultPanelData.sanyuanData
         local colorSpr = self.smallColors[data.sanyuanColor_id]
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-            self:__AddAnimal(i, colorSpr, data.animalRatioArray[i])
+            self:__AddAnimal(i, colorSpr, data.animalRatioArray[i], self.resultAnimals_Gold)
         end
         
     elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
@@ -100,13 +105,12 @@ function Class:ShowResult(resultPanelData)
         local data = resultPanelData.sixiData
         for i = ColorType.Red, ColorType.Yellow, 1 do
             local spr = self.smallColors[i]
-            self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i])
+            self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i], self.resultAnimals_Gold)
         end
-        
     else
         self.winAnimalData.winAnimalGO:SetActive(true)
         local data = resultPanelData.normalData
-        self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio)
+        self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio, self.resultAnimals)
         --
         self.winAnimalData.winColorBG.sprite = self.bgColors[color_id]
         self.winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
@@ -133,7 +137,7 @@ function Class:ShowResult(resultPanelData)
         self.winSongDengData.animalImg.sprite = animal
         self.winSongDengData.animalImg:SetNativeSize()
         self.winSongDengData.ratio.text = "x"..tostring(ratio)
-        self:__AddAnimal(data.songDengAnimalID, self.smallColors[data.songDengColorID], ratio)
+        self:__AddAnimal(data.songDengAnimalID, self.smallColors[data.songDengColorID], ratio, self.resultAnimals)
 
     end
 
@@ -157,8 +161,8 @@ function Class:HideResult()
 end
 
 -- 初始化一个中奖动物
-function Class:__AddAnimal(animal_id, colorSpr, ratio)
-    local go = Instantiate(self.resultAnimals[animal_id], self.resuletScrollView.content)
+function Class:__AddAnimal(animal_id, colorSpr, ratio, resultAnimals)
+    local go = Instantiate(resultAnimals[animal_id], self.resuletScrollView.content)
     go.transform.localPosition = Vector3.zero
     local animalData = {}
     go:GetComponent(typeof(LuaInitHelper)):Init(animalData, false)

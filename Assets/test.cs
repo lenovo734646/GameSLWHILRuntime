@@ -303,11 +303,19 @@ namespace SLWH
                     }
                 }
             }
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    bleft = true;
-            //    Debug.Log("你按下了鼠标左键");
-            //}
+            if (Input.GetKeyUp(KeyCode.D))
+            {
+                //bleft = true;
+                //Debug.Log("你按下了鼠标左键");
+                animatorHelper.GetAnimator().Play("Open", 0, 1);
+                animatorHelper.SetBool("bClose", false);
+            }
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                //bleft = true;
+                //Debug.Log("你按下了鼠标左键");
+                animatorHelper.SetBool("bClose", true);
+            }
             //if (Input.GetMouseButtonUp(0))
             //{
             //    bleft = false;

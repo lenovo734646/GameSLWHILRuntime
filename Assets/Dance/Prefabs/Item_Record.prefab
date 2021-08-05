@@ -129,6 +129,12 @@ MonoBehaviour:
     anyType: {fileID: 3430735382047613188}
     sType: 
     manualName: 
+  - name: SiXiRoot
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 119805598526480568}
+    sType: 
+    manualName: 
   showlog: 0
 --- !u!1 &567523059544090556
 GameObject:
@@ -567,6 +573,12 @@ MonoBehaviour:
     anyType: {fileID: 7003168154099231529}
     sType: 
     manualName: 
+  - name: CaiJinRoot
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 2655941881657534336}
+    sType: 
+    manualName: 
   showlog: 0
 --- !u!1 &2931080131738679640
 GameObject:
@@ -889,6 +901,12 @@ MonoBehaviour:
     anyType: {fileID: 5575235962833646163}
     sType: 
     manualName: 
+  - name: ShanDianRoot
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 3342005184151290935}
+    sType: 
+    manualName: 
   showlog: 0
 --- !u!1 &3342005184691338721
 GameObject:
@@ -1041,13 +1059,13 @@ MonoBehaviour:
   - name: enjoyTypeImg3
     t: {fileID: 0}
     monoType: {fileID: 0}
-    anyType: {fileID: 6007484052390141677}
+    anyType: {fileID: 2287740537101117507}
     sType: 
     manualName: 
   - name: enjoyTypeImg2
     t: {fileID: 0}
     monoType: {fileID: 0}
-    anyType: {fileID: 2287740537101117507}
+    anyType: {fileID: 6007484052390141677}
     sType: 
     manualName: 
   - name: enjoyTypeImg1
@@ -1420,6 +1438,12 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 9223253557673808246}
+    sType: 
+    manualName: 
+  - name: SanYuanRoot
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 4215134777743662176}
     sType: 
     manualName: 
   showlog: 0
@@ -2507,6 +2531,12 @@ MonoBehaviour:
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 6666850834935240944}
+    sType: 
+    manualName: 
+  - name: SongDengRoot
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 7805903103993726841}
     sType: 
     manualName: 
   showlog: 0

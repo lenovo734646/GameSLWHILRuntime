@@ -145,13 +145,10 @@ function Class:__init(roomdata)
             animalImg.sprite = spr
             animalImg:SetNativeSize()
         end
-
-        -- viewItemData.enjoyTypeImg.sprite = itemdata.enjoyTypeSpr
-            for i = 1, 3 do
-                local active = i==itemdata.enjoyType_id
-                viewItemData['enjoyTypeImg'..itemdata.enjoyType_id].gameObject:SetActive(active)
-            end
-            
+        for i = 1, 3 do
+            local active = i==itemdata.enjoyType_id
+            viewItemData['enjoyTypeImg'..i].gameObject:SetActive(active)
+        end
         --
         if itemdata.sanYuanInfo ~= nil then
             local syData = {}
@@ -164,7 +161,7 @@ function Class:__init(roomdata)
             syData.animal_2.sprite = itemdata.sanYuanInfo.animalSpr_2
             syData.animal_3.sprite = itemdata.sanYuanInfo.animalSpr_3
             syData.animal_4.sprite = itemdata.sanYuanInfo.animalSpr_4
-            viewItemData.sanYuanInitHelper.gameObject:SetActive(true)
+            syData.SanYuanRoot:SetActive(true)
         elseif itemdata.siXiInfo ~= nil then
             local sxData = {}
             viewItemData.siXiInitHelper:Init(sxData)
@@ -174,7 +171,7 @@ function Class:__init(roomdata)
             sxData.animal_1.sprite = itemdata.siXiInfo.animalSpr
             sxData.animal_2.sprite = itemdata.siXiInfo.animalSpr
             sxData.animal_3.sprite = itemdata.siXiInfo.animalSpr
-            viewItemData.siXiInitHelper.gameObject:SetActive(true)
+            sxData.SiXiRoot:SetActive(true)
         else
             viewItemData.colorImg.sprite = itemdata.colorSpr
             SetAnimalImg(viewItemData.animalImg, itemdata.animalSpr)
@@ -185,18 +182,18 @@ function Class:__init(roomdata)
             local sdData = {}
             viewItemData.shanDianInitHelper:Init(sdData)
             sdData.ratio.text = tostring(itemdata.shanDianRatio)
-            viewItemData.shanDianInitHelper.gameObject:SetActive(true)
+            sdData.ShanDianRoot:SetActive(true)
         elseif itemdata.songDengInfo ~= nil then
             local songDengData = {}
             viewItemData.songDengInitHelper:Init(songDengData)
             songDengData.colorImg.sprite = itemdata.songDengInfo.songDengColorSpr
             songDengData.animalImg.sprite = itemdata.songDengInfo.songDengAnimalSpr
-            viewItemData.songDengInitHelper.gameObject:SetActive(true)
+            songDengData.SongDengRoot:SetActive(true)
         elseif itemdata.caijinRatio ~= nil then
             local caijinData = {}
             viewItemData.caiJinInitHelper:Init(caijinData)
             caijinData.ratio.text = "x"..tostring(itemdata.caijinRatio)
-            viewItemData.caiJinInitHelper.gameObject:SetActive(true)
+            caijinData.CaiJinRoot:SetActive(true)
         end
         
     end

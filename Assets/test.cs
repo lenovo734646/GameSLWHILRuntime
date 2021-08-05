@@ -35,6 +35,7 @@ namespace SLWH
         public UGUISpineHelper spineHelper;
 
         public DOTweenAnimation tweenAnimation;
+        public DOTweenAnimation[] winAnimalTweenAnimations;
 
         public Sprite spr;
         public Image img;
@@ -54,6 +55,7 @@ namespace SLWH
         public AnimatorHelper animatorHelper;
         public float delayTime = 0.5f;
         public OSAScrollView oSAScrollView;
+        public Transform winStageTrans;
 
 
         public enum ColorType
@@ -238,14 +240,46 @@ namespace SLWH
 #if UNITY_EDITOR
             if (Input.GetKeyUp(KeyCode.A))
             {
-                animatorHelper = tweenAnimation.gameObject.GetComponent<AnimatorHelper>();
-                var infoArray = animatorHelper.GetAnimator().GetCurrentAnimatorClipInfo(0);
-                foreach (var info in infoArray)
+                var offset = 5.0f;
+                var count = winAnimalTweenAnimations.Length;
+                var pos = winStageTrans.position;
+                var itemPos = pos;
+
+                for (int i = 0; i < count; i++)
                 {
-                    info.clip.wrapMode = WrapMode.Loop;
+                    var c = i - (count - 1) / 2;
+                    itemPos.x = pos.x + c * offset;
+                    var item = winAnimalTweenAnimations[i];
+                    item.DOPlayForward();
+                    item.transform.DORotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
+                    item.transform.DOMove(itemPos, 1.2f).SetDelay(0.3f);
+                    animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
+                    animatorHelper.SetBool("bJumpToCenter", true);
+                    animatorHelper.SetBool("bVictory", true);
+
                 }
 
-                animatorHelper.Play("ShiZiJumpTo");
+                //foreach (var item in winAnimalTweenAnimations)
+                //{
+                //    if (item)
+                //    {
+                //        item.DOPlayForward();
+                //        animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
+                //        animatorHelper.SetBool("bJumpToCenter", true);
+                //        animatorHelper.SetBool("bVictory", true);
+                //    }
+                //}
+
+                //animatorHelper.SetBool("bVictory", false);
+                //animatorHelper.SetBool("bJumpToCenter", false);
+
+                //var infoArray = animatorHelper.GetAnimator().GetCurrentAnimatorClipInfo(0);
+                //foreach (var info in infoArray)
+                //{
+                //    info.clip.wrapMode = WrapMode.Loop;
+                //}
+
+                //animatorHelper.Play("ShiZiJumpTo");
                 //var clip = animatorHelper.GetAnimationClip("Jump");
                 //if (clip)
                 //{
@@ -253,12 +287,21 @@ namespace SLWH
                 //    animatorHelper.Play("Jump");
                 //    //tweenAnimation.DOPlayForward();
                 //}
-                
+
             }
 
             if (Input.GetKeyUp(KeyCode.S))
             {
-
+                foreach (var item in winAnimalTweenAnimations)
+                {
+                    if (item)
+                    {
+                        item.DOPlayBackwards();
+                        animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
+                        animatorHelper.SetBool("bVictory", false);
+                        animatorHelper.SetBool("bJumpToCenter", false);
+                    }
+                }
             }
             //if (Input.GetMouseButtonDown(0))
             //{

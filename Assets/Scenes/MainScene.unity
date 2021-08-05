@@ -379,6 +379,10 @@ PrefabInstance:
       propertyPath: events.Array.data[1].UnityEvent.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
       objectReference: {fileID: 502621421}
+    - target: {fileID: 1763560982, guid: 0897f58384a690849a8714e3281bf560, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.5
+      objectReference: {fileID: 0}
     - target: {fileID: 744337338149574988, guid: 0897f58384a690849a8714e3281bf560,
         type: 3}
       propertyPath: m_AnchorMin.y

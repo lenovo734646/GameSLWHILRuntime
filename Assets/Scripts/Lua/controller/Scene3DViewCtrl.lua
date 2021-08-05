@@ -309,8 +309,8 @@ function Class:InitAnimalAnimation()
                 while true do
                     local delayTime = RandomFloat(0,2)
                     yield(WaitForSeconds(delayTime))
-                    data.animatorHelper:Play("Idel1")
-                    yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel1")))
+                    data.animatorHelper:Play("Idel")
+                    yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel")))
                 end
             end)
         end
@@ -323,7 +323,7 @@ function Class:InitAnimalAnimation()
         data.PlayShow = function () -- 跟中奖同时播放
             data.StopAnim()
             winShowData.gameObject:SetActive(true)
-            winShowData.animatorHelper:Play("Victory")
+            winShowData.animatorHelper:Play("Victory") -- 中间领奖台动物胜利动画
             -- 播放声音
             local color_id = self.resultPanelData.color_id
             --print("播放声音：", self.resultPanelData.color_id)
@@ -343,6 +343,42 @@ function Class:InitAnimalAnimation()
             winShowData.gameObject:SetActive(false)-- 一直在显示，不需要隐藏
             data.PlayIdle()
         end
+        -- 跳到中间领奖台
+        -- bSkipAnim 是否跳过DOTween动画（断线重连时间不够需要跳过动画）
+        data.JumpToWinStage = function (winItemCount, index, bSkipAnim)
+            local offset = 5.0
+            local pos = ui.JumpTarget_Transform.position
+            local itemPos = pos
+            local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
+            itemPos.x = pos.x+c*offset
+            data.OriginalPos = data.transform.position -- 记录一下原始位置，以便返回
+            data.OriginalRot = data.transform.eulerAngles -- 记录一下原始角度
+            if bSkipAnim then
+                data.transform.position = itemPos
+                data.transform.eulerAngles = Vector3(0,-180,0)
+            else
+                print("Play Anim....true")
+                data.transform:DOMove(itemPos, 1.2):SetDelay(0.3)
+                data.transform:DORotate(Vector3(0,-180,0), 0.2):SetDelay(1)
+                data.animatorHelper:SetBool("bJumpToCenter", true)
+                data.animatorHelper:SetBool("bVictory", true)
+            end
+
+        end
+        data.JumpToOriginal = function (bSkipAnim)
+            if bSkipAnim then
+                data.transform.position = data.OriginalPos
+                data.transform.eulerAngles = data.OriginalRot
+            else
+                print("Play Anim....false")
+                data.transform:DOMove(data.OriginalPos, 1.2):SetDelay(0.3)
+                data.transform:DORotate(data.OriginalRot, 0.2)
+                data.animatorHelper:SetBool("bJumpToCenter", false)
+                data.animatorHelper:SetBool("bVictory", false)
+            end
+
+        end
+        
 
     end
 end
@@ -638,32 +674,37 @@ function Class:OnShowState(data)
                 ShowZhanShiTime = leftTime - GameConfig.ShowResultTime
             end
         end
-        --local winItemDataList = {} -- 记录本次所有中奖动物itemData
+        local winItemDataList = {} -- 记录本次所有中奖动物itemData
         CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
                 local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
                 local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
                 local itemData = self.runItemDataList[animalTo]
+                table.insert(winItemDataList, itemData)
                 --print("data.left_time = ", data.left_time)
                 if not bSkip then
                     local round = 2
                     local showTime = ShowRunTime
-                    if i > 1 then -- 送灯
+                    if i > 1 then -- 送灯，目前最多送一个，所以总中奖数最多为2
                         round = 0
                         showTime = ShowRunTime_Shark
                     end
-                    yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放转盘动画
-                    itemData.PlayShow() -- 播放动物胜利动画
+                    yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
+                    ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
+                    -- TODO: 中奖动物跳入并播放胜利动画
+                    itemData.JumpToWinStage(winItemCount, i, bSkip)
+                    --itemData.PlayShow() -- 中间奖台播放动物胜利动画
                     yield(WaitForSeconds(GameConfig.ShowZhanShiTime))
                     ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
-                    ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
+                    --ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
                     --
                     local colordata = self.ui.colorDataList[colorTo]
                     colordata.animator:Play("BaoshiFlash", 0, 0)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
                 else
+                    itemData.JumpToWinStage(winItemCount, i, bSkip)
                     -- 这里播放也看不到，需要把花瓣打开，舞台升起才能看到，但是时间可能不够，这里就暂时不显示了
                     --itemData.PlayShow() -- 播放动物胜利动画
                 end
@@ -683,6 +724,9 @@ function Class:OnShowState(data)
             -- 显示中奖结算界面
             local resultPanel = self.ui.mainUI.resultPanel
             resultPanel:ShowResult(self.resultPanelData)
+            for _, itemData in pairs(winItemDataList) do
+                itemData.JumpToOriginal(bSkip)
+            end
             yield(WaitForSeconds(ShowResultTime))
             resultPanel:HideResult()
             if winColor == GameConfig.ColorType.SanYuan or winColor == GameConfig.ColorType.SiXi then
@@ -766,11 +810,10 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         --print("动物开转 = ", animalTotalRot, dur, time)
         yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), dur, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
-        local animaldata = runItemDataList[animalToindex]
-        
-        animaldata.animatorHelper:Play("Victory") -- 中奖动物播放胜利动画
-        ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
-        ui.winStageAnimal:DOPlayForward()   -- 播放中奖动物升起动画
+
+        --local animaldata = runItemDataList[animalToindex]
+        --animaldata.animatorHelper:Play("Victory") -- 中奖动物播放胜利动画(外圈动物胜利动画)
+        --ui.winStageAnimal:DOPlayForward()   -- 播放中奖动物升起动画
         yield()
     end)
 

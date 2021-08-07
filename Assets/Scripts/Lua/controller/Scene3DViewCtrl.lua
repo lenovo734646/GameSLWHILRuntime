@@ -8,6 +8,7 @@ local _STR_ = _STR_
 local math,pairs = math,pairs
 local Vector3 = CS.UnityEngine.Vector3
 local DOTween = CS.DG.Tweening.DOTween
+local Ease = CS.DG.Tweening.Ease
 local RotateMode = CS.DG.Tweening.RotateMode
 local table = table
 local tinsert = table.insert
@@ -228,19 +229,11 @@ function Class:OnSceneReady()
         local record_list = data.record_list
         local list = {}
         for _,info in ipairs(record_list)do
-            local result = info.ressult_info_list[1] 
-            local songDengInfo = info.ressult_info_list[2]
-            local songDengColorID = nil
-            local songDengAnimalID = nil
-            if songDengInfo ~= nil then
-                songDengColorID = songDengInfo.winColor
-                songDengAnimalID =  songDengInfo.winAnimal
-            end
-            local itemData = ui:GetHistoryIconData(result.winColor, result.winSanYuanColor, result.winAnimal, info.win_enjoyGameType, info.win_exType,
-                                                    songDengColorID, songDengAnimalID)
+            local itemData = ui:GetHistoryIconData(info)
             tinsert(list, itemData)
         end
         ui.roadScrollView:ReplaceItems(list)
+        ui.roadScrollView:SmoothScrollToEnd()
     end)
 
     -- 主动请求游戏状态数据
@@ -346,35 +339,37 @@ function Class:InitAnimalAnimation()
         -- 跳到中间领奖台
         -- bSkipAnim 是否跳过DOTween动画（断线重连时间不够需要跳过动画）
         data.JumpToWinStage = function (winItemCount, index, bSkipAnim)
-            local offset = 5.0
+            
             local pos = ui.JumpTarget_Transform.position
+            -- local offset = 5.0
             local itemPos = pos
-            local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
-            itemPos.x = pos.x+c*offset
+            -- local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
+            -- itemPos.x = pos.x+c*offset
             data.OriginalPos = data.transform.position -- 记录一下原始位置，以便返回
             data.OriginalRot = data.transform.eulerAngles -- 记录一下原始角度
+            data.bJump = true
             if bSkipAnim then
-                data.transform.position = itemPos
+                data.transform.position = pos
                 data.transform.eulerAngles = Vector3(0,-180,0)
             else
-                data.transform:DOMove(itemPos, 1.0):SetDelay(0.3)
+                data.transform:DOMove(itemPos, 0.9):SetDelay(0.3):SetEase(Ease.InOutQuad)
                 data.transform:DORotate(Vector3(0,-180,0), 0.2):SetDelay(1)
                 data.animatorHelper:SetBool("bJumpToCenter", true)
-                data.animatorHelper:SetBool("bVictory", true)
+                data.animatorHelper:SetTrigger("tVictory")
             end
 
         end
         data.JumpToOriginal = function (bSkipAnim)
+            data.bJump = false
             if bSkipAnim then
                 data.transform.position = data.OriginalPos
                 data.transform.eulerAngles = data.OriginalRot
             else
-                data.transform:DOMove(data.OriginalPos, 1.0):SetDelay(0.3)
-                data.transform:DORotate(data.OriginalRot, 0.2)
+                data.transform:DOMove(data.OriginalPos, 0.9):SetDelay(0.3):SetEase(Ease.InOutQuad)
+                data.transform:DORotate(data.OriginalRot, 0.2):SetDelay(1)
+                data.animatorHelper:Play("Jump")
                 data.animatorHelper:SetBool("bJumpToCenter", false)
-                data.animatorHelper:SetBool("bVictory", false)
             end
-
         end
         
 
@@ -564,18 +559,12 @@ function Class:OnShowState(data)
     local winEnjoyGameType = data.enjoy_game_ret
     local exType = data.ex_ret
     print("=====OnShowState=======:")
-    print("庄和闲结果: ", winEnjoyGameType)
-    print("颜色结果: ", winColor)
-    print("动物结果: ", winAnimal)
-    print("大三元颜色结果: ", winSanYuanColor)
-    print("额外大奖结果：", exType)
-    print("彩金倍率：", data.caijin_ratio)
-    print("闪电倍率：", data.shandian_ratio)
+    print("颜色结果: ", winColor, "动物结果: ", winAnimal, "大三元颜色结果: ", winSanYuanColor, "庄和闲结果: ", winEnjoyGameType)
+    print("额外大奖结果：", exType, "彩金倍率：", data.caijin_ratio, "闪电倍率：", data.shandian_ratio)
     if exType == ExWinType.SongDeng then
         print("送灯奖励：", songDengInfo.color_id, songDengInfo.animal_id, self:__GetRatio(songDengInfo.color_id, songDengInfo.animal_id))
     end
     
-
     -- 统计结果
     -- 庄闲和小游戏
     local enjoyGameData = {
@@ -689,20 +678,24 @@ function Class:OnShowState(data)
                         showTime = ShowRunTime_Shark
                     end
                     yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
-                    ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
+                    ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
                     -- 中奖动物跳入并播放胜利动画
                     itemData.JumpToWinStage(winItemCount, i, bSkip)
                     --
                     yield(WaitForSeconds(GameConfig.ShowZhanShiTime))
-                    ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+                    if winItemCount > 1 and i ~= winItemCount then   -- 轮流跳入
+                        itemData.JumpToOriginal(bSkip)
+                        yield(WaitForSeconds(1.2))
+                    end
                     --ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
                     --
                     local colordata = self.ui.colorDataList[colorTo]
                     colordata.animator:Play("BaoshiFlash", 0, 0)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
+                    yield(WaitForSeconds(3))
                 else
-                    ui.winStage_huaban_animatorhelper:SetBool("bClose", false) -- 播放花瓣打开动画
+                    ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
                     itemData.JumpToWinStage(winItemCount, i, bSkip) 
                 end
             end
@@ -722,9 +715,11 @@ function Class:OnShowState(data)
             local resultPanel = self.ui.mainUI.resultPanel
             resultPanel:ShowResult(self.resultPanelData)
             for _, itemData in pairs(winItemDataList) do
-                itemData.JumpToOriginal(bSkip)
+                if itemData.bJump then
+                    itemData.JumpToOriginal(bSkip)
+                end
             end
-            ui.winStage_huaban_animatorhelper:SetBool("bClose", true) -- 播放花瓣关闭动画
+            ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
             --
             yield(WaitForSeconds(ShowResultTime))
             resultPanel:HideResult()
@@ -740,15 +735,17 @@ function Class:OnShowState(data)
             -- 同步玩家分数
             print("同步玩家分数: ", self.selfScore)
             self:OnMoneyChange(self.selfScore)
-
+            self.selfScore = SEnv.playerRes.currency
             -- 开奖结束再更新record，避免剧透
-            local sdColor, sdAnimal = nil,nil
-            if songDengInfo ~= nil then
-                sdColor = songDengInfo.color_id
-                sdAnimal = songDengInfo.animal_id
-            end
-            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(winColor, winSanYuanColor, winAnimal, winEnjoyGameType, exType,
-                                                                sdColor, sdAnimal, data.caijin_ratio))
+            local info  = {
+                ressult_info = {winColor = resultInfo.color_id, winSanYuanColor = resultInfo.sanyuan_color_id, winAnimal = resultInfo.animal_id},
+                win_enjoyGameType = winEnjoyGameType,
+                win_exType = exType,
+                ressult_info_songdeng = {winColor = songDengInfo.color_id, winAnimal = songDengInfo.animal_id},
+                caijin_ratio = data.caijin_ratio,
+                shandian_ratio = data.shandian_ratio,
+            }
+            ui.roadScrollView:InsertItem(ui:GetHistoryIconData(info))
         end)
     end
 end
@@ -818,14 +815,15 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
 
     
 end
-
--- 空闲阶段
+-- 目前可能会出现 结算流程未结束就进入  OnFreeState 的问题，因为是按时间计算的
+-- 可以考虑把结算状态的最后逻辑处理放到 OnFreeState 中
+-- 空闲阶段 
 function Class:OnFreeState()
+    print("进入空闲阶段....玩家分数重置")
     if self.resultPanelData then
         self.resultPanelData.winScore = 0 -- 本局输赢
         self.resultPanelData.betScore = 0  -- 总输赢
     end
-    self.selfScore = SEnv.playerRes.currency
     --
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')

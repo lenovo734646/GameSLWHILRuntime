@@ -35,7 +35,7 @@ namespace SLWH
         public UGUISpineHelper spineHelper;
 
         public DOTweenAnimation tweenAnimation;
-        public DOTweenAnimation[] winAnimalTweenAnimations;
+        public Animator[] winAnimalAnimators;
 
         public Sprite spr;
         public Image img;
@@ -233,7 +233,8 @@ namespace SLWH
                 yield return new WaitForSeconds(animatorHelper.GetDuration("Idel1"));
             }
         }
-
+        private Vector3 originalPos = Vector3.zero;
+        private Vector3 originalRot = Vector3.zero;
         // Update is called once per frame
         void Update()
         {
@@ -241,21 +242,31 @@ namespace SLWH
             if (Input.GetKeyUp(KeyCode.A))
             {
                 var offset = 5.0f;
-                var count = winAnimalTweenAnimations.Length;
-                var pos = winStageTrans.position;
+                var count = winAnimalAnimators.Length;
+                var targetPos = tweenAnimation.transform.parent.InverseTransformPoint(winStageTrans.position);
+                var pos = targetPos;//winStageTrans.position;
                 var itemPos = pos;
+
+                //
+                //tweenAnimation.transform.DOLocalMove(targetPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
 
                 for (int i = 0; i < count; i++)
                 {
                     var c = i - (count - 1) / 2;
                     itemPos.x = pos.x + c * offset;
-                    var item = winAnimalTweenAnimations[i];
-                    item.DOPlayForward();
-                    item.transform.DORotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
-                    item.transform.DOMove(itemPos, 1.2f).SetDelay(0.3f);
+                    var item = winAnimalAnimators[i];
+                    //originalPos = item.transform.position;
+                    //originalRot = item.transform.eulerAngles;
+                    originalPos = item.transform.localPosition;
+                    originalRot = item.transform.localEulerAngles;
+
+                    //item.transform.DOMove(itemPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
+                    item.transform.DOLocalMove(itemPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
+                    //item.transform.DORotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
+                    item.transform.DOLocalRotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
                     animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
                     animatorHelper.SetBool("bJumpToCenter", true);
-                    animatorHelper.SetBool("bVictory", true);
+                    animatorHelper.SetTrigger("tVictory");
 
                 }
 
@@ -292,29 +303,34 @@ namespace SLWH
 
             if (Input.GetKeyUp(KeyCode.S))
             {
-                foreach (var item in winAnimalTweenAnimations)
+                foreach (var item in winAnimalAnimators)
                 {
                     if (item)
                     {
-                        item.DOPlayBackwards();
+                        item.transform.DOLocalRotate(originalRot, 0.2f).SetDelay(1.0f);
+                        item.transform.DOLocalMove(originalPos, 0.9f).SetDelay(0.3f);
                         animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
-                        animatorHelper.SetBool("bVictory", false);
+                        animatorHelper.Play("Jump");
                         animatorHelper.SetBool("bJumpToCenter", false);
                     }
                 }
             }
             if (Input.GetKeyUp(KeyCode.D))
             {
+                var tRot = tweenAnimation.transform.parent.eulerAngles;
+                tweenAnimation.transform.parent.eulerAngles = new Vector3(tRot.x, tRot.y + 10.0f, tRot.z);
                 //bleft = true;
                 //Debug.Log("你按下了鼠标左键");
-                animatorHelper.GetAnimator().Play("Open", 0, 1);
-                animatorHelper.SetBool("bClose", false);
+                //animatorHelper.GetAnimator().Play("Open", 0, 1);
+                //animatorHelper.SetBool("bClose", false);
             }
             if (Input.GetKeyUp(KeyCode.F))
             {
+                var targetPos = tweenAnimation.transform.parent.InverseTransformPoint(winStageTrans.position);
+                tweenAnimation.transform.DOLocalMove(targetPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
                 //bleft = true;
                 //Debug.Log("你按下了鼠标左键");
-                animatorHelper.SetBool("bClose", true);
+                //animatorHelper.SetBool("bClose", true);
             }
             //if (Input.GetMouseButtonUp(0))
             //{
@@ -370,13 +386,10 @@ namespace SLWH
         int materialIndex = 0;
         private void OnGUI()
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (GUI.Button(new Rect(10, 300, 100, 50), "输入位置"))
             {
-                
-            }
-            if (GUI.Button(new Rect(10, 300, 100, 50), "AnXIa"))
-            {
-   
+                Debug.Log(tweenAnimation.transform.position);
+                Debug.Log(tweenAnimation.transform.localPosition);
                 //toggle.isOn = true;
                 // spineHelper.Play("kaishixiazhu");
                 // 替换图片精灵并设置原尺寸

@@ -119,9 +119,12 @@ message ResultInfo
 // 历史记录(目前只有请求历史记录使用到)
 message HistoryRecord
 {
-    repeated ResultInfo ressult_info_list = 1; // 中奖结果列表（送灯有两个，其他情况一个）
-    int32 win_enjoyGameType = 2;// 中奖“庄闲和”
-    int32 win_exType = 3;       // 额外中奖（彩金、送灯、闪电翻倍）
+    ResultInfo ressult_info = 1;            // 中奖结果
+    int32 win_enjoyGameType = 2;            // 中奖“庄闲和”
+    int32 win_exType = 3;                   // 特殊奖（彩金、送灯、闪电翻倍）
+    ResultInfo ressult_info_songdeng = 4;   // 特殊奖送灯中奖结果
+    int32 caijin_ratio = 5;                 // 特殊将彩金倍数
+    int32 shandian_ratio = 6;               // 特殊奖闪电翻倍倍数
 }
 
 // 单次开奖结果
@@ -145,11 +148,11 @@ message StateChangeNtf
     int32 state = 2;                                //状态 1=下注 2=开奖 3=空闲 
     repeated int32 color_array = 3;                 // 颜色列表1-24
     repeated int32 ratio_array = 4;                 // 倍率列表1-12动物 13-15庄和闲
-    repeated ResultAnimIndex anim_result_list = 5;  //开奖结果列表（RunItem起始点和结束点）
+    repeated ResultAnimIndex anim_result_list = 5;  //开奖结果列表（RunItem起始点和结束点），正常只有一个，如果有送灯会有多个
     int32 enjoy_game_ret = 6;                       // 庄闲和开奖结果
     int32 ex_ret = 7;                               // 额外中奖结果（彩金，送灯，闪电翻倍）
-    int64 caijin_ratio = 8;                         // 彩金倍数
-    int64 shandian_ratio = 9;                        // 闪电翻倍倍数
+    int32 caijin_ratio = 8;                         // 彩金倍数
+    int32 shandian_ratio = 9;                        // 闪电翻倍倍数
     //int64 betMaxLimit = 10;                          // 本局下注最大限制（防止超过庄家分数）
 }
 

@@ -168,7 +168,8 @@ function Class:__AddAnimal(animal_id, colorSpr, ratio, resultAnimals)
     go:GetComponent(typeof(LuaInitHelper)):Init(animalData, false)
     animalData.color.sprite = colorSpr
     animalData.ratioText.text = "x"..ratio
-    animalData.animator:Play("Jump", 0, 0);
+    animalData.animator:Play("Victory", 0, 0);
+    animalData.animator:SetTrigger("tResultVictoryToIdel1")
     
 end
 

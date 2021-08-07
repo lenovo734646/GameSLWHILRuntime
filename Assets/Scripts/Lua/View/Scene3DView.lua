@@ -24,6 +24,8 @@ local SimpleSlot = require'controller.SimpleSlot'
 _ENV = moduledef { seenamespace = CS }
 
 local RUN_ITEM_COUNT = GameConfig.RunItemCount
+local ColorType = GameConfig.ColorType
+local ExWinType = GameConfig.ExWinType
 
 local Class = class()
 
@@ -135,7 +137,7 @@ function Class:__init(roomdata)
     --数据提供接口实现
     roadScrollView.OnCreateViewItemData = function (itemViewGameObject,itemIndex)
         local viewItemData = {}
-        itemViewGameObject:GetComponent(typeof(LuaInitHelper)):Init(viewItemData)
+        itemViewGameObject:GetComponent(typeof(LuaInitHelper)):Init(viewItemData, false)
         viewItemData.gameObject = itemViewGameObject
         return viewItemData
     end
@@ -149,10 +151,17 @@ function Class:__init(roomdata)
             local active = i==itemdata.enjoyType_id
             viewItemData['enjoyTypeImg'..i].gameObject:SetActive(active)
         end
+        -- 每次刷新先重置一下，因为viewItem会复用
+        viewItemData.sanYuanInitHelper.gameObject:SetActive(false)
+        viewItemData.siXiInitHelper.gameObject:SetActive(false)
+
+        viewItemData.shanDianInitHelper.gameObject:SetActive(false)
+        viewItemData.songDengInitHelper.gameObject:SetActive(false)
+        viewItemData.caiJinInitHelper.gameObject:SetActive(false)
         --
         if itemdata.sanYuanInfo ~= nil then
             local syData = {}
-            viewItemData.sanYuanInitHelper:Init(syData)
+            viewItemData.sanYuanInitHelper:Init(syData, false)
             syData.item_1.sprite = itemdata.colorSpr
             syData.item_2.sprite = itemdata.colorSpr
             syData.item_3.sprite = itemdata.colorSpr
@@ -164,7 +173,7 @@ function Class:__init(roomdata)
             syData.SanYuanRoot:SetActive(true)
         elseif itemdata.siXiInfo ~= nil then
             local sxData = {}
-            viewItemData.siXiInitHelper:Init(sxData)
+            viewItemData.siXiInitHelper:Init(sxData, false)
             sxData.item_1.sprite = itemdata.siXiInfo.colorSpr_1
             sxData.item_2.sprite = itemdata.siXiInfo.colorSpr_2
             sxData.item_3.sprite = itemdata.siXiInfo.colorSpr_3
@@ -180,18 +189,19 @@ function Class:__init(roomdata)
         -- 特殊大奖
         if itemdata.shanDianRatio ~= nil then
             local sdData = {}
-            viewItemData.shanDianInitHelper:Init(sdData)
+            viewItemData.shanDianInitHelper:Init(sdData, false)
             sdData.ratio.text = tostring(itemdata.shanDianRatio)
             sdData.ShanDianRoot:SetActive(true)
         elseif itemdata.songDengInfo ~= nil then
             local songDengData = {}
-            viewItemData.songDengInitHelper:Init(songDengData)
+            --print("送灯 color = ", itemdata.songDengInfo.songDengColorSpr, "  animal = ", itemdata.songDengInfo.songDengAnimalSpr)
+            viewItemData.songDengInitHelper:Init(songDengData, false)
             songDengData.colorImg.sprite = itemdata.songDengInfo.songDengColorSpr
             songDengData.animalImg.sprite = itemdata.songDengInfo.songDengAnimalSpr
             songDengData.SongDengRoot:SetActive(true)
         elseif itemdata.caijinRatio ~= nil then
             local caijinData = {}
-            viewItemData.caiJinInitHelper:Init(caijinData)
+            viewItemData.caiJinInitHelper:Init(caijinData, false)
             caijinData.ratio.text = "x"..tostring(itemdata.caijinRatio)
             caijinData.CaiJinRoot:SetActive(true)
         end
@@ -235,12 +245,16 @@ end
 -- color_id 中奖颜色id
 -- type_id 庄和闲 id
 -- sp_id 特殊中奖id（大三元，大四喜）
-function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
-    local ColorType = GameConfig.ColorType
-    local ExWinType = GameConfig.ExWinType
-
-    --print("HistroyData: " ,color_id, sanYuanColor_id, animal_id, enjoyType_id, ex_id, songDengColorID, songDengAnimalID, caijinRotio_)
-
+function Class:GetHistoryIconData(info)
+    local color_id = info.ressult_info.winColor
+    local sanYuanColor_id = info.ressult_info.winSanYuanColor
+    local animal_id = info.ressult_info.winAnimal
+    local ex_id = info.win_exType
+    local enjoyType_id = info.win_enjoyGameType
+    local caijinRotio_ = info.caijin_ratio
+    --print("获取历史数据：color_id = ", color_id, "  sanYuanColor_id = ", sanYuanColor_id, "  animal_id = ", animal_id, 
+    --    "  ex_id = ", ex_id, "  enjoyType_id = ", enjoyType_id, "  caijinRotio_ = ", caijinRotio_)
+    --
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
     local sanYuanInfo = nil
     local siXiInfo = nil
@@ -271,10 +285,13 @@ function Class:GetHistoryIconData(color_id, sanYuanColor_id, animal_id, enjoyTyp
         shanDianRatio = 2
     elseif ex_id == ExWinType.SanBei then
         shanDianRatio = 3
-    elseif ex_id == ExWinType.SongDeng then
+    elseif ex_id == ExWinType.SongDeng and info.ressult_info_songdeng ~= nil then
+        local songDengColorID = info.ressult_info_songdeng.winColor
+        local songDengAnimalID =  info.ressult_info_songdeng.winAnimal
+        --print("获取历史数据 songDengColorID = ", songDengColorID, "  songDengAnimalID = ", songDengAnimalID)
         songDengInfo = {
             songDengColorSpr = self.roadColorSprites[songDengColorID],
-            songDengAnimalSpr = self. roadAnimalSprites[songDengAnimalID],
+            songDengAnimalSpr = self.roadAnimalSprites[songDengAnimalID],
         }
     end
 

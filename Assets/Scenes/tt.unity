@@ -1860,9 +1860,9 @@ MonoBehaviour:
   toggle: {fileID: 0}
   scrollRect: {fileID: 0}
   spineHelper: {fileID: 2101554045}
-  tweenAnimation: {fileID: 0}
-  winAnimalTweenAnimations:
-  - {fileID: 6846959928537681970}
+  tweenAnimation: {fileID: 6846959927857050404}
+  winAnimalAnimators:
+  - {fileID: 6035984682502101235}
   spr: {fileID: 21300000, guid: 9de6e5ed21deb8845ae80e86dfa3da9f, type: 3}
   img: {fileID: 1512177223}
   eventBroadcaster: {fileID: 0}
@@ -4643,13 +4643,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892960684}
-  m_LocalRotation: {x: 0.36924648, y: -0, z: -0, w: 0.92933154}
-  m_LocalPosition: {x: 5.05, y: 26.91, z: -20.69}
+  m_LocalRotation: {x: 0.1195304, y: 0, z: 0, w: 0.9928306}
+  m_LocalPosition: {x: 5.05, y: 12.44, z: -34.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 43.338, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 13.73, y: 0, z: 0}
 --- !u!1 &901444662
 GameObject:
   m_ObjectHideFlags: 0

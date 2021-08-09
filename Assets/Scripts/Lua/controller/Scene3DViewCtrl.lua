@@ -198,15 +198,15 @@ function Class:OnSceneReady()
     end)
     --
     local roomdata = self.roomdata
-    -- 根据上局中奖下标同步转盘和指针角度
+    -- 根据上局中奖下标同步转盘和指针角度 0° 是第一格的位置所以 index-1
     local zhizhenRot = (roomdata.last_color_index -1)*15
     local animalIndex = roomdata.last_color_index - roomdata.last_animal_index 
     if animalIndex < 0 then
         animalIndex = animalIndex + GameConfig.RunItemCount
     end
     local animalRot = (animalIndex)*15
-    -- print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
-    -- print("同步动物角度:", roomdata.last_animal_index, animalIndex, animalRot)
+    print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
+    print("同步动物角度:", roomdata.last_animal_index, animalRot)
     self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
     self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
 
@@ -352,7 +352,7 @@ function Class:InitAnimalAnimation()
                 data.transform.position = pos
                 data.transform.eulerAngles = Vector3(0,-180,0)
             else
-                data.transform:DOMove(itemPos, 0.9):SetDelay(0.3):SetEase(Ease.InOutQuad)
+                data.transform:DOMove(itemPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
                 data.transform:DORotate(Vector3(0,-180,0), 0.2):SetDelay(1)
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetTrigger("tVictory")
@@ -365,7 +365,7 @@ function Class:InitAnimalAnimation()
                 data.transform.position = data.OriginalPos
                 data.transform.eulerAngles = data.OriginalRot
             else
-                data.transform:DOMove(data.OriginalPos, 0.9):SetDelay(0.3):SetEase(Ease.InOutQuad)
+                data.transform:DOMove(data.OriginalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
                 data.transform:DORotate(data.OriginalRot, 0.2):SetDelay(1)
                 data.animatorHelper:Play("Jump")
                 data.animatorHelper:SetBool("bJumpToCenter", false)
@@ -633,7 +633,7 @@ function Class:OnShowState(data)
         local winItemCount = #anim_result_list -- 中奖动物数量
         local leftTime = data.left_time
          -- 跑马灯动画时间
-        local ShowRunTime = leftTime - (GameConfig.ShowResultTime + GameConfig.ShowZhanShiTime*winItemCount)
+        local ShowRunTime = leftTime - (GameConfig.ShowResultTime + GameConfig.ShowZhanShiTime*winItemCount + 1.1*(winItemCount-1) )
         if ShowRunTime <= 1 then -- 跑马灯时间小于1 就不跑了
             bSkip = true
         end
@@ -641,7 +641,7 @@ function Class:OnShowState(data)
         --
         local ShowResultTime = GameConfig.ShowResultTime
         local ShowZhanShiTime = GameConfig.ShowZhanShiTime
-        local ShowRunTime_Shark = self.shark_more_show_time - GameConfig.ShowZhanShiTime -- 减去展示时间，只要跑马灯时间
+        local ShowRunTime_Shark = self.shark_more_show_time - (GameConfig.ShowZhanShiTime + 1.1*(winItemCount-1)) -- 减去展示时间，只要跑马灯时间
         if bSkip == false then
             if winItemCount > 1 then
                 local t1 = ShowRunTime - ShowRunTime_Shark
@@ -682,10 +682,10 @@ function Class:OnShowState(data)
                     -- 中奖动物跳入并播放胜利动画
                     itemData.JumpToWinStage(winItemCount, i, bSkip)
                     --
-                    yield(WaitForSeconds(GameConfig.ShowZhanShiTime))
+                    yield(WaitForSeconds(ShowZhanShiTime))
                     if winItemCount > 1 and i ~= winItemCount then   -- 轮流跳入
                         itemData.JumpToOriginal(bSkip)
-                        yield(WaitForSeconds(1.2))
+                        yield(WaitForSeconds(1.1))  -- 跳入时间
                     end
                     --ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
                     --
@@ -693,10 +693,11 @@ function Class:OnShowState(data)
                     colordata.animator:Play("BaoshiFlash", 0, 0)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
-                    yield(WaitForSeconds(3))
                 else
                     ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
-                    itemData.JumpToWinStage(winItemCount, i, bSkip) 
+                    if i == winItemCount then   -- 只显示最后一个，因为领奖台只能站一个动物
+                        itemData.JumpToWinStage(winItemCount, i, bSkip) 
+                    end
                 end
             end
             -- 如果跳过了跑马灯动画，并且扣除结算界面显示时间，还有剩余，就等一等，避免结算界面提前消失
@@ -737,11 +738,15 @@ function Class:OnShowState(data)
             self:OnMoneyChange(self.selfScore)
             self.selfScore = SEnv.playerRes.currency
             -- 开奖结束再更新record，避免剧透
+            local sdInfo = nil
+            if songDengInfo ~= nil then
+                sdInfo = {winColor = songDengInfo.color_id, winAnimal = songDengInfo.animal_id}
+            end
             local info  = {
                 ressult_info = {winColor = resultInfo.color_id, winSanYuanColor = resultInfo.sanyuan_color_id, winAnimal = resultInfo.animal_id},
                 win_enjoyGameType = winEnjoyGameType,
                 win_exType = exType,
-                ressult_info_songdeng = {winColor = songDengInfo.color_id, winAnimal = songDengInfo.animal_id},
+                ressult_info_songdeng = sdInfo,
                 caijin_ratio = data.caijin_ratio,
                 shandian_ratio = data.shandian_ratio,
             }
@@ -753,54 +758,71 @@ end
 
 -- 开奖逻辑（从开始转到显示结算界面）
 function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromindex, animalToindex, round, time)
-    round = round or 3
+    round = round or 2
     time = time or GameConfig.ShowAnimationTime
     local ui = self.ui
-
+    local RunItemCount = GameConfig.RunItemCount
+    --print("colorFromindex = ", colorFromindex, "  colorToindex = ", colorToindex, "  animalFromindex = ", animalFromindex, " animalToindex = ", animalToindex)
+    --print("箭头角度：", ui.arrow_transform.eulerAngles, " 动物角度：", ui.animal_rotate_root_transform.eulerAngles)
+    
+    -- 箭头(颜色)
     local colorDataList = ui.colorDataList
-    local len = #colorDataList
     local rotCount = colorFromindex - colorToindex  -- 逆时针转
     if rotCount < 0 then
-        rotCount = rotCount + len
+        rotCount = rotCount + RunItemCount
     end
-    local colorTotalWillRunCount = rotCount + len*round
-    if colorTotalWillRunCount < len then
-        colorTotalWillRunCount=colorTotalWillRunCount+len
+    local colorTotalWillRunCount = rotCount + RunItemCount*round
+    if colorTotalWillRunCount < RunItemCount then   -- 与上一局同一个结果就转一圈，防止同一个结果原地不动的情况，
+        colorTotalWillRunCount=colorTotalWillRunCount+RunItemCount
     end
 
     local arrow_transform = ui.arrow_transform
     local colorStartRot = (colorFromindex - 1)*15
     arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
     local arrowTotalRot = colorTotalWillRunCount*15
+    print("箭头转动数量：", colorTotalWillRunCount)
     --
-
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
     CoroutineHelper.StartCoroutine(function ()
-        yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), time - 1, RotateMode.LocalAxisAdd)
+        local fixTime = time - 1 -- 避免重连时间不够，指针直接跳到结束点
+        if fixTime < 0.5 then
+            fixTime = time
+        end
+        yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), fixTime, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         local colordata = colorDataList[colorToindex]
         colordata.animator.enabled = true  -- 播放中奖颜色闪烁动画
     end)
 
-    -- 
-    local realAnimalToIndex = colorToindex - animalToindex 
-    if realAnimalToIndex < 0 then
-        realAnimalToIndex = realAnimalToIndex + GameConfig.RunItemCount
+    -- 动物
+    local temp = colorFromindex - colorToindex 
+    if temp < 0 then
+        temp = temp + RunItemCount
     end
-    local runItemDataList = ui.runItemDataList
-    local len = #runItemDataList
-    local animalTotalWillRunCount = realAnimalToIndex - animalFromindex + len*round
-    if animalTotalWillRunCount < len then
-        animalTotalWillRunCount=animalTotalWillRunCount+len
+    local realFrom = animalFromindex - temp
+    if realFrom <= 0 then
+        realFrom = realFrom + RunItemCount
     end
 
-    local animalStartRot = (animalFromindex)*15
+    local animalRotCount = realFrom - animalToindex -- 顺时针转
+    if animalRotCount < 0 then
+        animalRotCount = animalRotCount + RunItemCount
+    end
+    --print("temp = ", temp, " realFrom = ", realFrom, " animalRotCount = ", animalRotCount)
+    local animalTotalWillRunCount = animalRotCount + RunItemCount*round
+    if animalTotalWillRunCount < RunItemCount then
+        animalTotalWillRunCount=animalTotalWillRunCount+RunItemCount
+    end
+    local tIndex = colorFromindex - animalFromindex
+    if tIndex < 0 then
+        tIndex =  tIndex + RunItemCount
+    end
+    local animalStartRot = (tIndex)*15
+    print("动物转动数量：", animalTotalWillRunCount)
     local animalRotRoot_transform = ui.animal_rotate_root_transform
     animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
     local animalTotalRot = animalTotalWillRunCount*15
-    
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-
     return CoroutineHelper.StartCoroutine(function ()
         local dur = time  -- 错开一点不同时停止
         --print("动物开转 = ", animalTotalRot, dur, time)

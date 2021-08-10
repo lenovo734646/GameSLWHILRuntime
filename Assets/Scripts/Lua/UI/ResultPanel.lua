@@ -97,7 +97,7 @@ function Class:ShowResult(resultPanelData)
         local data = resultPanelData.sanyuanData
         local colorSpr = self.smallColors[data.sanyuanColor_id]
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-            self:__AddAnimal(i, colorSpr, data.animalRatioArray[i], self.resultAnimals_Gold)
+            self:__AddAnimal(i, colorSpr, data.animalRatioArray[i], self.resultAnimals_Gold, true)
         end
         
     elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
@@ -105,12 +105,12 @@ function Class:ShowResult(resultPanelData)
         local data = resultPanelData.sixiData
         for i = ColorType.Red, ColorType.Yellow, 1 do
             local spr = self.smallColors[i]
-            self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i], self.resultAnimals_Gold)
+            self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i], self.resultAnimals_Gold, true)
         end
     else
         self.winAnimalData.winAnimalGO:SetActive(true)
         local data = resultPanelData.normalData
-        self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio, self.resultAnimals)
+        self:__AddAnimal(data.animal_id, self.smallColors[color_id], data.ratio, self.resultAnimals, false)
         --
         self.winAnimalData.winColorBG.sprite = self.bgColors[color_id]
         self.winAnimalData.animalImg.sprite = self.animalSprs[data.animal_id]
@@ -161,15 +161,20 @@ function Class:HideResult()
 end
 
 -- 初始化一个中奖动物
-function Class:__AddAnimal(animal_id, colorSpr, ratio, resultAnimals)
+function Class:__AddAnimal(animal_id, colorSpr, ratio, resultAnimals, isSanYuanSiXi)
     local go = Instantiate(resultAnimals[animal_id], self.resuletScrollView.content)
     go.transform.localPosition = Vector3.zero
     local animalData = {}
     go:GetComponent(typeof(LuaInitHelper)):Init(animalData, false)
     animalData.color.sprite = colorSpr
     animalData.ratioText.text = "x"..ratio
-    animalData.animator:Play("Victory", 0, 0);
-    animalData.animator:SetTrigger("tResultVictoryToIdel1")
+    if not isSanYuanSiXi then
+        animalData.animator:Play("Victory", 0, 0);
+        animalData.animator:SetTrigger("tResultVictoryToIdel1")
+    else
+        animalData.animator:Play("SanYuanSiXi", 0, 0);
+    end
+
     
 end
 

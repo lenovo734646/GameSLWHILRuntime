@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 723e295be4bd4db4f8e6a1c117b45ffc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 62c7926379e506e46a29b7128d4d66c0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -99,7 +99,7 @@ MonoBehaviour:
   supportLanguageList:
   - name: CN
     content: 
-    sprite: {fileID: 21300000, guid: 723e295be4bd4db4f8e6a1c117b45ffc, type: 3}
+    sprite: {fileID: 21300000, guid: 62c7926379e506e46a29b7128d4d66c0, type: 3}
     sprite2: {fileID: 0}
     gameObject: {fileID: 0}
     buttonSwapSprites:
@@ -109,7 +109,7 @@ MonoBehaviour:
       disabledSprite: {fileID: 0}
   - name: EN
     content: 
-    sprite: {fileID: 21300000, guid: b89dcb2015fbc254db84bf498197f567, type: 3}
+    sprite: {fileID: 21300000, guid: 42bca544db5e5204d88f9d8546e763be, type: 3}
     sprite2: {fileID: 0}
     gameObject: {fileID: 0}
     buttonSwapSprites:

@@ -1871,7 +1871,7 @@ MonoBehaviour:
   baoshi: {fileID: 0}
   materials: []
   animator: {fileID: 0}
-  animatorHelper: {fileID: 1514917287}
+  animatorHelper: {fileID: 6846959927903403872}
   delayTime: 1
   oSAScrollView: {fileID: 0}
   winStageTrans: {fileID: 2131160362}
@@ -7559,18 +7559,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ac944c76ef098a4cad5ee397417d81b, type: 3}
---- !u!114 &1514917287 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6977026444551093142, guid: 6ac944c76ef098a4cad5ee397417d81b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514917286}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1518020793
 GameObject:
   m_ObjectHideFlags: 0
@@ -36450,13 +36438,29 @@ GameObject:
   m_Component:
   - component: {fileID: 6074961634570560997}
   - component: {fileID: 6035984682665325835}
+  - component: {fileID: 6846959927903403872}
   m_Layer: 0
   m_Name: "\u7334\u5B50\u8F93\u51FA (2)"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &6846959927903403872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6846959927903403871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AutoPlayOnAwake: 0
+  autoPlayAnimName: 
+  animatorStateInfoEventList: []
 --- !u!1 &6846959927961624494
 GameObject:
   m_ObjectHideFlags: 0

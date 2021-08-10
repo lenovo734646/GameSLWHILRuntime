@@ -326,8 +326,9 @@ namespace SLWH
             }
             if (Input.GetKeyUp(KeyCode.F))
             {
-                var targetPos = tweenAnimation.transform.parent.InverseTransformPoint(winStageTrans.position);
-                tweenAnimation.transform.DOLocalMove(targetPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
+                animatorHelper.Play("SiXi_houzi");
+                //var targetPos = tweenAnimation.transform.parent.InverseTransformPoint(winStageTrans.position);
+                //tweenAnimation.transform.DOLocalMove(targetPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
                 //bleft = true;
                 //Debug.Log("你按下了鼠标左键");
                 //animatorHelper.SetBool("bClose", true);

@@ -357,7 +357,26 @@ function Class:InitAnimalAnimation()
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetTrigger("tVictory")
             end
+            -- 播放声音
+            local color_id = self.resultPanelData.color_id
+            local animal_id = self.resultPanelData.animal_id
+            if index > 1 and self.resultPanelData.songdengData then
+                color_id = self.resultPanelData.songdengData.songDengColorID
+                animal_id = self.resultPanelData.songdengData.songDengAnimalID
+            end
 
+            assert(color_id)
+            assert(animal_id)
+            
+            if color_id == GameConfig.ColorType.SanYuan then
+                AudioManager.Instance:PlaySoundEff2D("dasanyuan")
+            elseif color_id == GameConfig.ColorType.SiXi then
+                AudioManager.Instance:PlaySoundEff2D("dasixi")
+            else
+                local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
+                print("播放声音: ", color_id, animal_id, audioIndex)
+                AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
+            end
         end
         data.JumpToOriginal = function (bSkipAnim)
             data.bJump = false
@@ -500,6 +519,7 @@ function Class:SetColorAndRatio(colorArray, ratioArray)
         print("颜色表：", json.encode(colorArray))
         for index, value in ipairs(colorArray) do
             ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
+            --print("index = ", index, "color_id = ", value, " animal_id = ", ui.runItemDataList[index].item_id)
         end
     end
     if #ratioArray ~= 0 then
@@ -772,7 +792,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         rotCount = rotCount + RunItemCount
     end
     local colorTotalWillRunCount = rotCount + RunItemCount*round
-    if colorTotalWillRunCount < RunItemCount then   -- 与上一局同一个结果就转一圈，防止同一个结果原地不动的情况，
+    if colorTotalWillRunCount < RunItemCount then   -- 与上一局同一个结果就转一圈，防止同一个结果原地不动的情况, 送灯除外，
         colorTotalWillRunCount=colorTotalWillRunCount+RunItemCount
     end
 
@@ -780,7 +800,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     local colorStartRot = (colorFromindex - 1)*15
     arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
     local arrowTotalRot = colorTotalWillRunCount*15
-    print("箭头转动数量：", colorTotalWillRunCount)
+    --print("箭头转动数量：", colorTotalWillRunCount)
     --
     local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
     CoroutineHelper.StartCoroutine(function ()
@@ -818,7 +838,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         tIndex =  tIndex + RunItemCount
     end
     local animalStartRot = (tIndex)*15
-    print("动物转动数量：", animalTotalWillRunCount)
+    --print("动物转动数量：", animalTotalWillRunCount)
     local animalRotRoot_transform = ui.animal_rotate_root_transform
     animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
     local animalTotalRot = animalTotalWillRunCount*15

@@ -86,6 +86,7 @@ function Class:__init(roomdata)
             animatorHelper = animatorHelper,
             winShowData = indexToFindMap[i],
             index = i,
+            item_id = indexToFindMap[i].item_id, 
             Play = function ()
                 -- run item 
                 AudioManager.Instance:PlaySoundEff2D("run")

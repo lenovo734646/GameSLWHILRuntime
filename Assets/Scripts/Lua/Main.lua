@@ -167,12 +167,13 @@ function OnSceneLoaded(scene, mode)
                     end
                 elseif k == 2 then
                     for _, soundPkgPath in pairs(v) do
+                        print("加载音乐音效包：path = ", soundPkgPath)
                         loader:LoadSoundsPackage(soundPkgPath)
                         updateProgress()
                     end
                 elseif k == 3 then
                     for _, sceneName in pairs(v) do
-                        print("loadScene", sceneName)
+                        print("加载场景：", sceneName)
                         SceneManager.LoadSceneAsync(sceneName)
                         updateProgress()
                     end

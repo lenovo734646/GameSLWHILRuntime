@@ -935,7 +935,7 @@ public static class UnityHelper
         AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
         jc.CallStatic("WechatLogin", jo, appid);
 #elif UNITY_IOS
-        ToiOS.LoginWeChat(appid);
+        //ToiOS.LoginWeChat(appid);
 #endif
 #endif
     }
@@ -952,7 +952,7 @@ public static class UnityHelper
         //AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
         jc.CallStatic("getAccessToken", appid, appsecret, code);
 #elif UNITY_IOS
-        ToiOS.WechatGetAccessToken(appid, appsecret, code);
+        //ToiOS.WechatGetAccessToken(appid, appsecret, code);
 #endif
 #endif
     }
@@ -965,7 +965,7 @@ public static class UnityHelper
         //AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
         jc.CallStatic("isAccessTokenIsInvalid", accessToken, openID);
 #elif UNITY_IOS
-        ToiOS.isAccessTokenIsInvalid(accessToken, openID);
+        //ToiOS.isAccessTokenIsInvalid(accessToken, openID);
 #endif
     }
     // 更新或续期微信登录token
@@ -980,7 +980,7 @@ public static class UnityHelper
         //AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
         jc.CallStatic("refreshAccessToken", refreshToken);
 #elif UNITY_IOS
-        ToiOS.refreshAccessToken(refreshToken);
+        //ToiOS.refreshAccessToken(refreshToken);
 #endif
 #endif
     }
@@ -999,7 +999,7 @@ public static class UnityHelper
         jc.CallStatic("WxUrlShare", jo, url, title, description, imgUrl, judge);
 #elif UNITY_IOS
         // TODO：IOS Wechat Share
-        ToiOS.ShareWeChat(appid, url, title, description, imgUrl, judge);
+        //ToiOS.ShareWeChat(appid, url, title, description, imgUrl, judge);
 #endif
 #endif
     }
@@ -1032,7 +1032,7 @@ public static class UnityHelper
         }
 #elif UNITY_IOS
         // TODO：IOS Open Wechat
-        Application.OpenURL("weixin://")
+        //Application.OpenURL("weixin://")
 #endif
 #endif
         return false;

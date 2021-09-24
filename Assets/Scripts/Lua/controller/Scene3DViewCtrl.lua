@@ -102,15 +102,23 @@ end
 
 -- showRedNuber: 是否显示红色数字，下注状态就显示，这里其实是gameState
 function Class:PlayCountDownSound(time)
-    if time > 5 then
-        AudioManager.Instance:PlaySoundEff2D("TimerTick")
-    else
-        if self:IsBetState() then
+    if self:IsBetState() then
+        if time == 5 then
             AudioManager.Instance:PlaySoundEff2D("alert")
-        else
+        end
+        if time < 5 then
             AudioManager.Instance:PlaySoundEff2D("TimerTick")
         end
     end
+    -- if time > 5 then
+    --     AudioManager.Instance:PlaySoundEff2D("TimerTick")
+    -- else
+    --     if self:IsBetState() then
+    --         AudioManager.Instance:PlaySoundEff2D("alert")
+    --     else
+    --         AudioManager.Instance:PlaySoundEff2D("TimerTick")
+    --     end
+    -- end
 end
 
 --当组件DisableGameObjectsOnSceneLoaded完成后，会调用此方法

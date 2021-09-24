@@ -57,7 +57,7 @@ namespace SLWH
         public OSAScrollView oSAScrollView;
         public Transform winStageTrans;
 
-
+        public Camera mainCamera;
         public enum ColorType
         {
             Zero = 0,
@@ -241,34 +241,35 @@ namespace SLWH
 #if UNITY_EDITOR
             if (Input.GetKeyUp(KeyCode.A))
             {
-                var offset = 5.0f;
-                var count = winAnimalAnimators.Length;
-                var targetPos = tweenAnimation.transform.parent.InverseTransformPoint(winStageTrans.position);
-                var pos = targetPos;//winStageTrans.position;
-                var itemPos = pos;
+                
+                //var offset = 5.0f;
+                //var count = winAnimalAnimators.Length;
+                //var targetPos = tweenAnimation.transform.parent.InverseTransformPoint(winStageTrans.position);
+                //var pos = targetPos;//winStageTrans.position;
+                //var itemPos = pos;
 
-                //
-                //tweenAnimation.transform.DOLocalMove(targetPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
+                ////
+                ////tweenAnimation.transform.DOLocalMove(targetPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
 
-                for (int i = 0; i < count; i++)
-                {
-                    var c = i - (count - 1) / 2;
-                    itemPos.x = pos.x + c * offset;
-                    var item = winAnimalAnimators[i];
-                    //originalPos = item.transform.position;
-                    //originalRot = item.transform.eulerAngles;
-                    originalPos = item.transform.localPosition;
-                    originalRot = item.transform.localEulerAngles;
+                //for (int i = 0; i < count; i++)
+                //{
+                //    var c = i - (count - 1) / 2;
+                //    itemPos.x = pos.x + c * offset;
+                //    var item = winAnimalAnimators[i];
+                //    //originalPos = item.transform.position;
+                //    //originalRot = item.transform.eulerAngles;
+                //    originalPos = item.transform.localPosition;
+                //    originalRot = item.transform.localEulerAngles;
 
-                    //item.transform.DOMove(itemPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
-                    item.transform.DOLocalMove(itemPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
-                    //item.transform.DORotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
-                    item.transform.DOLocalRotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
-                    animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
-                    animatorHelper.SetBool("bJumpToCenter", true);
-                    animatorHelper.SetTrigger("tVictory");
+                //    //item.transform.DOMove(itemPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
+                //    item.transform.DOLocalMove(itemPos, 0.9f).SetDelay(0.3f).SetEase(Ease.InOutQuad);
+                //    //item.transform.DORotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
+                //    item.transform.DOLocalRotate(new Vector3(0, -180, 0), 0.2f).SetDelay(1.0f);
+                //    animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
+                //    animatorHelper.SetBool("bJumpToCenter", true);
+                //    animatorHelper.SetTrigger("tVictory");
 
-                }
+                //}
 
                 //foreach (var item in winAnimalTweenAnimations)
                 //{
@@ -303,17 +304,18 @@ namespace SLWH
 
             if (Input.GetKeyUp(KeyCode.S))
             {
-                foreach (var item in winAnimalAnimators)
-                {
-                    if (item)
-                    {
-                        item.transform.DOLocalRotate(originalRot, 0.2f).SetDelay(1.0f);
-                        item.transform.DOLocalMove(originalPos, 0.9f).SetDelay(0.3f);
-                        animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
-                        animatorHelper.Play("Jump");
-                        animatorHelper.SetBool("bJumpToCenter", false);
-                    }
-                }
+
+                //foreach (var item in winAnimalAnimators)
+                //{
+                //    if (item)
+                //    {
+                //        item.transform.DOLocalRotate(originalRot, 0.2f).SetDelay(1.0f);
+                //        item.transform.DOLocalMove(originalPos, 0.9f).SetDelay(0.3f);
+                //        animatorHelper = item.gameObject.GetComponent<AnimatorHelper>();
+                //        animatorHelper.Play("Jump");
+                //        animatorHelper.SetBool("bJumpToCenter", false);
+                //    }
+                //}
             }
             if (Input.GetKeyUp(KeyCode.D))
             {

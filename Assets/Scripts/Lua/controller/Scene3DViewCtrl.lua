@@ -405,12 +405,14 @@ end
 
 function Class:OnCustumEvent(params)
     local eventName = params[0]
-    if eventName=='CameraMoved' then
-        print('CameraMoved')
-    elseif eventName == 'On2_1Mode' then
-        --针对超宽屏进行优化
-        self.ui.gameObject.transform.localScale = _G.Vector3(1.03,1,1)
-    end
+    LogE("使用了  OnCustumEvent：  ", eventName)
+    
+    -- if eventName=='CameraMoved' then
+    --     print('CameraMoved')
+    -- elseif eventName == 'On2_1Mode' then
+    --     --针对超宽屏进行优化
+    --     self.ui.gameObject.transform.localScale = _G.Vector3(1.03,1,1)
+    -- end
 end
 
 function Class:IsBetState()
@@ -709,6 +711,9 @@ function Class:OnShowState(data)
                         showTime = ShowRunTime_Shark
                     end
                     yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
+                    -- 摄像机拉近动画
+                    ui.viewEventBroadcaster:Broadcast('runFinishCameraMove')
+                    
                     print("花瓣打开....")
                     ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
                     -- 中奖动物跳入并播放胜利动画

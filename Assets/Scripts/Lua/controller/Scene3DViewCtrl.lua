@@ -559,7 +559,7 @@ function Class:OnShowState(data)
     --
     if #data.color_array == 0 or #data.ratio_array == 0 then
         if #self.ratioArray == 0 then
-            LogE("OnShowState: data.color_array == nil or data.ratio_array == nil self.ratioArray = nil")
+            print("OnShowState: data.color_array == nil or data.ratio_array == nil self.ratioArray = nil")
             return
         end
     else
@@ -572,6 +572,9 @@ function Class:OnShowState(data)
     local AnimalType = GameConfig.AnimalType
     --
     local resultInfo = data.anim_result_list[1]
+    if resultInfo == nil then -- 初次进入游戏不清楚为什么这里偶尔会是nil
+        return
+    end
     local songDengInfo = data.anim_result_list[2]
     local winColor = resultInfo.color_id
     local winSanYuanColor = resultInfo.sanyuan_color_id
@@ -698,8 +701,10 @@ function Class:OnShowState(data)
                         showTime = ShowRunTime_Shark
                     end
                     yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
+                    print("花瓣打开....")
                     ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
                     -- 中奖动物跳入并播放胜利动画
+                    print("动物跳入展示....")
                     itemData.JumpToWinStage(winItemCount, i, bSkip)
                     --
                     yield(WaitForSeconds(ShowZhanShiTime))
@@ -733,13 +738,17 @@ function Class:OnShowState(data)
             self.ui.SpotLight_Animal_animator.enabled = false
             self.ui.Baoshi_1_animator.enabled = false
             -- 显示中奖结算界面
+            print("显示结算....中奖动物数：", #winItemDataList)
             local resultPanel = self.ui.mainUI.resultPanel
             resultPanel:ShowResult(self.resultPanelData)
             for _, itemData in pairs(winItemDataList) do
+                print("动物是否跳出:", itemData.bJump)
                 if itemData.bJump then
+                    print("动物跳回....")
                     itemData.JumpToOriginal(bSkip)
                 end
             end
+            print("关闭花瓣....")
             ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
             --
             yield(WaitForSeconds(ShowResultTime))

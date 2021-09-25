@@ -76,7 +76,7 @@ public static class EditorUtil
         var enumerable = GetValue(source, name) as IEnumerable;
         if (enumerable == null) return null;
         var enm = enumerable.GetEnumerator();
-        //while (index-- >= 0)
+        while (index-- >= 0)
         {
             var b = enm.MoveNext();
             if (b == false)

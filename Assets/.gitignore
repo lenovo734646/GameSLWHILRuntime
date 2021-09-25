@@ -1,2 +1,4 @@
 /Lua
 /*.meta
+/XLua/Gen
+/XLua/Gen.meta

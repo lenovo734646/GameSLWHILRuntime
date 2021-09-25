@@ -1,5 +1,97 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1015362909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1015362910}
+  - component: {fileID: 1015362913}
+  m_Layer: 15
+  m_Name: BaoShi_DirectionalLight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1015362910
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015362909}
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1290307973675881363}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!108 &1015362913
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015362909}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 1
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 0.122
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 33554432
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &1763560981
 GameObject:
   m_ObjectHideFlags: 0
@@ -19186,7 +19278,7 @@ GameObject:
   - component: {fileID: 1304461323227788153}
   - component: {fileID: 1304461323227788152}
   - component: {fileID: 1304461323227788154}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19285,7 +19377,7 @@ GameObject:
   - component: {fileID: 1304461323269383068}
   - component: {fileID: 1304461323269382755}
   - component: {fileID: 1304461323269383069}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19384,7 +19476,7 @@ GameObject:
   - component: {fileID: 1304461323318597563}
   - component: {fileID: 1304461323318597562}
   - component: {fileID: 1304461323318597556}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19483,7 +19575,7 @@ GameObject:
   - component: {fileID: 1304461323502579107}
   - component: {fileID: 1304461323502579106}
   - component: {fileID: 1304461323502579164}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19656,7 +19748,7 @@ GameObject:
   - component: {fileID: 1304461323601159167}
   - component: {fileID: 1304461323601159166}
   - component: {fileID: 1304461323601159160}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19755,7 +19847,7 @@ GameObject:
   - component: {fileID: 1304461323631096975}
   - component: {fileID: 1304461323631096974}
   - component: {fileID: 1304461323631096968}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19854,7 +19946,7 @@ GameObject:
   - component: {fileID: 1304461323716575653}
   - component: {fileID: 1304461323716575652}
   - component: {fileID: 1304461323716575654}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20400,7 +20492,7 @@ GameObject:
   - component: {fileID: 1304461323977283329}
   - component: {fileID: 1304461323977283328}
   - component: {fileID: 1304461323977283330}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20558,7 +20650,7 @@ GameObject:
   - component: {fileID: 1304461324134054756}
   - component: {fileID: 1304461324134054763}
   - component: {fileID: 1304461324134054757}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20814,7 +20906,7 @@ GameObject:
   - component: {fileID: 1304461324295165272}
   - component: {fileID: 1304461324295165279}
   - component: {fileID: 1304461324295165273}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20913,7 +21005,7 @@ GameObject:
   - component: {fileID: 1304461324364286751}
   - component: {fileID: 1304461324364286750}
   - component: {fileID: 1304461324364286744}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21012,7 +21104,7 @@ GameObject:
   - component: {fileID: 1304461324432675879}
   - component: {fileID: 1304461324432675878}
   - component: {fileID: 1304461324432675872}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21111,7 +21203,7 @@ GameObject:
   - component: {fileID: 1304461324515118257}
   - component: {fileID: 1304461324515118256}
   - component: {fileID: 1304461324515118258}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21210,7 +21302,7 @@ GameObject:
   - component: {fileID: 1304461324561095648}
   - component: {fileID: 1304461324561095655}
   - component: {fileID: 1304461324561095649}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21309,7 +21401,7 @@ GameObject:
   - component: {fileID: 1304461324578408594}
   - component: {fileID: 1304461324578408593}
   - component: {fileID: 1304461324578408595}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21408,7 +21500,7 @@ GameObject:
   - component: {fileID: 1304461324664728461}
   - component: {fileID: 1304461324664728460}
   - component: {fileID: 1304461324664728462}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26261,7 +26353,7 @@ GameObject:
   - component: {fileID: 1304461324714868783}
   - component: {fileID: 1304461324714868782}
   - component: {fileID: 1304461324714868776}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27045,13 +27137,29 @@ MonoBehaviour:
             m_StringArgument: HideBetStage
             m_BoolArgument: 0
           m_CallState: 2
-  - name: runFinishCameraMove
+  - name: CameraMoveForward
     delayInMillisecond: 0
     UnityEvent:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
           m_MethodName: DOPlayForward
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: CameraMoveBackward
+    delayInMillisecond: 0
+    UnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_MethodName: DOPlayBackwards
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -27227,7 +27335,7 @@ GameObject:
   - component: {fileID: 1304461325074310304}
   - component: {fileID: 1304461325074310311}
   - component: {fileID: 1304461325074310305}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27770,7 +27878,7 @@ GameObject:
   - component: {fileID: 1304461325152383819}
   - component: {fileID: 1304461325152383818}
   - component: {fileID: 1304461325152383812}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27869,7 +27977,7 @@ GameObject:
   - component: {fileID: 1304461325175673583}
   - component: {fileID: 1304461325175673582}
   - component: {fileID: 1304461325175673576}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27968,7 +28076,7 @@ GameObject:
   - component: {fileID: 1304461325175732680}
   - component: {fileID: 1304461325175732687}
   - component: {fileID: 1304461325175732681}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32339,7 +32447,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1553981378986990035}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: ColorLightRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32833,7 +32941,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 33554231
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -33711,6 +33819,7 @@ Transform:
   - {fileID: 2274541615075239107}
   - {fileID: 3216050665967300727}
   - {fileID: 3401854616897226869}
+  - {fileID: 1015362910}
   m_Father: {fileID: 1304461324910240666}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -67565,7 +67674,7 @@ GameObject:
   - component: {fileID: 8455841234648168181}
   - component: {fileID: 8786008300868208611}
   - component: {fileID: 9122291607222440411}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67664,7 +67773,7 @@ GameObject:
   - component: {fileID: 8455841235107926595}
   - component: {fileID: 8786008301509452629}
   - component: {fileID: 9122291607893046637}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67763,7 +67872,7 @@ GameObject:
   - component: {fileID: 8455841233515434736}
   - component: {fileID: 8786008299719238630}
   - component: {fileID: 9122291608371426776}
-  m_Layer: 15
+  m_Layer: 25
   m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

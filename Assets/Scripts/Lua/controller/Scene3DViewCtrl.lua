@@ -529,6 +529,7 @@ function Class:SetColorAndRatio(colorArray, ratioArray)
         print("颜色表：", json.encode(colorArray))
         for index, value in ipairs(colorArray) do
             ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
+            ui.colorDataList[index].color_id = value
             --print("index = ", index, "color_id = ", value, " animal_id = ", ui.runItemDataList[index].item_id)
         end
     end
@@ -585,6 +586,7 @@ function Class:OnShowState(data)
     if resultInfo == nil then -- 初次进入游戏不清楚为什么这里偶尔会是nil
         return
     end
+    --
     local songDengInfo = data.anim_result_list[2]
     local winColor = resultInfo.color_id
     local winSanYuanColor = resultInfo.sanyuan_color_id
@@ -695,6 +697,7 @@ function Class:OnShowState(data)
             end
         end
         local winItemDataList = {} -- 记录本次所有中奖动物itemData
+        print("ShowRunTime = ", ShowRunTime, "ShowRunTime_Shark = ", ShowRunTime_Shark)
         CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
@@ -712,7 +715,7 @@ function Class:OnShowState(data)
                     end
                     yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
                     -- 摄像机拉近动画
-                    ui.viewEventBroadcaster:Broadcast('runFinishCameraMove')
+                    ui.viewEventBroadcaster:Broadcast('CameraMoveForward')
                     
                     print("花瓣打开....")
                     ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
@@ -723,6 +726,8 @@ function Class:OnShowState(data)
                     yield(WaitForSeconds(ShowZhanShiTime))
                     if winItemCount > 1 and i ~= winItemCount then   -- 轮流跳入
                         itemData.JumpToOriginal(bSkip)
+                        -- 摄像机位置还原
+                        ui.viewEventBroadcaster:Broadcast('CameraMoveBackward')
                         yield(WaitForSeconds(1.1))  -- 跳入时间
                     end
                     --ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
@@ -834,6 +839,9 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         :SetEase(curve):WaitForCompletion())
         local colordata = colorDataList[colorToindex]
         colordata.animator.enabled = true  -- 播放中奖颜色闪烁动画
+        local name = "BaoshiFlash_"..colordata.color_id
+        colordata.animator:Play(name, 0, 0)
+        print("colorAnimName = ", name)
     end)
 
     -- 动物

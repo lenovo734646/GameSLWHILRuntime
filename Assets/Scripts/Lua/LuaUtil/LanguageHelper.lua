@@ -17,7 +17,7 @@ function GetServerErrorMsg(code, msgName)
     msgName = msgName:Replace('.', '')
     local key = msgName ..'_' ..code
     print('GetServerErrorMsg',key)
-    local _,rt = table.findKV(LanguageErrcode, function(k, v)
+    local _,rt = table.Find(LanguageErrcode, function(k, v)
         return v.key == key
     end)
     local curLanguage = SysDefines.curLanguage
@@ -47,7 +47,7 @@ function GetDisconnectTips(ntf)
         return ntf.errmessage
     end
 
-    local tips = table.FindBy(DisconnectTips, function(v)
+    local tips = table.Find(DisconnectTips, function(v)
         return v.Code == code
     end)[tiplang]
     if tips then
@@ -61,7 +61,7 @@ function GetDisconnectTips(ntf)
 end
 
 function GetLanguageT(key)
-    local tt = table.FindBy(LanguageT, function(t)
+    local tt = table.Find(LanguageT, function(t)
         return t.key == key
     end)
     return tt[SysDefines.curLanguage] or tt.CN

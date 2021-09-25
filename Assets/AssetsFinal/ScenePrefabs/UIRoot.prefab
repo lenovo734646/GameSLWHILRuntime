@@ -1449,7 +1449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 790, y: -150}
+  m_AnchoredPosition: {x: 789.99994, y: -150}
   m_SizeDelta: {x: 160, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2557613262097652972
@@ -3828,7 +3828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 220, y: -339}
+  m_AnchoredPosition: {x: 250, y: -339}
   m_SizeDelta: {x: 203, y: 52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2557613262436669233
@@ -7667,8 +7667,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 216, y: -14}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 255, y: -14}
+  m_SizeDelta: {x: 300, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2557613263000456547
 CanvasRenderer:
@@ -9910,7 +9910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -220, y: -339}
+  m_AnchoredPosition: {x: -250, y: -339}
   m_SizeDelta: {x: 203, y: 51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2557613263414341286
@@ -12377,7 +12377,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 875, y: -150}
+  m_AnchoredPosition: {x: 874.99994, y: -150}
   m_SizeDelta: {x: 330, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2557613263986732519
@@ -12434,8 +12434,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 215.99995, y: -13.99974}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 255, y: -13.99974}
+  m_SizeDelta: {x: 300, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2557613263987013745
 CanvasRenderer:
@@ -12470,7 +12470,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 40
+    m_MaxSize: 83
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -13713,7 +13713,7 @@ PrefabInstance:
     - target: {fileID: 757996989400952377, guid: df1caa3c802952d498b877ab5ec46d43,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -597
+      value: -597.00006
       objectReference: {fileID: 0}
     - target: {fileID: 799103020141138705, guid: df1caa3c802952d498b877ab5ec46d43,
         type: 3}

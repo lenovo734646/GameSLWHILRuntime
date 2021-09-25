@@ -47,7 +47,7 @@ function GetDisconnectTips(ntf)
         return ntf.errmessage
     end
 
-    local tips = table.findBy(DisconnectTips, function(v)
+    local tips = table.FindBy(DisconnectTips, function(v)
         return v.Code == code
     end)[tiplang]
     if tips then
@@ -61,7 +61,7 @@ function GetDisconnectTips(ntf)
 end
 
 function GetLanguageT(key)
-    local tt = table.findBy(LanguageT, function(t)
+    local tt = table.FindBy(LanguageT, function(t)
         return t.key == key
     end)
     return tt[SysDefines.curLanguage] or tt.CN

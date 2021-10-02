@@ -7,6 +7,7 @@ local Color = UnityEngine.Color
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local TextAnchor = UnityEngine.TextAnchor
+local Vector2 = UnityEngine.Vector2
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -43,7 +44,10 @@ function Class:UpdateFromData(data)
         self.rightHeadBG:SetActive(true)
         self.rightHeadImage.sprite = data.iconSpr
         self.leftIHeadBG:SetActive(false)
-        --
+        -- 自己发言不用显示名字
+        --self.nameText.gameObject:GetComponent("RectTransform").sizeDelta = Vector2(1, 30)
+        self.nameText.gameObject:SetActive(false)
+        --self.InfoRootLayout.childAlignment = TextAnchor.UpperRight
         --self.contentBackImage.color = Color(0.75, 1, 1, self.colorAtInit.a)
         self.rootLayoutGroup.childAlignment = TextAnchor.MiddleRight
         self.msgContentLayoutGroup.childAlignment = TextAnchor.MiddleRight
@@ -54,6 +58,10 @@ function Class:UpdateFromData(data)
         self.leftHeadImage.sprite = data.iconSpr
         self.rightHeadBG:SetActive(false)
         --
+        --self.nameText.gameObject:GetComponent("RectTransform").sizeDelta = Vector2(210, 30)
+        self.nameText.gameObject:SetActive(true)
+        self.nameText.text = data.nickName
+        --self.InfoRootLayout.childAlignment = TextAnchor.UpperLeft
         --self.contentBackImage.color = self.colorAtInit
         self.rootLayoutGroup.childAlignment = TextAnchor.MiddleLeft
         self.msgContentLayoutGroup.childAlignment = TextAnchor.MiddleLeft

@@ -24,6 +24,8 @@ local GameConfig = GameConfig
 -- local GetHeadSprite = SEnv.GetHeadSprite
 -- local GetHeadFrameSprite = SEnv.GetHeadFrameSprite
 -- print("GetHeadSprite = ", GetHeadSprite, SEnv.GetHeadSprite)
+-- 
+local isOpen = false -- 是否显示聊天窗口
 
 _ENV = moduledef {
     seenamespace = CS
@@ -53,6 +55,8 @@ function Class:__init(panel, loader, userData)
     self.msgItemBGInitHelper:ObjectsSetToLuaTable(self.msgItemBGs)
     self.msgItemBGInitHelper = nil
 
+    -- 未读消息
+    self.unReadMsgCount = 0
     --
     self.faceSpr = SEnv.GetHeadSprite(userData.headID)
 
@@ -114,7 +118,8 @@ function Class:__init(panel, loader, userData)
         print("收到消息：userID = ", data.user_id, data.nickname, data.message_type, data.content, data.metadata)
         local timeStampSec = tonumber(data.metadata)
         local headSpr = SEnv.GetHeadSprite(data.head)
-        self:OnReceiveMsg(timeStampSec, data.user_id, data.message_type, data.content, data.metadata, headSpr)
+        --local headFrameSpr = SEnv.GetHeadFrameSprite(data.headFrameID) -- 协议暂时没有头像框字段
+        self:OnReceiveMsg(timeStampSec, data.user_id, data.nickname, data.message_type, data.content, data.metadata, headSpr)
     end)
 end
 
@@ -139,7 +144,6 @@ end
 -- 发送文字
 function Class:OnSendText(inputField)
     local text = inputField.text
-    --print("OnSendText text = ", "|"..text.."|")
     if string.IsNullOrEmpty(text) or text == " " or text == '\n' or text == '\r' or text == '\t' then
         inputField.text = ""
         return
@@ -154,7 +158,7 @@ function Class:OnSendText(inputField)
     -- self:OnReceiveMsg(timeStampSec, 0012, 1, text, nil, self.faceSpr)   
     --
     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        CLCHATROOMSender.Send_SendChatMessageReq_Async(1, text, tostring(timeStampSec),_G.ShowErrorByHintHandler)
+        CLCHATROOMSender.Send_SendChatMessageReq_Async(1, text, tostring(timeStampSec), _G.ShowErrorByHintHandler)
     end)
     self.inputField.text = ""
 end
@@ -166,7 +170,7 @@ function Class:OnSendPhrase(phraseData)
     -- self:OnReceiveMsg(timeStampSec, self.selfUserID, 2, phraseData.index, nil, self.faceSpr)   
     --
     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        CLCHATROOMSender.Send_SendChatMessageReq_Async(2, tostring(phraseData.index), tostring(timeStampSec),_G.ShowErrorByHintHandler)
+        CLCHATROOMSender.Send_SendChatMessageReq_Async(2, tostring(phraseData.index), tostring(timeStampSec), _G.ShowErrorByHintHandler)
     end)
     -- 关闭界面
     self.tog_Phrase.isOn = false;
@@ -174,10 +178,24 @@ end
 
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
-function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, headSpr)
+function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, metadata, headSpr)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
         return
+    end
+    if not isOpen then
+        self.redDotTip:SetActive(true)
+        self.unReadMsgCount = self.unReadMsgCount +1
+        if self.unReadMsgCount > 99 then
+            self.unReadMsgCount = 99
+        end
+        self:__SetUnReadmsgCount(self.unReadMsgCount)
+    else
+        if self.redDotTip.activeSelf then
+            self.redDotTip:SetActive(false)
+        end
+        self:__SetUnReadmsgCount(0)
+
     end
     -- print("msgItemBGs = ", self.msgItemBGs[1], self.msgItemBGs[2])
     local msgItemBgSpr = self.msgItemBGs[1]
@@ -210,9 +228,8 @@ function Class:OnReceiveMsg(timeStampSec, userID, msgType, content, metadata, he
             end
         end
     end
-    local msgData = ChatMsgData.Create(timeStampSec, userID, isMine, content, audioClip, headSpr, msgItemBgSpr)
+    local msgData = ChatMsgData.Create(timeStampSec, userID, nickName, isMine, content, audioClip, headSpr, msgItemBgSpr)
     self.msgScrollView:InsertItem(msgData)
-
 end
 
 function Class:ShowSendBtnByInput(inputField)
@@ -222,6 +239,11 @@ function Class:ShowSendBtnByInput(inputField)
     else
         self.btnSend.gameObject:SetActive(false)
     end
+end
+
+function Class:__SetUnReadmsgCount(count)
+    self.unReadMsgCount = count
+    self.unReadMsgCountText.text = tostring(count)
 end
 
 -- 以下代码为自动生成代码
@@ -265,6 +287,20 @@ function Class:On_tog_Voice_Event(tog_Voice)
         self.btnSend.gameObject:SetActive(false)
     end
     self.voicePanel:OnShow(isOn)
+end
+
+function Class:On_tog_ChatPanel_Event(tog_ChatPanel)
+    if tog_ChatPanel.isOn then
+        isOpen = true
+        if self.redDotTip.activeSelf then
+            self.redDotTip:SetActive(false)
+        end
+        self:__SetUnReadmsgCount(0)
+        self.msgScrollView:Refresh()
+        self.msgScrollView:SmoothScrollToEnd()
+    else
+        isOpen = false
+    end
 end
 
 -- 响应onEndEdit和onValueChanged

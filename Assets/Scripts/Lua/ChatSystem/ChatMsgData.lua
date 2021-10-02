@@ -10,18 +10,19 @@ function Create(...)
     return Class(...)
 end
 
-function Class:__init(timestampSec, userID, isMine, text, audioClip, iconSpr, msgItemBgSpr)
+function Class:__init(timestampSec, userID, nickName, isMine, text, audioClip, iconSpr, msgItemBgSpr)
     self.timestampSec = timestampSec    -- 时间戳（秒数）
     self.userID = userID                -- 玩家ID(用来获取发送消息的用户信息)
+    self.nickName = nickName            -- 玩家昵称
     self.isMine = isMine                -- 是否是自己发的消息（根据UserID判断）
     self.text = text                    -- 聊天内容（文字）
     self.audioClip = audioClip          -- 音频源
     self.iconSpr = iconSpr              -- 头像
     self.msgItemBgSpr = msgItemBgSpr    -- 消息条目背景
 end
-    -- 获取时间戳（分：秒）
+    -- 获取时间戳（时：分：秒）
 function Class:GetTimeStamp() 
-    return os.date( "%M:%S", self.timeStampSec)
+    return os.date( "%H:%M:%S", self.timeStampSec)
 end
 
 return _ENV

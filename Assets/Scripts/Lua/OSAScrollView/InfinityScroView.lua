@@ -29,6 +29,7 @@ function Class:__init(OSAScrollViewCom)
     assert(OSAScrollViewCom)
     self.OSAScrollViewCom = OSAScrollViewCom
     self.OSAScrollView = OSAScrollView.Create(OSAScrollViewCom)
+    self:Init()
     self.viewDataHelper = ScrollItemViewDataHelper.Create(OSAScrollViewCom)
 
     OSAScrollViewCom.UpdateViewsHolderCallback = function (paramters_)
@@ -133,6 +134,10 @@ end
 
 function Class:ReplaceItems(items, freezeEndEdge)
     return self.viewDataHelper:ResetItems(items, freezeEndEdge)
+end
+-- 刷新 
+function Class:Refresh()
+    self.OSAScrollView.OSAScrollViewCom:Refresh()
 end
 
 function Class:Release()

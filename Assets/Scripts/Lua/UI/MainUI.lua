@@ -109,6 +109,15 @@ function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)
     self.playerListPanel:OnSendPlayerListReq()
 end
 
+function Class:On_btn_Set_Event(btn_Bank)
+    print(" on btn_set click! ")
+    if g_Env then
+        g_Env.uiManager:OpenUI("Setting.SettingPanelUI")
+    else
+        LogW("独立小游戏无法打开设置界面...")
+    end
+end
+
 function Class:On_btn_Bank_Event(btn_Bank)
     print("打开银行...")
     if g_Env then

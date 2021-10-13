@@ -1,6 +1,10 @@
 local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
     typeof, type, print, table, tonumber, SysDefines
 local LuaInitHelper = CS.LuaInitHelper
+local PointerEventData = CS.UnityEngine.EventSystems.PointerEventData
+local EventSystem = CS.UnityEngine.EventSystems.EventSystem
+local Input = CS.UnityEngine.Input
+local Vector2 = CS.UnityEngine.Vector2
 
 local DestroyImmediate = DestroyImmediate
 local CS,AssertUnityObjValid = CS,AssertUnityObjValid
@@ -194,5 +198,30 @@ function MoneyToNumber(str)
         return 0
     end
 end
+-- 获取当前鼠标停留的GameObject 层级为由下到上
+function GetMouseOverGameObjects(graphicRaycaster)
+    local pointerEventData = PointerEventData(EventSystem.current)
+    local v3 = Input.mousePosition
+    pointerEventData.position = Vector2(v3.x, v3.y)
+    local results = {}
+    graphicRaycaster:Raycast(pointerEventData, results)
+    return results
+end
+-- 判断鼠标是否停留在target上
+function IsMouseCorveredTarget(target, graphicRaycaster)
+    print("graphicRaycaster = ", graphicRaycaster)
+    local objs = GetMouseOverGameObjects(graphicRaycaster)
+    if objs == nil or #objs <= 0 then
+        return false
+    end
+    for key, value in pairs(objs) do
+        if value.gameObject.name == target.name then
+            return true
+        end
+    end
+    return false
+end
+
+
 
 return _ENV

@@ -102,7 +102,7 @@ function Class:__init(panel, loader, userData)
     -- 语音聊天
     -- 最长录音时间
     self.maxRecordTime = 60
-    self.voicePanel = VoicePanel.Create(self.voicePanelGo, self.graphicRaycaster, self.maxRecordTime)
+    self.voicePanel = VoicePanel.Create(self.voicePanelGo, self.canvas_graphicraycaster, self.maxRecordTime)
     self.voicePanel.onSendCallback = function(clipData)
         self:OnSendVoice(clipData)
     end
@@ -249,40 +249,40 @@ end
 -- 以下代码为自动生成代码
 function Class:On_tog_Emoji_Event(tog_Emoji)
     local isOn = tog_Emoji.isOn
-    --
-    if isOn and self.tog_Phrase.isOn then
-        self.tog_Phrase.isOn = false
-    end
-    if isOn and self.tog_Voice.isOn then
-        self.tog_Voice.isOn = false
-    end
-    --
+    -- --
+    -- if isOn and self.tog_Phrase.isOn then
+    --     self.tog_Phrase.isOn = false
+    -- end
+    -- if isOn and self.tog_Voice.isOn then
+    --     self.tog_Voice.isOn = false
+    -- end
+    -- --
     self.emojiPanel:OnShow(isOn)
 end
 
 function Class:On_tog_Phrase_Event(tog_Phrase)
     local isOn = tog_Phrase.isOn
-    --
-    if isOn and self.tog_Voice.isOn then
-        self.tog_Voice.isOn = false
-    end
-    if isOn and self.tog_Emoji.isOn then
-        self.tog_Emoji.isOn = false
-    end
-    --
+    -- --
+    -- if isOn and self.tog_Voice.isOn then
+    --     self.tog_Voice.isOn = false
+    -- end
+    -- if isOn and self.tog_Emoji.isOn then
+    --     self.tog_Emoji.isOn = false
+    -- end
+    -- --
     self.phrasePanel:OnShow(isOn)
 end
 
 function Class:On_tog_Voice_Event(tog_Voice)
     local isOn = tog_Voice.isOn
-    --
-    if isOn and self.tog_Emoji.isOn then
-        self.tog_Emoji.isOn = false
-    end
-    if isOn and self.tog_Phrase.isOn then
-        self.tog_Phrase.isOn = false
-    end
-    --
+    -- --
+    -- if isOn and self.tog_Emoji.isOn then
+    --     self.tog_Emoji.isOn = false
+    -- end
+    -- if isOn and self.tog_Phrase.isOn then
+    --     self.tog_Phrase.isOn = false
+    -- end
+    -- --
     if self.btnSend.gameObject.activeSelf then
         self.btnSend.gameObject:SetActive(false)
     end

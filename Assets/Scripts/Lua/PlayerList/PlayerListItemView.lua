@@ -39,6 +39,7 @@ function Class:UpdateFromData(data)
     
     if data.headFrameID ~= nil then
         self.frame_image.sprite = SEnv.GetHeadFrameSprite(data.headFrameID)
+        self.frame_image:SetNativeSize()
     end
 
     for i = 1, #self.rangimglist do

@@ -184,4 +184,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ddb0c6341fed4046b31ee0b99498276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TestLang: EN
+  TestLang: CN

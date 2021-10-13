@@ -6,7 +6,7 @@ local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEng
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
-local IsMouseCorveredTarget = CS.UnityHelper.IsMouseCorveredTarget
+local Helpers = require 'LuaUtil.Helpers'
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -20,17 +20,20 @@ end
 function Class:__init(panel, gr, maxRecordTime)
     panel:GetComponent(typeof(LuaInitHelper)):Init(self)
     self.panel = panel
+    print("gr = ", gr)
     self.gr = gr
     self.maxRecordTime = maxRecordTime
 
+    self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchDown:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(true)
         self.recorder:StartRecording(self.maxRecordTime)
     end)
 
+    self.btnPressRecording.OnTouchUp:RemoveAllListeners()
     self.btnPressRecording.OnTouchUp:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(false)
-        if IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
+        if Helpers.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
             if clipData ~= nil then
@@ -48,8 +51,8 @@ function Class:__init(panel, gr, maxRecordTime)
 end
 
 function Class:OnShow(isOn)
-    self.panel:SetActive(isOn)
-    self.sliderPanel.gameObject:SetActive(not isOn)
+    -- self.panel:SetActive(isOn)
+    -- self.sliderPanel.gameObject:SetActive(not isOn)
 end
 
 function Class:ByteToAudioClip(clipData)

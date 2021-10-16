@@ -21,6 +21,7 @@ end
 function Class:__init(view)
     self.view = view
     view:GetComponent(typeof(LuaInitHelper)):Init(self)
+    self.eventListener:Init(self)
 
     self.paddingAtIconSide = self.rootLayoutGroup.padding.right
     self.paddingAtOtherSide = self.rootLayoutGroup.padding.left
@@ -28,6 +29,12 @@ function Class:__init(view)
 
     self.isPlaying = false
     self.onClick = nil
+    -- data 信息
+    self.msgData = nil
+
+    --
+    self.progressSliderRoot:SetActive(false)
+    self.btn_ReSend.gameObject:SetActive(false)
 end
 
 -- data : ChatMsgData.lua类型
@@ -36,6 +43,7 @@ function Class:UpdateFromData(data)
         logError("UpdateFromData data is nil")
         return
     end
+    self.msgData = data
     -- 时间戳
     self.timeText.text = data:GetTimeStamp()
     -- 头像和布局
@@ -49,7 +57,7 @@ function Class:UpdateFromData(data)
         self.nameText.gameObject:SetActive(false)
         --self.InfoRootLayout.childAlignment = TextAnchor.UpperRight
         --self.contentBackImage.color = Color(0.75, 1, 1, self.colorAtInit.a)
-        self.rootLayoutGroup.childAlignment = TextAnchor.MiddleRight
+        self.rootLayoutGroup.childAlignment = TextAnchor.UpperRight
         self.msgContentLayoutGroup.childAlignment = TextAnchor.MiddleRight
         self.rootLayoutGroup.padding.right = self.paddingAtIconSide
         self.rootLayoutGroup.padding.left = self.paddingAtOtherSide
@@ -63,7 +71,7 @@ function Class:UpdateFromData(data)
         self.nameText.text = data.nickName
         --self.InfoRootLayout.childAlignment = TextAnchor.UpperLeft
         --self.contentBackImage.color = self.colorAtInit
-        self.rootLayoutGroup.childAlignment = TextAnchor.MiddleLeft
+        self.rootLayoutGroup.childAlignment = TextAnchor.UpperLeft
         self.msgContentLayoutGroup.childAlignment = TextAnchor.MiddleLeft
         self.rootLayoutGroup.padding.right = self.paddingAtOtherSide
         self.rootLayoutGroup.padding.left = self.paddingAtIconSide
@@ -77,9 +85,7 @@ function Class:UpdateFromData(data)
 
         self.audioSource.clip = data.audioClip
         self.wfDraw:StartWaveFormGeneration(data.audioClip)
-        self.soundBtn.onClick:AddListener(function ()
-            self:StartPlayback()
-        end)
+        -- self:StartPlayback() -- 不自动播放
         self.text.text = ""
     else
         self.wfDraw.gameObject:SetActive(false);
@@ -123,6 +129,34 @@ function Class:StopPlayback()
     self.isPlaying = false
     self.audioSource:Stop()
     self.wfDraw.playbackSli.value = 0
+end
+
+function Class:OnSendSuccess()
+    self.progressSliderRoot:SetActive(false)
+    self.btn_ReSend.gameObject:SetActive(false)
+end
+
+function Class:OnSendFailed()
+    self.progressSliderRoot:SetActive(false)
+    self.btn_ReSend.gameObject:SetActive(true)
+end
+
+function Class:OnDestroy()
+    print("ChatMsgViewItem OnDestroy.............")
+end
+
+-- function Class:OnEnable()
+--     print("ChatMsgView OnEnable.............")
+-- end
+
+function Class:On_btn_ReSend_Event(btn_ReSend)
+    if self.OnReSend then
+        self.OnReSend(self.timestampSec)
+    end
+end
+
+function Class:On_btn_PlaySound_Event(btn_PlaySound)
+    self:StartPlayback()
 end
 
 

@@ -132,6 +132,28 @@ function Class:GetItemsCount()
     return self.OSAScrollView:GetItemsCount()
 end
 
+function Class:GetItemViewsHolderAtStart()
+    if self:GetItemsCount() <= 0 then
+        return nil
+    end
+    return self.OSAScrollView:GetItemViewsHolder(0)
+end
+
+function Class:GetItemViewsHolderAtEnd()
+    if self:GetItemsCount() <= 0 then
+        return nil
+    end
+    local index = self:GetItemsCount()-1
+    return self.OSAScrollView:GetItemViewsHolder(index)
+end
+
+function Class:GetItemViewsHolder(index)
+    if self:GetItemsCount() <= 0 or index < 0 or index >= self:GetItemsCount() then
+        return nil
+    end
+    return self.OSAScrollView:GetItemViewsHolder(index)
+end
+
 function Class:ReplaceItems(items, freezeEndEdge)
     return self.viewDataHelper:ResetItems(items, freezeEndEdge)
 end

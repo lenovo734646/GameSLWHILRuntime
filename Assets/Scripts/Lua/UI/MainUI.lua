@@ -109,7 +109,7 @@ function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)
     self.playerListPanel:OnSendPlayerListReq()
 end
 
-function Class:On_btn_Set_Event(btn_Bank)
+function Class:On_btn_Set_Event(btn_Set)
     print(" on btn_set click! ")
     if g_Env then
         g_Env.uiManager:OpenUI("Setting.SettingPanelUI")

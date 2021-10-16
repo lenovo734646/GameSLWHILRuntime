@@ -1,13 +1,15 @@
-SEnv = SEnv or {}
+SubGame_Env = {}
 RUN_IN_TEST_MODE = true
 print('运行在无网络测试模式')
 GameConfig = GameConfig or require'Config' -- 在大厅模式下会传给小游戏这个数值
+require'Prepare'
 require "LuaUtil/LuaRequires"
 
 
 local SceneView = require'View.Scene3DView'
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-
+local yield = coroutine.yield
+local Helpers = require 'LuaUtil.Helpers'
 local GameConfig = require'GameConfig'
 
 if SUBGAME_EDITOR then
@@ -15,7 +17,31 @@ if SUBGAME_EDITOR then
     SEnv.playerRes = playerRes
 end
 
-SceneManager.LoadScene("MainScene")
+-- 测试下载
+local download_url = "https://game-oss-hotupdate-test.oss-cn-beijing.aliyuncs.com/HotUpdate_TEST/111.txt"
+CoroutineHelper.StartCoroutine(function ()
+    local request = Helpers.WebRequestGet(download_url)
+    request:SendWebRequest()
+    while (not request.isDone) do
+        yield()
+        -- TODO: 显示正在下载提示 和 下载进度
+        -- req.ui:SetTipText(_G._STR_ '正在同步...' .. floor2(request.downloadProgress * 100) .. '%')
+        print("正在下载...")
+    end
+    if not string.IsNullOrEmpty(request.error) then
+        --_G.ShotHintMessage(_ERR_STR_(request.error))
+        print("下载出错:", request.error)
+        return
+    end
+    local data = request.downloadHandler.data
+    print("下载成功...", #data, data)
+    -- -- 下载成功 转换成 audioClip
+    -- audioClip = self.voicePanel:ByteToAudioClip(request.downloadHandler.data)
+    -- --audioClip = self.voicePanel:ByteToAudioClip(content)
+    -- print("语音数据转换成AudioClip:", audioClip)
+end)
+
+-- SceneManager.LoadScene("MainScene")
 
 
 local roomdata = {

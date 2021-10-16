@@ -29,6 +29,7 @@ using UnityEngine.Networking;
 using ZXing;
 using UnityEngine.SceneManagement;
 using UnityEngine.Profiling;
+using UnityEngine.UI;
 
 public static class UnityHelper
 {
@@ -1365,4 +1366,36 @@ public static class UnityHelper
 
     public static long RealUsedMemorySize { 
         get => (Profiler.GetTotalAllocatedMemoryLong()- Profiler.GetTotalUnusedReservedMemoryLong()) / 1024 / 1024; }
+
+
+    // 判断鼠标是否在target上
+    public static bool IsMouseCorveredTarget(GameObject target, GraphicRaycaster gr)
+    {
+        var corverList = GetOverGameObject(gr);
+        if (corverList == null || corverList.Count <= 0)
+            return false;
+        foreach (var ret in corverList)
+        {
+            if (ret.gameObject.name == target.name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 获取鼠标悬停位置的GameObject返回go层级为由下到上
+    public static List<RaycastResult> GetOverGameObject(GraphicRaycaster raycaster)
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerEventData, results);
+        return results;
+    }
+
+    public static bool IsNullOrWhiteSpace(string str)
+    {
+        return string.IsNullOrWhiteSpace(str);
+    }
 }

@@ -10,7 +10,9 @@ function Create(...)
     return Class(...)
 end
 
-function Class:__init(timestampSec, userID, nickName, isMine, text, audioClip, iconSpr, msgItemBgSpr)
+function Class:__init(msgType, timestampSec, userID, nickName, isMine, text, audioClip, iconSpr, msgItemBgSpr)
+    print("ChatMsgData audioClip = : ", audioClip)
+    self.msgType = msgType              -- 消息类型  
     self.timestampSec = timestampSec    -- 时间戳（秒数）
     self.userID = userID                -- 玩家ID(用来获取发送消息的用户信息)
     self.nickName = nickName            -- 玩家昵称

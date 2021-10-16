@@ -6,6 +6,11 @@ SEnv = SubGame_Env
 _STR_ = _STR_ or function(str)
     return str
 end
+
+_ERR_STR_ = _ERR_STR_ or function (errStr)
+    return errStr
+end
+
 SEnv.gamectrl={}
 SEnv.OpenPlazaUI=function (...)
     if g_Env then

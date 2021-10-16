@@ -36,9 +36,11 @@ function Class:__init(panel, gr, maxRecordTime)
         if Helpers.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
+            --print("clipData = ", clipData)
             if clipData ~= nil then
-                print("OnTouchUp....发送消息")
+                
                 if self.onSendCallback then
+                    print("OnTouchUp....发送消息", #clipData, type(clipData))
                     self.onSendCallback(clipData)
                 end
                 self.recorder:CancelRecording()
@@ -46,6 +48,7 @@ function Class:__init(panel, gr, maxRecordTime)
         else
             --松手时不在录音按钮上就取消
             self.recorder:CancelRecording()
+            print("取消语音发送...")
         end
     end)
 end

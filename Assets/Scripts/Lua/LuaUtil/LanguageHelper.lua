@@ -81,6 +81,10 @@ _G._STR_ = _G._STR_ or function (str)
     end
     return t[SysDefines.curLanguage] or str
 end
+-- 统一调用格式
+_G._ERR_STR_ = _G._ERR_STR_ or function (str)
+    return str
+end
 
 function string.FormatDate(month,day,year)
     year = year or 2019

@@ -1,10 +1,14 @@
 local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
     typeof, type, print, table, tonumber, SysDefines
 local LuaInitHelper = CS.LuaInitHelper
-local PointerEventData = CS.UnityEngine.EventSystems.PointerEventData
-local EventSystem = CS.UnityEngine.EventSystems.EventSystem
+local EventSystems = CS.UnityEngine.EventSystems
+local PointerEventData = EventSystems.PointerEventData
+local EventSystem = EventSystems.EventSystem
 local Input = CS.UnityEngine.Input
 local Vector2 = CS.UnityEngine.Vector2
+local UnityHelper = CS.UnityHelper
+local List_RaycastResult = CS.System.Collections.Generic.List(EventSystems.RaycastResult)
+
 
 local DestroyImmediate = DestroyImmediate
 local CS,AssertUnityObjValid = CS,AssertUnityObjValid
@@ -203,23 +207,46 @@ function GetMouseOverGameObjects(graphicRaycaster)
     local pointerEventData = PointerEventData(EventSystem.current)
     local v3 = Input.mousePosition
     pointerEventData.position = Vector2(v3.x, v3.y)
-    local results = {}
+
+    local results = List_RaycastResult()
     graphicRaycaster:Raycast(pointerEventData, results)
-    return results
+    print("results = ", results, results.Count)
+    return results -- 这里类型是 c# List
 end
 -- 判断鼠标是否停留在target上
 function IsMouseCorveredTarget(target, graphicRaycaster)
     print("graphicRaycaster = ", graphicRaycaster)
     local objs = GetMouseOverGameObjects(graphicRaycaster)
-    if objs == nil or #objs <= 0 then
+    if objs == nil or objs.Count <= 0 then
         return false
     end
     for key, value in pairs(objs) do
+        print("对比:", target.name, value.gameObject.name)
         if value.gameObject.name == target.name then
             return true
         end
     end
     return false
+end
+
+-- 下载
+local UnityWebRequest = CS.UnityEngine.Networking.UnityWebRequest
+function WebRequestGet(url, timeout)
+    local request = UnityWebRequest.Get(url)
+    --request.certificateHandler = CS.CertHandler()
+    if timeout then
+        request.timeout = timeout
+    end
+    return request
+end
+-- 上传
+function WebRequestPut(url, data, timeout)
+    local request = UnityWebRequest.Put(url, data)
+    --request.certificateHandler = CS.CertHandler()
+    if timeout then
+        request.timeout = timeout
+    end
+    return request
 end
 
 

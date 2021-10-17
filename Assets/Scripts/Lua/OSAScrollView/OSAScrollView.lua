@@ -128,12 +128,14 @@ end
 function Class:GetItemsCount()
     return self.OSAScrollViewCom:GetItemsCount()
 end
-
+-- 添加后马上获取不一定能获取到，要更新了 VisibleItemsCount 之后才能获取到
 function Class:GetItemViewsHolder(index)
-    -- local vh = self.OSAScrollViewCom:GetItemViewsHolder(index)
-    -- local bindData = vh.bindData
-    -- print("GetItemViewsHolder index = ", index, vh, bindData)
-    return self.OSAScrollViewCom:GetItemViewsHolder(index).bindData -- 
+    print("VisibleItemsCount = ", self.OSAScrollViewCom.VisibleItemsCount)
+    local vh = self.OSAScrollViewCom:GetItemViewsHolder(index)
+    if vh then
+        return vh.bindData 
+    end
+    return nil
 end
 
 function Class:SmoothScrollTo(itemIndex, duration, normalizedOffsetFromViewportStart, 

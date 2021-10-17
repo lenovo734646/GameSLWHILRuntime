@@ -1,5 +1,6 @@
 local _G, g_Env, print, log, LogE, os, math = _G, g_Env, print, log, LogE, os, math
 local class, typeof, type, string, utf8, pairs = class, typeof, type, string, utf8, pairs
+local LogW = LogW
 
 local tostring, tonumber = tostring, tonumber
 local table = table
@@ -147,35 +148,40 @@ function Class:OnSendVoice(clipData)
         LogE("音频数据转换 AudioClip 失败")
         return
     end
+    if audioClip.length <= 0.6 then
+        LogW("音频时间过短 < 0.6")
+        return
+    end
+    self:OnSendMsg(msgType, nil, timeStampSec, audioClip, clipData)
     --
-    CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
-        if err then
-            LogE("请求语音上传链接错误:", err)
-            return
-        end
-        local upload_url = data.upload_url
-        local download_url = data.download_url
-        print("语音上传链接请求成功上传链接:", upload_url..'\n下载链接：'..download_url)
-        CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom, function ()
-            -- TODO: 显示正在发送提示
-            local request = Helpers.WebRequestPut(upload_url, clipData)
-            request:SendWebRequest()
-            while (not request.isDone) do
-                yield()
-                --print("正在上传发送...")
-            end
-            if not string.IsNullOrEmpty(request.error) then
-                _G.ShotHintMessage(_G._ERR_STR_(request.error))
-                print("上传发送出错:", request.error)
-                return
-            end
-            -- TODO: 上传完成 隐藏正在发送提示
-            print("上传成功发送下载链接：", download_url)
-            -- 发送完成 把下载地址返回给服务器
-            self:OnSendMsg(msgType, download_url, timeStampSec, audioClip, clipData)
-        end)
-    end)
+    -- CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+    --     local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
+    --     if err then
+    --         LogE("请求语音上传链接错误:", err)
+    --         return
+    --     end
+    --     local upload_url = data.upload_url
+    --     local download_url = data.download_url
+    --     print("语音上传链接请求成功上传链接:", upload_url..'\n下载链接：'..download_url)
+    --     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom, function ()
+    --         -- TODO: 显示正在发送提示
+    --         local request = Helpers.WebRequestPut(upload_url, clipData)
+    --         request:SendWebRequest()
+    --         while (not request.isDone) do
+    --             yield()
+    --             --print("正在上传发送...")
+    --         end
+    --         if not string.IsNullOrEmpty(request.error) then
+    --             _G.ShotHintMessage(_G._ERR_STR_(request.error))
+    --             print("上传发送出错:", request.error)
+    --             return
+    --         end
+    --         -- TODO: 上传完成 隐藏正在发送提示
+    --         print("上传成功发送下载链接：", download_url)
+    --         -- 发送完成 把下载地址返回给服务器
+    --         self:OnSendMsg(msgType, download_url, timeStampSec, audioClip, clipData)
+    --     end)
+    -- end)
 end
 
 -- 发送文字
@@ -224,11 +230,61 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
     end
     self.msgScrollView:InsertItem(msgData)
     local chatMsgView = self.msgScrollView:GetItemViewsHolderAtEnd()
-    tinsert(waitSendChatMsgViewList, chatMsgView) -- 添加到等待发送列表
-    -- 发送
     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-        CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
+        while chatMsgView == nil do
+            yield()
+            print("获取 chatMsgView 中...")
+            chatMsgView = self.msgScrollView:GetItemViewsHolderAtEnd()
+        end
+
+        print("获取 chatMsgView 成功... timeStampSec = ", timeStampSec)
+        tinsert(waitSendChatMsgViewList, chatMsgView) -- 添加到等待发送列表
+        -- 发送
+        if msgType == 2 then    -- 音频发送
+            if audioClip and clipData then
+                CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+                    local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
+                    if err then
+                        chatMsgView:OnSendFailed(err)
+                        LogE("请求语音上传链接错误:", err)
+                        return
+                    end
+                    local upload_url = data.upload_url
+                    local download_url = data.download_url
+                    print("语音上传链接请求成功上传链接:", upload_url..'\n下载链接：'..download_url)
+                    CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom, function ()
+                        -- TODO: 显示正在发送提示
+                        local request = Helpers.WebRequestPut(upload_url, clipData)
+                        request:SendWebRequest()
+                        while (not request.isDone) do
+                            yield()
+                            chatMsgView:OnUpdateProgress(request.uploadProgress)
+                        end
+                        if not string.IsNullOrEmpty(request.error) then
+                            _G.ShotHintMessage(_G._ERR_STR_(request.error))
+                            print("上传发送出错:", request.error)
+                            return
+                        end
+                        -- TODO: 上传完成 隐藏正在发送提示
+                        print("上传成功发送下载链接：", download_url)
+                        -- 发送完成 把下载地址返回给服务器
+                        CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+                            CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, tostring(timeStampSec), _G.ShowErrorByHintHandler)
+                        end)
+                    end)
+                end)
+            else
+                LogE("audioClip or clipData is nil")
+                return
+            end
+        else
+            CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+                CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
+            end)
+        end
+        return chatMsgView
     end)
+    -- end
 end
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
@@ -258,6 +314,7 @@ function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, me
         if chatMsgView ~= nil then 
             chatMsgView:OnSendSuccess()
         end
+        return
     end
 
 
@@ -378,8 +435,10 @@ function Class:__GetMsgItemBGSpr(userID)
 end
 
 function Class:__GetWaitSendChatMsgView(timestampSec)
+    print("waitSendChatMsgViewList = ", #waitSendChatMsgViewList)
     local chatMsgView, index = table.Find(waitSendChatMsgViewList, function (v)
-        return v.timestampSec == timestampSec
+        print("v.msgData.timestampSec = ", v.msgData.timestampSec, timestampSec)
+        return v.msgData.timestampSec == timestampSec
     end)
     if chatMsgView == nil then
         LogE("未找到时间戳为:"..timestampSec.."  的chatMsgView")

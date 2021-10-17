@@ -8,6 +8,8 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local TextAnchor = UnityEngine.TextAnchor
 local Vector2 = UnityEngine.Vector2
+local _STR_ = _STR_
+local _ERR_STR_ = _ERR_STR_
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -95,7 +97,9 @@ function Class:UpdateFromData(data)
         self.onClick = nil;
         self.audioSource = nil;
     end
-
+    -- 消息状态
+    self.progressSliderRoot:SetActive(true)
+    self.btn_ReSend.gameObject:SetActive(false)
     
 end
 
@@ -134,11 +138,18 @@ end
 function Class:OnSendSuccess()
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(false)
+    print("发送成功...")
 end
 
-function Class:OnSendFailed()
+function Class:OnSendFailed(err)
+    _G.ShotHintMessage(_STR_'发送失败:'..err)
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(true)
+end
+
+function Class:OnUpdateProgress(progress)
+    self.progressSlider.value = progress
+    print("发送中..", (progress*100).."%")
 end
 
 function Class:OnDestroy()

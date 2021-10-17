@@ -1875,6 +1875,7 @@ MonoBehaviour:
   delayTime: 1
   oSAScrollView: {fileID: 0}
   winStageTrans: {fileID: 2131160362}
+  mainCamera: {fileID: 0}
 --- !u!1 &389190757
 GameObject:
   m_ObjectHideFlags: 0

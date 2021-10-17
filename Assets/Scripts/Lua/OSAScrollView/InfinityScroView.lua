@@ -144,6 +144,7 @@ function Class:GetItemViewsHolderAtEnd()
         return nil
     end
     local index = self:GetItemsCount()-1
+    print("GetItemViewsHolderAtEnd index = ", index)
     return self.OSAScrollView:GetItemViewsHolder(index)
 end
 

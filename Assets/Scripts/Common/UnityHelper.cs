@@ -1376,7 +1376,7 @@ public static class UnityHelper
             return false;
         foreach (var ret in corverList)
         {
-            if (ret.gameObject.name == target.name)
+            if (ret.gameObject == target)
             {
                 return true;
             }

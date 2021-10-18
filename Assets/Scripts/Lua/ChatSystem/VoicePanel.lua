@@ -6,8 +6,7 @@ local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEng
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
-local Helpers = require 'LuaUtil.Helpers'
-
+local UnityHelper = CS.UnityHelper
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -33,7 +32,7 @@ function Class:__init(panel, gr, maxRecordTime)
     self.btnPressRecording.OnTouchUp:RemoveAllListeners()
     self.btnPressRecording.OnTouchUp:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(false)
-        if Helpers.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
+        if UnityHelper.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
             --print("clipData = ", clipData)

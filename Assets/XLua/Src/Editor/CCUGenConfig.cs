@@ -464,7 +464,7 @@ public static class CCUGenConfig
         typeof(List<KeyCode>),
         typeof(List<object>),
         typeof(List<string>),
-        typeof(List<TMPro.TMP_Dropdown.OptionData>),
+
 
         typeof(Dictionary<string, object>),
 

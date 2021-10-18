@@ -1,13 +1,13 @@
 local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
     typeof, type, print, table, tonumber, SysDefines
 local LuaInitHelper = CS.LuaInitHelper
-local EventSystems = CS.UnityEngine.EventSystems
-local PointerEventData = EventSystems.PointerEventData
-local EventSystem = EventSystems.EventSystem
-local Input = CS.UnityEngine.Input
-local Vector2 = CS.UnityEngine.Vector2
-local UnityHelper = CS.UnityHelper
-local List_RaycastResult = CS.System.Collections.Generic.List(EventSystems.RaycastResult)
+-- local EventSystems = CS.UnityEngine.EventSystems
+-- local PointerEventData = EventSystems.PointerEventData
+-- local EventSystem = EventSystems.EventSystem
+-- local Input = CS.UnityEngine.Input
+-- local Vector2 = CS.UnityEngine.Vector2
+-- local UnityHelper = CS.UnityHelper
+-- local List_RaycastResult = CS.System.Collections.Generic.List(EventSystems.RaycastResult)
 
 
 local DestroyImmediate = DestroyImmediate
@@ -202,32 +202,32 @@ function MoneyToNumber(str)
         return 0
     end
 end
--- 获取当前鼠标停留的GameObject 层级为由下到上
-function GetMouseOverGameObjects(graphicRaycaster)
-    local pointerEventData = PointerEventData(EventSystem.current)
-    local v3 = Input.mousePosition
-    pointerEventData.position = Vector2(v3.x, v3.y)
+-- -- 获取当前鼠标停留的GameObject 层级为由下到上
+-- function GetMouseOverGameObjects(graphicRaycaster)
+--     local pointerEventData = PointerEventData(EventSystem.current)
+--     local v3 = Input.mousePosition
+--     pointerEventData.position = Vector2(v3.x, v3.y)
 
-    local results = List_RaycastResult()
-    graphicRaycaster:Raycast(pointerEventData, results)
-    print("results = ", results, results.Count)
-    return results -- 这里类型是 c# List
-end
--- 判断鼠标是否停留在target上
-function IsMouseCorveredTarget(target, graphicRaycaster)
-    print("graphicRaycaster = ", graphicRaycaster)
-    local objs = GetMouseOverGameObjects(graphicRaycaster)
-    if objs == nil or objs.Count <= 0 then
-        return false
-    end
-    for key, value in pairs(objs) do
-        print("对比:", target.name, value.gameObject.name)
-        if value.gameObject.name == target.name then
-            return true
-        end
-    end
-    return false
-end
+--     local results = List_RaycastResult()
+--     graphicRaycaster:Raycast(pointerEventData, results)
+--     print("results = ", results, results.Count)
+--     return results -- 这里类型是 c# List
+-- end
+-- -- 判断鼠标是否停留在target上
+-- function IsMouseCorveredTarget(target, graphicRaycaster)
+--     print("graphicRaycaster = ", graphicRaycaster)
+--     local objs = GetMouseOverGameObjects(graphicRaycaster)
+--     if objs == nil or objs.Count <= 0 then
+--         return false
+--     end
+--     for key, value in pairs(objs) do
+--         print("对比:", target.name, value.gameObject.name)
+--         if value.gameObject == target then
+--             return true
+--         end
+--     end
+--     return false
+-- end
 
 -- 下载
 local UnityWebRequest = CS.UnityEngine.Networking.UnityWebRequest

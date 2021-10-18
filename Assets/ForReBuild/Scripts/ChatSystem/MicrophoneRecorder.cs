@@ -21,10 +21,10 @@ namespace SP
 
         public Slider slider;   // 录制时间进度条
         public Text timeText;
-        private float curRecordingTime;
+        public float curRecordingTime;
         //
         private Image[] waveImageGroup;
-        private AudioSource micRecord;
+        public AudioSource micRecord;
 
         public int recordingMaxTime = 60;       // 允许录音最大时间 时长大于此值只发送此值长度
         public float recordingMinTime = 0.5f;   // 允许录音最小时间 时长小于此值不发送
@@ -38,7 +38,7 @@ namespace SP
 
         public GameObject voiceInputPanel;
         //
-        private int headerSize = 44; //default for uncompressed wav
+        private int headerSize = 44;            // 默认不压缩音频长度
         private float outputVol = 0.65f;
         private int clipChannels = 1;
         private bool recOutput;
@@ -65,7 +65,7 @@ namespace SP
             print("min = " + minFreq + "  max = " + maxFreq + "  AudioSettings.outputSampleRate = " + AudioSettings.outputSampleRate);
 
 
-            //
+            // 音频频谱
             waveImageGroup = new Image[26];
             for (var i = 0; i < 26; i++)
             {
@@ -89,15 +89,16 @@ namespace SP
             timeText.text = "0:00";
             while(curRecordingTime < recordingMaxTime)
             {
+                yield return null;
+                slider.value = curRecordingTime;
+
                 yield return new WaitForSeconds(1);
                 curRecordingTime += 1;
                 string minutes = Mathf.Floor(curRecordingTime / 60).ToString("0");
                 string seconds = (curRecordingTime % 60).ToString("00");
                 timeText.text = minutes + ":" + seconds;
-                slider.value = curRecordingTime;
-                //yield return null;
-                //timeText.text = micRecord.clip.length.ToString();
                 //slider.value = curRecordingTime;
+
 
             }
             // 录制时间到 自动停止录音
@@ -120,10 +121,11 @@ namespace SP
                 slider.maxValue = time;
                 slider.value = 0;
                 curRecordingTime = 0;
-                StartCoroutine(RecordingTimeCounter());
+                StartCoroutine("RecordingTimeCounter");
                 //
                 isRecording = true;
                 recordingMaxTime = time;
+                Microphone.End(device);
                 micRecord.clip = Microphone.Start(device, true, recordingMaxTime, freq);
             }
             else
@@ -132,8 +134,8 @@ namespace SP
             }
 
         }
-
-        public void StopRecording()
+        // 停止录音并返回录音时长
+        public float StopRecording()
         {
             if (isRecording)
             {
@@ -141,22 +143,21 @@ namespace SP
                 VWGridGroup.SetActive(false);
                 slider.gameObject.SetActive(false);
                 slider.value = 0; 
-                StopAllCoroutines();
+                StopCoroutine("RecordingTimeCounter");
                 //
                 isRecording = false;
-                int timeSinceStart = Microphone.GetPosition("");
-                if (timeSinceStart == 0)
-                {
-                    Debug.Log("Recording length = 0? -> not a long enough recording to process");
-                    return;
-                }
+                int lastPos = Microphone.GetPosition(device);
+                var length = (float)lastPos / freq;
                 Microphone.End(device);
+                //print("结束录制 时长 = "+length);
                 float[] recordedClip = new float[micRecord.clip.samples * micRecord.clip.channels];
                 micRecord.clip.GetData(recordedClip, 0);
-                TrimSilenceData(recordedClip, timeSinceStart); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
+                var validLength = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
                 wfDraw.StartWaveFormGeneration(micRecord.clip); // 这里 clip 的 length 是传入的最大值 MaxTime的长度
-                //
+                //print("结束录制 剪除静音后时长 = " + validLength);
+                return validLength;
             }
+            return 0;
         }
 
         public void StartPlayback()
@@ -285,8 +286,8 @@ namespace SP
             return null;
         }
 
-        // 剪除静音部分,并生成新的clip替换掉原来的clip
-        public void TrimSilenceData(float[] clipArray_, int timeSinceStart_)
+        // 剪除静音部分,并生成新的clip替换掉原来的clip, 返回有效时长
+        public float TrimSilenceData(float[] clipArray_, int timeSinceStart_)
         {
             float[] shortenedClip = new float[timeSinceStart_];
             float[] newClipData = new float[timeSinceStart_];
@@ -301,17 +302,23 @@ namespace SP
                 }
             }
             //
-            print("validCount= "+ validCount);
+            //print("validCount= "+ validCount);
             var clip = micRecord.clip;
             AudioClip newClip = AudioClip.Create(clip.name, validCount / clip.channels, clip.channels, freq, false);
             newClip.SetData(newClipData, 0);
             micRecord.clip = newClip;
+            return newClip.length;
         }
 
-        public void SaveToFile(float[] shortenedClip)
+        public void SaveToWavFile(string fileName ,float[] shortenedClip)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                var now = DateTime.Now;
+                fileName = $"Recording_{now.Year}_{now.Month}_{now.Day}_{now.Hour}_{now.Minute}_{now.Second}";
+            }
             FileStream fileStream;
-            fileStream = new FileStream(Application.persistentDataPath + "/" + "Recording" + ".wav", FileMode.Create);
+            fileStream = new FileStream(Application.persistentDataPath + "/" + fileName + ".wav", FileMode.Create);
             byte emptyByte = new byte();
             for (int i = 0; i < headerSize; i++) //preparing the header 
             {
@@ -425,6 +432,7 @@ namespace SP
                     //将可视化的物体和音波相关联
                     //obj[f].gameObject.transform.localScale = new Vector3(0.3f, volumeData[i] * 10 + 0.2f, 0.1f);//将可视化的物体和音波相关联
                     var sy = Mathf.Clamp(volumeData[i] * 10, -1.5f, 1.5f);
+                    print("sy = " + sy+"  volume"+ volumeData[i]);
                     waveImageGroup[f].rectTransform.localScale = new Vector3(1f, sy, 1f);
                 }
             }

@@ -26,10 +26,11 @@ namespace SP
         private Image[] waveImageGroup;
         private AudioSource micRecord;
 
-        private int recordingMaxTime = 60;
-        private int freq = 44100;
-        private string device;
-        private bool isRecording = false;
+        public int recordingMaxTime = 60;       // 允许录音最大时间 时长大于此值只发送此值长度
+        public float recordingMinTime = 0.5f;   // 允许录音最小时间 时长小于此值不发送
+        public int freq = 44100;                // 采样率 支持任意采样率就使用此采样率否则使用支持的最小采样率
+        public string device;
+        public bool isRecording = false;
 
         // 回放
         public WaveFormDraw wfDraw;
@@ -94,6 +95,10 @@ namespace SP
                 string seconds = (curRecordingTime % 60).ToString("00");
                 timeText.text = minutes + ":" + seconds;
                 slider.value = curRecordingTime;
+                //yield return null;
+                //timeText.text = micRecord.clip.length.ToString();
+                //slider.value = curRecordingTime;
+
             }
             // 录制时间到 自动停止录音
             print("recording time over auto stop");
@@ -149,7 +154,7 @@ namespace SP
                 float[] recordedClip = new float[micRecord.clip.samples * micRecord.clip.channels];
                 micRecord.clip.GetData(recordedClip, 0);
                 TrimSilenceData(recordedClip, timeSinceStart); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
-                wfDraw.StartWaveFormGeneration(micRecord.clip);
+                wfDraw.StartWaveFormGeneration(micRecord.clip); // 这里 clip 的 length 是传入的最大值 MaxTime的长度
                 //
             }
         }

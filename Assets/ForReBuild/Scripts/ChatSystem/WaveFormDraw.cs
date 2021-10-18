@@ -18,7 +18,7 @@ namespace SP
 
 		public void StartWaveFormGeneration(AudioClip myClip = null)
 		{
-			if (myClip == null)
+			if (myClip == null || myClip.length <= 0.5f)
 			{
 				return;
 			}
@@ -40,6 +40,11 @@ namespace SP
 				resolution = (audio.clip.samples * audio.clip.channels) / 10000;
 			}
 
+            if (waveForm.Length <= 0)
+            {
+				return;
+            }
+
 			//  Debug.Log(waveForm.Length + "Res "  + resolution);
 			for (int i = 0; i < waveForm.Length; i++)
 			{
@@ -60,6 +65,7 @@ namespace SP
 			{
 				blankColorArr[i] = Color.clear;
 			}
+			Debug.Log("waveForm.Length = "+ waveForm.Length);
 			texture = new Texture2D(waveForm.Length, 100);
 			texture.SetPixels(blankColorArr, 0);
 			waveFromImg.texture = texture;

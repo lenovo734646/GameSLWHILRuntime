@@ -901,7 +901,7 @@ namespace Com.TheFallenGames.OSA.Core
 			}
 			if (gameObject.activeInHierarchy)
 			{
-			_SmoothScrollCoroutine = StartCoroutine(SmoothScrollProgressCoroutine(itemIndex, duration, normalizedOffsetFromViewportStart, normalizedPositionOfItemPivotToUse, onProgress, onDone));
+				_SmoothScrollCoroutine = StartCoroutine(SmoothScrollProgressCoroutine(itemIndex, duration, normalizedOffsetFromViewportStart, normalizedPositionOfItemPivotToUse, onProgress, onDone));
 			}
 			return true;
 		}

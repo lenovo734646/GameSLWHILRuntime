@@ -56,12 +56,12 @@ function Class:__init(roomdata, loader)
     -- self.tog_Effect.isOn = not AudioManager.Instance.EffectAudio.mute
 
     self.gameStateSpineHelper.gameObject:SetActive(true)
-    -- 刘海屏适配
-    local mainUIRectTransform = View:GetComponent("RectTransform")
-    local srcX = mainUIRectTransform.anchoredPosition.x
-    local dstX = srcX + Screen.safeArea.x
-    local dstY = mainUIRectTransform.anchoredPosition.y + Screen.safeArea.x
-    mainUIRectTransform.anchoredPosition = Vector2(dstX, dstY)
+    -- -- 刘海屏适配
+    -- local mainUIRectTransform = View:GetComponent("RectTransform")
+    -- local srcX = mainUIRectTransform.anchoredPosition.x
+    -- local dstX = srcX + Screen.safeArea.x
+    -- local dstY = mainUIRectTransform.anchoredPosition.y + Screen.safeArea.x
+    -- mainUIRectTransform.anchoredPosition = Vector2(dstX, dstY)
 
 end
 

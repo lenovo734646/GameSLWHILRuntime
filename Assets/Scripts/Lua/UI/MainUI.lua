@@ -3,7 +3,9 @@ local class = class
 local print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs =
       print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs
 
-
+local GameObject = GameObject
+local Screen = UnityEngine.Screen
+local Vector2 = UnityEngine.Vector2
 local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 local UserInfo = require'UI.UserInfo'
@@ -23,9 +25,10 @@ function Create(...)
 end
 
 
-function Class:__init(panel, roomdata, loader)
-    self.panel = panel
-    panel:GetComponent(typeof(LuaInitHelper)):Init(self)
+function Class:__init(roomdata, loader)
+    local View = GameObject.Find('UIRoot/Canvas/MainPanel')
+    self.panel = View
+    View:GetComponent(typeof(LuaInitHelper)):Init(self)
     self.eventListener:Init(self)
 
     -- 聊天界面
@@ -53,6 +56,11 @@ function Class:__init(panel, roomdata, loader)
     -- self.tog_Effect.isOn = not AudioManager.Instance.EffectAudio.mute
 
     self.gameStateSpineHelper.gameObject:SetActive(true)
+    -- 刘海屏适配
+    local mainUIRectTransform = View:GetComponent("RectTransform")
+    local srcX = mainUIRectTransform.anchoredPosition.x
+    local dstX = srcX + Screen.safeArea.x
+    mainUIRectTransform.anchoredPosition = Vector2(dstX, mainUIRectTransform.anchoredPosition.y)
 
 end
 

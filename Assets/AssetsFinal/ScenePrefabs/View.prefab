@@ -26859,12 +26859,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 2104e1655972d2840a3579f0929cc955, type: 2}
   sortByName: 0
   initList:
-  - name: mainUIInitHelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 0}
-    sType: 
-    manualName: 
   - name: animal_rotate_root_transform
     t: {fileID: 0}
     monoType: {fileID: 0}

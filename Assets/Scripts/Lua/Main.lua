@@ -186,6 +186,9 @@ function OnSceneLoaded(scene, mode)
     if scene.name == "MainScene" then
         SEnv.messageCenter = MessageCenter()
         gameView = SceneView.Create(roomdata)
+        if SEnv.isLostConnect then
+            OnNetworkLost()
+        end
     end
 end
 
@@ -208,34 +211,41 @@ local LogW = LogW
 -- g_Env._SubGameReconnection是在玩家强制退出游戏或者意外退出游戏时恢复用
 -- 这里的中断是在游戏过程中网络中断，是互联网断开，不是与服务器断开
 function OnNetworkLost()
-    local LoadingUI = g_Env.uiManager:OpenUI('LoadingUI')
-    if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
-        LoadingUI:SetTipText(_STR_ '网络已断开，网络恢复将继续游戏...')
-        CoroutineHelper.StopAllCoroutines()
-        LogW("网络连接断开...")
-    else
-        LoadingUI:SetTipText(_STR_ '与服务器断开连接，等待恢复中...')
-        CoroutineHelper.StopAllCoroutines()
-        LogW("与服务器断开连接...")
+    SEnv.isLostConnect = true
+    if gameView then
+        local LoadingUI = g_Env.uiManager:OpenUI('LoadingUI')
+        if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
+            LoadingUI:SetTipText(_STR_ '网络已断开，网络恢复将继续游戏...')
+            CoroutineHelper.StopAllCoroutines()
+            LogW("网络连接断开...")
+        else
+            LoadingUI:SetTipText(_STR_ '与服务器断开连接，等待恢复中...')
+            CoroutineHelper.StopAllCoroutines()
+            LogW("与服务器断开连接...")
+        end
     end
 end
 
 -- 网络恢复时调用
 -- 与OnNetworkLost相对
 function OnNetworkReConnect()
+    SEnv.isLostConnect = nil
     LogW("网络连接恢复...")
-    PBHelper.Reset() -- 一定要重置网络模块
-    g_Env.uiManager:CloseUI('LoadingUI')
-    -- 先重新请求进入房间
-    CLSLWHSender.Send_EnterRoomReq(OnEnterRoomAck)
-    -- 再请求服务器数据
-    CLSLWHSender.Send_GetServerDataReq(function(ack)
-        if ack._errmessage then
-            g_Env.CreateHintMessage(ack._errmessage)
-        else
-            gameView.ctrl:OnStateChangeNtf(ack, true)
-        end
-    end)
+    if gameView then
+        PBHelper.Reset() -- 一定要重置网络模块
+        g_Env.uiManager:CloseUI('LoadingUI')
+        -- 先重新请求进入房间
+        CLSLWHSender.Send_EnterRoomReq(OnEnterRoomAck)
+        -- 再请求服务器数据
+        CLSLWHSender.Send_GetServerDataReq(function(ack)
+            if ack._errmessage then
+                g_Env.CreateHintMessage(ack._errmessage)
+            else
+                gameView.ctrl:OnStateChangeNtf(ack, true)
+            end
+        end)
+    end
+
 end
 
 if IsRunInHall then

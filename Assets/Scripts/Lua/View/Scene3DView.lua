@@ -47,7 +47,7 @@ function Class:__init(roomdata)
     self.slot = SimpleSlot.Create(self.slotPanelInitHelper)
 
     -- UI
-    self.mainUI = MainUI.Create(self.mainUIInitHelper, roomdata, EditorAssetLoader)
+    self.mainUI = MainUI.Create(roomdata)
     -- 中间获胜动物舞台
     local winStageChildren = {}
     self.winStageInitHelper:Init(winStageChildren)

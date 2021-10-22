@@ -224,6 +224,26 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
     local playerRes = SEnv.playerRes
     local headSpr = SEnv.GetHeadSprite(playerRes.headID)
     local msgItemBgSpr = self:__GetMsgItemBGSpr(playerRes.selfUserID)
+    local phraseIndex = -1
+    if msgType == 3 then
+        if content ~= nil then
+            phraseIndex = tonumber(content)
+            if phraseIndex ~= nil then
+                local data = self.phrasePanel:GetPhraseData(phraseIndex)
+                if data ~= nil then
+                    content = data.content
+                    self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. phraseIndex])
+                else
+                    LogE("获取快捷消息数据失败 index =" .. phraseIndex)
+                    return
+                end
+            else
+                LogE("快捷消息index 转换错误 content = " .. content)
+                return
+            end
+        end
+    end
+    --
     local msgData = ChatMsgData.Create(msgType, timeStampSec, playerRes.selfUserID, playerRes.userName, true, content, audioClip, headSpr, msgItemBgSpr)
     if clipData then -- 保存音频二进制数据重发使用
         msgData.clipData = clipData
@@ -277,18 +297,26 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
                 LogE("audioClip or clipData is nil")
                 return
             end
+        elseif msgType == 3 then
+            CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+                CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, tostring(phraseIndex), tostring(timeStampSec), _G.ShowErrorByHintHandler)
+            end)
+            --self:OnReceiveMsg(111, 111, "111", 3, tostring(phraseIndex), nil, headSpr)
         else
             CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
+            --self:OnReceiveMsg(111, 111, "111", 1, content, nil, headSpr)
         end
         return chatMsgView
     end)
     -- end
+    
 end
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
 function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, metadata, headSpr)
+    print("OnReceiveMsg: msgTypee = ", msgType, content)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
         return
@@ -353,8 +381,10 @@ function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, me
     elseif msgType == 3 then
         if content ~= nil then
             index = tonumber(content)
+            print("index = ", index)
             if index ~= nil then
                 local data = self.phrasePanel:GetPhraseData(index)
+                print("data = ", data, data.content)
                 if data ~= nil then
                     content = data.content
                     self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])

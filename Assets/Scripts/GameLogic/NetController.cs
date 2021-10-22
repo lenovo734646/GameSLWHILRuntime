@@ -109,7 +109,6 @@ public class QLUploadRequest : IQLUploadRequest {
 
 public class NetController: MonoBehaviour
 {
-    public static NetController Instance { get; private set; }
     public static bool IsNetConnected
     {
         get
@@ -119,6 +118,7 @@ public class NetController: MonoBehaviour
         }
     }
     public bool IsConnected { get => netComponent.IsConnected; }
+    public static NetController Instance { get; private set; }
     public string serverUrl = "";
     private DefaultQLClient webClient;
     public DefaultQLClient WebClient
@@ -135,14 +135,16 @@ public class NetController: MonoBehaviour
         }
     }
 
-    public class WaitForConnect : CustomYieldInstruction {
-        public override bool keepWaiting => state=="";
-        public string state="";
+    public class WaitForConnect : CustomYieldInstruction
+    {
+        public override bool keepWaiting => state == "";
+        public string state = "";
 
-        public WaitForConnect(string ip, int port, 
-            int timeoutInSeconds=5) {
-            Instance.netComponent.ConnectWithTimeout(ip,port,timeoutInSeconds*1000,str=> {
-                state = str;
+        public WaitForConnect(string ip, int port, int timeoutInSeconds = 5)
+        {
+            Instance.netComponent.Connect(ip, port, timeoutInSeconds * 1000, success =>
+            {
+                state = success ? "Established" : "ConnectedFailed";
             });
         }
     }
@@ -205,19 +207,22 @@ public class NetController: MonoBehaviour
     }
 
 
-    public void SetKey(int[] key) {
-        if (key.Length == 0) {
+    public void SetKey(string sessionGuid, int[] key)
+    {
+        if (key.Length == 0)
+        {
             throw new Exception("key len == 0");
         }
         var bytes = new byte[key.Length];
-        for(int i = 0; i < key.Length; i++) {
+        for (int i = 0; i < key.Length; i++)
+        {
             bytes[i] = (byte)key[i];
         }
-        netComponent.SetRandomKey(bytes);
+        netComponent.SetEncryptProtocolKey(sessionGuid, bytes);
     }
 
 
-   
+
     //protected override void onApplicationQuit() {
     //    netComponent.Dispose();
     //}

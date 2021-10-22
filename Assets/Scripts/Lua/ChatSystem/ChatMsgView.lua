@@ -89,6 +89,9 @@ function Class:UpdateFromData(data)
         self.wfDraw:StartWaveFormGeneration(data.audioClip)
         -- self:StartPlayback() -- 不自动播放
         self.text.text = ""
+        -- 消息状态
+        self.progressSliderRoot:SetActive(true)
+        self.btn_ReSend.gameObject:SetActive(false)
     else
         self.wfDraw.gameObject:SetActive(false);
         self.text.gameObject:SetActive(true);
@@ -97,9 +100,6 @@ function Class:UpdateFromData(data)
         self.onClick = nil;
         self.audioSource = nil;
     end
-    -- 消息状态
-    self.progressSliderRoot:SetActive(true)
-    self.btn_ReSend.gameObject:SetActive(false)
     
 end
 

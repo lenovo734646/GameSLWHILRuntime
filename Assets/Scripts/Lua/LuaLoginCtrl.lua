@@ -33,6 +33,7 @@ function Class:AutoLoginAsync()
         Ip = Ip,
         Port = Port,
     }
+    print('Port',Port)
 
     if (string.IsNullOrEmpty(SEnv.ipinfo.Ip)) then
         SEnv.gamectrl.GetIpPort(true)
@@ -54,6 +55,7 @@ function Class:AutoLoginAsync()
             assert(false, 'NET_CONNECT state:' .. tostring(state))
         end
     end
+
     -- 登录配置
     local deviceUniqueIdentifier = UnityEngine.SystemInfo.deviceUniqueIdentifier
     local rsp, err = CLGTSender.Send_HandReq_Async(UnityHelper.GetPlatformInt(), 1, 1, deviceUniqueIdentifier,
@@ -63,7 +65,7 @@ function Class:AutoLoginAsync()
         return false, err
     end
     print(_G.json.encode(rsp))
-    NetController.Instance:SetKey(rsp.random_key_arr)
+    NetController.Instance:SetKey(rsp.session_guid, rsp.random_key_arr)
     SEnv.isNetConnected = true
     SEnv.LoginType = loginType
     local token

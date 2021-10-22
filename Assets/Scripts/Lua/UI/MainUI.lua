@@ -60,7 +60,8 @@ function Class:__init(roomdata, loader)
     local mainUIRectTransform = View:GetComponent("RectTransform")
     local srcX = mainUIRectTransform.anchoredPosition.x
     local dstX = srcX + Screen.safeArea.x
-    mainUIRectTransform.anchoredPosition = Vector2(dstX, mainUIRectTransform.anchoredPosition.y)
+    local dstY = mainUIRectTransform.anchoredPosition.y + Screen.safeArea.x
+    mainUIRectTransform.anchoredPosition = Vector2(dstX, dstY)
 
 end
 

@@ -46,6 +46,7 @@ function Create(...)
 end
 
 function Class:__init(ui,View,roomdata)
+    self.testNum = 10
     print("3D View Ctrl Init...roomdata.last_bet_id = ", roomdata.last_bet_id)
     self.ui = ui
     self.View = View
@@ -233,15 +234,7 @@ function Class:OnSceneReady()
 
     -- 发送请求历史路单数据
     CLSLWHSender.Send_HistoryReq(function (data)
-        print('HistoryAck:'..json.encode(data))
-        local record_list = data.record_list
-        local list = {}
-        for _,info in ipairs(record_list)do
-            local itemData = ui:GetHistoryIconData(info)
-            tinsert(list, itemData)
-        end
-        ui.roadScrollView:ReplaceItems(list)
-        ui.roadScrollView:SmoothScrollToEnd()
+        self:OnHistroyAck(data)
     end)
 
     -- 主动请求游戏状态数据
@@ -252,23 +245,6 @@ function Class:OnSceneReady()
             self:OnStateChangeNtf(ack)
         end
     end)
-    -- --print("OnSceneReady: 状态 = ", state, left_time)
-    -- --self:OnStateChangeNtf({ left_time = left_time, state = state })
-    -- --需要下注阶段发来的倍率表和颜色表，
-    -- --所以刚进入无论什么状态都要等到下一轮下注状态，才能正常进行游戏
-    -- self.ui.mainUI:SetWaitNextStateTip(true)
- 
-    
-    -- --修正时间差
-    -- local passTime = clock()-self.timeStamp
-    -- self.timeStamp = nil
-    -- local left_time = left_time-passTime
-    -- if left_time > 2 then
-    --     self.ui.mainUI.timeCounter:StartCountDown(left_time, state, function (time)
-    --         self:PlayCountDownSound(time)
-    --     end)
-    -- end
-
 end
 
 
@@ -1026,6 +1002,23 @@ function Class:OnReceiveBetAck(data)
     self:OnMoneyChange(data.self_score)
     local score = self:__GetSelfAllBetScore()
     self.ui.mainUI:SetCurBetScore(score)
+end
+
+function Class:OnHistroyAck(data)
+    print('HistoryAck:'..json.encode(data))
+    if data.errcode ~= 0 then
+        _G.ShotHintMessage(_G._STR_("获取历史记录出错"))
+    else
+        local ui = self.ui
+        local record_list = data.record_list
+        local list = {}
+        for _,info in ipairs(record_list)do
+            local itemData = ui:GetHistoryIconData(info)
+            tinsert(list, itemData)
+        end
+        ui.roadScrollView:ReplaceItems(list)
+        ui.roadScrollView:SmoothScrollToEnd()
+    end
 end
 
 -- 获取中奖动物倍率

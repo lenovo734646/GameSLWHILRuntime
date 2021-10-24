@@ -4,14 +4,6 @@ SEnv = SubGame_Env
 --     end
 -- end
 
-ShowErrorByHint = function (msgName,errcode)
-    if g_Env then
-        g_Env.ShowTips(g_Env.GetServerErrorMsg(errcode,msgName))
-    else
-        print('服务器返回错误代码','msgName=',msgName,'errcode=',errcode)
-    end
-end
-
 ShowErrorByHintHandler = function (errcode, msgName)
     if g_Env then
         g_Env.ShowHitMessage(g_Env.GetServerErrorMsg(errcode,msgName))
@@ -236,6 +228,10 @@ function OnNetworkReConnect()
         g_Env.uiManager:CloseUI('LoadingUI')
         -- 先重新请求进入房间
         CLSLWHSender.Send_EnterRoomReq(OnEnterRoomAck)
+        -- 再请求路单(这里防止加载的时候断网，导致OnSceneReady中的请求发送失败，这里补上)
+        CLSLWHSender.Send_HistoryReq(function (data)
+            gameView.ctrl:OnHistroyAck(data)
+        end)
         -- 再请求服务器数据
         CLSLWHSender.Send_GetServerDataReq(function(ack)
             if ack._errmessage then

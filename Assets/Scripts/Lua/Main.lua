@@ -36,6 +36,10 @@ function Main()
         -- 在大厅中将使用大厅的环境
         local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
         SEnv.playerRes = playerRes
+
+        SEnv.AutoUpdateHeadImage = function (img, headID)
+            img.sprite = SEnv.GetHeadSprite(headID)
+        end
     
         SEnv.GetHeadSprite = function (headID)
             return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..(headID+1)..".png", typeof(Sprite))

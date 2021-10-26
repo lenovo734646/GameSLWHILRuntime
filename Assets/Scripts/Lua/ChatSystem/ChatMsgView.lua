@@ -30,13 +30,13 @@ function Class:__init(view)
     self.colorAtInit = self.contentBackImage.color
 
     self.isPlaying = false
-    self.onClick = nil
     -- data 信息
     self.msgData = nil
 
     --
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(false)
+    self.IsSendSusseed = false
 end
 
 -- data : ChatMsgData.lua类型
@@ -90,20 +90,21 @@ function Class:UpdateFromData(data)
         -- self:StartPlayback() -- 不自动播放
         self.text.text = ""
         -- 消息状态
-        self.progressSliderRoot:SetActive(true)
+        self.progressSliderRoot:SetActive(not self.IsSendSusseed)
         self.btn_ReSend.gameObject:SetActive(false)
     else
         self.wfDraw.gameObject:SetActive(false);
         self.text.gameObject:SetActive(true);
 
         self.text.text = data.text;
-        self.onClick = nil;
-        self.audioSource = nil;
+        self.audioSource.clip = nil;
     end
     
 end
 
 function Class:StartPlayback()
+    AudioManager.Instance.MusicAudio.mute = true
+    AudioManager.Instance.EffectAudio.mute = true
     if self.isPlaying then
         return
     end
@@ -133,11 +134,14 @@ function Class:StopPlayback()
     self.isPlaying = false
     self.audioSource:Stop()
     self.wfDraw.playbackSli.value = 0
+    AudioManager.Instance.MusicAudio.mute = false
+    AudioManager.Instance.EffectAudio.mute = false
 end
 
 function Class:OnSendSuccess()
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(false)
+    self.IsSendSusseed = true
     print("发送成功...")
 end
 

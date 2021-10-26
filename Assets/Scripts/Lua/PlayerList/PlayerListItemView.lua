@@ -34,12 +34,12 @@ function Class:UpdateFromData(data)
     self.TMP_f_UserNickName.text = data.userName
     self.TMP_f_UserMoney.text = Helpers.GameNumberFormat(data.gold)
     if data.headID then
-        self.head_image.sprite = SEnv.GetHeadSprite(data.headID)
+        SEnv.AutoUpdateHeadImage(self.image_f_UserHead, data.headID)
     end
     
     if data.headFrameID ~= nil then
-        self.frame_image.sprite = SEnv.GetHeadFrameSprite(data.headFrameID)
-        self.frame_image:SetNativeSize()
+        self.image_f_UserHeadFrame.sprite = SEnv.GetHeadFrameSprite(data.headFrameID)
+        self.image_f_UserHeadFrame:SetNativeSize()
     end
 
     for i = 1, #self.rangimglist do

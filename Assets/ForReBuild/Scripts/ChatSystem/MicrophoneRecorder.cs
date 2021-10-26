@@ -32,6 +32,7 @@ namespace SP
         public string device;
         public bool isRecording = false;
 
+        public int RecordVOLEnhanceMulti = 1;
         // 回放
         public WaveFormDraw wfDraw;
         private bool isPlaybacking = false;
@@ -197,6 +198,19 @@ namespace SP
             voiceInputPanel.SetActive(false);
         }
 
+        // 音频数据放大
+        // multi：放大倍数
+        public void RecordVOLEnhance(float[] clipArray, int multi)
+        {
+            if (multi != 1)
+            {
+                for (int i = 0; i < clipArray.Length; i++)
+                {
+                    clipArray[i] = clipArray[i] * multi;
+                }
+            }
+        }
+
         public byte[] GetSendDataBuff()
         {
             if (isPlaybacking)
@@ -214,7 +228,7 @@ namespace SP
         {
             float[] clipArray = new float[clip.samples * clip.channels];
             clip.GetData(clipArray, 0);
-
+            RecordVOLEnhance(clipArray, RecordVOLEnhanceMulti);
             // 方案1
             byte[] bytes = new byte[clipArray.Length * 4];
             Buffer.BlockCopy(clipArray, 0, bytes, 0, bytes.Length);
@@ -431,8 +445,8 @@ namespace SP
                     int f = i / voiceWaveStep;
                     //将可视化的物体和音波相关联
                     //obj[f].gameObject.transform.localScale = new Vector3(0.3f, volumeData[i] * 10 + 0.2f, 0.1f);//将可视化的物体和音波相关联
-                    var sy = Mathf.Clamp(volumeData[i] * 10, -1.5f, 1.5f);
-                    print("sy = " + sy+"  volume"+ volumeData[i]);
+                    var sy = Mathf.Clamp(volumeData[i] * 10, -1.5f, 1.5f)* RecordVOLEnhanceMulti;
+                    //print("sy = " + sy+"  volume"+ volumeData[i]);
                     waveImageGroup[f].rectTransform.localScale = new Vector3(1f, sy, 1f);
                 }
             }

@@ -4,6 +4,7 @@ local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
       print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
 
 local Helpers = require'LuaUtil.Helpers'
+local SEnv = SEnv
 _ENV = moduledef { seenamespace = CS }
 
 local Class = class()
@@ -34,11 +35,11 @@ function Class:OnChangeMoney(currency)
 end
 
 function Class:OnChangeHead(headID)
-    --self.headImg.sprite = GetHeadSprite(headID)
+    SEnv.AutoUpdateHeadImage(self.image_f_UserHead, headID)
 end
 
 function Class:OnChangeHeadFrame(headFrameID)
-    --self.headFrameImg.sprite = GetHeadFrameSprite(headFrameID)
+    self.image_f_UserHeadFrame.sprite = SEnv.GetHeadFrameSprite(headFrameID)
 end
 
 

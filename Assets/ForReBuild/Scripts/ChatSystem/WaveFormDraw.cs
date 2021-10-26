@@ -18,7 +18,7 @@ namespace SP
 
 		public void StartWaveFormGeneration(AudioClip myClip = null)
 		{
-			if (myClip == null || myClip.length <= 0.5f)
+			if (myClip == null)
 			{
 				return;
 			}
@@ -185,6 +185,7 @@ namespace SP
 
 		void Update()
 		{
+#if UNITY_EDITOR
 			if (waveForm == null)
 			{
 				return;
@@ -199,6 +200,7 @@ namespace SP
 			current *= 2;
 			Vector3 c = new Vector3(current * .01f, 0, 0);
 			Debug.DrawLine(c, c + Vector3.up * 10, Color.white);
+#endif
 		}
 
 		void DrawLine(Texture2D tex, int x1, int y1, int x0, int y0, Color col)

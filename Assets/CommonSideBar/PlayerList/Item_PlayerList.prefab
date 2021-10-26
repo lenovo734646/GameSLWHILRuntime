@@ -347,13 +347,13 @@ MonoBehaviour:
     anyType: {fileID: 3589991803320321381}
     sType: 
     manualName: 
-  - name: head_image
+  - name: image_f_UserHead
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3589991802926386051}
     sType: 
     manualName: 
-  - name: frame_image
+  - name: image_f_UserHeadFrame
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3589991802738535924}
@@ -1101,8 +1101,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 70, y: -57}
-  m_SizeDelta: {x: 150, y: 100}
+  m_AnchoredPosition: {x: 68.17, y: -49.35}
+  m_SizeDelta: {x: 114.522415, y: 29.656479}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3589991803065941628
 CanvasRenderer:
@@ -1141,8 +1141,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293454056
+  m_fontColor: {r: 0.9117647, g: 0.9117647, b: 0.9117647, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1160,10 +1160,10 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 10
+  m_fontSize: 24.1
   m_fontSizeBase: 10
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0

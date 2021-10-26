@@ -19,9 +19,9 @@ end
 function Class:__init(panel, gr, maxRecordTime)
     panel:GetComponent(typeof(LuaInitHelper)):Init(self)
     self.panel = panel
-    print("gr = ", gr)
     self.gr = gr
     self.maxRecordTime = maxRecordTime
+    self.recorder.RecordVOLEnhanceMulti = 1 -- 声音放大
 
     self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchDown:AddListener(function ()
@@ -35,7 +35,6 @@ function Class:__init(panel, gr, maxRecordTime)
         if UnityHelper.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
-            --print("clipData = ", clipData)
             if clipData ~= nil then
                 
                 if self.onSendCallback then

@@ -27,6 +27,7 @@ local Helpers = require 'LuaUtil.Helpers'
 
 local SEnv = SEnv
 local GameConfig = GameConfig
+local _Ver = _Ver
 -- local GetHeadSprite = SEnv.GetHeadSprite
 -- local GetHeadFrameSprite = SEnv.GetHeadFrameSprite
 -- print("GetHeadSprite = ", GetHeadSprite, SEnv.GetHeadSprite)
@@ -122,6 +123,12 @@ function Class:__init(panel, loader, userData)
         --local headFrameSpr = SEnv.GetHeadFrameSprite(data.headFrameID) -- 协议暂时没有头像框字段
         self:OnReceiveMsg(timeStampSec, data.user_id, data.nickname, data.message_type, data.content, data.metadata, headSpr)
     end)
+
+    -- 兼容大厅版本
+    self.tog_Voice.gameObject:SetActive(false)
+    if _Ver and _Ver._ver > 0.982 then
+        self.tog_Voice.gameObject:SetActive(true)
+    end
 end
 
 function Class:KeyControl()

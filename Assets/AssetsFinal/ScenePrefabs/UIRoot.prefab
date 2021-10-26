@@ -14999,6 +14999,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 799103020918852431, guid: df1caa3c802952d498b877ab5ec46d43,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 799103021107152529, guid: df1caa3c802952d498b877ab5ec46d43,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size

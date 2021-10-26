@@ -257,7 +257,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
     end
     self.msgScrollView:InsertItem(msgData)
     local chatMsgView = self.msgScrollView:GetItemViewsHolderAtEnd()
-    CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+    CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
         while chatMsgView == nil do
             yield()
             print("获取 chatMsgView 中...")
@@ -269,7 +269,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
         -- 发送
         if msgType == 2 then    -- 音频发送
             if audioClip and clipData then
-                CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+                CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                     local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
                     if err then
                         chatMsgView:OnSendFailed(err)
@@ -279,7 +279,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
                     local upload_url = data.upload_url
                     local download_url = data.download_url
                     print("语音上传链接请求成功上传链接:", upload_url..'\n下载链接：'..download_url)
-                    CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom, function ()
+                    CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour, function ()
                         -- TODO: 显示正在发送提示
                         local request = Helpers.WebRequestPut(upload_url, clipData)
                         request:SendWebRequest()
@@ -295,7 +295,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
                         -- TODO: 上传完成 隐藏正在发送提示
                         print("上传成功发送下载链接：", download_url)
                         -- 发送完成 把下载地址返回给服务器
-                        CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+                        CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                             CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, tostring(timeStampSec), _G.ShowErrorByHintHandler)
                         end)
                     end)
@@ -305,12 +305,12 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
                 return
             end
         elseif msgType == 3 then
-            CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, tostring(phraseIndex), tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
             --self:OnReceiveMsg(111, 111, "111", 3, tostring(phraseIndex), nil, headSpr)
         else
-            CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
             --self:OnReceiveMsg(111, 111, "111", 1, content, nil, headSpr)
@@ -361,7 +361,7 @@ function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, me
         if content ~= nil then
             print("收到语音消息下载链接：", content)
             -- 下载语音消息
-            CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                 local request = Helpers.WebRequestGet(content)
                 request:SendWebRequest()
                 while (not request.isDone) do

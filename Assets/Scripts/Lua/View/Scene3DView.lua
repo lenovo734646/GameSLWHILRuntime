@@ -18,7 +18,7 @@ local ItemCountChangeMode = OSACore.ItemCountChangeMode
 
 local MainUI =  require'UI.MainUI'
 local SimpleSlot = require'controller.SimpleSlot'
-
+local SEnv = SEnv
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -235,6 +235,8 @@ function Class:__init(roomdata)
     self.betSelectBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
     self.betSelectBtnsInitHelper = nil
 
+    -- 找一个不会被Inactive 的脚本用来运行协程
+    SEnv.CoroutineMonoBehaviour = self.viewEventBroadcaster
 
     -- ctrl
     self.ctrl = Scene3DViewCtrl.Create(self,View,roomdata)

@@ -13,6 +13,9 @@ local _ERR_STR_ = _ERR_STR_
 
 _ENV = moduledef { seenamespace = CS }
 
+local musicMute = false
+local audioMute = false
+
 local Class = class()
 
 function Create(...)
@@ -41,6 +44,7 @@ end
 
 -- data : ChatMsgData.lua类型
 function Class:UpdateFromData(data)
+    self.eventListener:Init(self)
     if data == nil then
         logError("UpdateFromData data is nil")
         return
@@ -103,8 +107,20 @@ function Class:UpdateFromData(data)
 end
 
 function Class:StartPlayback()
-    AudioManager.Instance.MusicAudio.mute = true
-    AudioManager.Instance.EffectAudio.mute = true
+    print("开始回放音频：", self.isPlaying)
+    if not AudioManager.Instance.MusicAudio.mute then
+        AudioManager.Instance.MusicAudio.mute = true
+        musicMute = false
+    else
+        musicMute = true
+    end
+    if not AudioManager.Instance.EffectAudio.mute then
+        AudioManager.Instance.EffectAudio.mute = true
+        audioMute = false
+    else
+        audioMute = true
+    end
+    -- 
     if self.isPlaying then
         return
     end
@@ -128,14 +144,15 @@ function Class:StartPlayback()
 end
 
 function Class:StopPlayback()
+    print("结束回放音频：", self.isPlaying)
     if not self.isPlaying then
         return
     end
     self.isPlaying = false
     self.audioSource:Stop()
     self.wfDraw.playbackSli.value = 0
-    AudioManager.Instance.MusicAudio.mute = false
-    AudioManager.Instance.EffectAudio.mute = false
+    AudioManager.Instance.MusicAudio.mute = musicMute
+    AudioManager.Instance.EffectAudio.mute = audioMute
 end
 
 function Class:OnSendSuccess()

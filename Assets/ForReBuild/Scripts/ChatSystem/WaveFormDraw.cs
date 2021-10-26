@@ -7,7 +7,7 @@ namespace SP
 	public class WaveFormDraw : MonoBehaviour
 	{
 
-		int resolution = 60;
+		public int resolution = 60;
 		private Color[] blankColorArr;
 		float[] waveForm;
 		float[] samples;
@@ -22,7 +22,6 @@ namespace SP
 			{
 				return;
 			}
-			resolution = 60;
 			AudioSource audio = GetComponent<AudioSource>();
 			audio.clip = myClip;
 			resolution = audio.clip.frequency / resolution;

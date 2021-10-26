@@ -64,22 +64,13 @@ function Class:__init(panel)
         viewItemData:UpdateFromData(itemdata)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
     end
-
-    -- -- onComplete回调 playForward finish 调用
-    -- self.popUpDOTweenAnim.onComplete:AddListener(function ()
-    --     print("OnComplete......")
-    --     if self.panel.transform.localScale.x < 0.1 then
-    --         self.panel:SetActive(false)
-    --     end
-    -- end)
-    -- self.popUpDOTweenAnim.hasOnComplete = true;
 end
 
 
 -- 发送 玩家列表请求
 function Class:OnSendPlayerListReq()
     print("发送玩家列表请求")
-    CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
+    CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
         local data = CLCHATROOMSender.Send_QueryPlayerListReq_Async(0, 100, _G.ShowErrorByHintHandler)
         if data then
             local items = {}
@@ -88,10 +79,10 @@ function Class:OnSendPlayerListReq()
             local players = data.players
             self.onlineCount.text = string.Format2(_STR_"在线人数：{1}",count)
             for key, info in pairs(players) do
-                print("玩家列表：", key, info.nickname, info.user_id, info.head)
+                print("玩家列表：", key, info.nickname, info.recently_setbets, info.recently_wincount)
                 local rankImageSpr = self.rankImages[key]
                 local itemData = PlayerListItemData.Create(info.user_id, info.nickname, info.head, info.headFrame, 
-                                                            info.currency, info.betScore, info.winCount, key, rankImageSpr)
+                                                            info.currency, info.recently_setbets, info.recently_wincount, key, rankImageSpr)
                 tinsert(items, itemData)
                 itemData.rankid = key
             end

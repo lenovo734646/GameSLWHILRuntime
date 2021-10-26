@@ -60,10 +60,10 @@ function Class:UpdateFromData(data)
         self.rankText.gameObject:SetActive(true)
         self.rankText.text = tostring(data.rank)
     end
-    data.betScore = data.betScore or 0
-    data.winCount = data.winCount or 0
-    self.betScoreText.text = Helpers.GameNumberFormat(data.betScore)
-    self.winCountText.text = Helpers.GameNumberFormat(data.winCount)
+    data.recently_setbets = data.recently_setbets or 0
+    data.recently_wincount = data.recently_wincount or 0
+    self.betScoreText.text = Helpers.GameNumberFormat(data.recently_setbets)
+    self.winCountText.text = Helpers.GameNumberFormat(data.recently_wincount)
 end
 
 function Class:UserInfoBtnClick()

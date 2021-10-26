@@ -31,8 +31,11 @@ namespace SP
         public int freq = 44100;                // 采样率 支持任意采样率就使用此采样率否则使用支持的最小采样率
         public string device;
         public bool isRecording = false;
-
+        // 声音放大倍率
         public int RecordVOLEnhanceMulti = 1;
+
+        // 是否剪除静音
+        public bool IsTrimSilence = false;
         // 回放
         public WaveFormDraw wfDraw;
         private bool isPlaybacking = false;
@@ -153,7 +156,11 @@ namespace SP
                 //print("结束录制 时长 = "+length);
                 float[] recordedClip = new float[micRecord.clip.samples * micRecord.clip.channels];
                 micRecord.clip.GetData(recordedClip, 0);
-                var validLength = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
+                var validLength = micRecord.clip.length;
+                if (IsTrimSilence)
+                {
+                    validLength = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
+                }
                 wfDraw.StartWaveFormGeneration(micRecord.clip); // 这里 clip 的 length 是传入的最大值 MaxTime的长度
                 //print("结束录制 剪除静音后时长 = " + validLength);
                 return validLength;

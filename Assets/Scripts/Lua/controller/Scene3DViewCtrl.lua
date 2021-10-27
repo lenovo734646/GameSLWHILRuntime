@@ -303,7 +303,6 @@ function Class:InitAnimalAnimation()
             winShowData.animatorHelper:Play("Victory") -- 中间领奖台动物胜利动画
             -- 播放声音
             local color_id = self.resultPanelData.color_id
-            --print("播放声音：", self.resultPanelData.color_id)
             assert(color_id)
             local animal_id = self.resultPanelData.animal_id
             if color_id == GameConfig.ColorType.SanYuan then
@@ -358,7 +357,6 @@ function Class:InitAnimalAnimation()
                 AudioManager.Instance:PlaySoundEff2D("dasixi")
             else
                 local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
-                print("播放声音: ", color_id, animal_id, audioIndex)
                 AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
             end
         end
@@ -510,7 +508,7 @@ function Class:SetColorAndRatio(colorArray, ratioArray)
         end
     end
     if #ratioArray ~= 0 then
-        print("倍率表：", json.encode(ratioArray))
+        -- print("倍率表：", json.encode(ratioArray))
         self.ratioArray = ratioArray   
         -- 设置倍率（包含庄和闲）
         local count = #ui.betAreaList

@@ -68,7 +68,6 @@ end
 
 -- 设置统计数据
 function Class:SetStatisticData(sixiCount, sanyuanCount, zhuangCount, xianCount, heCount, allGameCount)
-    print("设置统计数据：", sixiCount, sanyuanCount, zhuangCount, xianCount, heCount, allGameCount)
     self.statisicalData.sixiText.text =  string.Format2(_STR_" 大四喜x{1} ",(sixiCount))
     self.statisicalData.sanyuanText.text =  string.Format2(_STR_" 大三元x{1} ",(sanyuanCount))
     self.statisicalData.zhuangText.text =  string.Format2(_STR_" 庄x{1} ",(zhuangCount))

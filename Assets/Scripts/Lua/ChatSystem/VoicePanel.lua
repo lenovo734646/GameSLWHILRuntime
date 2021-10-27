@@ -7,6 +7,9 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local UnityHelper = CS.UnityHelper
+local _STR_ = _STR_
+local _ERR_STR_ = _ERR_STR_
+local ShowHitMessage = ShowHitMessage
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -28,7 +31,11 @@ function Class:__init(panel, gr, maxRecordTime)
         self.sliderPanel.gameObject:SetActive(true)
         local bStart = self.recorder:StartRecording(self.maxRecordTime)
         if not bStart then
-            g_Env.ShowHitMessage(_STR_("录音失败，请检查权限"))
+            if g_Env then
+                g_Env.ShowHitMessage(_STR_("录音失败，请检查权限"))
+            else
+                print("录音失败，请检查权限")
+            end
         end
     end)
 

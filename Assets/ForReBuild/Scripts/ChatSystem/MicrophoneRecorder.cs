@@ -84,14 +84,14 @@ namespace SP
             wfDraw.gameObject.SetActive(false);
 
 
-            
+
         }
 
 
         IEnumerator RecordingTimeCounter()
         {
             timeText.text = "0:00";
-            while(curRecordingTime < recordingMaxTime)
+            while (curRecordingTime < recordingMaxTime)
             {
                 yield return null;
                 curRecordingTime += Time.deltaTime;
@@ -107,62 +107,77 @@ namespace SP
             StopRecording();
         }
 
-        public void StartRecording(int time)
+        public bool StartRecording(int time)
         {
-            if (isPlaybacking)
-                StopPlayback();
-            //
-            if (!isRecording)
+            try
             {
-                voiceInputPanel.SetActive(true);
-                wfDraw.gameObject.SetActive(false);
-                VWGridGroup.SetActive(true);
-                slider.gameObject.SetActive(true);
-                slider.minValue = 0;
-                slider.maxValue = time;
-                slider.value = 0;
-                curRecordingTime = 0;
-                StartCoroutine("RecordingTimeCounter");
+                if (isPlaybacking)
+                    StopPlayback();
                 //
-                isRecording = true;
-                recordingMaxTime = time;
-                Microphone.End(device);
-                micRecord.clip = Microphone.Start(device, true, recordingMaxTime, freq);
+                if (!isRecording)
+                {
+                    voiceInputPanel.SetActive(true);
+                    wfDraw.gameObject.SetActive(false);
+                    VWGridGroup.SetActive(true);
+                    slider.gameObject.SetActive(true);
+                    slider.minValue = 0;
+                    slider.maxValue = time;
+                    slider.value = 0;
+                    curRecordingTime = 0;
+                    StartCoroutine("RecordingTimeCounter");
+                    //
+                    isRecording = true;
+                    recordingMaxTime = time;
+                    Microphone.End(device);
+                    micRecord.clip = Microphone.Start(device, true, recordingMaxTime, freq);
+                    
+                }
+                return isRecording;
             }
-            else
+            catch (Exception e)
             {
-                StopRecording();
+                Debug.LogError("录音失败:"+e.Message);
+                return false;
             }
 
         }
         // 停止录音并返回录音时长
         public float StopRecording()
         {
-            if (isRecording)
+            try
             {
-                wfDraw.gameObject.SetActive(true);
-                VWGridGroup.SetActive(false);
-                slider.gameObject.SetActive(false);
-                slider.value = 0; 
-                StopCoroutine("RecordingTimeCounter");
-                //
-                isRecording = false;
-                int lastPos = Microphone.GetPosition(device);
-                var length = (float)lastPos / freq;
-                Microphone.End(device);
-                //
-                float[] recordedClip = new float[micRecord.clip.samples * micRecord.clip.channels];
-                micRecord.clip.GetData(recordedClip, 0);
-                length = TrimByRealTime(recordedClip, lastPos);
-                //print($"结束录制 时长 = {length}, lastPos = {lastPos}, micRecord.clip.samples = {micRecord.clip.samples}");
-                if (IsTrimSilence)
+                if (isRecording)
                 {
-                    length = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
+                    wfDraw.gameObject.SetActive(true);
+                    VWGridGroup.SetActive(false);
+                    slider.gameObject.SetActive(false);
+                    slider.value = 0;
+                    StopCoroutine("RecordingTimeCounter");
+                    //
+                    isRecording = false;
+                    int lastPos = Microphone.GetPosition(device);
+                    var length = (float)lastPos / freq;
+                    Microphone.End(device);
+                    //
+                    float[] recordedClip = new float[micRecord.clip.samples * micRecord.clip.channels];
+                    micRecord.clip.GetData(recordedClip, 0);
+                    length = TrimByRealTime(recordedClip, lastPos);
+                    //print($"结束录制 时长 = {length}, lastPos = {lastPos}, micRecord.clip.samples = {micRecord.clip.samples}");
+                    if (IsTrimSilence)
+                    {
+                        length = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
+                    }
+                    wfDraw.StartWaveFormGeneration(micRecord.clip); // 这里 clip 的 length 是传入的最大值 MaxTime的长度
+                                                                    //print("结束录制 剪除静音后时长 = " + validLength);
+                    return length;
                 }
-                wfDraw.StartWaveFormGeneration(micRecord.clip); // 这里 clip 的 length 是传入的最大值 MaxTime的长度
-                //print("结束录制 剪除静音后时长 = " + validLength);
-                return length;
             }
+            catch (Exception e)
+            {
+
+                Debug.LogError("停止录音失败:"+e.Message);
+            }
+
             return 0;
         }
 
@@ -188,19 +203,28 @@ namespace SP
             print("回放结束....");
         }
 
-        public void CancelRecording()
+        public bool CancelRecording()
         {
-            if (isRecording)
-                StopRecording();
-            if (isPlaybacking)
-                StopPlayback();
-            // reset
-            for (var i = 0; i < waveImageGroup.Length; i++)
+            try
             {
-                waveImageGroup[i].transform.localScale = Vector3.zero;
+                if (isRecording)
+                    StopRecording();
+                if (isPlaybacking)
+                    StopPlayback();
+                // reset
+                for (var i = 0; i < waveImageGroup.Length; i++)
+                {
+                    waveImageGroup[i].transform.localScale = Vector3.zero;
+                }
+                micRecord.clip = null;
+                voiceInputPanel.SetActive(false);
+                return true;
             }
-            micRecord.clip = null;
-            voiceInputPanel.SetActive(false);
+            catch (Exception e)
+            {
+                Debug.LogError("取消录音失败:" + e.Message);
+            }
+            return false;
         }
 
         // 音频数据放大
@@ -267,12 +291,12 @@ namespace SP
             if (isRecording)
                 StopRecording();
             //
-            if(data == null)
+            if (data == null)
             {
                 Debug.LogError("ByteToClip data is null");
                 return null;
             }
-            
+
             try
             {
                 var dms = new MemoryStream();
@@ -287,7 +311,7 @@ namespace SP
                 byte[] decompressBytes = dms.ToArray();
                 zip.Close();
 
-                
+
 
                 //print($"解压前：{data.Length}   解压后：{decompressBytes.Length} ");
 
@@ -306,7 +330,7 @@ namespace SP
         }
 
         // 剪除结束位置以后的数据
-        public float TrimByRealTime(float[] clipArray_,int lastPos)
+        public float TrimByRealTime(float[] clipArray_, int lastPos)
         {
             var clip = micRecord.clip;
             if (lastPos <= 0)
@@ -343,7 +367,7 @@ namespace SP
             return newClip.length;
         }
 
-        public void SaveToWavFile(string fileName ,float[] shortenedClip)
+        public void SaveToWavFile(string fileName, float[] shortenedClip)
         {
             if (string.IsNullOrEmpty(fileName))
             {
@@ -427,7 +451,7 @@ namespace SP
             if (isRecording)
                 GetMaxVolume();
 
-            if(isPlaybacking) // 回放
+            if (isPlaybacking) // 回放
             {
                 if (micRecord == null || micRecord.clip == null)
                     return;
@@ -464,7 +488,7 @@ namespace SP
                     int f = i / voiceWaveStep;
                     //将可视化的物体和音波相关联
                     //obj[f].gameObject.transform.localScale = new Vector3(0.3f, volumeData[i] * 10 + 0.2f, 0.1f);//将可视化的物体和音波相关联
-                    var sy = Mathf.Clamp(volumeData[i] * 10, -1.5f, 1.5f)* RecordVOLEnhanceMulti;
+                    var sy = Mathf.Clamp(volumeData[i] * 10, -1.5f, 1.5f) * RecordVOLEnhanceMulti;
                     //print("sy = " + sy+"  volume"+ volumeData[i]);
                     waveImageGroup[f].rectTransform.localScale = new Vector3(1f, sy, 1f);
                 }

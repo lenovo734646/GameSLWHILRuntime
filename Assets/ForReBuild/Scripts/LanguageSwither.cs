@@ -32,6 +32,7 @@ public class LanguageSwither : MonoBehaviour
     }
     [CustomEditorName("自动应用")]
     public bool autoApply = true;
+    public bool changeByEvent = false;
     public Text text;
     public TextMeshPro textMeshPro;
     public TextMeshProUGUI textMeshProUGUI;
@@ -51,6 +52,15 @@ public class LanguageSwither : MonoBehaviour
         Apply(data);
     }
     public void Apply(LangData langData) {
+        if (changeByEvent)
+        {
+            if (MessageCenter.Instance)
+            {
+                //基本上就是交给Lua处理了，Lua里面监听此事件后进行处理
+                MessageCenter.Instance.SendMessage("MSG_LanguageSwither", this, langData);
+            }
+            return;
+        }
         if (text) {
             text.text = langData.content;
         }

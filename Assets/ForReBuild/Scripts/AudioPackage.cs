@@ -59,8 +59,7 @@ namespace ForReBuild {
                 if (!clip) return false;
                 return clip.name == pathOrName;
             });
-            if (audioClip) return true;
-            return false;
+            return audioClip;
         }
 
         void OnDestroy() {

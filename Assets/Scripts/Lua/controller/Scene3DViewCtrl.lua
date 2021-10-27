@@ -138,7 +138,7 @@ function Class:OnSceneReady()
     end)
 
     PBHelper.AddListener('CaiJinNtf', function (data)
-        print("彩金消息: caijin_count = ", data.caijin_count)
+        -- print("彩金消息: caijin_count = ", data.caijin_count)
         ui.mainUI:SetCaiJinCount(data.caijin_count)
     end)
     
@@ -161,7 +161,7 @@ function Class:OnSceneReady()
 
     -- 本局自己输赢和庄家输赢
     PBHelper.AddListener('SelfWinResultNtf', function (data)
-        print("结算：玩家分数: ", data.self_score, data.win_score, data.bet_score)
+        -- print("结算：玩家分数: ", data.self_score, data.win_score, data.bet_score)
         self.resultPanelData.winScore = data.win_score -- 本局输赢
         self.resultPanelData.betScore = data.bet_score  -- 总输赢
         self.selfScore = data.self_score
@@ -502,7 +502,7 @@ function Class:SetColorAndRatio(colorArray, ratioArray)
     local ui = self.ui
     if #colorArray ~= 0 then
         -- 设置颜色
-        print("颜色表：", json.encode(colorArray))
+        -- print("颜色表：", json.encode(colorArray))
         for index, value in ipairs(colorArray) do
             ui.colorDataList[index].colorMesh.material = ui.colorMeshMaterialList[value]
             ui.colorDataList[index].color_id = value
@@ -522,7 +522,7 @@ end
 
 -- 下注阶段
 function Class:OnBetState(data)
-    print("进入下注阶段....")
+    -- print("进入下注阶段....")
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('betState')
     AudioManager.Instance:PlaySoundEff2D("start_bet")
@@ -537,7 +537,7 @@ end
 
 -- 游戏阶段（转和显示结果）
 function Class:OnShowState(data)
-    print("进入结算阶段....")
+    -- print("进入结算阶段....")
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
     AudioManager.Instance:PlaySoundEff2D("stop") 
@@ -648,7 +648,7 @@ function Class:OnShowState(data)
         if ShowRunTime <= 1 then -- 跑马灯时间小于1 就不跑了
             bSkip = true
         end
-        print("leftTime = ", leftTime, " bSkip = ", bSkip, "ShowRunTime = ", ShowRunTime, "winItemCount = ", winItemCount)
+        -- print("leftTime = ", leftTime, " bSkip = ", bSkip, "ShowRunTime = ", ShowRunTime, "winItemCount = ", winItemCount)
         --
         local ShowResultTime = GameConfig.ShowResultTime
         local ShowZhanShiTime = GameConfig.ShowZhanShiTime
@@ -673,7 +673,7 @@ function Class:OnShowState(data)
             end
         end
         local winItemDataList = {} -- 记录本次所有中奖动物itemData
-        print("ShowRunTime = ", ShowRunTime, "ShowRunTime_Shark = ", ShowRunTime_Shark)
+        -- print("ShowRunTime = ", ShowRunTime, "ShowRunTime_Shark = ", ShowRunTime_Shark)
         CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
@@ -693,10 +693,10 @@ function Class:OnShowState(data)
                     -- 摄像机拉近动画
                     ui.viewEventBroadcaster:Broadcast('CameraMoveForward')
                     
-                    print("花瓣打开....")
+                    -- print("花瓣打开....")
                     ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
                     -- 中奖动物跳入并播放胜利动画
-                    print("动物跳入展示....")
+                    -- print("动物跳入展示....")
                     itemData.JumpToWinStage(winItemCount, i, bSkip)
                     --
                     yield(WaitForSeconds(ShowZhanShiTime))
@@ -732,17 +732,17 @@ function Class:OnShowState(data)
             self.ui.SpotLight_Animal_animator.enabled = false
             self.ui.Baoshi_1_animator.enabled = false
             -- 显示中奖结算界面
-            print("显示结算....中奖动物数：", #winItemDataList)
+            -- print("显示结算....中奖动物数：", #winItemDataList)
             local resultPanel = self.ui.mainUI.resultPanel
             resultPanel:ShowResult(self.resultPanelData)
             for _, itemData in pairs(winItemDataList) do
-                print("动物是否跳出:", itemData.bJump)
+                -- print("动物是否跳出:", itemData.bJump)
                 if itemData.bJump then
-                    print("动物跳回....")
+                    -- print("动物跳回....")
                     itemData.JumpToOriginal(bSkip)
                 end
             end
-            print("关闭花瓣....")
+            -- print("关闭花瓣....")
             ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
             --
             yield(WaitForSeconds(ShowResultTime))
@@ -757,7 +757,7 @@ function Class:OnShowState(data)
             self.ui.Baoshi_1_animator.enabled = true
             self.ui.SpotLight_Animal_animator.gameObject:SetActive(true)
             -- 同步玩家分数
-            print("同步玩家分数: ", self.selfScore)
+            -- print("同步玩家分数: ", self.selfScore)
             self:OnMoneyChange(self.selfScore)
             self.selfScore = SEnv.playerRes.currency
             -- 开奖结束再更新record，避免剧透
@@ -817,7 +817,7 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         colordata.animator.enabled = true  -- 播放中奖颜色闪烁动画
         local name = "BaoshiFlash_"..colordata.color_id
         colordata.animator:Play(name, 0, 0)
-        print("colorAnimName = ", name)
+        -- print("colorAnimName = ", name)
     end)
 
     -- 动物
@@ -867,7 +867,7 @@ end
 -- 可以考虑把结算状态的最后逻辑处理放到 OnFreeState 中
 -- 空闲阶段 
 function Class:OnFreeState()
-    print("进入空闲阶段....玩家分数重置")
+    -- print("进入空闲阶段....玩家分数重置")
     if self.resultPanelData then
         self.resultPanelData.winScore = 0 -- 本局输赢
         self.resultPanelData.betScore = 0  -- 总输赢
@@ -984,7 +984,7 @@ function Class:OnSendBet(item_id, betid)
 end
 
 function Class:OnReceiveBetAck(data)
-    print("玩家下注返回：玩家分数: ", data.self_score)
+    -- print("玩家下注返回：玩家分数: ", data.self_score)
     local betAreaList = self.ui.betAreaList
     local self_bet_info = data.self_bet_info
     local item_id = self_bet_info.index_id
@@ -1005,7 +1005,7 @@ function Class:OnReceiveBetAck(data)
 end
 
 function Class:OnHistroyAck(data)
-    print('HistoryAck:'..json.encode(data))
+    -- print('HistoryAck:'..json.encode(data))
     if data.errcode ~= 0 then
         _G.ShotHintMessage(_G._STR_("获取历史记录出错"))
     else

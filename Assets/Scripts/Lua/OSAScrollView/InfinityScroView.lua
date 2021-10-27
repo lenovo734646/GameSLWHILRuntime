@@ -143,8 +143,8 @@ function Class:GetItemViewsHolderAtEnd()
     if self:GetItemsCount() <= 0 then
         return nil
     end
-    local index = self:GetItemsCount()-1
-    print("GetItemViewsHolderAtEnd index = ", index)
+    local index = self.OSAScrollView.OSAScrollViewCom.VisibleItemsCount - 1-- self:GetItemsCount()-1
+    -- print("GetItemViewsHolderAtEnd index = ", index)
     return self.OSAScrollView:GetItemViewsHolder(index)
 end
 

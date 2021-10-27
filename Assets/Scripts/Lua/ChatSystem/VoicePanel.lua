@@ -13,6 +13,9 @@ local ShowHitMessage = ShowHitMessage
 
 _ENV = moduledef { seenamespace = CS }
 
+local musicMute = false
+local audioMute = false
+
 local Class = class()
 
 function Create(...)
@@ -36,6 +39,8 @@ function Class:__init(panel, gr, maxRecordTime)
             else
                 print("录音失败，请检查权限")
             end
+        else
+            self:PauseMusicAndAudio()
         end
     end)
 
@@ -58,6 +63,7 @@ function Class:__init(panel, gr, maxRecordTime)
             self.recorder:CancelRecording()
             print("取消语音发送...")
         end
+        self:RecoverMusicAndAudio()
     end)
 end
 
@@ -78,6 +84,26 @@ end
 function Class:Release()
     self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchUp:RemoveAllListeners()
+end
+
+function Class:PauseMusicAndAudio()
+    if not AudioManager.Instance.MusicAudio.mute then
+        AudioManager.Instance.MusicAudio.mute = true
+        musicMute = false
+    else
+        musicMute = true
+    end
+    if not AudioManager.Instance.EffectAudio.mute then
+        AudioManager.Instance.EffectAudio.mute = true
+        audioMute = false
+    else
+        audioMute = true
+    end
+end
+
+function Class:RecoverMusicAndAudio()
+    AudioManager.Instance.MusicAudio.mute = musicMute
+    AudioManager.Instance.EffectAudio.mute = audioMute
 end
 
 return _ENV

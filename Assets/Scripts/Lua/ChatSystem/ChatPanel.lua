@@ -301,12 +301,14 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData)
                         end
                         -- TODO: 上传完成 隐藏正在发送提示
                         print("上传成功发送下载链接：", download_url)
+                        --self:OnReceiveMsg(111, 111, "111", 2, download_url, nil, headSpr)
                         -- 发送完成 把下载地址返回给服务器
                         CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                             CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, tostring(timeStampSec), _G.ShowErrorByHintHandler)
                         end)
                     end)
                 end)
+                
             else
                 LogE("audioClip or clipData is nil")
                 return
@@ -387,7 +389,7 @@ function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, me
                 -- 下载成功 转换成 audioClip
                 audioClip = self.voicePanel:ByteToAudioClip(request.downloadHandler.data)
                 --audioClip = self.voicePanel:ByteToAudioClip(content)
-                print("语音数据转换成AudioClip:", audioClip)
+                print("语音数据转换成AudioClip:", audioClip.length)
                 local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headSpr, msgItemBgSpr)
                 self.msgScrollView:InsertItem(msgData)
             end)
@@ -395,10 +397,8 @@ function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, me
     elseif msgType == 3 then
         if content ~= nil then
             index = tonumber(content)
-            -- print("index = ", index)
             if index ~= nil then
                 local data = self.phrasePanel:GetPhraseData(index)
-                -- print("data = ", data, data.content)
                 if data ~= nil then
                     content = data.content
                     self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])
@@ -479,9 +479,7 @@ function Class:__GetMsgItemBGSpr(userID)
 end
 
 function Class:__GetWaitSendChatMsgView(timestampSec)
-    print("waitSendChatMsgViewList = ", #waitSendChatMsgViewList)
     local chatMsgView, index = table.Find(waitSendChatMsgViewList, function (v)
-        print("v.msgData.timestampSec = ", v.msgData.timestampSec, timestampSec)
         return v.msgData.timestampSec == timestampSec
     end)
     if chatMsgView == nil then

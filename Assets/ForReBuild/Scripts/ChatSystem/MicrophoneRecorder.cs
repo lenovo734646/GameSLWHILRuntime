@@ -36,6 +36,7 @@ namespace SP
 
         // 是否剪除静音
         public bool IsTrimSilence = false;
+        public bool IsUserZip = false;
         // 回放
         public WaveFormDraw wfDraw;
         private bool isPlaybacking = false;
@@ -130,13 +131,13 @@ namespace SP
                     recordingMaxTime = time;
                     Microphone.End(device);
                     micRecord.clip = Microphone.Start(device, true, recordingMaxTime, freq);
-                    
+
                 }
                 return isRecording;
             }
             catch (Exception e)
             {
-                Debug.LogError("录音失败:"+e.Message);
+                Debug.LogError("录音失败:" + e.Message);
                 return false;
             }
 
@@ -175,7 +176,7 @@ namespace SP
             catch (Exception e)
             {
 
-                Debug.LogError("停止录音失败:"+e.Message);
+                Debug.LogError("停止录音失败:" + e.Message);
             }
 
             return 0;
@@ -261,22 +262,31 @@ namespace SP
             // 方案1
             byte[] bytes = new byte[clipArray.Length * 4];
             Buffer.BlockCopy(clipArray, 0, bytes, 0, bytes.Length);
-            try
+            if (IsUserZip)
             {
-                var wms = new MemoryStream();
-                var zip = new GZipStream(wms, CompressionMode.Compress);
-                zip.Write(bytes, 0, bytes.Length);
-                zip.Close();
+                try
+                {
+                    var wms = new MemoryStream();
+                    var zip = new GZipStream(wms, CompressionMode.Compress);
+                    zip.Write(bytes, 0, bytes.Length);
+                    zip.Close();
 
-                byte[] compressBytes = wms.ToArray();
+                    byte[] compressBytes = wms.ToArray();
 
-                //print($"压缩前：{bytes.Length}   压缩后：{compressBytes.Length}");
-                return compressBytes;
+                    print($"压缩前：{bytes.Length}   压缩后：{compressBytes.Length}");
+                    return compressBytes;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("VoiceToByte Error " + e.Message);
+                }
             }
-            catch (Exception e)
+            else
             {
-                Debug.LogError("VoiceToByte Error " + e.Message);
+                print($"不使用压缩：{bytes.Length} clip时长:{clip.length}");
+                return bytes;
             }
+
 
             // 方案3
             //WavUtility.FromAudioClip(clip);
@@ -296,36 +306,49 @@ namespace SP
                 Debug.LogError("ByteToClip data is null");
                 return null;
             }
-
-            try
+            if (IsUserZip)
             {
-                var dms = new MemoryStream();
-                var wms = new MemoryStream(data);
-                var zip = new GZipStream(wms, CompressionMode.Decompress);
-                var count = 0;
-                byte[] tempdata = new byte[4096];
-                while ((count = zip.Read(tempdata, 0, tempdata.Length)) != 0)
+                try
                 {
-                    dms.Write(tempdata, 0, count);
+                    var dms = new MemoryStream();
+                    var wms = new MemoryStream(data);
+                    var zip = new GZipStream(wms, CompressionMode.Decompress);
+                    var count = 0;
+                    byte[] tempdata = new byte[4096];
+                    while ((count = zip.Read(tempdata, 0, tempdata.Length)) != 0)
+                    {
+                        dms.Write(tempdata, 0, count);
+                    }
+                    byte[] decompressBytes = dms.ToArray();
+                    zip.Close();
+
+
+
+                    print($"解压前：{data.Length}   解压后：{decompressBytes.Length} ");
+
+                    float[] clipdata = new float[decompressBytes.Length / 4];
+                    Buffer.BlockCopy(decompressBytes, 0, clipdata, 0, decompressBytes.Length);
+                    //
+                    AudioClip newClip = AudioClip.Create(clipdata.Length.ToString(), clipdata.Length / clipChannels, clipChannels, freq, false);
+                    newClip.SetData(clipdata, 0);
+                    return newClip;
                 }
-                byte[] decompressBytes = dms.ToArray();
-                zip.Close();
-
-
-
-                //print($"解压前：{data.Length}   解压后：{decompressBytes.Length} ");
-
-                float[] clipdata = new float[decompressBytes.Length / 4];
-                Buffer.BlockCopy(decompressBytes, 0, clipdata, 0, decompressBytes.Length);
+                catch (Exception e)
+                {
+                    Debug.LogError("OnReceiveVoice Decompress Error " + e.Message);
+                }
+            }
+            else
+            {
+                float[] clipdata = new float[data.Length / 4];
+                Buffer.BlockCopy(data, 0, clipdata, 0, data.Length);
                 //
                 AudioClip newClip = AudioClip.Create(clipdata.Length.ToString(), clipdata.Length / clipChannels, clipChannels, freq, false);
                 newClip.SetData(clipdata, 0);
+                print($"不使用压缩：{data.Length} clip 时长:{newClip.length}");
                 return newClip;
             }
-            catch (Exception e)
-            {
-                Debug.LogError("OnReceiveVoice Decompress Error " + e.Message);
-            }
+
             return null;
         }
 
@@ -346,6 +369,7 @@ namespace SP
         // 剪除静音部分,并生成新的clip替换掉原来的clip, 返回有效时长
         public float TrimSilenceData(float[] clipArray_, int timeSinceStart_)
         {
+            Debug.Log("剪除静音...");
             float[] shortenedClip = new float[timeSinceStart_];
             float[] newClipData = new float[timeSinceStart_];
             Array.Copy(clipArray_, shortenedClip, shortenedClip.Length - 1);

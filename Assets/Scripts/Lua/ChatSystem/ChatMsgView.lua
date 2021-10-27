@@ -94,7 +94,10 @@ function Class:UpdateFromData(data)
         -- self:StartPlayback() -- 不自动播放
         self.text.text = ""
         -- 消息状态
-        self.progressSliderRoot:SetActive(not self.IsSendSusseed)
+        if data.isMine then
+            self.progressSliderRoot:SetActive(not self.IsSendSusseed)
+        end
+        self.progressSliderRoot:SetActive(false)
         self.btn_ReSend.gameObject:SetActive(false)
     else
         self.wfDraw.gameObject:SetActive(false);
@@ -107,7 +110,7 @@ function Class:UpdateFromData(data)
 end
 
 function Class:StartPlayback()
-    print("开始回放音频：", self.isPlaying)
+    print("开始回放音频：", self.isPlaying, self.audioSource.clip.length)
     if not AudioManager.Instance.MusicAudio.mute then
         AudioManager.Instance.MusicAudio.mute = true
         musicMute = false
@@ -170,7 +173,6 @@ end
 
 function Class:OnUpdateProgress(progress)
     self.progressSlider.value = progress
-    -- print("发送中..", (progress*100).."%")
 end
 
 function Class:OnDestroy()

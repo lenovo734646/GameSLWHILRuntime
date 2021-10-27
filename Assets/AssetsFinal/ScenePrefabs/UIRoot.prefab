@@ -425,6 +425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -542,6 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -733,6 +735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -1345,6 +1348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -1944,6 +1948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -2919,6 +2924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -5471,6 +5477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -5671,6 +5678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 2557613262483459969}
@@ -7437,6 +7445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -8959,6 +8968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -10553,6 +10563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -10826,6 +10837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -11401,6 +11413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -11517,6 +11530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -11633,6 +11647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -12995,6 +13010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -13343,6 +13359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 3876728397721957186}
@@ -15330,6 +15347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -16233,6 +16251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -17174,6 +17193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -17370,6 +17390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -17566,6 +17587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -18072,6 +18094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -19844,6 +19867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 8528977276805140625}
@@ -20701,6 +20725,7 @@ MonoBehaviour:
   isRecording: 0
   RecordVOLEnhanceMulti: 1
   IsTrimSilence: 0
+  IsUserZip: 0
   wfDraw: {fileID: 8528977277043410264}
   voiceInputPanel: {fileID: 1028330779}
 --- !u!82 &8528977277034476606
@@ -20714,7 +20739,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -21887,6 +21912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -22518,6 +22544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 8528977277699548089}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -23257,6 +23284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 8528977277836298304}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -24519,6 +24547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}

@@ -21,7 +21,7 @@ function Class:__init(panel, gr, maxRecordTime)
     self.panel = panel
     self.gr = gr
     self.maxRecordTime = maxRecordTime
-    self.recorder.RecordVOLEnhanceMulti = 1 -- 声音放大
+    -- self.recorder.RecordVOLEnhanceMulti = 1 -- 声音放大
 
     self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchDown:AddListener(function ()

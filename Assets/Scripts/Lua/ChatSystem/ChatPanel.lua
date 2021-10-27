@@ -126,7 +126,7 @@ function Class:__init(panel, loader, userData)
 
     -- 兼容大厅版本
     self.tog_Voice.gameObject:SetActive(false)
-    if _Ver and _Ver._ver > 0.982 then
+    if _Ver and _Ver._ver >= 0.983 then
         self.tog_Voice.gameObject:SetActive(true)
     end
     if g_Env == nil then

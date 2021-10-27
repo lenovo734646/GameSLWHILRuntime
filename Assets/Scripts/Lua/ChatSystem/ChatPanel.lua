@@ -135,18 +135,6 @@ function Class:__init(panel, loader, userData)
     if g_Env == nil then
         self.tog_Voice.gameObject:SetActive(true)
     end
-
-    -- 权限判断
-    local platformInt = UnityHelper.GetPlatformInt()
-    if platformInt == 2 then
-        if not Permission.HasUserAuthorizedPermission(Permission.Microphone) then
-            Permission.RequestUserPermission(Permission.Microphone) -- 请求麦克风权限
-        end
-    elseif platformInt == 1 then
-        if not Application.HasUserAuthorization(UserAuthorization.Microphone) then
-            Application.RequestUserAuthorization(UserAuthorization.Microphone)
-        end
-    end
 end
 
 function Class:KeyControl()

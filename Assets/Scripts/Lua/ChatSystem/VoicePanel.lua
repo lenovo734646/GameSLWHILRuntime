@@ -26,7 +26,10 @@ function Class:__init(panel, gr, maxRecordTime)
     self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchDown:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(true)
-        self.recorder:StartRecording(self.maxRecordTime)
+        local bStart = self.recorder:StartRecording(self.maxRecordTime)
+        if not bStart then
+            g_Env.ShowHitMessage(_STR_("录音失败，请检查权限"))
+        end
     end)
 
     self.btnPressRecording.OnTouchUp:RemoveAllListeners()

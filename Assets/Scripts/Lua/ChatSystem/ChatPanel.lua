@@ -10,6 +10,9 @@ local tremove = table.remove
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset,
     UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
+local UnityHelper = UnityHelper
+local Permission = UnityEngine.Android.Permission
+local UserAuthorization = UnityEngine.UserAuthorization
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
@@ -131,6 +134,18 @@ function Class:__init(panel, loader, userData)
     end
     if g_Env == nil then
         self.tog_Voice.gameObject:SetActive(true)
+    end
+
+    -- 权限判断
+    local platformInt = UnityHelper.GetPlatformInt()
+    if platformInt == 2 then
+        if not Permission.HasUserAuthorizedPermission(Permission.Microphone) then
+            Permission.RequestUserPermission(Permission.Microphone) -- 请求麦克风权限
+        end
+    elseif platformInt == 1 then
+        if not Application.HasUserAuthorization(UserAuthorization.Microphone) then
+            Application.RequestUserAuthorization(UserAuthorization.Microphone)
+        end
     end
 end
 

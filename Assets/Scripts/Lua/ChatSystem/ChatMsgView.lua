@@ -170,7 +170,7 @@ end
 
 function Class:OnUpdateProgress(progress)
     self.progressSlider.value = progress
-    print("发送中..", (progress*100).."%")
+    -- print("发送中..", (progress*100).."%")
 end
 
 function Class:OnDestroy()

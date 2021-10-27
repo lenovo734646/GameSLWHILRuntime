@@ -129,6 +129,9 @@ function Class:__init(panel, loader, userData)
     if _Ver and _Ver._ver > 0.982 then
         self.tog_Voice.gameObject:SetActive(true)
     end
+    if g_Env == nil then
+        self.tog_Voice.gameObject:SetActive(true)
+    end
 end
 
 function Class:KeyControl()
@@ -155,6 +158,7 @@ function Class:OnSendVoice(clipData)
         LogE("音频数据转换 AudioClip 失败")
         return
     end
+    print("语音长度:", audioClip.length)
     if audioClip.length <= 0.6 then
         LogW("音频时间过短 < 0.6")
         return
@@ -388,10 +392,10 @@ function Class:OnReceiveMsg(timeStampSec, userID, nickName, msgType, content, me
     elseif msgType == 3 then
         if content ~= nil then
             index = tonumber(content)
-            print("index = ", index)
+            -- print("index = ", index)
             if index ~= nil then
                 local data = self.phrasePanel:GetPhraseData(index)
-                print("data = ", data, data.content)
+                -- print("data = ", data, data.content)
                 if data ~= nil then
                     content = data.content
                     self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])

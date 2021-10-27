@@ -64,7 +64,7 @@ namespace SP
 			{
 				blankColorArr[i] = Color.clear;
 			}
-			Debug.Log("waveForm.Length = "+ waveForm.Length);
+			//Debug.Log("waveForm.Length = "+ waveForm.Length);
 			texture = new Texture2D(waveForm.Length, 100);
 			texture.SetPixels(blankColorArr, 0);
 			waveFromImg.texture = texture;

@@ -94,16 +94,13 @@ namespace SP
             while(curRecordingTime < recordingMaxTime)
             {
                 yield return null;
+                curRecordingTime += Time.deltaTime;
                 slider.value = curRecordingTime;
-
-                yield return new WaitForSeconds(1);
-                curRecordingTime += 1;
+                //yield return new WaitForSeconds(1);
                 string minutes = Mathf.Floor(curRecordingTime / 60).ToString("0");
-                string seconds = (curRecordingTime % 60).ToString("00");
+                string seconds = (curRecordingTime).ToString("00");
                 timeText.text = minutes + ":" + seconds;
                 //slider.value = curRecordingTime;
-
-
             }
             // 录制时间到 自动停止录音
             print("recording time over auto stop");
@@ -153,17 +150,18 @@ namespace SP
                 int lastPos = Microphone.GetPosition(device);
                 var length = (float)lastPos / freq;
                 Microphone.End(device);
-                //print("结束录制 时长 = "+length);
+                //
                 float[] recordedClip = new float[micRecord.clip.samples * micRecord.clip.channels];
                 micRecord.clip.GetData(recordedClip, 0);
-                var validLength = micRecord.clip.length;
+                length = TrimByRealTime(recordedClip, lastPos);
+                //print($"结束录制 时长 = {length}, lastPos = {lastPos}, micRecord.clip.samples = {micRecord.clip.samples}");
                 if (IsTrimSilence)
                 {
-                    validLength = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
+                    length = TrimSilenceData(recordedClip, lastPos); // 此函数给micRecord.clip重新赋值，剪除了多余的静音部分
                 }
                 wfDraw.StartWaveFormGeneration(micRecord.clip); // 这里 clip 的 length 是传入的最大值 MaxTime的长度
                 //print("结束录制 剪除静音后时长 = " + validLength);
-                return validLength;
+                return length;
             }
             return 0;
         }
@@ -248,7 +246,7 @@ namespace SP
 
                 byte[] compressBytes = wms.ToArray();
 
-                print($"压缩前：{bytes.Length}   压缩后：{compressBytes.Length}");
+                //print($"压缩前：{bytes.Length}   压缩后：{compressBytes.Length}");
                 return compressBytes;
             }
             catch (Exception e)
@@ -291,7 +289,7 @@ namespace SP
 
                 
 
-                print($"解压前：{data.Length}   解压后：{decompressBytes.Length} ");
+                //print($"解压前：{data.Length}   解压后：{decompressBytes.Length} ");
 
                 float[] clipdata = new float[decompressBytes.Length / 4];
                 Buffer.BlockCopy(decompressBytes, 0, clipdata, 0, decompressBytes.Length);
@@ -305,6 +303,20 @@ namespace SP
                 Debug.LogError("OnReceiveVoice Decompress Error " + e.Message);
             }
             return null;
+        }
+
+        // 剪除结束位置以后的数据
+        public float TrimByRealTime(float[] clipArray_,int lastPos)
+        {
+            var clip = micRecord.clip;
+            if (lastPos <= 0)
+            {
+                lastPos = 1;
+            }
+            AudioClip newClip = AudioClip.Create(clip.name, lastPos / clip.channels, clip.channels, freq, false);
+            newClip.SetData(clipArray_, 0);
+            micRecord.clip = newClip;
+            return newClip.length;
         }
 
         // 剪除静音部分,并生成新的clip替换掉原来的clip, 返回有效时长

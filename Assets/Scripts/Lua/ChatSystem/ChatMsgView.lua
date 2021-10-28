@@ -39,7 +39,6 @@ function Class:__init(view)
     --
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(false)
-    self.IsSendSusseed = false
 end
 
 -- data : ChatMsgData.lua类型
@@ -95,9 +94,11 @@ function Class:UpdateFromData(data)
         self.text.text = ""
         -- 消息状态
         if data.isMine then
-            self.progressSliderRoot:SetActive(not self.IsSendSusseed)
+            self.progressSliderRoot:SetActive(not self.msgData.IsSendSusseed)
+            print("self.IsSendSusseed = ", self.msgData.IsSendSusseed)
+        else
+            self.progressSliderRoot:SetActive(false)
         end
-        self.progressSliderRoot:SetActive(false)
         self.btn_ReSend.gameObject:SetActive(false)
     else
         self.wfDraw.gameObject:SetActive(false);
@@ -161,7 +162,7 @@ end
 function Class:OnSendSuccess()
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(false)
-    self.IsSendSusseed = true
+    self.msgData.IsSendSusseed = true
     print("发送成功...")
 end
 
@@ -173,6 +174,7 @@ end
 
 function Class:OnUpdateProgress(progress)
     self.progressSlider.value = progress
+    print("发送进度:", progress*100)
 end
 
 function Class:OnDestroy()

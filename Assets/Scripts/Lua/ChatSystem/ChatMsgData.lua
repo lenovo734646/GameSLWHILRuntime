@@ -20,6 +20,7 @@ function Class:__init(msgType, timestampSec, userID, nickName, isMine, text, aud
     self.audioClip = audioClip          -- 音频源
     self.iconSpr = iconSpr              -- 头像
     self.msgItemBgSpr = msgItemBgSpr    -- 消息条目背景
+    self.IsSendSusseed = false
 end
     -- 获取时间戳（时：分：秒）
 function Class:GetTimeStamp() 

@@ -44,10 +44,9 @@ namespace SP
         public GameObject voiceInputPanel;
         //
         private int headerSize = 44;            // 默认不压缩音频长度
-        private float outputVol = 0.65f;
-        private int clipChannels = 1;
+        private float outputVol = 1.0f;
         private bool recOutput;
-        void Start()
+        void Awake()
         {
             if (Microphone.devices.Length <= 0)
             {
@@ -182,6 +181,15 @@ namespace SP
             return 0;
         }
 
+        public int GetRecordingClipChannels()
+        {
+            if (micRecord.clip)
+            {
+                return micRecord.clip.channels;
+            }
+            return 1;
+        }
+
         public void StartPlayback()
         {
             if (isPlaybacking)
@@ -283,7 +291,7 @@ namespace SP
             }
             else
             {
-                print($"不使用压缩：{bytes.Length} clip时长:{clip.length}");
+                print($"ClipToByte 不使用压缩：{bytes.Length} clipData:{clipArray.Length} clip 时长:{clip.length} clipChannels = {clip.channels} freq = {freq} clip.samples = {clip.samples}");
                 return bytes;
             }
 
@@ -294,12 +302,8 @@ namespace SP
             return null;
         }
 
-        public AudioClip ByteToAudioClip(byte[] data)
+        public AudioClip ByteToAudioClip(byte[] data, int clipChannels_, int freq_)
         {
-            if (isPlaybacking)
-                StopPlayback();
-            if (isRecording)
-                StopRecording();
             //
             if (data == null)
             {
@@ -322,14 +326,12 @@ namespace SP
                     byte[] decompressBytes = dms.ToArray();
                     zip.Close();
 
-
-
                     print($"解压前：{data.Length}   解压后：{decompressBytes.Length} ");
 
                     float[] clipdata = new float[decompressBytes.Length / 4];
                     Buffer.BlockCopy(decompressBytes, 0, clipdata, 0, decompressBytes.Length);
                     //
-                    AudioClip newClip = AudioClip.Create(clipdata.Length.ToString(), clipdata.Length / clipChannels, clipChannels, freq, false);
+                    AudioClip newClip = AudioClip.Create(clipdata.Length.ToString(), clipdata.Length / clipChannels_, clipChannels_, freq_, false);
                     newClip.SetData(clipdata, 0);
                     return newClip;
                 }
@@ -343,9 +345,9 @@ namespace SP
                 float[] clipdata = new float[data.Length / 4];
                 Buffer.BlockCopy(data, 0, clipdata, 0, data.Length);
                 //
-                AudioClip newClip = AudioClip.Create(clipdata.Length.ToString(), clipdata.Length / clipChannels, clipChannels, freq, false);
+                AudioClip newClip = AudioClip.Create(clipdata.Length.ToString(), clipdata.Length / clipChannels_, clipChannels_, freq_, false);
                 newClip.SetData(clipdata, 0);
-                print($"不使用压缩：{data.Length} clip 时长:{newClip.length}");
+                print($"ByteToAudioClip 不使用压缩：{data.Length} clipData:{clipdata.Length} clip 时长:{newClip.length} clipChannels = {clipChannels_} freq = {freq_} newClip.samples = {newClip.samples}");
                 return newClip;
             }
 

@@ -112,6 +112,7 @@ end
 function Class:StartPlayback()
     if self.isPlaying then
         self:StopPlayback()
+        return
     end
     print("开始回放音频：", self.isPlaying, self.audioSource.clip.length)
     if not AudioManager.Instance.MusicAudio.mute then

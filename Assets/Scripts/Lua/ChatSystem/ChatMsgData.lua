@@ -23,7 +23,7 @@ function Class:__init(msgType, timestampSec, userID, nickName, isMine, text, aud
 end
     -- 获取时间戳（时：分：秒）
 function Class:GetTimeStamp() 
-    return os.date( "%H:%M:%S", self.timeStampSec)
+    return os.date( "%H:%M:%S", self.timestampSec)
 end
 
 return _ENV

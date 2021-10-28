@@ -51,10 +51,10 @@ function Class:__init(panel, gr, maxRecordTime)
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
             if clipData ~= nil then
-                
+                local clipChannels = self.recorder:GetRecordingClipChannels()
                 if self.onSendCallback then
                     print("OnTouchUp....发送消息", #clipData, type(clipData))
-                    self.onSendCallback(clipData)
+                    self.onSendCallback(clipData, clipChannels, self.recorder.freq)
                 end
                 self.recorder:CancelRecording()
             end
@@ -72,13 +72,13 @@ function Class:OnShow(isOn)
     -- self.sliderPanel.gameObject:SetActive(not isOn)
 end
 
-function Class:ByteToAudioClip(clipData)
+function Class:ByteToAudioClip(clipData, clipChannels, freq)
     if clipData == nil then
         logError("ByteToAudioClip clipData is nil")
         return nil
     end
 
-    return self.recorder:ByteToAudioClip(clipData)
+    return self.recorder:ByteToAudioClip(clipData, clipChannels, freq)
 end
 
 function Class:Release()

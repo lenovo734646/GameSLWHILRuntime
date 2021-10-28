@@ -329,7 +329,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
             end)
             --self:OnReceiveMsg(111, "111", 1, content, 111, headSpr)
         end
-        return chatMsgView
+        return waitSendChatMsgView
     end)
     -- end
     

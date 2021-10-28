@@ -95,7 +95,6 @@ function Class:UpdateFromData(data)
         -- 消息状态
         if data.isMine then
             self.progressSliderRoot:SetActive(not self.msgData.IsSendSusseed)
-            print("self.IsSendSusseed = ", self.msgData.IsSendSusseed)
         else
             self.progressSliderRoot:SetActive(false)
         end
@@ -111,6 +110,9 @@ function Class:UpdateFromData(data)
 end
 
 function Class:StartPlayback()
+    if self.isPlaying then
+        self:StopPlayback()
+    end
     print("开始回放音频：", self.isPlaying, self.audioSource.clip.length)
     if not AudioManager.Instance.MusicAudio.mute then
         AudioManager.Instance.MusicAudio.mute = true
@@ -125,9 +127,6 @@ function Class:StartPlayback()
         audioMute = true
     end
     -- 
-    if self.isPlaying then
-        return
-    end
     self.isPlaying = true
     self.audioSource:Play()
     -- 协程等待播放结束
@@ -174,7 +173,7 @@ end
 
 function Class:OnUpdateProgress(progress)
     self.progressSlider.value = progress
-    print("发送进度:", progress*100)
+    -- print("发送进度:", progress*100)
 end
 
 function Class:OnDestroy()

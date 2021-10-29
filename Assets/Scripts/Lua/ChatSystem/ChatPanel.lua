@@ -546,6 +546,7 @@ function Class:On_tog_Voice_Event(tog_Voice)
     -- -- 权限检查
     if _Ver and _Ver._ver >= 0.983 then
         if UnityHelper.HasUserAuthorizedPermission then
+            self.voicePanel:RequestMicrophone()
             local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
             if not hasPermission then
                 if g_Env then

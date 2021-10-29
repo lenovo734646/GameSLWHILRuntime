@@ -67,9 +67,13 @@ function Class:__init(panel, gr, maxRecordTime)
     end)
 end
 
+function Class:RequestMicrophone()
+    self.recorder:Init()
+end
+
 function Class:OnShow(isOn)
-    -- self.panel:SetActive(isOn)
-    -- self.sliderPanel.gameObject:SetActive(not isOn)
+    self.panel:SetActive(isOn)
+    self.sliderPanel.gameObject:SetActive(not isOn)
 end
 
 function Class:ByteToAudioClip(clipData, clipChannels, freq)

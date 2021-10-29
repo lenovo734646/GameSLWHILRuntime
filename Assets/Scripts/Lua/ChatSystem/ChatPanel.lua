@@ -545,13 +545,17 @@ function Class:On_tog_Voice_Event(tog_Voice)
     -- end
     -- -- 权限检查
     if _Ver and _Ver._ver >= 0.983 then
-        local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
-        if not hasPermission then
-            if g_Env then
-                g_Env.ShowHitMessage(_G._STR_("录音需要麦克风权限，请手动打开麦克风权限"))
+        if UnityHelper.HasUserAuthorizedPermission then
+            local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
+            if not hasPermission then
+                if g_Env then
+                    g_Env.ShowHitMessage(_G._STR_("录音需要麦克风权限，请手动打开麦克风权限"))
+                else
+                    print("录音需要麦克风权限，请手动打开麦克风权限")
+                end
                 return
             else
-                print("录音需要麦克风权限，请手动打开麦克风权限")
+                print("已获取麦克风权限")
             end
         end
     end

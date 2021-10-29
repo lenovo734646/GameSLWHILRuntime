@@ -1411,7 +1411,7 @@ public static class UnityHelper
         else if (permissionName == "RECORD_AUDIO")
             authorization = UserAuthorization.Microphone;
         else
-            return false
+            return false;
         return Application.HasUserAuthorization(authorization);
 #else
         return true;

@@ -544,7 +544,7 @@ function Class:On_tog_Voice_Event(tog_Voice)
     --     self.tog_Phrase.isOn = false
     -- end
     -- -- 权限检查
-    if UnityHelper.HasUserAuthorizedPermission then
+    if UnityHelper.HasUserAuthorizedPermission and isOn == true then
         CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour, function ()
             self.voicePanel:RequestMicrophone()
             yield()

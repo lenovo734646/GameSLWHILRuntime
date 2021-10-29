@@ -82,9 +82,6 @@ namespace SP
             slider.gameObject.SetActive(false);
             VWGridGroup.SetActive(false);
             wfDraw.gameObject.SetActive(false);
-
-
-
         }
 
 

@@ -1398,4 +1398,24 @@ public static class UnityHelper
     {
         return string.IsNullOrWhiteSpace(str);
     }
+
+    public static bool HasUserAuthorizedPermission(string permissionName)
+    {
+#if UNITY_ANDROID
+        permissionName = "android.permission." + permissionName;
+        return UnityEngine.Android.Permission.HasUserAuthorizedPermission(permissionName);
+#elif UNITY_IOS
+        UserAuthorization authorization = UserAuthorization.Microphone;
+        if (permissionName == "CAMERA")
+            authorization = UserAuthorization.WebCam;
+        else if (permissionName == "RECORD_AUDIO")
+            authorization = UserAuthorization.Microphone;
+        else
+            return false
+        return Application.HasUserAuthorization(authorization);
+#else
+        return true;
+#endif
+
+    }
 }

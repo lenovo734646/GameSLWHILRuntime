@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class LangTest : MonoBehaviour
@@ -16,4 +17,10 @@ public class LangTest : MonoBehaviour
     {
         
     }
+#if UNITY_EDITOR
+    public void OnPauseClick()
+    {
+        EditorApplication.isPaused = !EditorApplication.isPaused;
+    }
+#endif
 }

@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 101912819}
   - component: {fileID: 101912822}
   - component: {fileID: 101912823}
+  - component: {fileID: 101912820}
   m_Layer: 0
   m_Name: LuaRuntime
   m_TagString: Untagged
@@ -153,6 +154,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &101912820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101912818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90da319fe2cdc3a41b8f41b147375961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showLog: 0
+  keyEvents:
+  - keyCode: 19
+    keyEventType: 2
+    keyEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 101912823}
+          m_MethodName: OnPauseClick
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  mouseButtonEvents: []
 --- !u!114 &101912822
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ function Class:OnChangeMoney(currency)
 end
 
 function Class:OnChangeHead(headID)
-    SEnv.AutoUpdateHeadImage(self.image_f_UserHead, headID)
+    SEnv.AutoUpdateHeadImage(self.image_f_UserHead, headID, self.selfUserID)
 end
 
 function Class:OnChangeHeadFrame(headFrameID)

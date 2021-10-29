@@ -34,7 +34,7 @@ function Class:UpdateFromData(data)
     self.TMP_f_UserNickName.text = data.userName
     self.TMP_f_UserMoney.text = Helpers.GameNumberFormat(data.gold)
     if data.headID then
-        SEnv.AutoUpdateHeadImage(self.image_f_UserHead, data.headID)
+        SEnv.AutoUpdateHeadImage(self.image_f_UserHead, data.headID, data.userID)
     end
     
     if data.headFrameID ~= nil then

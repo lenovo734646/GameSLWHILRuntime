@@ -37,7 +37,7 @@ function Main()
         local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
         SEnv.playerRes = playerRes
 
-        SEnv.AutoUpdateHeadImage = function (img, headID)
+        SEnv.AutoUpdateHeadImage = function (img, headID, selfUserID)
             img.sprite = SEnv.GetHeadSprite(headID)
         end
     

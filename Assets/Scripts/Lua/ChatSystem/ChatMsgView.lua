@@ -8,6 +8,7 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local TextAnchor = UnityEngine.TextAnchor
 local Vector2 = UnityEngine.Vector2
+local SEnv = SEnv
 local _STR_ = _STR_
 local _ERR_STR_ = _ERR_STR_
 
@@ -55,7 +56,7 @@ function Class:UpdateFromData(data)
     self.userID = data.userID
     if data.isMine then
         self.rightHeadBG:SetActive(true)
-        self.rightHeadImage.sprite = data.iconSpr
+        SEnv.AutoUpdateHeadImage(self.rightHeadImage, data.headID, data.userID)
         self.leftIHeadBG:SetActive(false)
         -- 自己发言不用显示名字
         --self.nameText.gameObject:GetComponent("RectTransform").sizeDelta = Vector2(1, 30)
@@ -68,7 +69,7 @@ function Class:UpdateFromData(data)
         self.rootLayoutGroup.padding.left = self.paddingAtOtherSide
     else
         self.leftIHeadBG:SetActive(true)
-        self.leftHeadImage.sprite = data.iconSpr
+        SEnv.AutoUpdateHeadImage(self.leftHeadImage, data.headID, data.userID)
         self.rightHeadBG:SetActive(false)
         --
         --self.nameText.gameObject:GetComponent("RectTransform").sizeDelta = Vector2(210, 30)

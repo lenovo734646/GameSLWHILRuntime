@@ -126,9 +126,7 @@ function Class:__init(panel, loader, userData)
     -- 消息监听
     PBHelper.AddListener('CLCHATROOM.ChatMessageNtf', function(data)
         print("收到消息：userID = ", data.user_id, data.nickname, data.message_type, data.content, data.metadata)
-        local headSpr = SEnv.GetHeadSprite(data.head)
-        --local headFrameSpr = SEnv.GetHeadFrameSprite(data.headFrameID) -- 协议暂时没有头像框字段
-        self:OnReceiveMsg(data.user_id, data.nickname, data.message_type, data.content, data.metadata, headSpr)
+        self:OnReceiveMsg(data.user_id, data.nickname, data.message_type, data.content, data.metadata, data.head)
     end)
 
     -- 兼容大厅版本
@@ -240,7 +238,7 @@ end
 -- 发送错误用来重发
 function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, clipChannels, freq)
     local playerRes = SEnv.playerRes
-    local headSpr = SEnv.GetHeadSprite(playerRes.headID)
+    local headID = playerRes.headID
     local msgItemBgSpr = self:__GetMsgItemBGSpr(playerRes.selfUserID)
     local phraseIndex = -1
     if msgType == 3 then
@@ -262,7 +260,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
         end
     end
     --
-    local msgData = ChatMsgData.Create(msgType, timeStampSec, playerRes.selfUserID, playerRes.userName, true, content, audioClip, headSpr, msgItemBgSpr)
+    local msgData = ChatMsgData.Create(msgType, timeStampSec, playerRes.selfUserID, playerRes.userName, true, content, audioClip, headID, msgItemBgSpr)
     if clipData then -- 保存音频二进制数据重发使用
         msgData.clipData = clipData
     end
@@ -307,7 +305,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                         -- 发送完成 把下载地址返回给服务器
                         local metadata = { timeStampSec = timeStampSec,  clipChannels = clipChannels, freq = freq}
                         local metadataJson = _G.json.encode(metadata)
-                        --self:OnReceiveMsg(111, "111", 2, download_url, metadata, headSpr)
+                        --self:OnReceiveMsg(111, "111", 2, download_url, metadata, headID)
                         CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                             CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, metadataJson, _G.ShowErrorByHintHandler)
                         end)
@@ -322,12 +320,12 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
             CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, tostring(phraseIndex), tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
-            --self:OnReceiveMsg(111, "111", 3, tostring(phraseIndex), 111, headSpr)
+            --self:OnReceiveMsg(111, "111", 3, tostring(phraseIndex), 111, headID)
         else
             CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
-            --self:OnReceiveMsg(111, "111", 1, content, 111, headSpr)
+            --self:OnReceiveMsg(111, "111", 1, content, 111, headID)
         end
         return waitSendChatMsgView
     end)
@@ -336,7 +334,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
 end
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
-function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headSpr)
+function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID)
     print("OnReceiveMsg: msgTypee = ", msgType, content)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
@@ -404,7 +402,7 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headSp
                 -- 下载成功 转换成 audioClip
                 audioClip = self.voicePanel:ByteToAudioClip(request.downloadHandler.data, clipChannels, freq)
                 print("语音数据转换成AudioClip:", audioClip.length)
-                local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headSpr, msgItemBgSpr)
+                local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
                 self.msgScrollView:InsertItem(msgData)
             end)
         end
@@ -416,7 +414,7 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headSp
                 if data ~= nil then
                     content = data.content
                     self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])
-                    local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headSpr, msgItemBgSpr)
+                    local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
                     self.msgScrollView:InsertItem(msgData)
                 else
                     LogE("获取快捷消息数据失败 index =" .. index)
@@ -428,7 +426,7 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headSp
             end
         end
     else
-        local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headSpr, msgItemBgSpr)
+        local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
         self.msgScrollView:InsertItem(msgData)
     end
 end

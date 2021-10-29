@@ -45,8 +45,13 @@ namespace SP
         //
         private int headerSize = 44;            // 默认不压缩音频长度
         private float outputVol = 1.0f;
-        private bool recOutput;
+        public bool bInit = false;
         void Awake()
+        {
+            Init();
+        }
+
+        public void Init()
         {
             if (Microphone.devices.Length <= 0)
             {
@@ -70,18 +75,23 @@ namespace SP
 
 
             // 音频频谱
-            waveImageGroup = new Image[26];
-            for (var i = 0; i < 26; i++)
+            if (waveImageGroup == null)
             {
-                var go = Instantiate(voiceWavePrefab, VWGridGroup.transform);
-                go.transform.localScale = Vector3.zero;
-                waveImageGroup[i] = go.GetComponent<Image>();
+                waveImageGroup = new Image[26];
+                for (var i = 0; i < 26; i++)
+                {
+                    var go = Instantiate(voiceWavePrefab, VWGridGroup.transform);
+                    go.transform.localScale = Vector3.zero;
+                    waveImageGroup[i] = go.GetComponent<Image>();
+                }
             }
+
             voiceInputPanel.SetActive(false);
 
             slider.gameObject.SetActive(false);
             VWGridGroup.SetActive(false);
             wfDraw.gameObject.SetActive(false);
+            bInit = true;
         }
 
 
@@ -108,6 +118,10 @@ namespace SP
         {
             try
             {
+                if (!bInit)
+                {
+                    Init();
+                }
                 if (isPlaybacking)
                     StopPlayback();
                 //

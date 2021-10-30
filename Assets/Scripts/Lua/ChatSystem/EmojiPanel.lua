@@ -63,8 +63,8 @@ function Class:Release()
     end
 end
 
-function Class:OnDestroy()
-    print("1111111111111")
-end
+-- function Class:OnDestroy()
+--     print("1111111111111")
+-- end
 
 return _ENV

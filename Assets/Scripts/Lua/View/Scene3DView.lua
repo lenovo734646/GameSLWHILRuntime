@@ -8,10 +8,11 @@ local tinsert = table.insert
 local tonumber = tonumber
 
 local GameObject = GameObject
-
+local DOTween = CS.DG.Tweening.DOTween
 local Scene3DViewCtrl = require'controller.Scene3DViewCtrl'
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local GameConfig = require'GameConfig'
+local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
 
 local OSACore = CS.Com.TheFallenGames.OSA.Core
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
@@ -318,14 +319,15 @@ function Class:GetHistoryIconData(info)
 end
 
 function Class:Release()
+    print("Scene3DView Release")
+    CoroutineHelper.StopAllCoroutines()
     self.roadScrollView.OnCreateViewItemData = nil
     self.roadScrollView.UpdateViewItemHandler = nil
     self.roadScrollView:Release()
     self.roadScrollView = nil
 
-    self.ctrl.mainUI:Release()
+    self.mainUI:Release()
 end
-
 
 
 

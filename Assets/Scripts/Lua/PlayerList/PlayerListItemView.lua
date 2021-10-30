@@ -51,15 +51,16 @@ function Class:UpdateFromData(data)
         img.gameObject:SetActive(true)
     end
     
-    if data.rankImageSpr ~= nil then
-        -- self.rankImage.sprite = data.rankImageSpr
-        -- self.rankImage.gameObject:SetActive(true)
-        self.rankText.gameObject:SetActive(false)
-    else
-        -- self.rankImage.gameObject:SetActive(false)
-        self.rankText.gameObject:SetActive(true)
-        self.rankText.text = tostring(data.rank)
-    end
+    -- if data.rankImageSpr ~= nil then
+    --     -- self.rankImage.sprite = data.rankImageSpr
+    --     -- self.rankImage.gameObject:SetActive(true)
+    --     self.rankText.gameObject:SetActive(false)
+    -- else
+    --     -- self.rankImage.gameObject:SetActive(false)
+    --     self.rankText.gameObject:SetActive(true)
+    --     self.rankText.text = tostring(data.rank)
+    -- end
+    self.rankText.gameObject:SetActive(false) -- 暂时取消这个显示，如果需要的话，以后风格布局统一修改再说
     data.recently_setbets = data.recently_setbets or 0
     data.recently_wincount = data.recently_wincount or 0
     self.betScoreText.text = Helpers.GameNumberFormat(data.recently_setbets)

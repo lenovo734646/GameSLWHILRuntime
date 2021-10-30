@@ -179,7 +179,7 @@ function Class:OnUpdateProgress(progress)
 end
 
 function Class:OnDestroy()
-    print("ChatMsgViewItem OnDestroy.............")
+    -- print("ChatMsgViewItem OnDestroy.............")
 end
 
 -- function Class:OnEnable()

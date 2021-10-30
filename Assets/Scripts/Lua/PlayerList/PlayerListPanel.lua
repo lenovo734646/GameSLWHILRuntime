@@ -99,7 +99,8 @@ function Class:Release()
 end
 
 function Class:OnDestroy()
-
+    print("PlayerListPanel OnDestroy")
+    self:Release()
 end
 
 

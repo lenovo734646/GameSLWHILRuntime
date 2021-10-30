@@ -110,4 +110,5 @@ function Class:RecoverMusicAndAudio()
     AudioManager.Instance.EffectAudio.mute = audioMute
 end
 
+
 return _ENV

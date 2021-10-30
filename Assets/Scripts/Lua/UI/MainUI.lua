@@ -103,13 +103,11 @@ function Class:SetGameCount(count)
 end
 
 function Class:Release()
-    self.chatPanel:Release()
-    self.playerListPanel:Release()
-    self.ludanPanel:Release()
+    -- self.chatPanel:Release() 
+    -- self.playerListPanel:Release()
 
     self.chatPanel = nil
     self.playerListPanel = nil
-    self.ludanPanel = nil
 end
 
 

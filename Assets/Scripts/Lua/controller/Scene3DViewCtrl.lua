@@ -852,10 +852,6 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         --print("动物开转 = ", animalTotalRot, dur, time)
         yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), dur, RotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
-
-        --local animaldata = runItemDataList[animalToindex]
-        --animaldata.animatorHelper:Play("Victory") -- 中奖动物播放胜利动画(外圈动物胜利动画)
-        --ui.winStageAnimal:DOPlayForward()   -- 播放中奖动物升起动画
         yield()
     end)
 
@@ -1085,6 +1081,11 @@ function Class:__GetContinueBetScore()
         score=score+v
     end
     return score
+end
+
+function Class:OnDestroy()
+    print("Scene3DViewCtrl OnDestroy")
+    self.ui:Release()
 end
 
 

@@ -380,6 +380,12 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
     local index = -1
     local audioClip = nil
     if msgType == 2 then    -- 音频消息
+        if g_Env then
+            if _Ver and _Ver._ver < 0.983 then
+                return 
+            end
+        end
+
         if content ~= nil then
             print("收到语音消息下载链接：", content)
             -- 下载语音消息

@@ -548,27 +548,35 @@ function Class:On_tog_Voice_Event(tog_Voice)
     --     self.tog_Phrase.isOn = false
     -- end
     -- -- 权限检查
-    if UnityHelper.HasUserAuthorizedPermission and isOn == true then
-        CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour, function ()
-            self.voicePanel:RequestMicrophone()
-            yield()
-            local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
-            if not hasPermission then
-                if g_Env then
-                    g_Env.ShowHitMessage(_G._STR_("录音需要麦克风权限，请手动打开麦克风权限"))
+    if UnityHelper.GetPlatform() == "Android" then
+        if UnityHelper.HasUserAuthorizedPermission and isOn == true then
+            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour, function ()
+                self.voicePanel:RequestMicrophone()
+                yield()
+                local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
+                if not hasPermission then
+                    if g_Env then
+                        g_Env.ShowHitMessage(_G._STR_("录音需要麦克风权限，请手动打开麦克风权限"))
+                    else
+                        print("录音需要麦克风权限，请手动打开麦克风权限")
+                    end
+                    tog_Voice.isOn = false
                 else
-                    print("录音需要麦克风权限，请手动打开麦克风权限")
+                    print("已获取麦克风权限")
+                    if self.btnSend.gameObject.activeSelf then
+                        self.btnSend.gameObject:SetActive(false)
+                    end
+                    self.voicePanel:OnShow(isOn)
                 end
-                tog_Voice.isOn = false
-            else
-                print("已获取麦克风权限")
-                if self.btnSend.gameObject.activeSelf then
-                    self.btnSend.gameObject:SetActive(false)
-                end
-                self.voicePanel:OnShow(isOn)
-            end
-        end)
+            end)
+        end
+    else
+        if self.btnSend.gameObject.activeSelf then
+            self.btnSend.gameObject:SetActive(false)
+        end
+        self.voicePanel:OnShow(isOn)
     end
+
     --
 end
 

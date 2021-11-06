@@ -403,7 +403,10 @@ end
 
 function Class:OnStateChangeNtf(data, isReconnection)
     if isReconnection then
-        self.ui.mainUI.resultPanel:HideResult()
+        self.ui.mainUI.ResetUI()
+    end
+    if SEnv.gamePause then
+        return
     end
     local state = data.state
     self.state = state

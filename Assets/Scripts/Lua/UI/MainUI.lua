@@ -102,6 +102,11 @@ function Class:SetGameCount(count)
     self.gameCountText.text = Helpers.GameNumberFormat(count)
 end
 
+function Class:ResetUI()
+    self.tog_OpenBet.isOn = false
+    self.resultPanel:HideResult()
+end
+
 function Class:Release()
     -- self.chatPanel:Release() 
     -- self.playerListPanel:Release()

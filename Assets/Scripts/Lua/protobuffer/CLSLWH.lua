@@ -70,6 +70,7 @@ message GetServerDataAck
     int32 ex_ret = 9;                               // 额外中奖结果（彩金，送灯，闪电翻倍）
     int64 caijin_ratio = 10;                         // 彩金倍数
     int64 shandian_ratio = 11;                        // 闪电翻倍倍数
+    int64 time_stamp = 12;          // 消息时间戳
 }
 
 //自己下注请求
@@ -154,6 +155,7 @@ message StateChangeNtf
     int32 caijin_ratio = 8;                         // 彩金倍数
     int32 shandian_ratio = 9;                        // 闪电翻倍倍数
     //int64 betMaxLimit = 10;                          // 本局下注最大限制（防止超过庄家分数）
+    int64 time_stamp = 10;          // 消息时间戳
 }
 
 // 游戏彩金数

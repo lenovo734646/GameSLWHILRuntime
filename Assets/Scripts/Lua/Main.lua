@@ -23,6 +23,7 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 
 local Sprite = UnityEngine.Sprite
 local GameObject = UnityEngine.GameObject
+local DateTime = CS.System.DateTime
 
 
 
@@ -241,6 +242,7 @@ function OnNetworkReConnect()
             if ack._errmessage then
                 g_Env.CreateHintMessage(ack._errmessage)
             else
+                SEnv.gamePause = nil
                 gameView.ctrl:OnStateChangeNtf(ack, true)
             end
         end)
@@ -248,12 +250,35 @@ function OnNetworkReConnect()
 
 end
 -- 进入后台事件
+local pauseTimestamp = 0
 function OnApplicationPause(b)
     if b then -- 进入后台
         print("SLWH 进入后台...")
+        pauseTimestamp = CS.UnityHelper.GetTimeStampSecond()
+        SEnv.gamePause = true
     else
-        SEnv.nowTimestamp = CS.TimeHelper.GetServerTimestampSecond()
-        print("SLWH 退出后台...", SEnv.nowTimestamp)
+        -- SEnv.nowTimestamp = CS.TimeHelper.GetServerTimestampSecond()
+        local nowTimestamp = CS.UnityHelper.GetTimeStampSecond()
+        -- if nowTimestamp - pauseTimestamp > 2 then
+        --     CLSLWHSender.Send_GetServerDataReq(function(ack)
+        --         if ack._errmessage then
+        --             g_Env.CreateHintMessage(ack._errmessage)
+        --         else
+        --             gameView.ctrl:OnStateChangeNtf(ack, true)
+        --         end
+        --     end)
+        -- end
+
+        local isNetConnected = g_Env.IsNetConnected()
+        print("SLWH 进入前台...", isNetConnected)
+        CLSLWHSender.Send_GetServerDataReq(function(ack)
+            if ack._errmessage then
+                g_Env.CreateHintMessage(ack._errmessage)
+            else
+                SEnv.gamePause = nil
+                gameView.ctrl:OnStateChangeNtf(ack, true)
+            end
+        end)
     end
 end
 

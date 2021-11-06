@@ -1113,6 +1113,21 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2557613262327479580, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: initList.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2557613262327479580, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: initList.Array.data[15].anyType
+      value: 
+      objectReference: {fileID: 1991156215}
+    - target: {fileID: 2557613262327479580, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: initList.Array.data[15].name
+      value: BottomBG_tog_OpenBet
+      objectReference: {fileID: 0}
     - target: {fileID: 2557613262419006750, guid: 4f1c50e3b00693046b744454a74914bd,
         type: 3}
       propertyPath: m_AnchoredPosition.x

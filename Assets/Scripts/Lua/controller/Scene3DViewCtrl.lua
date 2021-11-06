@@ -303,16 +303,17 @@ function Class:InitAnimalAnimation()
             winShowData.animatorHelper:Play("Victory") -- 中间领奖台动物胜利动画
             -- 播放声音
             local color_id = self.resultPanelData.color_id
-            assert(color_id)
             local animal_id = self.resultPanelData.animal_id
-            if color_id == GameConfig.ColorType.SanYuan then
-                AudioManager.Instance:PlaySoundEff2D("dasanyuan")
-            elseif color_id == GameConfig.ColorType.SiXi then
-                AudioManager.Instance:PlaySoundEff2D("dasixi")
-            else
-                local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
-                --print("PlayWin Sound ", color_id, animal_id, audioIndex)
-                AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
+            if color_id and animal_id then
+                if color_id == GameConfig.ColorType.SanYuan then
+                    AudioManager.Instance:PlaySoundEff2D("dasanyuan")
+                elseif color_id == GameConfig.ColorType.SiXi then
+                    AudioManager.Instance:PlaySoundEff2D("dasixi")
+                else
+                    local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
+                    --print("PlayWin Sound ", color_id, animal_id, audioIndex)
+                    AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
+                end
             end
         end
         data.StopShow = function ()
@@ -344,22 +345,22 @@ function Class:InitAnimalAnimation()
             -- 播放声音
             local color_id = self.resultPanelData.color_id
             local animal_id = self.resultPanelData.animal_id
-            if index > 1 and self.resultPanelData.songdengData then
-                color_id = self.resultPanelData.songdengData.songDengColorID
-                animal_id = self.resultPanelData.songdengData.songDengAnimalID
+            if color_id and animal_id then
+                if index > 1 and self.resultPanelData.songdengData then
+                    color_id = self.resultPanelData.songdengData.songDengColorID
+                    animal_id = self.resultPanelData.songdengData.songDengAnimalID
+                end
+                
+                if color_id == GameConfig.ColorType.SanYuan then
+                    AudioManager.Instance:PlaySoundEff2D("dasanyuan")
+                elseif color_id == GameConfig.ColorType.SiXi then
+                    AudioManager.Instance:PlaySoundEff2D("dasixi")
+                else
+                    local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
+                    AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
+                end
             end
 
-            assert(color_id)
-            assert(animal_id)
-            
-            if color_id == GameConfig.ColorType.SanYuan then
-                AudioManager.Instance:PlaySoundEff2D("dasanyuan")
-            elseif color_id == GameConfig.ColorType.SiXi then
-                AudioManager.Instance:PlaySoundEff2D("dasixi")
-            else
-                local audioIndex = self:__GetBetItemLuaIndex(color_id, animal_id)
-                AudioManager.Instance:PlaySoundEff2D(GameConfig.WinSound[audioIndex])
-            end
         end
         data.JumpToOriginal = function (bSkipAnim)
             data.bJump = false

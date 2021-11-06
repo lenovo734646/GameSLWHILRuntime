@@ -324,6 +324,7 @@ function Class:InitAnimalAnimation()
         data.JumpToWinStage = function (winItemCount, index, bSkipAnim)
             
             local jumpTargetPos = ui.JumpTarget_Transform.localPosition
+            local jumpTargetRot = ui.JumpTarget_Transform.localEulerAngles
             -- local offset = 5.0
             -- local itemPos = jumpTargetPos
             -- local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
@@ -333,10 +334,10 @@ function Class:InitAnimalAnimation()
             data.bJump = true
             if bSkipAnim then
                 data.transform.localPosition = jumpTargetPos
-                data.transform.localEulerAngles = Vector3(0,-180,0)
+                data.transform.localEulerAngles = jumpTargetRot
             else
                 data.transform:DOLocalMove(jumpTargetPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
-                data.transform:DOLocalRotate(Vector3(0,-180,0), 0.2):SetDelay(1)
+                data.transform:DOLocalRotate(jumpTargetRot, 0.2):SetDelay(1)
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetTrigger("tVictory")
             end

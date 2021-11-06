@@ -375,6 +375,26 @@ PrefabInstance:
       propertyPath: events.Array.data[1].UnityEvent.m_PersistentCalls.m_Calls.Array.data[7].m_Target
       value: 
       objectReference: {fileID: 2557613263234496585}
+    - target: {fileID: 1763560982, guid: 0897f58384a690849a8714e3281bf560, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763560982, guid: 0897f58384a690849a8714e3281bf560, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763560982, guid: 0897f58384a690849a8714e3281bf560, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763560982, guid: 0897f58384a690849a8714e3281bf560, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763560982, guid: 0897f58384a690849a8714e3281bf560, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 744337338149574988, guid: 0897f58384a690849a8714e3281bf560,
         type: 3}
       propertyPath: m_AnchorMin.y

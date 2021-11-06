@@ -1064,6 +1064,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 607730806, guid: 4f1c50e3b00693046b744454a74914bd, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1028330779, guid: 4f1c50e3b00693046b744454a74914bd, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1147,6 +1151,16 @@ PrefabInstance:
         type: 3}
       propertyPath: initList.Array.data[15].name
       value: BottomBG_tog_OpenBet
+      objectReference: {fileID: 0}
+    - target: {fileID: 2557613262350038184, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2557613262350038184, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1600
       objectReference: {fileID: 0}
     - target: {fileID: 2557613262419006750, guid: 4f1c50e3b00693046b744454a74914bd,
         type: 3}
@@ -1313,6 +1327,11 @@ PrefabInstance:
       propertyPath: toggleFalseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 535584437}
+    - target: {fileID: 2557613263176752933, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2557613263229807210, guid: 4f1c50e3b00693046b744454a74914bd,
         type: 3}
       propertyPath: m_AnchoredPosition.y

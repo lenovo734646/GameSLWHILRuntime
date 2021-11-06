@@ -366,8 +366,8 @@ function Class:InitAnimalAnimation()
                 data.transform.position = data.OriginalPos
                 data.transform.eulerAngles = data.OriginalRot
             else
-                data.transform:DOMove(data.OriginalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
-                data.transform:DORotate(data.OriginalRot, 0.2):SetDelay(1)
+                data.transform:DOLocalMove(data.OriginalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
+                data.transform:DOLocalRotate(data.OriginalRot, 0.2):SetDelay(1)
                 data.animatorHelper:Play("Jump")
                 data.animatorHelper:SetBool("bJumpToCenter", false)
             end

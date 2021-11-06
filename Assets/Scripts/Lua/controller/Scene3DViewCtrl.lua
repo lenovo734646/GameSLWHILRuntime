@@ -335,8 +335,8 @@ function Class:InitAnimalAnimation()
                 data.transform.position = pos
                 data.transform.eulerAngles = Vector3(0,-180,0)
             else
-                data.transform:DOMove(itemPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
-                data.transform:DORotate(Vector3(0,-180,0), 0.2):SetDelay(1)
+                data.transform:DOLocalMove(itemPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
+                data.transform:DOLocalRotate(Vector3(0,-180,0), 0.2):SetDelay(1)
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetTrigger("tVictory")
             end

@@ -256,6 +256,7 @@ function OnApplicationPause(b)
         print("SLWH 进入后台...")
         pauseTimestamp = CS.UnityHelper.GetTimeStampSecond()
         SEnv.gamePause = true
+        CoroutineHelper.StopAllCoroutines()
     else
         -- SEnv.nowTimestamp = CS.TimeHelper.GetServerTimestampSecond()
         local nowTimestamp = CS.UnityHelper.GetTimeStampSecond()

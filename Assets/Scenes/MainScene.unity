@@ -860,6 +860,26 @@ PrefabInstance:
       propertyPath: initList.Array.data[16].anyType
       value: 
       objectReference: {fileID: 1047865309}
+    - target: {fileID: 1553981379295364907, guid: 0897f58384a690849a8714e3281bf560,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1553981379295364907, guid: 0897f58384a690849a8714e3281bf560,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1553981379295364907, guid: 0897f58384a690849a8714e3281bf560,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4256735789278440953, guid: 0897f58384a690849a8714e3281bf560,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6746968398490329515, guid: 0897f58384a690849a8714e3281bf560,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -889,6 +909,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8179211434019870207, guid: 0897f58384a690849a8714e3281bf560,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8402688882823736306, guid: 0897f58384a690849a8714e3281bf560,
         type: 3}

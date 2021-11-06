@@ -247,6 +247,15 @@ function OnNetworkReConnect()
     end
 
 end
+-- 进入后台事件
+function OnApplicationPause(b)
+    if b then -- 进入后台
+        print("SLWH 进入后台...")
+    else
+        SEnv.nowTimestamp = CS.TimeHelper.GetServerTimestampSecond()
+        print("SLWH 退出后台...", SEnv.nowTimestamp)
+    end
+end
 
 if IsRunInHall then
     Main()

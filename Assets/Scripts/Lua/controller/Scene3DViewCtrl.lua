@@ -323,19 +323,19 @@ function Class:InitAnimalAnimation()
         -- bSkipAnim 是否跳过DOTween动画（断线重连时间不够需要跳过动画）
         data.JumpToWinStage = function (winItemCount, index, bSkipAnim)
             
-            local pos = ui.JumpTarget_Transform.position
+            local jumpTargetPos = ui.JumpTarget_Transform.localPosition
             -- local offset = 5.0
-            local itemPos = pos
+            -- local itemPos = jumpTargetPos
             -- local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
             -- itemPos.x = pos.x+c*offset
-            data.OriginalPos = data.transform.position -- 记录一下原始位置，以便返回
-            data.OriginalRot = data.transform.eulerAngles -- 记录一下原始角度
+            data.OriginalPos = data.transform.localPosition -- 记录一下原始位置，以便返回
+            data.OriginalRot = data.transform.localEulerAngles -- 记录一下原始角度
             data.bJump = true
             if bSkipAnim then
-                data.transform.position = pos
-                data.transform.eulerAngles = Vector3(0,-180,0)
+                data.transform.localPosition = jumpTargetPos
+                data.transform.localEulerAngles = Vector3(0,-180,0)
             else
-                data.transform:DOLocalMove(itemPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
+                data.transform:DOLocalMove(jumpTargetPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
                 data.transform:DOLocalRotate(Vector3(0,-180,0), 0.2):SetDelay(1)
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetTrigger("tVictory")
@@ -363,8 +363,8 @@ function Class:InitAnimalAnimation()
         data.JumpToOriginal = function (bSkipAnim)
             data.bJump = false
             if bSkipAnim then
-                data.transform.position = data.OriginalPos
-                data.transform.eulerAngles = data.OriginalRot
+                data.transform.localPosition = data.OriginalPos
+                data.transform.localEulerAngles = data.OriginalRot
             else
                 data.transform:DOLocalMove(data.OriginalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
                 data.transform:DOLocalRotate(data.OriginalRot, 0.2):SetDelay(1)

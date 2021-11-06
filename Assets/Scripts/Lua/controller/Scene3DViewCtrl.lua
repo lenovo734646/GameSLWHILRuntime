@@ -284,8 +284,8 @@ function Class:InitAnimalAnimation()
             data.StopAnim()
             data.animco = CoroutineHelper.StartCoroutine(function ()
                 while true do
-                    local delayTime = RandomFloat(0,2)
-                    yield(WaitForSeconds(delayTime))
+                    -- local delayTime = RandomFloat(0,2)
+                    -- yield(WaitForSeconds(delayTime))
                     data.animatorHelper:Play("Idel")
                     yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel")))
                 end
@@ -317,15 +317,15 @@ function Class:InitAnimalAnimation()
             end
         end
         data.StopShow = function ()
-            winShowData.gameObject:SetActive(false)-- 一直在显示，不需要隐藏
+            winShowData.gameObject:SetActive(false)
             data.PlayIdle()
         end
         -- 跳到中间领奖台
         -- bSkipAnim 是否跳过DOTween动画（断线重连时间不够需要跳过动画）
         data.JumpToWinStage = function (winItemCount, index, bSkipAnim)
-            
+            data.StopAnim()
             local jumpTargetPos = ui.JumpTarget_Transform.localPosition
-            local jumpTargetRot = ui.JumpTarget_Transform.localEulerAngles
+            local jumpTargetRot = ui.JumpTarget_Transform.localEulerAngles - self.ui.animal_rotate_root_transform.localEulerAngles
             -- local offset = 5.0
             -- local itemPos = jumpTargetPos
             -- local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
@@ -363,6 +363,7 @@ function Class:InitAnimalAnimation()
 
         end
         data.JumpToOriginal = function (bSkipAnim)
+            data.StopAnim()
             data.bJump = false
             if bSkipAnim then
                 data.transform.localPosition = data.OriginalPos
@@ -405,7 +406,7 @@ end
 
 function Class:OnStateChangeNtf(data, isReconnection)
     if isReconnection then
-        self.ui.mainUI.ResetUI()
+        self.ui.mainUI:ResetUI()
     end
     if SEnv.gamePause then
         return
@@ -638,7 +639,7 @@ function Class:OnShowState(data)
     -- 小老虎机转动
     ui.slot:Run111(winEnjoyGameType)
     -- 停止动物动画
-    self:StopIdleStateAnim()
+    -- self:StopIdleStateAnim()
     local anim_result_list = data.anim_result_list
     if anim_result_list then
         -- -- 检查剩余时间是否足够进行动画（断线重连可能在任意状态中任意时间恢复，会导致状态剩余时间不同）

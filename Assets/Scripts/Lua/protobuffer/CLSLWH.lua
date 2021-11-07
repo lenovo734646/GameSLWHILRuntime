@@ -70,8 +70,7 @@ message GetServerDataAck
     int32 ex_ret = 9;                               // 额外中奖结果（彩金，送灯，闪电翻倍）
     int64 caijin_ratio = 10;                         // 彩金倍数
     int64 shandian_ratio = 11;                        // 闪电翻倍倍数
-    int64 self_score = 12;          // 玩家自己的分数
-    int64 time_stamp = 13;          // 消息时间戳
+    int64 time_stamp = 12;          // 消息时间戳
 }
 
 //自己下注请求
@@ -114,7 +113,7 @@ message AnimalRatioInfo
 message ResultInfo
 {
     int32 winColor = 1;        // 中奖颜色（包含三元四喜）
-    int32 winSiXiColor = 2; // 四喜中奖颜色
+    int32 winSanYuanColor = 2; // 三元中奖颜色
     int32 winAnimal = 3;       // 中奖动物
 }
 
@@ -140,7 +139,7 @@ message ResultAnimIndex
 
     int32 color_id = 5;       // 中奖颜色ID（红、绿、黄、三元、四喜） 
     int32 animal_id = 6;      // 中奖动物ID
-    int32 sixi_color_id = 7;// 四喜的中奖颜色ID
+    int32 sanyuan_color_id = 7;// 三元的中奖颜色ID
 }
 
 //状态通知

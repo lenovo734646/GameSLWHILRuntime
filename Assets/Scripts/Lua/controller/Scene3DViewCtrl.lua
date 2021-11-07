@@ -38,6 +38,9 @@ local SEnv=SEnv
 
 _ENV = moduledef { seenamespace = CS }
 local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+local winItemDataList = {} -- 记录本次所有中奖动物itemData
+local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
+
 
 local Class = class()
 
@@ -406,7 +409,7 @@ end
 
 function Class:OnStateChangeNtf(data, isReconnection)
     if isReconnection then
-        self.ui.mainUI:ResetUI()
+        self:ResetView(data)
     end
     if SEnv.gamePause then
         return
@@ -644,7 +647,7 @@ function Class:OnShowState(data)
     if anim_result_list then
         -- -- 检查剩余时间是否足够进行动画（断线重连可能在任意状态中任意时间恢复，会导致状态剩余时间不同）
         -- -- 剩余时间小于(结算界面+动画展示 + 2)直接显示结果，不进行动画
-        local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
+        bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
         local winItemCount = #anim_result_list -- 中奖动物数量
         local leftTime = data.left_time
          -- 跑马灯动画时间
@@ -676,7 +679,7 @@ function Class:OnShowState(data)
                 ShowZhanShiTime = leftTime - GameConfig.ShowResultTime
             end
         end
-        local winItemDataList = {} -- 记录本次所有中奖动物itemData
+        winItemDataList = {} 
         -- print("ShowRunTime = ", ShowRunTime, "ShowRunTime_Shark = ", ShowRunTime_Shark)
         CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
@@ -860,8 +863,33 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
         :SetEase(curve):WaitForCompletion())
         yield()
     end)
-
-    
+end
+-- 把场景重置到初始状态（重连或后台切回还原用）
+function Class:ResetView(data)
+    self.ui.mainUI:ResetUI()
+    self.ui.viewEventBroadcaster:Broadcast('CameraMoveBackward')
+    self.ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
+    -- 开启聚光灯动画和宝石动画
+    self.ui.SpotLight_Animal_animator.enabled = true
+    self.ui.Baoshi_1_animator.enabled = true
+    self.ui.SpotLight_Animal_animator.gameObject:SetActive(true)
+    -- 所有动物跳回
+    for _, itemData in pairs(winItemDataList) do
+        -- print("动物是否跳出:", itemData.bJump)
+        if itemData.bJump then
+            -- print("动物跳回....")
+            itemData.JumpToOriginal(bSkip)
+        end
+    end
+    -- 玩家分数同步
+    if data.state ~= 2 then -- 非开奖界面
+        self.selfScore = data.self_score
+        if data.self_score == 0 then
+            self.selfScore = SEnv.playerRes.currency
+        end
+        self:OnMoneyChange(self.selfScore)
+    end
+    -- 路单同步(独立协议处理)
 end
 -- 目前可能会出现 结算流程未结束就进入  OnFreeState 的问题，因为是按时间计算的
 -- 可以考虑把结算状态的最后逻辑处理放到 OnFreeState 中

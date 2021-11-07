@@ -259,7 +259,7 @@ function OnApplicationPause(b)
         CoroutineHelper.StopAllCoroutines()
     else
         -- SEnv.nowTimestamp = CS.TimeHelper.GetServerTimestampSecond()
-        local nowTimestamp = CS.UnityHelper.GetTimeStampSecond()
+        -- local nowTimestamp = CS.UnityHelper.GetTimeStampSecond()
         -- if nowTimestamp - pauseTimestamp > 2 then
         --     CLSLWHSender.Send_GetServerDataReq(function(ack)
         --         if ack._errmessage then
@@ -269,9 +269,10 @@ function OnApplicationPause(b)
         --         end
         --     end)
         -- end
-
-        local isNetConnected = g_Env.IsNetConnected()
-        print("SLWH 进入前台...", isNetConnected)
+        print("SLWH 进入前台...")
+        CLSLWHSender.Send_HistoryReq(function (data)
+            gameView.ctrl:OnHistroyAck(data)
+        end)
         CLSLWHSender.Send_GetServerDataReq(function(ack)
             if ack._errmessage then
                 g_Env.CreateHintMessage(ack._errmessage)

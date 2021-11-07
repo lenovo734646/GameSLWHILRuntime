@@ -125,6 +125,7 @@ end
 -- ex_ret                                 额外中奖结果（彩金，送灯，闪电翻倍）
 -- caijin_ratio                           彩金倍数
 -- shandian_ratio                          闪电翻倍倍数
+-- self_score            玩家自己的分数
 -- time_stamp            消息时间戳
 function Send_GetServerDataReq(callback)
     local senddata = {}

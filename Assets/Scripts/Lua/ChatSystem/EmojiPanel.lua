@@ -41,7 +41,7 @@ function Class:OnEmojiClick(index)
     if index < 0 or index > self.emojiCount then
         return
     end
-    str = "<sprite="..index..">"
+    str = string.format("<sprite=%02d>", index)
     self.inputField.text = self.inputField.text..str
     self.inputField:MoveTextEnd(false)
 end

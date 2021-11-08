@@ -368,6 +368,22 @@ function string.lastindexof(str, searchStr)
     return lastindex
 end
 
+-- 以某个字符串开始
+function string.startswith(target_string, start_pattern, plain)
+    plain = plain or true
+    local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, 1, plain)
+    return find_pos_begin == 1
+end
+
+-- 以某个字符串结尾
+function string.endswith(target_string, start_pattern, plain)
+    plain = plain or true
+    local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, -#start_pattern, plain)
+    return find_pos_end == #target_string
+end
+string.Startswith = string.startswith
+string.Endswith = string.endswith
+
 -- 以tab格式赶回
 function THelperTab(THelper)
     local id = 1

@@ -6,6 +6,11 @@ local tostring, tonumber = tostring, tonumber
 local table = table
 local tinsert = table.insert
 local tremove = table.remove
+local sfind = string.find
+local ssub = string.sub
+local slen = string.len
+local sstartwith = string.startswith
+local sendwith = string.endswith
 
 local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset,
     UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
@@ -604,8 +609,34 @@ function Class:On_tog_ChatPanel_Event(tog_ChatPanel)
     end
 end
 
--- 响应onEndEdit和onValueChanged
+-- 此函数响应的是onValueChanged事件
+local spriteLen = 11
 function Class:On_msgInputField_Event(inputField)
+    local str = inputField.text
+    local contentLimitLength = inputField.characterLimit
+    --
+    -- print("onValueChanged:", str)
+    if slen(str) > contentLimitLength then
+
+        local tempStr = ssub(str, 1, contentLimitLength)
+        -- print("0000 = ", tempStr);
+        -- 如果最后是 <sprite=%d>被截断，则将截断的去掉
+        local tStr = ssub(tempStr, - spriteLen)
+        -- print("1111tStr = ", tStr, "tempStr = ", tempStr);
+        tempStr = ssub(tempStr, 1, slen(tempStr)- spriteLen)
+        -- print("2222tStr = ",tStr, "tempStr = ",tempStr);
+        if not sstartwith(tStr, "<") or not sendwith(tStr,">") then
+            local index = sfind(tStr, "<")
+            if index ~= nil then
+                tStr = ssub(tStr, 1, index-1);
+                -- print("截断 tStr = ", tStr , "index = ", index);
+            end
+        end
+        tempStr = tempStr .. tStr;
+        -- print("3333 = " , tempStr);
+        inputField.text = tempStr;
+    end
+    --
     self:ShowSendBtnByInput(inputField)
 end
 

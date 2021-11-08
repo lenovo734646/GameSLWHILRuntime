@@ -28,12 +28,12 @@ function Class:__init(panel, inputField, emojis, itemPrefab)
             local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)
             go:GetComponent(typeof(Image)).sprite = emojis[i]
             go.name = emojis[i].name
+            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
             go:GetComponent(typeof(Button)).onClick:AddListener(function ()
                 self:OnEmojiClick(i-1)
             end)
         end
     end
-    print("EmojiPanel self.scrollView.content = ", self.scrollView.content)
 end
 
 function Class:OnEmojiClick(index)

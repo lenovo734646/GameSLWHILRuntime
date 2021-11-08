@@ -161,28 +161,28 @@ function Class:__init(roomdata)
         viewItemData.songDengInitHelper.gameObject:SetActive(false)
         viewItemData.caiJinInitHelper.gameObject:SetActive(false)
         --
-        if itemdata.sanYuanInfo ~= nil then
-            local syData = {}
-            viewItemData.sanYuanInitHelper:Init(syData, false)
-            syData.item_1.sprite = itemdata.colorSpr
-            syData.item_2.sprite = itemdata.colorSpr
-            syData.item_3.sprite = itemdata.colorSpr
-            syData.item_4.sprite = itemdata.colorSpr
-            syData.animal_1.sprite = itemdata.sanYuanInfo.animalSpr_1
-            syData.animal_2.sprite = itemdata.sanYuanInfo.animalSpr_2
-            syData.animal_3.sprite = itemdata.sanYuanInfo.animalSpr_3
-            syData.animal_4.sprite = itemdata.sanYuanInfo.animalSpr_4
-            syData.SanYuanRoot:SetActive(true)
-        elseif itemdata.siXiInfo ~= nil then
+        if itemdata.siXiInfo ~= nil then
             local sxData = {}
             viewItemData.siXiInitHelper:Init(sxData, false)
-            sxData.item_1.sprite = itemdata.siXiInfo.colorSpr_1
-            sxData.item_2.sprite = itemdata.siXiInfo.colorSpr_2
-            sxData.item_3.sprite = itemdata.siXiInfo.colorSpr_3
-            sxData.animal_1.sprite = itemdata.siXiInfo.animalSpr
-            sxData.animal_2.sprite = itemdata.siXiInfo.animalSpr
-            sxData.animal_3.sprite = itemdata.siXiInfo.animalSpr
+            sxData.item_1.sprite = itemdata.colorSpr
+            sxData.item_2.sprite = itemdata.colorSpr
+            sxData.item_3.sprite = itemdata.colorSpr
+            sxData.item_4.sprite = itemdata.colorSpr
+            sxData.animal_1.sprite = itemdata.siXiInfo.animalSpr_1
+            sxData.animal_2.sprite = itemdata.siXiInfo.animalSpr_2
+            sxData.animal_3.sprite = itemdata.siXiInfo.animalSpr_3
+            sxData.animal_4.sprite = itemdata.siXiInfo.animalSpr_4
             sxData.SiXiRoot:SetActive(true)
+        elseif itemdata.sanYuanInfo ~= nil then
+            local syData = {}
+            viewItemData.sanYuanInitHelper:Init(syData, false)
+            syData.item_1.sprite = itemdata.sanYuanInfo.colorSpr_1
+            syData.item_2.sprite = itemdata.sanYuanInfo.colorSpr_2
+            syData.item_3.sprite = itemdata.sanYuanInfo.colorSpr_3
+            syData.animal_1.sprite = itemdata.sanYuanInfo.animalSpr
+            syData.animal_2.sprite = itemdata.sanYuanInfo.animalSpr
+            syData.animal_3.sprite = itemdata.sanYuanInfo.animalSpr
+            syData.SanYuanRoot:SetActive(true)
         else
             viewItemData.colorImg.sprite = itemdata.colorSpr
             SetAnimalImg(viewItemData.animalImg, itemdata.animalSpr)
@@ -251,12 +251,12 @@ end
 -- sp_id 特殊中奖id（大三元，大四喜）
 function Class:GetHistoryIconData(info)
     local color_id = info.ressult_info.winColor
-    local sanYuanColor_id = info.ressult_info.winSanYuanColor
+    local siXIColor_id = info.ressult_info.winSiXiColor
     local animal_id = info.ressult_info.winAnimal
     local ex_id = info.win_exType
     local enjoyType_id = info.win_enjoyGameType
     local caijinRotio_ = info.caijin_ratio
-    --print("获取历史数据：color_id = ", color_id, "  sanYuanColor_id = ", sanYuanColor_id, "  animal_id = ", animal_id, 
+    --print("获取历史数据：color_id = ", color_id, "  siXIColor_id = ", siXIColor_id, "  animal_id = ", animal_id, 
     --    "  ex_id = ", ex_id, "  enjoyType_id = ", enjoyType_id, "  caijinRotio_ = ", caijinRotio_)
     --
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
@@ -265,17 +265,17 @@ function Class:GetHistoryIconData(info)
     local songDengInfo = nil
     local shanDianRatio = nil
     local caijinRatio = nil
-    if color_id == ColorType.SanYuan then   -- 大三元处理
-        colorSpr = self.roadColorSprites[sanYuanColor_id]
-        sanYuanInfo = {
+    if color_id == ColorType.SiXi then   -- 大四喜处理
+        colorSpr = self.roadColorSprites[siXIColor_id]
+        siXiInfo = {
             animalSpr_1 = self.roadAnimalSprites[1],
             animalSpr_2 = self.roadAnimalSprites[2],
             animalSpr_3 = self.roadAnimalSprites[3],
             animalSpr_4 = self.roadAnimalSprites[4],
         }
-    elseif color_id == ColorType.SiXi then   -- 大四喜处理
+    elseif color_id == ColorType.SanYuan then   -- 大三元处理
         colorSpr = self.roadColorSprites[1] -- 给个默认
-        siXiInfo = {
+        sanYuanInfo = {
             colorSpr_1 = self.roadColorSprites[1],
             colorSpr_2 = self.roadColorSprites[2],
             colorSpr_3 = self.roadColorSprites[3],

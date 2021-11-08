@@ -37,6 +37,11 @@ local AudioManager = AudioManager or CS.AudioManager
 local SEnv=SEnv
 
 _ENV = moduledef { seenamespace = CS }
+
+local ColorType = GameConfig.ColorType
+local ExWinType = GameConfig.ExWinType
+local AnimalType = GameConfig.AnimalType
+
 local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
 local winItemDataList = {} -- 记录本次所有中奖动物itemData
 local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
@@ -561,23 +566,23 @@ function Class:OnShowState(data)
         self.ratioArray = data.ratio_array
     end
     --
-    local ColorType = GameConfig.ColorType
-    local ExWinType = GameConfig.ExWinType
-    local AnimalType = GameConfig.AnimalType
-    --
     local resultInfo = data.anim_result_list[1]
     if resultInfo == nil then -- 初次进入游戏不清楚为什么这里偶尔会是nil
         return
     end
+    -- -- 测试三元四喜
+    -- resultInfo.color_id = 5 
+    -- resultInfo.sixi_color_id = 2
+    -- resultInfo.animal_id = 4 -- 兔子
     --
     local songDengInfo = data.anim_result_list[2]
     local winColor = resultInfo.color_id
-    local winSanYuanColor = resultInfo.sanyuan_color_id
+    local winSiXiColor = resultInfo.sixi_color_id
     local winAnimal = resultInfo.animal_id
     local winEnjoyGameType = data.enjoy_game_ret
     local exType = data.ex_ret
     print("=====OnShowState=======:")
-    print("颜色结果: ", winColor, "动物结果: ", winAnimal, "大三元颜色结果: ", winSanYuanColor, "庄和闲结果: ", winEnjoyGameType)
+    print("颜色结果: ", winColor, "动物结果: ", winAnimal, "大四喜颜色结果: ", winSiXiColor, "庄和闲结果: ", winEnjoyGameType)
     print("额外大奖结果：", exType, "彩金倍率：", data.caijin_ratio, "闪电倍率：", data.shandian_ratio)
     if exType == ExWinType.SongDeng then
         print("送灯奖励：", songDengInfo.color_id, songDengInfo.animal_id, self:__GetRatio(songDengInfo.color_id, songDengInfo.animal_id))
@@ -592,27 +597,27 @@ function Class:OnShowState(data)
     self.resultPanelData.enjoyGameData = enjoyGameData
     -- 颜色(普通中奖+三元四喜)
     
-    if winColor == ColorType.SanYuan then
+    if winColor == ColorType.SiXi then
         local animalRatioArray = {}
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-            tinsert(animalRatioArray, self:__GetRatio(winSanYuanColor, i))
+            tinsert(animalRatioArray, self:__GetRatio(winSiXiColor, i))
         end
-        local sanyuanData = {
-            sanyuanColor_id = winSanYuanColor,
+        local sixiData = {
+            sixiColor_id = winSiXiColor,
             animalRatioArray = animalRatioArray,
         }
-        self.resultPanelData.sanyuanData = sanyuanData
+        self.resultPanelData.sixiData = sixiData
 
-    elseif winColor == ColorType.SiXi then
+    elseif winColor == ColorType.SanYuan then
         local animalRatioArray = {}
         for i = ColorType.Red, ColorType.Yellow, 1 do
             tinsert(animalRatioArray, self:__GetRatio(i, winAnimal))
         end
-        local sixiData = {
+        local sanyuanData = {
             animal_id =  winAnimal,
             animalRatioArray = animalRatioArray,
         }
-        self.resultPanelData.sixiData = sixiData
+        self.resultPanelData.sanyuanData = sanyuanData
     else
         local normalData = {
         animal_id = winAnimal,
@@ -773,7 +778,7 @@ function Class:OnShowState(data)
                 sdInfo = {winColor = songDengInfo.color_id, winAnimal = songDengInfo.animal_id}
             end
             local info  = {
-                ressult_info = {winColor = resultInfo.color_id, winSanYuanColor = resultInfo.sanyuan_color_id, winAnimal = resultInfo.animal_id},
+                ressult_info = {winColor = resultInfo.color_id, winSiXiColor = resultInfo.sixi_color_id, winAnimal = resultInfo.animal_id},
                 win_enjoyGameType = winEnjoyGameType,
                 win_exType = exType,
                 ressult_info_songdeng = sdInfo,
@@ -873,7 +878,7 @@ function Class:ResetView(data)
     self.ui.SpotLight_Animal_animator.enabled = true
     self.ui.Baoshi_1_animator.enabled = true
     self.ui.SpotLight_Animal_animator.gameObject:SetActive(true)
-    -- 所有动物跳回
+    -- 所有中奖动物跳回
     for _, itemData in pairs(winItemDataList) do
         -- print("动物是否跳出:", itemData.bJump)
         if itemData.bJump then
@@ -881,6 +886,14 @@ function Class:ResetView(data)
             itemData.JumpToOriginal(bSkip)
         end
     end
+    -- 所有宝石动画闪烁停止
+    for i = 1, #self.ui.colorDataList do
+        local colordata = self.ui.colorDataList[i]
+        colordata.animator:Play("BaoshiFlash", 0, 0)
+        colordata.animator:Update(0)
+        colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
+    end
+
     -- 玩家分数同步
     if data.state ~= 2 then -- 非开奖界面
         self.selfScore = data.self_score

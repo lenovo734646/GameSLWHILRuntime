@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7172739238289393184}
   - component: {fileID: 3549768704408109965}
   m_Layer: 5
-  m_Name: SiXiRoot
+  m_Name: SanYuanRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 73939c9c154f70b43bb5d10ac5d6ebd9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 38f163fdb8728ed4680634f97e94a3b4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -129,7 +129,7 @@ MonoBehaviour:
     anyType: {fileID: 3430735382047613188}
     sType: 
     manualName: 
-  - name: SiXiRoot
+  - name: SanYuanRoot
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 119805598526480568}
@@ -448,6 +448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -1038,13 +1039,13 @@ MonoBehaviour:
     anyType: {fileID: 2967863341320535278}
     sType: 
     manualName: 
-  - name: sanYuanInitHelper
+  - name: siXiInitHelper
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 2599745388905833719}
     sType: 
     manualName: 
-  - name: siXiInitHelper
+  - name: sanYuanInitHelper
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 3549768704408109965}
@@ -1311,7 +1312,7 @@ GameObject:
   - component: {fileID: 5579214279946768967}
   - component: {fileID: 2599745388905833719}
   m_Layer: 5
-  m_Name: SanYuanRoot
+  m_Name: SiXiRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1367,7 +1368,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 38f163fdb8728ed4680634f97e94a3b4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 73939c9c154f70b43bb5d10ac5d6ebd9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1440,7 +1441,7 @@ MonoBehaviour:
     anyType: {fileID: 9223253557673808246}
     sType: 
     manualName: 
-  - name: SanYuanRoot
+  - name: SiXiRoot
     t: {fileID: 0}
     monoType: {fileID: 0}
     anyType: {fileID: 4215134777743662176}
@@ -2628,6 +2629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}
@@ -2744,6 +2746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoApply: 1
+  changeByEvent: 0
   text: {fileID: 0}
   textMeshPro: {fileID: 0}
   textMeshProUGUI: {fileID: 0}

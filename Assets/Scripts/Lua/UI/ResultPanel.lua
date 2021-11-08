@@ -92,17 +92,18 @@ function Class:ShowResult(resultPanelData)
     self.enjoyGameData.ratioText.text = "x"..enjoyGameData.enjoyGameRatio
     self.enjoyGameData.winEnjoyGameGO:SetActive(true)
     -- 颜色(普通中奖+三元四喜)
-    if color_id == ColorType.SanYuan then   -- 同一颜色四种动物都中奖
-        self.winSanYuan:SetActive(true)
-        local data = resultPanelData.sanyuanData
-        local colorSpr = self.smallColors[data.sanyuanColor_id]
+    if color_id == ColorType.SiXi then   -- 同一颜色四种动物都中奖
+        self.winSiXi:SetActive(true)
+        local data = resultPanelData.sixiData
+        local colorSpr = self.smallColors[data.sixiColor_id]
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
+            print("四喜动物倍率:", i, data.animalRatioArray[i])
             self:__AddAnimal(i, colorSpr, data.animalRatioArray[i], self.resultAnimals_Gold, true)
         end
         
-    elseif color_id == ColorType.SiXi then  -- 同一动物三种颜色都中奖
-        self.winSiXi:SetActive(true)
-        local data = resultPanelData.sixiData
+    elseif color_id == ColorType.SanYuan then  -- 同一动物三种颜色都中奖
+        self.winSanYuan:SetActive(true)
+        local data = resultPanelData.sanyuanData
         for i = ColorType.Red, ColorType.Yellow, 1 do
             local spr = self.smallColors[i]
             self:__AddAnimal(data.animal_id, spr, data.animalRatioArray[i], self.resultAnimals_Gold, true)

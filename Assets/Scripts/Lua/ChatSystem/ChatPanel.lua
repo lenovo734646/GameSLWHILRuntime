@@ -13,6 +13,7 @@ local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
 local UnityHelper = UnityHelper
 local Permission = UnityEngine.Android.Permission
 local UserAuthorization = UnityEngine.UserAuthorization
+-- local TouchScreenKeyboard_Status = UnityEngine.TouchScreenKeyboard.Status
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
@@ -97,7 +98,7 @@ function Class:__init(panel, loader, userData)
         viewItemHoder:UpdateFromData(itemdata)
         self.OSAScrollViewCom:ScheduleComputeTwinPass(true)
         if itemdata.isMine then
-            print("更新自己发送的 ViewHolder...")
+            -- print("更新自己发送的 ViewHolder...")
             waitSendChatMsgView = viewItemHoder
         end
     end
@@ -128,6 +129,14 @@ function Class:__init(panel, loader, userData)
         print("收到消息：userID = ", data.user_id, data.nickname, data.message_type, data.content, data.metadata)
         self:OnReceiveMsg(data.user_id, data.nickname, data.message_type, data.content, data.metadata, data.head)
     end)
+    -- self.inputField.onTouchScreenKeyboardStatusChanged:RemoveAllListeners()
+    -- self.inputField.onTouchScreenKeyboardStatusChanged:AddListener(function (status)
+    --     print("onTouchScreenKeyboardStatusChanged ", status)
+    --     if status ~= TouchScreenKeyboard_Status.Visible then
+            
+    --         -- self.inputField.onSubmit()
+    --     end
+    -- end)
 
     -- 兼容大厅版本
     self.tog_Voice.gameObject:SetActive(false)
@@ -141,6 +150,7 @@ end
 
 function Class:KeyControl()
     if Input.GetKeyDown(KeyCode.KeypadEnter) or Input.GetKeyDown(KeyCode.Return) then
+        print("键盘事件：Enter or Return...")
         self:OnSendTextFromInputField(self.inputField)
     end
 end
@@ -269,10 +279,10 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
     CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
         while waitSendChatMsgView == nil do
             yield()
-            print("获取 chatMsgView 中...")
+            -- print("获取 chatMsgView 中...")
         end
 
-        print("获取 chatMsgView 成功... timeStampSec = ", timeStampSec, waitSendChatMsgView.msgData.timestampSec, waitSendChatMsgView.msgData.text)
+        -- print("获取 chatMsgView 成功... timeStampSec = ", timeStampSec, waitSendChatMsgView.msgData.timestampSec, waitSendChatMsgView.msgData.text)
         tinsert(waitSendChatMsgViewList, waitSendChatMsgView) -- 添加到等待发送列表
         -- 发送
         if msgType == 2 then    -- 音频发送
@@ -335,7 +345,7 @@ end
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
 function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID)
-    print("OnReceiveMsg: msgTypee = ", msgType, content)
+    -- print("OnReceiveMsg: msgTypee = ", msgType, content)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
         return
@@ -498,7 +508,7 @@ end
 
 function Class:__GetWaitSendChatMsgView(timestampSec)
     local chatMsgView, index = table.Find(waitSendChatMsgViewList, function (v)
-        print("v.timestampSec = ", v.msgData.timestampSec, " target = ", timestampSec)
+        -- print("v.timestampSec = ", v.msgData.timestampSec, " target = ", timestampSec)
         return v.msgData.timestampSec == timestampSec
     end)
     if chatMsgView == nil then
@@ -600,6 +610,7 @@ function Class:On_msgInputField_Event(inputField)
 end
 
 function Class:On_btnSend_Event(btnSend)
+    print("发送按钮事件触发....")
     self:OnSendTextFromInputField(self.inputField)
 end
 
@@ -608,6 +619,10 @@ function Class:OnCustumEvent(params)
     -- if params[0]=='msgInputField_onSubmit' then
     --     self:OnSendTextFromInputField(self.inputField)
     -- end
+end
+
+function Class:OnEndEdit()
+    print("OnEndEdit....")
 end
 
 function Class:Release()

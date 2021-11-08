@@ -714,6 +714,7 @@ MonoBehaviour:
   IsUserZip: 0
   wfDraw: {fileID: 8528977277043410264}
   voiceInputPanel: {fileID: 1028330779}
+  bInit: 0
 --- !u!82 &7932952393797720519
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4021,7 +4022,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -15}
-  m_SizeDelta: {x: 146, y: 900}
+  m_SizeDelta: {x: 146, y: 840}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &2557613262256464726
 CanvasRenderer:
@@ -5106,7 +5107,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1600}
+  m_SizeDelta: {x: 1600, y: 1600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2557613262350038187
 CanvasRenderer:
@@ -5454,8 +5455,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 12, y: 0}
-  m_SizeDelta: {x: -36, y: -120}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -36, y: -60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2557613262419006751
 MonoBehaviour:
@@ -9843,7 +9844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 35, y: -415}
+  m_AnchoredPosition: {x: 35, y: -400}
   m_SizeDelta: {x: 80, y: 38}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2557613263229807208
@@ -20774,20 +20775,20 @@ MonoBehaviour:
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
   m_RegexValue: 
-  m_GlobalPointSize: 20
-  m_CharacterLimit: 0
+  m_GlobalPointSize: 30
+  m_CharacterLimit: 10
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8528977277772909783}
-        m_MethodName: CallLuaByGameObjectName
-        m_Mode: 2
+        m_MethodName: CallLuaByEvent
+        m_Mode: 5
         m_Arguments:
-          m_ObjectArgument: {fileID: 8528977277144415609}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: OnEndEdit
           m_BoolArgument: 0
         m_CallState: 2
   m_OnSubmit:
@@ -23075,7 +23076,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -24001,7 +24002,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -34, y: -34}
   m_Pivot: {x: 0.5, y: 0.5}

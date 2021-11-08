@@ -222,8 +222,8 @@ function Class:OnSceneReady()
         animalIndex = animalIndex + GameConfig.RunItemCount
     end
     local animalRot = (animalIndex)*15
-    print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
-    print("同步动物角度:", roomdata.last_animal_index, animalRot)
+    -- print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
+    -- print("同步动物角度:", roomdata.last_animal_index, animalRot)
     self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
     self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
 

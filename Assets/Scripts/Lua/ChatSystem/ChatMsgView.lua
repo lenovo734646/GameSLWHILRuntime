@@ -104,10 +104,19 @@ function Class:UpdateFromData(data)
         self.wfDraw.gameObject:SetActive(false);
         self.text.gameObject:SetActive(true);
 
-        self.text.text = data.text;
+        self.text.text = self:FixEmojiSize(data.text)
         self.audioSource.clip = nil;
     end
-    
+end
+
+function Class:FixEmojiSize(text, fixSize)
+    fixSize = fixSize or 45
+    local tempText = text
+    tempText = string.gsub(text, "<sprite=%d+>", function (s)
+        -- print(s)
+        return "<size="..fixSize..">"..s.."</size>"
+    end)
+    return tempText
 end
 
 function Class:StartPlayback()

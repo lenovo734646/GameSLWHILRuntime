@@ -454,12 +454,13 @@ function Class:OnBetClicked(luaInitHelper)
     local item_id = betAreaData.item_id
 
     if self.notEnoughMoney then
-        SEnv.MessageBox({ content = _STR_"金币不足，是否打开银行取款?", 
-            onOK = function()
-                self.ui.mainUI:On_btn_Bank_Event()
-            end,
-            showCancel = true,
-        })
+        g_Env.OnUserCurrencyNotEnough()
+        -- SEnv.MessageBox({ content = _STR_"金币不足，是否打开银行取款?", 
+        --     onOK = function()
+        --         self.ui.mainUI:On_btn_Bank_Event()
+        --     end,
+        --     showCancel = true,
+        -- })
         return
     end
     --发送下注

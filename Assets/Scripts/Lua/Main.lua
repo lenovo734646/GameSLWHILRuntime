@@ -284,6 +284,11 @@ function OnApplicationPause(b)
     end
 end
 
+if g_Env then
+    g_Env.systemNoticeCtrl:SetSubGameSystemNoticePosition(0, -640)
+    g_Env.systemNoticeCtrl:SetSubGameSystemNoticeWidth(640)
+end
+
 if IsRunInHall then
     Main()
 else

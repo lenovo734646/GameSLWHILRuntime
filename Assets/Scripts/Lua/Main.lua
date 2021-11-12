@@ -285,8 +285,8 @@ function OnApplicationPause(b)
 end
 
 if g_Env then
-    g_Env.systemNoticeCtrl:SetSystemNoticePosition(0, -640)
-    g_Env.systemNoticeCtrl:SetSystemNoticeWidth(640)
+    g_Env.systemNoticeCtrl:SetSystemNoticePosition(0, -120)
+    g_Env.systemNoticeCtrl:SetSystemNoticeWidth(840)
 end
 
 if IsRunInHall then

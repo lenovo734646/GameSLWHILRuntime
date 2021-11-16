@@ -53,7 +53,7 @@ SEnv.ErrorPaser = g_Env and g_Env.GetServerErrorMsg or function(errCode, ackname
 end
 
 SEnv.GetHeadSprite = g_Env and g_Env.CommonUICtrl and g_Env.CommonUICtrl.GetHeadSprite
-SEnv.GetHeadFrameSprite = g_Env and g_Env.CommonUICtrl and g_Env.CommonUICtrl.GetHeadSprite
+SEnv.GetHeadFrameSprite = g_Env and g_Env.CommonUICtrl and g_Env.CommonUICtrl.GetHeadFrameSprite
 
 if g_Env then
     setmetatable(SEnv,{

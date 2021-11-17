@@ -28,7 +28,7 @@ function MessageCenter:AddListener(msgType, func, target)
     })
     self:_addListener(msgType, bindFunc)
 end
--- ×Ô¶¯ÒÆ³ıµ÷ÓÃµÄÊÂ¼ş
+-- è‡ªåŠ¨ç§»é™¤è°ƒç”¨çš„äº‹ä»¶
 function MessageCenter:AddListenerAutoRelease(msgType, func)
     local list = self.autoReleaseEvents[msgType]
     if not list then
@@ -43,7 +43,7 @@ function MessageCenter:_addListener(msgType, event)
         self.dicMsgEvents[msgType] = {}
     end
     if not table.contains(self.dicMsgEvents[msgType], event) then
-        -- print("³É¹¦Ìí¼ÓÕâ¸ö¼àÌı")
+        -- print("æˆåŠŸæ·»åŠ è¿™ä¸ªç›‘å¬")
         table.insert(self.dicMsgEvents[msgType], event)
     end
 end
@@ -90,7 +90,7 @@ function MessageCenter:_removeListener(msgType, event)
     if self.dicMsgEvents[msgType] ~= nil then
         local index = table.contains(self.dicMsgEvents[msgType], event)
         if index then
-            -- print("³É¹¦ÒÆ³ıÕâ¸ö¼àÌı")
+            -- print("æˆåŠŸç§»é™¤è¿™ä¸ªç›‘å¬")
             table.removebyvalue(self.dicMsgEvents[msgType], event, true)
         end
     end

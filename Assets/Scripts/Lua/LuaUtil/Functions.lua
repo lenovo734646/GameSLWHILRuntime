@@ -15,6 +15,10 @@ local IsUnityObjectValid=CS.UnityHelper.IsUnityObjectValid
 local Destroy=CS.UnityEngine.Object.Destroy
 local DestroyImmediate=CS.UnityEngine.Object.DestroyImmediate
 
+local sfind = string.find
+local ssub = string.sub
+local tinsert = table.insert
+
 function __TRACKBACK__(errorMsg)
     local track_text = debug.traceback(tostring(errorMsg))
     logError(track_text)
@@ -304,23 +308,43 @@ function table.count(tbl)
     return count
 end
 
-function table.keys(tbl)
-    local keys = {}
-    for k, v in pairs(tbl) do
-        -- log("table.keys:"..k)
-        table.insert(keys, k)
+function table.countWithoutKeys(tbl, withoutKeysList)
+    local count = 0
+    local withoutKeysCache = {}
+    for _, value in ipairs(withoutKeysList) do
+        withoutKeysCache[value] = true
     end
-    return keys
-end
-
-function table.values(tbl)
-    local values = {}
-    for k, v in pairs(tbl) do
-        if v ~= nil then
-            table.insert(values, v)
+    for k, _ in pairs(tbl) do
+        if not withoutKeysCache[k] then
+            count = count + 1
         end
     end
-    return values
+    return count
+end
+
+function table.reverse(tbl)
+    local tmp = {}
+    table.copy(tbl, tmp)
+    for k, v in ipairs(tbl) do
+        tbl[k] = tmp[#tmp + 1 - k]
+    end
+    return tbl
+end
+
+function table.foreach(tbl, func)
+    for k, v in pairs(tbl) do
+        func(v)
+    end
+end
+-- 单独取出tbl中所有元素中的某个字段
+function table.select(tbl, selector)
+    local tmp = {}
+    for k, v in pairs(tbl) do
+        if selector(v) ~= nil then
+            table.insert(tmp, selector(v))
+        end
+    end
+    return tmp
 end
 
 function string.split(input, delimiter)
@@ -383,57 +407,6 @@ function string.endswith(target_string, start_pattern, plain)
 end
 string.Startswith = string.startswith
 string.Endswith = string.endswith
-
--- 以tab格式赶回
-function THelperTab(THelper)
-    local id = 1
-    local tab = {}
-    local count = THelper.DataMap.Count
-    while (id < count or id == count) do
-        local v = THelper.GetRow(id)
-        if v == nil then
-            break
-        end
-        tab[id] = v
-        id = id + 1
-    end
-    return tab
-end
-
--- 返回发现的第一个对象
-function THelperWhere(THelper, wherefunc)
-    local id = 1
-    while true do
-        local v = THelper.GetRow(id)
-        if v == nil then
-            break
-        end
-        if wherefunc(v) then
-            return v
-        end
-        id = id + 1
-    end
-end
--- 返回发现的所有对象
-function THelperWhereReturnTab(THelper, wherefunc)
-    local i = 1
-    local tabIndex = 1
-    local tab = {}
-    local count = THelper.DataMap.Count
-    while (i < count or i == count) do
-        local v = THelper.GetRow(i)
-        if v == nil then
-            break
-        end
-        if wherefunc(v) then
-            tab[tabIndex] = v
-            tabIndex = tabIndex + 1
-        end
-        i = i + 1
-    end
-    return tab
-end
-
 function ReloadModule(name)
     local status, err = xpcall(function()
         package.loaded[name] = nil
@@ -452,9 +425,7 @@ function UnLoadModule(name)
     print('UnLoadModule ' .. name)
 end
 
-local sfind = string.find
-local ssub = string.sub
-local tinsert = table.insert
+
 string.replace = function(s, pattern, repl)
     local i, j = sfind(s, pattern, 1, true)
     if i and j then
@@ -697,9 +668,15 @@ function table.values(hashtable)
     return values
 end
 
-function table.merge(dest, src)
-    for k, v in pairs(src) do
-        dest[k] = v
+function table.merge(dest, ...)
+    local params = {...}
+    local startIndex = #dest
+    for i = 1, #params do
+        local param = params[i]
+        for j = 1, #param do
+            dest[startIndex + j] = param[j]
+        end
+        startIndex = startIndex + #param
     end
 end
 

@@ -131,7 +131,8 @@ end
 function Class:GetItemsCount()
     return self.OSAScrollView:GetItemsCount()
 end
-
+-- 获取ViewHolder只能获取到 visible 的，不是随便GetItemCount() 的index 就可以的
+-- 最好不要使用这几个函数来获取，而是在UpdateViewHolder 回调中获取，保证显示且能获取到
 function Class:GetItemViewsHolderAtStart()
     if self:GetItemsCount() <= 0 then
         return nil

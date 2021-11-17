@@ -513,19 +513,8 @@ public static class CCUGenConfig
         typeof(UnityEngine.Texture2D.EXRFlags),
         typeof(UnityEngine.ScreenCapture.StereoScreenCaptureMode),
         typeof(UnityEngine.Video.VideoClip),
-
-        typeof(TMPro.TMP_Text),
-        typeof(TMPro.TMP_InputField),
-        typeof(TMPro.TMP_InputField.CharacterValidation),
-        typeof(TMPro.TMP_InputField.ContentType),
-        typeof(TMPro.TMP_InputField.InputType),
-        typeof(TMPro.TMP_InputField.LineType),
-        typeof(TMPro.TMP_InputField.Transition),
-        typeof(TMPro.TMP_Dropdown),
-        typeof(TMPro.TMP_Dropdown.OptionData),
-        typeof(TMPro.TMP_Dropdown.OptionDataList),
-        typeof(TMPro.TMP_Dropdown.Transition),
-
+        typeof(UnityEngine.DeviceOrientation),
+        typeof(UnityEngine.SystemLanguage),
 
         typeof(Space),
         typeof(RectTransform.Edge),
@@ -562,6 +551,17 @@ public static class CCUGenConfig
         // TextMeshPro
         typeof(TMPro.TextMeshProUGUI),
         typeof(TMPro.TextMeshPro),
+        typeof(TMPro.TMP_Text),
+        typeof(TMPro.TMP_InputField),
+        typeof(TMPro.TMP_InputField.CharacterValidation),
+        typeof(TMPro.TMP_InputField.ContentType),
+        typeof(TMPro.TMP_InputField.InputType),
+        typeof(TMPro.TMP_InputField.LineType),
+        typeof(TMPro.TMP_InputField.Transition),
+        typeof(TMPro.TMP_Dropdown),
+        typeof(TMPro.TMP_Dropdown.OptionData),
+        typeof(TMPro.TMP_Dropdown.OptionDataList),
+        typeof(TMPro.TMP_Dropdown.Transition),
         //// Text Animation
         //typeof(Febucci.UI.TextAnimator),
         //typeof(Febucci.UI.TextAnimatorPlayer),
@@ -584,6 +584,10 @@ public static class CCUGenConfig
         typeof(OSAHelper.Param),
         typeof(OSAHelper.ItemViewHolder),
         typeof(TextAnchor),
+
+        // MicrophoneRecorder
+        typeof(SP.MicrophoneRecorder),
+        typeof(SP.WaveFormDraw),
 
         //spine
         typeof(Spine.AnimationState),
@@ -653,7 +657,7 @@ public static class CCUGenConfig
 
         typeof(UnityEngine.UI.Slider.SliderEvent),
         typeof(UnityEngine.Events.UnityEventBase),
-
+        
 
         //typeof(OpenInstallDelegate),
 
@@ -662,6 +666,7 @@ public static class CCUGenConfig
         typeof(Action<LuaTable, Collider>),
         typeof(Action<LuaTable>),
         typeof(Action<Message>),
+        typeof(Action<UnityEngine.TouchScreenKeyboard.Status>),
     };
 
     [LuaCallCSharp]

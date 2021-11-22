@@ -276,7 +276,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -45, y: -45}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4280752170065045317
 MonoBehaviour:
@@ -2092,6 +2092,7 @@ GameObject:
   - component: {fileID: 8921445258123487952}
   - component: {fileID: 8921445258123487958}
   - component: {fileID: 8921445258123487959}
+  - component: {fileID: 7855717094733443767}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2159,6 +2160,48 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u70B9\u51FB\u64AD\u653E      "
+--- !u!114 &7855717094733443767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8921445258123487953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoApply: 1
+  changeByEvent: 0
+  text: {fileID: 8921445258123487959}
+  textMeshPro: {fileID: 0}
+  textMeshProUGUI: {fileID: 0}
+  skeletonGraphic: {fileID: 0}
+  image: {fileID: 0}
+  toggle: {fileID: 0}
+  button: {fileID: 0}
+  supportLanguageList:
+  - name: CN
+    content: "\u70B9\u51FB\u64AD\u653E      "
+    sprite: {fileID: 0}
+    sprite2: {fileID: 0}
+    gameObject: {fileID: 0}
+    buttonSwapSprites:
+      highlightedSprite: {fileID: 0}
+      pressedSprite: {fileID: 0}
+      selectedSprite: {fileID: 0}
+      disabledSprite: {fileID: 0}
+  - name: EN
+    content: Click Play
+    sprite: {fileID: 0}
+    sprite2: {fileID: 0}
+    gameObject: {fileID: 0}
+    buttonSwapSprites:
+      highlightedSprite: {fileID: 0}
+      pressedSprite: {fileID: 0}
+      selectedSprite: {fileID: 0}
+      disabledSprite: {fileID: 0}
 --- !u!1 &8921445258127487003
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local UnityHelper = CS.UnityHelper
+local SEnv = SEnv
 local _STR_ = _STR_
 local _ERR_STR_ = _ERR_STR_
 local ShowHitMessage = ShowHitMessage
@@ -61,7 +62,7 @@ function Class:__init(panel, gr, maxRecordTime)
         else
             --松手时不在录音按钮上就取消
             self.recorder:CancelRecording()
-            print("取消语音发送...")
+            SEnv.ShowHintMessage(_G._STR_("取消语音发送"))
         end
         self:RecoverMusicAndAudio()
     end)

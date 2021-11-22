@@ -16,8 +16,6 @@ local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, 
     UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
 local UnityHelper = UnityHelper
-local Permission = UnityEngine.Android.Permission
-local UserAuthorization = UnityEngine.UserAuthorization
 -- local TouchScreenKeyboard_Status = UnityEngine.TouchScreenKeyboard.Status
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'

@@ -35,7 +35,6 @@ function Create(...)
 end
 
 function Class:__init(roomdata)
-    self.testNum = 1
     local View = GameObject.Find('View')
     self.gameObject = View
     local initHelper = View:GetComponent(typeof(LuaInitHelper))

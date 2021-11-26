@@ -52,8 +52,8 @@ PBHelper.AddPbPkg("CLSLWH")
 -- shark_more_show_time             在出鲨鱼的情况下，服务器约定的显示结果时间
 -- self_score                        玩家当前的分数
 -- online_player_count               在线玩家数量
--- room_tatol_bet_info_list 房间总下注信息
--- self_bet_list        我自己已下注数组
+-- room_total_bet_info_list 房间总下注信息
+-- self_bet_info_list        我自己已下注数组
 -- self_user_id                 self UserID
 -- self_user_name               玩家昵称
 -- self_user_Head                 玩家头像
@@ -126,6 +126,8 @@ end
 -- caijin_ratio                           彩金倍数
 -- shandian_ratio                          闪电翻倍倍数
 -- self_score            玩家自己的分数
+-- room_total_bet_info_list   房间总下注信息
+-- self_bet_info_list              我自己已下注数组
 -- time_stamp            消息时间戳
 function Send_GetServerDataReq(callback)
     local senddata = {}
@@ -158,7 +160,7 @@ end
 -- self_score            玩家当前的分数
 -- self_bet_info       自己下注信息
 -- errParam              错误参数：比如下注上限等
--- room_tatol_bet_info_list 房间总下注信息
+-- room_total_bet_info_list 房间总下注信息
 function Send_SetBetReq(callback, index_id, bet_id)
     local senddata = {index_id = index_id, bet_id = bet_id, }
    return AsyncRequest('CLSLWH.SetBetReq',senddata,'CLSLWH.SetBetAck',function (ack)
@@ -208,6 +210,36 @@ function Send_HistoryReq_Async(err_paser)
     if data.errcode ~= 0 then
         if err_paser then
             return nil,err_paser(data.errcode,'CLSLWH.HistoryAck')
+        end
+        return nil,data.errcode
+    end
+    return data
+end
+
+--返回的表内容(协程方法Async同样适用):
+-- errcode                   0成功 1你不在房间内
+-- total_amount              房间总人数
+-- players     玩家信息数组
+function Send_QueryPlayerListReq(callback, page_index, page_count)
+    local senddata = {page_index = page_index, page_count = page_count, }
+   return AsyncRequest('CLSLWH.QueryPlayerListReq',senddata,'CLSLWH.QueryPlayerListAck',function (ack)
+        ack._errmessage = handleAckError(ack,'CLSLWH.QueryPlayerListAck')
+        return callback(ack)
+    end)
+end
+
+function Send_QueryPlayerListReq_Async(page_index, page_count, err_paser)
+    err_paser = err_paser or ErrorPaser
+    local senddata = {page_index = page_index, page_count = page_count, }
+    local data
+    local dataCheck={}
+    local callback = function(data_) data = data_;dataCheck.ok=true end
+    AsyncRequest('CLSLWH.QueryPlayerListReq',senddata,'CLSLWH.QueryPlayerListAck',callback)
+    local haserror,msg = WaitForResultOrTimeOut(dataCheck,'CLSLWH.QueryPlayerListReq')
+    if haserror then return nil,msg end
+    if data.errcode ~= 0 then
+        if err_paser then
+            return nil,err_paser(data.errcode,'CLSLWH.QueryPlayerListAck')
         end
         return nil,data.errcode
     end

@@ -61,10 +61,8 @@ function Class:UpdateFromData(data)
     --     self.rankText.text = tostring(data.rank)
     -- end
     self.rankText.gameObject:SetActive(false) -- 暂时取消这个显示，如果需要的话，以后风格布局统一修改再说
-    data.recently_setbets = data.recently_setbets or 0
-    data.recently_wincount = data.recently_wincount or 0
-    self.betScoreText.text = Helpers.GameNumberFormat(data.recently_setbets)
-    self.winCountText.text = Helpers.GameNumberFormat(data.recently_wincount)
+    self.betScoreText.text = Helpers.GameNumberFormat(data.totalBets)
+    self.winCountText.text = Helpers.GameNumberFormat(data.winCount)
 end
 
 function Class:UserInfoBtnClick()

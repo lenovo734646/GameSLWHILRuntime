@@ -45,8 +45,7 @@ local AnimalType = GameConfig.AnimalType
 local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
 local winItemDataList = {} -- 记录本次所有中奖动物itemData
 local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
-
-
+--
 local Class = class()
 
 function Create(...)
@@ -54,18 +53,17 @@ function Create(...)
 end
 
 function Class:__init(ui,View,roomdata)
-    self.testNum = 10
     print("3D View Ctrl Init...roomdata.last_bet_id = ", roomdata.last_bet_id)
     self.ui = ui
     self.View = View
     self.roomdata = roomdata
-    
+
     View:GetComponent(typeof(LuaUnityEventListener)):Init(self)
     View:GetComponent(typeof(KeyEventListener)):Init(self)
     --
     self.bet_config_array = roomdata.bet_config_array
     self.self_user_id = roomdata.self_user_id
-    self.normal_show_time = roomdata.normal_show_time / 1000    -- 毫秒转秒
+    self.normal_show_time = roomdata.normal_show_time / 1000 -- 毫秒转秒
     self.shark_more_show_time = roomdata.shark_more_show_time / 1000 -- 毫秒转秒
     self.betid = roomdata.last_bet_id or 0
     --
@@ -94,12 +92,12 @@ function Class:__init(ui,View,roomdata)
     --
     self.betSnapShot = {} -- 上一局押注数据(续押使用)
     -- 玩家上一次下注总值
-    self.selfTotalBet = {}
-    self.TotalBet = {}
+    self.selfBetMap = {} -- 自己下注
+    self.totalBetMap = {} -- 总下注
     self:__ResetBetScore()
     --
-    self.ratioArray = {}
-    self.resultPanelData = {}
+    self.ratioArray = {} -- 缓存当前局的动物倍率表，结算时获取倍率用
+    self.resultPanelData = {} -- 缓存当前局的结算信息，方便结算和显示
 
     self.gameCount = 0   -- 本次进入游戏局数
 
@@ -137,7 +135,7 @@ function Class:OnSceneReady()
     self.lastSeletedToggleIndex = 1
     self:OnMoneyChange(SEnv.playerRes.currency)
     -- 当前局输赢结果数据, 临时保存数据，结算结束再更新，避免刚进入结算界面就更新分数
-    self.curWinResultData = { win = 0, bet_score = 0, self_score = SEnv.playerRes.currency,}
+    -- self.curWinResultData = { win = 0, bet_score = 0, self_score = SEnv.playerRes.currency,}
     -- 网络消息监听
     -- 游戏状态变化
     PBHelper.AddListener('StateChangeNtf', function (data)
@@ -184,27 +182,30 @@ function Class:OnSceneReady()
         
         --print("OtherPlayerSetBetNtf...", item_id)
         if item_id == -1 then   -- 清除筹码返回
-            local totalBetInfoList = data.room_tatol_bet_info_list
+            local totalBetInfoList = data.room_total_bet_info_list
             for key, betInfo in pairs(totalBetInfoList) do
                 local id = betInfo.index_id
                 local total_bet = betInfo.total_bet
-                local betAreaData = self.ui.betAreaList[id]
-                --print("清除下注 id = ", id, total_bet)
-                self:__SetTotalBetScore(betAreaData, total_bet)
+                self:__SetTotalBetScore(id, total_bet)
             end
         else
-            local total_bet = data.info.total_bet or 0
             -- 同步总押分
-            local betAreaData = self.ui.betAreaList[item_id]
-            self:__SetTotalBetScore(betAreaData, total_bet)
+            local total_bet = data.info.total_bet or 0
+            self:__SetTotalBetScore(item_id, total_bet)
         end
+        -- 更新玩家列表的本局下注
+        self.ui.mainUI:UpdatePlayerTotalBets(data.user_id, data.total_bets)
     end)
 
-    -- 在线人数
+    -- 在线人数  
     PBHelper.AddListener("OnlinePlayerCountNtf", function (data)
-        print("OnlinePlayerCountNtf: ", data.online_count)
-        self.ui.topUI:UpdateOnlinePlayerCount(data.online_count)
+        self.ui.mainUI:UpdateOnlinePlayerCount(data.online_count)
     end)
+    -- 玩家列表胜利次数
+    PBHelper.AddListener("PlayerWinCountInfoNtf", function (data)
+        self.mainUI:UpdateOnlinePlayerCount(data.player_winCount_info_list)
+    end)
+
 
 
     -- 统计数据
@@ -227,23 +228,8 @@ function Class:OnSceneReady()
     self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
     self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
 
-    -- 状态处理
-    local selfTotalBet = roomdata.self_bet_list
-    local totalBet = roomdata.room_tatol_bet_info_list
-    -- 同步下注
-    for _, info in pairs(selfTotalBet) do
-        local betAreaData = ui.betAreaList[info.index_id]
-        self:__SetSelfBetScore(betAreaData, info.total_bet)
-    end
-    for _, info in pairs(totalBet) do
-        local betAreaData = ui.betAreaList[info.index_id]
-        self:__SetTotalBetScore(betAreaData, info.total_bet)
-    end
-
-    -- 发送请求历史路单数据
-    CLSLWHSender.Send_HistoryReq(function (data)
-        self:OnHistroyAck(data)
-    end)
+    self:SendHistoryReq()
+    self:ResetView(roomdata)
 
     -- 主动请求游戏状态数据
     CLSLWHSender.Send_GetServerDataReq(function(ack)
@@ -263,15 +249,11 @@ end
 
 
 function Class:OnBetSelect(toggle)
-    -- print('OnBetSelect',toggle)
     if toggle.isOn then
-        -- local betSelectToggles = self.ui.betSelectToggles
         local betid = tonumber(toggle.name)
         self.betid = betid
-        print('OnBetSelect ',toggle, ' betid ',betid)
         if not self.dontRecordPlayerSeletBet then
             self.lastSeletedToggleIndex = betid+1
-            print('Record OnBetSelect',toggle, ' betid ',betid)
         end
     end
 end
@@ -466,12 +448,8 @@ function Class:OnBetClicked(luaInitHelper)
 end
 
 function Class:OnContinueBtnClicked()
-    -- print('OnContinueBtnClicked 续押测试...1000')
-    -- for i = 1, 8, 1 do
-    --     self.betSnapShot[i] = 1000
-    -- end
     if self:__GetContinueBetScore() <= 0 then
-        _G.ShotHintMessage(_STR_"上局无下注")
+        SEnv.ShowHintMessage("上局没有下注记录")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
@@ -870,7 +848,23 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
 end
 -- 把场景重置到初始状态（重连或后台切回还原用）
 function Class:ResetView(data)
+    -- 同步玩家分数
+    self:OnMoneyChange(data.self_score)
+    -- 重置上一局结果残留
+    self:__ResetCurWinResultData()
+    -- 关闭下注界面隐藏结算界面
     self.ui.mainUI:ResetUI()
+    -- 同步下注信息和筹码
+    local selfBetMap = data.self_bet_info_list
+    local totalBetMap = data.room_total_bet_info_list
+    for _, info in pairs(selfBetMap) do
+        self:__SetSelfBetScore(info.index_id, info.total_bet)
+    end
+    --
+    for _, info in pairs(totalBetMap) do
+        self:__SetTotalBetScore(info.index_id, info.total_bet)
+    end
+    -- 恢复镜头
     self.ui.viewEventBroadcaster:Broadcast('CameraMoveBackward')
     self.ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
     -- 开启聚光灯动画和宝石动画
@@ -892,15 +886,6 @@ function Class:ResetView(data)
         colordata.animator:Update(0)
         colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
     end
-
-    -- 玩家分数同步
-    if data.state ~= 2 then -- 非开奖界面
-        self.selfScore = data.self_score
-        if data.self_score == 0 then
-            self.selfScore = SEnv.playerRes.currency
-        end
-        self:OnMoneyChange(self.selfScore)
-    end
     -- 路单同步(独立协议处理)
 end
 -- 目前可能会出现 结算流程未结束就进入  OnFreeState 的问题，因为是按时间计算的
@@ -908,10 +893,7 @@ end
 -- 空闲阶段 
 function Class:OnFreeState()
     -- print("进入空闲阶段....玩家分数重置")
-    if self.resultPanelData then
-        self.resultPanelData.winScore = 0 -- 本局输赢
-        self.resultPanelData.betScore = 0  -- 总输赢
-    end
+    self:__ResetCurWinResultData()
     --
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('freeState')
@@ -921,7 +903,7 @@ function Class:OnFreeState()
     -- 如果上一局有下注，则刷新续押数据，否则不变
     if self:__GetSelfAllBetScore() > 0 then
         self.betSnapShot = {}   -- 清空原数据
-        for key, value in pairs(self.selfTotalBet) do
+        for key, value in pairs(self.selfBetMap) do
             self.betSnapShot[key] = value
         end
     end
@@ -931,6 +913,9 @@ function Class:OnFreeState()
 
     self.gameCount = self.gameCount +1
     self.ui.mainUI:SetGameCount(self.gameCount)
+
+    -- 重置玩家列表中玩家的下注分数，这里自己做了，不必服务端同步
+    self.ui.mainUI:ResetAllPlayerTotalBets()
 end
 
 function Class:OnNetWorkReConnect()
@@ -1030,18 +1015,24 @@ function Class:OnReceiveBetAck(data)
     local item_id = self_bet_info.index_id
     if item_id == -1 then
         for _, betAreaData in pairs(betAreaList) do
-            self:__SetSelfBetScore(betAreaData, 0)
+            self:__SetSelfBetScore(betAreaData.item_id, 0)
         end
     else
         local total_bet = self_bet_info.total_bet
-        local betAreaData = betAreaList[item_id]
-        --
-        self:__SetSelfBetScore(betAreaData, total_bet)
+        self:__SetSelfBetScore(item_id, total_bet)
         AudioManager.Instance:PlaySoundEff2D("betSound")
     end
     self:OnMoneyChange(data.self_score)
     local score = self:__GetSelfAllBetScore()
     self.ui.mainUI:SetCurBetScore(score)
+end
+
+-- 发送请求历史路单数据
+function Class:SendHistoryReq()
+    print('SendHistoryReq:')
+    CLSLWHSender.Send_HistoryReq(function (data)
+        self:OnHistroyAck(data)
+    end)
 end
 
 function Class:OnHistroyAck(data)
@@ -1088,37 +1079,32 @@ function Class:__GetBetItemLuaIndex(color_id, animal_id)
 end
 
 -- 设置自己下注分数
-function Class:__SetSelfBetScore(betAreaData, total_bet)
-    assert(betAreaData)
-    betAreaData.selfBetScore.text = Helpers.GameNumberFormat(total_bet)
-    local item_id = betAreaData.item_id
-    self.selfTotalBet[item_id] = total_bet
+function Class:__SetSelfBetScore(id, score)
+    self.selfBetMap[id] = score
+    self.ui.betAreaList[id].selfBetScore.text = Helpers.GameNumberFormat(score)
 end
 -- 设置全体下注分数
-function Class:__SetTotalBetScore(betAreaData, total_bet)
-    assert(betAreaData)
-    betAreaData.totalBetScore.text = Helpers.GameNumberFormat(total_bet)
-    local item_id = betAreaData.item_id
-    self.TotalBet[item_id] = total_bet
+function Class:__SetTotalBetScore(id, score)
+    self.totalBetMap[id] = score
+    self.ui.betAreaList[id].totalBetScore.text = Helpers.GameNumberFormat(score)
 end
 
 -- 重置所有下注分数
 function Class:__ResetBetScore()
     for _, betAreadata in pairs(self.ui.betAreaList)do
-        self:__SetSelfBetScore(betAreadata, 0)
-        self:__SetTotalBetScore(betAreadata, 0)
+        self:__SetSelfBetScore(betAreadata.item_id, 0)
+        self:__SetTotalBetScore(betAreadata.item_id, 0)
     end
 end
 
 -- 获取自己当前总下注
 function Class:__GetSelfAllBetScore()
     local score = 0
-    for key, value in pairs(self.selfTotalBet) do
+    for key, value in pairs(self.selfBetMap) do
         score = score + value
     end
     return score
 end
-
 
 -- 获取续押需要消耗的总分
 function Class:__GetContinueBetScore()
@@ -1127,6 +1113,13 @@ function Class:__GetContinueBetScore()
         score=score+v
     end
     return score
+end
+-- 清除当前局结算缓存
+function Class:__ResetCurWinResultData()
+    if self.resultPanelData then
+        self.resultPanelData.winScore = 0 -- 本局输赢
+        self.resultPanelData.betScore = 0  -- 总输赢
+    end
 end
 
 function Class:OnDestroy()

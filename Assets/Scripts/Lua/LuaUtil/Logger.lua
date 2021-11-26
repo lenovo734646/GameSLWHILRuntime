@@ -44,8 +44,8 @@ end
 
 function AssertUnityObjValid(obj, ...)
     if not UnityHelper.IsUnityObjectValid(obj) then
-        gLuaEntryCom:ShowError("ÎÞÐ§µÄUnityObject: "..BuildStr(...)..": "..debug.traceback())
-        -- LogE("AssertUnityObjValid type = ", type(b), b, ...)
+        -- gLuaEntryCom:ShowError("æ— æ•ˆçš„UnityObject: "..BuildStr(...)..": "..debug.traceback())
+        LogE("AssertUnityObjValid: æ— æ•ˆçš„UnityObject: "..BuildStr(...)..": "..debug.traceback())
     end
-    --return assert(UnityHelper.IsUnityObjectValid(b), BuildStr(...))
+    return assert(UnityHelper.IsUnityObjectValid(obj), BuildStr(...))
 end

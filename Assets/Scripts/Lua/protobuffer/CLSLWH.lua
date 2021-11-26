@@ -14,7 +14,7 @@ message EnterServerNtf
 message BetInfo
 {
     int32 index_id = 1;            //下注区域Id(1-15)
-    int64 total_bet = 4;            //此项总下注
+    int64 total_bet = 2;            //此项总下注
 }
 //加入房间请求
 message EnterRoomReq
@@ -32,8 +32,8 @@ message EnterRoomAck
     int32 shark_more_show_time = 7;            //在出鲨鱼的情况下，服务器约定的显示结果时间
     int64 self_score = 8;                       //玩家当前的分数
     int32 online_player_count = 9;              //在线玩家数量
-    repeated BetInfo room_tatol_bet_info_list = 10;//房间总下注信息
-    repeated BetInfo self_bet_list = 11;       //我自己已下注数组
+    repeated BetInfo room_total_bet_info_list = 10;//房间总下注信息
+    repeated BetInfo self_bet_info_list = 11;       //我自己已下注数组
     int32 self_user_id = 12;                //self UserID
     string self_user_name = 13;             // 玩家昵称
     int32 self_user_Head = 14;               // 玩家头像
@@ -71,7 +71,9 @@ message GetServerDataAck
     int64 caijin_ratio = 10;                         // 彩金倍数
     int64 shandian_ratio = 11;                        // 闪电翻倍倍数
     int64 self_score = 12;          // 玩家自己的分数
-    int64 time_stamp = 13;          // 消息时间戳
+    repeated BetInfo room_total_bet_info_list = 13;  //房间总下注信息
+    repeated BetInfo self_bet_info_list = 14;             //我自己已下注数组
+    int64 time_stamp = 15;          // 消息时间戳
 }
 
 //自己下注请求
@@ -87,7 +89,7 @@ message SetBetAck
     int64 self_score = 2;           //玩家当前的分数
     BetInfo self_bet_info = 3;      //自己下注信息
     string errParam = 4;            // 错误参数：比如下注上限等
-    //repeated BetInfo room_tatol_bet_info_list = 4;//房间总下注信息
+    //repeated BetInfo room_total_bet_info_list = 4;//房间总下注信息
 }
 
 //
@@ -101,7 +103,8 @@ message OtherPlayerSetBetNtf
 {
     int32 user_id = 1; // 本次下注的userID
     BetInfo info = 2; // 本次下注区总押分信息（正常下注使用，一次操作只影响一个下注区）
-    repeated BetInfo room_tatol_bet_info_list = 3; // 所有下注区总下注信息（只有清除下注使用，可能影响多个下注区）
+    repeated BetInfo room_total_bet_info_list = 3; // 所有下注区总下注信息（只有清除下注使用，可能影响多个下注区）
+    int64 total_bets = 4; // 本次下注的玩家当前总下注，用来刷新玩家列表信息
 }
 
 // 动物倍率信息
@@ -186,12 +189,6 @@ message SelfWinResultNtf
     int64 self_score = 3;   // 自己分数
 }
 
-// 在线人数变化
-message OnlinePlayerCountNtf
-{
-    int32 online_count = 1;         // 在线人数
-}
-
 // 统计数据
 message StatisticDataNtf
 {
@@ -203,5 +200,52 @@ message StatisticDataNtf
     int32 AllGameCount = 6; // 游戏总局数
 }
 
+//玩家信息
+message PlayerInfo
+{
+    int32 user_id = 1;              //玩家Id
+    string nickname = 2;            //昵称
+    int32 gender = 3;               //0保密 1男 2女
+    int32 head = 4;                 //头像Id
+    int32 headFrame = 5;            //头像框Id
+    int32 vip_level = 6;            //vip等级
+    int64 currency = 7;             //金币数量
+    int64 bets = 8;                 //从进入游戏起总下注
+    int32 winCount = 9;             //从进入游戏起获胜次数
+}
+
+// 在线人数变化
+message OnlinePlayerCountNtf
+{
+    int32 online_count = 1;         // 在线人数
+}
+
+//玩家信息列表请求
+message QueryPlayerListReq
+{
+    int32 page_index = 1;           //请求第几页？
+    int32 page_count = 2;           //每页多少人？
+}
+
+//玩家信息列表回应
+message QueryPlayerListAck
+{
+    int32 errcode = 1;                  //0成功 1你不在房间内
+    int32 total_amount = 2;             //房间总人数
+    repeated PlayerInfo players = 3;    //玩家信息数组
+}
+
+// 玩家胜利次数信息
+message PlayerWinCountInfo
+{
+    int32 user_id = 1;              //玩家Id
+    int32 winCount = 2;             //从进入游戏起获胜次数
+}
+
+// 玩家胜利次数消息
+message PlayerWinCountInfoNtf
+{
+    repeated PlayerWinCountInfo player_winCount_info_list = 1;    //玩家胜利次数信息数组，用来刷新玩家列表信息
+}
 
 ]]

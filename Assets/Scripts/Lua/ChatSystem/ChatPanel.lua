@@ -522,18 +522,16 @@ function Class:__GetWaitSendChatMsgView(timestampSec)
     tremove(waitSendChatMsgViewList, index)
     return chatMsgView
 end
+-- 当游戏状态发生变化时取消输入状态，主要是取消语音输入
+function Class:OnCancelInput()
+    self.voicePanel:CancelVoiceInput()
+    self.inputField.onEndEdit:Invoke(self.inputField.text)
+end
 
 
 -- 以下代码为自动生成代码
 function Class:On_tog_Emoji_Event(tog_Emoji)
     local isOn = tog_Emoji.isOn
-    -- --
-    -- if isOn and self.tog_Phrase.isOn then
-    --     self.tog_Phrase.isOn = false
-    -- end
-    -- if isOn and self.tog_Voice.isOn then
-    --     self.tog_Voice.isOn = false
-    -- end
     -- --
     self.emojiPanel:OnShow(isOn)
 end
@@ -541,25 +539,11 @@ end
 function Class:On_tog_Phrase_Event(tog_Phrase)
     local isOn = tog_Phrase.isOn
     -- --
-    -- if isOn and self.tog_Voice.isOn then
-    --     self.tog_Voice.isOn = false
-    -- end
-    -- if isOn and self.tog_Emoji.isOn then
-    --     self.tog_Emoji.isOn = false
-    -- end
-    -- --
     self.phrasePanel:OnShow(isOn)
 end
 
 function Class:On_tog_Voice_Event(tog_Voice)
     local isOn = tog_Voice.isOn
-    -- --
-    -- if isOn and self.tog_Emoji.isOn then
-    --     self.tog_Emoji.isOn = false
-    -- end
-    -- if isOn and self.tog_Phrase.isOn then
-    --     self.tog_Phrase.isOn = false
-    -- end
     -- -- 权限检查
     if UnityHelper.GetPlatform() == "Android" then
         if UnityHelper.HasUserAuthorizedPermission and isOn == true then

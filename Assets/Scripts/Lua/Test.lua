@@ -49,8 +49,8 @@ local roomdata = {
     bet_config_array = {1000,10000,100000,500000,1000000,5000000},
     state = 2,
     left_time = 0,
-    room_tatol_bet_info_list = {},
-    self_bet_list = {},
+    room_total_bet_info_list = {},
+    self_bet_info_list = {},
     result_list = {},
     self_score = 0,
 }

@@ -18,12 +18,12 @@ local MessageCenter = require'Message.MessageCenter'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SceneView = require'View.Scene3DView'
 --
+local UnityHelper = CS.UnityHelper
 local yield = coroutine.yield
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 
 local Sprite = UnityEngine.Sprite
 local GameObject = UnityEngine.GameObject
-local DateTime = CS.System.DateTime
 
 
 
@@ -65,8 +65,8 @@ local roomdata = {
     bet_config_array = {},
     state = 1,
     left_time = 0,
-    room_tatol_bet_info_list = {},
-    self_bet_list = {},
+    room_total_bet_info_list = {},
+    self_bet_info_list = {},
     self_score = 0,
     self_user_id = 0,
     self_user_name = "",
@@ -164,7 +164,6 @@ function OnSceneLoaded(scene, mode)
                     end
                 elseif k == 2 then
                     for _, soundPkgPath in pairs(v) do
-                        print("加载音乐音效包：path = ", soundPkgPath)
                         loader:LoadSoundsPackage(soundPkgPath)
                         updateProgress()
                     end
@@ -189,9 +188,12 @@ function OnSceneLoaded(scene, mode)
     end
 end
 
-
+local TEST_IsNetConnectLost = nil   -- 模拟断网收不到消息
 local OnReceiveNetData = PBHelper.OnReceiveNetData
 function OnReceiveNetDataPack(data, packname)
+    -- if TEST_IsNetConnectLost then
+    --     return
+    -- end
     OnReceiveNetData(data, packname)
     
 end
@@ -212,11 +214,11 @@ function OnNetworkLost()
     if gameView then
         local LoadingUI = g_Env.uiManager:OpenUI('LoadingUI')
         if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
-            LoadingUI:SetTipText(_STR_ '网络已断开，网络恢复将继续游戏...')
+            LoadingUI:SetTipText(_G._STR_ '网络已断开，网络恢复将继续游戏...')
             CoroutineHelper.StopAllCoroutines()
             LogW("网络连接断开...")
         else
-            LoadingUI:SetTipText(_STR_ '与服务器断开连接，等待恢复中...')
+            LoadingUI:SetTipText(_G._STR_ '与服务器断开连接，等待恢复中...')
             CoroutineHelper.StopAllCoroutines()
             LogW("与服务器断开连接...")
         end
@@ -234,13 +236,11 @@ function OnNetworkReConnect()
         -- 先重新请求进入房间
         CLSLWHSender.Send_EnterRoomReq(OnEnterRoomAck)
         -- 再请求路单(这里防止加载的时候断网，导致OnSceneReady中的请求发送失败，这里补上)
-        CLSLWHSender.Send_HistoryReq(function (data)
-            gameView.ctrl:OnHistroyAck(data)
-        end)
+        gameView.ctrl:SendHistoryReq()
         -- 再请求服务器数据
         CLSLWHSender.Send_GetServerDataReq(function(ack)
             if ack._errmessage then
-                g_Env.CreateHintMessage(ack._errmessage)
+                SEnv.ShowHintMessage(ack._errmessage)
             else
                 SEnv.gamePause = nil
                 gameView.ctrl:OnStateChangeNtf(ack, true)
@@ -251,37 +251,51 @@ function OnNetworkReConnect()
 end
 -- 进入后台事件
 local pauseTimestamp = 0
+local lastStateLeftTime = nil
 function OnApplicationPause(b)
     if b then -- 进入后台
         print("SLWH 进入后台...")
-        pauseTimestamp = CS.UnityHelper.GetTimeStampSecond()
-        SEnv.gamePause = true
-        CoroutineHelper.StopAllCoroutines()
+        pauseTimestamp = UnityHelper.GetTimeStampSecond()
+        if gameView then
+            gameView.mainUI.chatPanel:OnCancelInput() -- 取消语音输入和文字输入
+            lastStateLeftTime = gameView.mainUI.timeCounter.time -- 保存进入后台前的状态剩余时间
+            print("lastStateLeftTime = ", lastStateLeftTime)
+        end
     else
-        -- SEnv.nowTimestamp = CS.TimeHelper.GetServerTimestampSecond()
-        -- local nowTimestamp = CS.UnityHelper.GetTimeStampSecond()
-        -- if nowTimestamp - pauseTimestamp > 2 then
-        --     CLSLWHSender.Send_GetServerDataReq(function(ack)
-        --         if ack._errmessage then
-        --             g_Env.CreateHintMessage(ack._errmessage)
-        --         else
-        --             gameView.ctrl:OnStateChangeNtf(ack, true)
-        --         end
-        --     end)
-        -- end
         print("SLWH 进入前台...")
-        CLSLWHSender.Send_HistoryReq(function (data)
-            gameView.ctrl:OnHistroyAck(data)
-        end)
-        CLSLWHSender.Send_GetServerDataReq(function(ack)
-            if ack._errmessage then
-                g_Env.CreateHintMessage(ack._errmessage)
-            else
-                SEnv.gamePause = nil
-                gameView.ctrl:OnStateChangeNtf(ack, true)
-            end
-        end)
+        local tempTime = UnityHelper.GetTimeStampSecond()
+        local passTime = tempTime - pauseTimestamp + 1 -- 加一秒冗余，避免小数情况判断不到 
+        print("passTime = ", passTime, "lastStateLeftTime = ", lastStateLeftTime)
+        if passTime > lastStateLeftTime or passTime > 3 then
+            SEnv.gamePause = true
+            CoroutineHelper.StopAllCoroutines() -- 确定要重新刷新数据才停止所有协程
+            CLSLWHSender.Send_HistoryReq(function (data)
+                gameView.ctrl:OnHistroyAck(data)
+            end)
+            CLSLWHSender.Send_GetServerDataReq(function(ack)    -- 这里短时间内不能多次请求，应记录游戏状态和时间，同一状态判断时间间隔（避免转一轮过去），不同状态直接请求
+                if ack._errmessage then
+                    SEnv.ShowHintMessage(ack._errmessage)
+                else
+                    SEnv.gamePause = nil
+                    gameView.ctrl:OnStateChangeNtf(ack, true)
+                end
+            end)
+        end
     end
+end
+
+function OnApplicationFocus(b)
+    print("FQZS 失去焦点...")
+    if not b then -- 失去焦点，手机上切到后台不会调用这个函数而是调用 OnApplicationPause
+        if gameView then
+            gameView.mainUI.chatPanel:OnCancelInput() -- 取消语音输入和文字输入
+        end
+    else
+        -- 有焦点
+        print("SLWH 获得焦点...")
+    end
+    -- 测试模拟切后台行为
+    -- OnApplicationPause(not b)
 end
 
 if g_Env then
@@ -292,6 +306,20 @@ end
 if IsRunInHall then
     Main()
 else
+    -- 测试函数
+    function _OnAKeyDown()
+        if gameView then
+            OnApplicationPause(true)
+            TEST_IsNetConnectLost = true
+        end
+    end
+
+    function _OnSKeyDown()
+        if gameView then
+            OnApplicationPause(false)
+            TEST_IsNetConnectLost = nil
+        end
+    end
     return function ()
         Main()
     end

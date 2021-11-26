@@ -22,12 +22,14 @@ function Class:__init(initHelper)
     self.gameObject = initHelper.gameObject
     self.gameObject:SetActive(true)
     initHelper:Init(self)
+    self.time = 0
 end
 
 function Class:StartCountDown(time, state, playSoundFunc)
     if self.co then
         CoroutineHelper.StopCoroutine(self.co)
     end
+    self.time = time
     for i=1,3 do
         if i==state then
             self['gamestate_'..i..'_image'].gameObject:SetActive(true)
@@ -58,6 +60,7 @@ function Class:StartCountDown(time, state, playSoundFunc)
             local dt = Time.deltaTime
             time = time - dt
             timerCounter = timerCounter - dt
+            self.time = time
             if timerCounter <= 0 then
                 timerCounter = timerCounter + 1
                 if doOneSecond(time) then

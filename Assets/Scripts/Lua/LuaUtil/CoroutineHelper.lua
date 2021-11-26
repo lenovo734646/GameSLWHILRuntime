@@ -18,7 +18,7 @@ return {
         if IsUnityObjectValid(monoBehaviour) then
             return monoBehaviour:StartCoroutine(util.cs_generator(...))
         else
-            LogE('monoBehaviour was Destroyed! ', monoBehaviour)
+            LogW('monoBehaviour was Destroyed! ', monoBehaviour)
         end
     end,
     StartCoroutineGo = function(gameObject, ...)
@@ -26,20 +26,27 @@ return {
             local component = gameObject:GetOrAddComponent(typeCache)
             return component:StartCoroutine(util.cs_generator(...))
         else
-            LogE('gameObject was Destroyed! ', gameObject)
+            LogW('gameObject was Destroyed! ', gameObject)
         end
+
     end,
     IEnumerator = function(...)
         return util.cs_generator(...)
     end,
-    StopCoroutine = function(coroutine)
-        if IsUnityObjectValid(cs_coroutine_runner) then
-            return cs_coroutine_runner:StopCoroutine(coroutine)
+    StopCoroutine = function(coroutine,com)
+        local runner = com or cs_coroutine_runner
+        if IsUnityObjectValid(runner) then
+            return runner:StopCoroutine(coroutine)
         end
     end,
     StopAllCoroutines = function()
         if IsUnityObjectValid(cs_coroutine_runner) then
             return cs_coroutine_runner:StopAllCoroutines()
         end
-    end
+    end,
+    StopAllCoroutinesAuto = function(monoBehaviour)
+        if IsUnityObjectValid(monoBehaviour) then
+            return monoBehaviour:StopAllCoroutines()
+        end
+    end,
 }

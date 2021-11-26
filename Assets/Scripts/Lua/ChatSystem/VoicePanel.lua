@@ -71,6 +71,14 @@ end
 function Class:RequestMicrophone()
     self.recorder:Init()
 end
+-- 取消音频输入
+function Class:CancelVoiceInput()
+    if self.recorder.isRecording then
+        self.recorder:CancelRecording()
+        SEnv.ShowHintMessage(_G._STR_("取消语音发送"))
+        self:RecoverMusicAndAudio()
+    end
+end
 
 function Class:OnShow(isOn)
     self.panel:SetActive(isOn)

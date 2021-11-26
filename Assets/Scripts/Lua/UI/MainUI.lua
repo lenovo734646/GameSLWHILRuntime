@@ -107,6 +107,33 @@ function Class:ResetUI()
     self.resultPanel:HideResult()
 end
 
+-- 设置当前在线人数
+function Class:UpdateOnlinePlayerCount(count)
+    if self.playerListPanel.panel.activeSelf then
+        self.playerListPanel:OnSendPlayerListReq()
+    end
+end
+
+-- 更新玩家胜利次数
+function Class:UpdatePlayersWinCount(player_winCount_info_list)
+    if self.playerListPanel.panel.activeSelf then
+        self.playerListPanel:UpdatePlayersWinCount()
+    end
+end
+-- 更新玩家本局下注
+function Class:UpdatePlayerTotalBets(user_id, totalBets)
+    if self.playerListPanel.panel.activeSelf then
+        self.playerListPanel:UpdatePlayerTotalBets(user_id, totalBets)
+    end
+end
+
+-- 重置玩家本局下注
+function Class:ResetAllPlayerTotalBets()
+    if self.playerListPanel.panel.activeSelf then
+        self.playerListPanel:ResetAllPlayerTotalBets()
+    end
+end
+
 function Class:Release()
     -- self.chatPanel:Release() 
     -- self.playerListPanel:Release()

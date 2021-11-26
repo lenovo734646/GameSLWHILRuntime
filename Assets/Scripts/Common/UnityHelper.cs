@@ -891,8 +891,15 @@ public static class UnityHelper
                 return www.downloadHandler.data;
         }
 
-        if (File.Exists(path))
+        if (File.Exists(path)) {
+            //Debug.Log($"ReadAllBytes {path}");
             return File.ReadAllBytes(path);
+        }
+        else
+        {
+            if(!path.Contains("xlua"))
+                Debug.LogWarning($"ReadAllBytes can not find:{path}");
+        }
         return null;
     }
 
@@ -1367,6 +1374,25 @@ public static class UnityHelper
     public static long RealUsedMemorySize { 
         get => (Profiler.GetTotalAllocatedMemoryLong()- Profiler.GetTotalUnusedReservedMemoryLong()) / 1024 / 1024; }
 
+    // 获取时间戳（秒）
+    public static long GetTimeStampSecond()
+    {
+        TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        return Convert.ToInt64(ts.TotalSeconds);
+    }
+
+    // 获取时间戳（毫秒）
+    public static long GetTimeStampMilliSecond()
+    {
+        TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        return Convert.ToInt64(ts.TotalMilliseconds);
+    }
+    // 获取时间戳（100纳秒）
+    public static long GetTimeStampTicks()
+    {
+        TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        return ts.Ticks;
+    }
 
     // 判断鼠标是否在target上
     public static bool IsMouseCorveredTarget(GameObject target, GraphicRaycaster gr)
@@ -1417,5 +1443,10 @@ public static class UnityHelper
         return true;
 #endif
 
+    }
+
+    public static string GetCountry()
+    {
+        return System.Globalization.RegionInfo.CurrentRegion.Name;
     }
 }

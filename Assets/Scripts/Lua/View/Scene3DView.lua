@@ -19,6 +19,7 @@ local ItemCountChangeMode = OSACore.ItemCountChangeMode
 
 local MainUI =  require'UI.MainUI'
 local SimpleSlot = require'controller.SimpleSlot'
+local CameraCtrl = require'controller.CameraCtrl'
 local SEnv = SEnv
 
 
@@ -48,6 +49,10 @@ function Class:__init(roomdata)
 
     -- UI
     self.mainUI = MainUI.Create(roomdata)
+
+    -- CameraCtrl
+    self.cameraCtrl = CameraCtrl.Create()
+
     -- 中间获胜动物舞台
     local winStageChildren = {}
     self.winStageInitHelper:Init(winStageChildren)
@@ -159,10 +164,13 @@ function Class:__init(roomdata)
         viewItemData.shanDianInitHelper.gameObject:SetActive(false)
         viewItemData.songDengInitHelper.gameObject:SetActive(false)
         viewItemData.caiJinInitHelper.gameObject:SetActive(false)
+
+        viewItemData.animalImg.gameObject:SetActive(true)
         --
         if itemdata.siXiInfo ~= nil then
             local sxData = {}
             viewItemData.siXiInitHelper:Init(sxData, false)
+            viewItemData.colorImg.sprite = itemdata.colorSpr -- 背景颜色设置为四喜颜色
             sxData.item_1.sprite = itemdata.colorSpr
             sxData.item_2.sprite = itemdata.colorSpr
             sxData.item_3.sprite = itemdata.colorSpr
@@ -175,6 +183,7 @@ function Class:__init(roomdata)
         elseif itemdata.sanYuanInfo ~= nil then
             local syData = {}
             viewItemData.sanYuanInitHelper:Init(syData, false)
+            viewItemData.colorImg.sprite = itemdata.sanYuanInfo.colorSpr_1 -- 背景颜色设置为三元第一个颜色，不然数据刷新的时候会改变
             syData.item_1.sprite = itemdata.sanYuanInfo.colorSpr_1
             syData.item_2.sprite = itemdata.sanYuanInfo.colorSpr_2
             syData.item_3.sprite = itemdata.sanYuanInfo.colorSpr_3
@@ -289,8 +298,8 @@ function Class:GetHistoryIconData(info)
     elseif ex_id == ExWinType.SanBei then
         shanDianRatio = 3
     elseif ex_id == ExWinType.SongDeng and info.ressult_info_songdeng ~= nil then
-        local songDengColorID = info.ressult_info_songdeng.winColor
-        local songDengAnimalID =  info.ressult_info_songdeng.winAnimal
+        local songDengColorID = info.ressult_info_songdeng.songDengColorID
+        local songDengAnimalID =  info.ressult_info_songdeng.songDengAnimalID
         --print("获取历史数据 songDengColorID = ", songDengColorID, "  songDengAnimalID = ", songDengAnimalID)
         songDengInfo = {
             songDengColorSpr = self.roadColorSprites[songDengColorID],
@@ -318,15 +327,35 @@ function Class:GetHistoryIconData(info)
 end
 
 function Class:Release()
-    print("Scene3DView Release")
+    -- 停止所有协程
     CoroutineHelper.StopAllCoroutines()
-    self.roadScrollView.OnCreateViewItemData = nil
-    self.roadScrollView.UpdateViewItemHandler = nil
-    self.roadScrollView:Release()
-    self.roadScrollView = nil
-
-    self.mainUI:Release()
+    CoroutineHelper.StopAllCoroutinesAuto(SEnv.CoroutineMonoBehaviour)
+    -- 停止所有动画播放
+    for key, data in pairs(self.runItemDataList) do
+        if data.animatorHelper and data.animatorHelper:GetAnimator() then
+            data.animatorHelper:Stop()
+        end
+        if data.winShowData.animatorHelper and data.winShowData.animatorHelper:GetAnimator() then
+            data.winShowData.animatorHelper:Stop()
+        end
+    end
+    --
+    if self.roadScrollView then
+        self.roadScrollView:Release()
+        self.roadScrollView = nil
+    end
+    print("1111111111111111111 SAFE_RELEASE self.roadScrollView = ", self.roadScrollView)
+    if self.mainUI then
+        self.mainUI:Release()
+        self.mainUI = nil
+    end
+    if self.ctrl then
+        self.ctrl:Release()
+        self.ctrl = nil
+    end
+    
 end
+
 
 
 

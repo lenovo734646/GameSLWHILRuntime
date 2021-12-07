@@ -201,7 +201,10 @@ end
 -- 退出游戏时调用：如果有必要可用来清理场景，关闭UI等
 function OnCloseSubGame()
     print("退出小游戏 OnCloseSubGame...")
-    --gameView:Release()
+    if gameView then
+        gameView:Release()
+        gameView:Release()
+    end
 end
 
 local LogW = LogW
@@ -257,7 +260,9 @@ function OnApplicationPause(b)
         print("SLWH 进入后台...")
         pauseTimestamp = UnityHelper.GetTimeStampSecond()
         if gameView then
-            gameView.mainUI.chatPanel:OnCancelInput() -- 取消语音输入和文字输入
+            if gameView.mainUI then
+                gameView.mainUI:OnCancelInput()-- 取消语音输入和文字输入
+            end
             lastStateLeftTime = gameView.mainUI.timeCounter.time -- 保存进入后台前的状态剩余时间
             print("lastStateLeftTime = ", lastStateLeftTime)
         end
@@ -288,7 +293,9 @@ function OnApplicationFocus(b)
     print("FQZS 失去焦点...")
     if not b then -- 失去焦点，手机上切到后台不会调用这个函数而是调用 OnApplicationPause
         if gameView then
-            gameView.mainUI.chatPanel:OnCancelInput() -- 取消语音输入和文字输入
+            if gameView.mainUI then
+                gameView.mainUI:OnCancelInput()-- 取消语音输入和文字输入
+            end
         end
     else
         -- 有焦点
@@ -309,15 +316,17 @@ else
     -- 测试函数
     function _OnAKeyDown()
         if gameView then
-            OnApplicationPause(true)
-            TEST_IsNetConnectLost = true
+            -- OnApplicationPause(true)
+            -- TEST_IsNetConnectLost = true
+            gameView.cameraCtrl:ToShowPoint()
         end
     end
 
     function _OnSKeyDown()
         if gameView then
-            OnApplicationPause(false)
-            TEST_IsNetConnectLost = nil
+            -- OnApplicationPause(false)
+            -- TEST_IsNetConnectLost = nil
+            gameView.cameraCtrl:ToNormalPoint()
         end
     end
     return function ()

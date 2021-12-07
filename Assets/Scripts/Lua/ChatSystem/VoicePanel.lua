@@ -97,6 +97,7 @@ end
 function Class:Release()
     self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchUp:RemoveAllListeners()
+    self.onSendCallback = nil
 end
 
 function Class:PauseMusicAndAudio()

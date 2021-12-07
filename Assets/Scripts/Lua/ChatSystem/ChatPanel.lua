@@ -183,34 +183,6 @@ function Class:OnSendVoice(clipData, clipChannels, freq)
     end
     self:OnSendMsg(msgType, nil, timeStampSec, audioClip, clipData, clipChannels, freq)
     --
-    -- CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom,function ()
-    --     local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
-    --     if err then
-    --         LogE("请求语音上传链接错误:", err)
-    --         return
-    --     end
-    --     local upload_url = data.upload_url
-    --     local download_url = data.download_url
-    --     print("语音上传链接请求成功上传链接:", upload_url..'\n下载链接：'..download_url)
-    --     CoroutineHelper.StartCoroutineAuto(self.OSAScrollViewCom, function ()
-    --         -- TODO: 显示正在发送提示
-    --         local request = Helpers.WebRequestPut(upload_url, clipData)
-    --         request:SendWebRequest()
-    --         while (not request.isDone) do
-    --             yield()
-    --             --print("正在上传发送...")
-    --         end
-    --         if not string.IsNullOrEmpty(request.error) then
-    --             _G.ShotHintMessage(_G._ERR_STR_(request.error))
-    --             print("上传发送出错:", request.error)
-    --             return
-    --         end
-    --         -- TODO: 上传完成 隐藏正在发送提示
-    --         print("上传成功发送下载链接：", download_url)
-    --         -- 发送完成 把下载地址返回给服务器
-    --         self:OnSendMsg(msgType, download_url, timeStampSec, audioClip, clipData)
-    --     end)
-    -- end)
 end
 
 -- 发送文字
@@ -639,26 +611,27 @@ function Class:OnEndEdit()
 end
 
 function Class:Release()
-    self.inputField.onSubmit:RemoveAllListeners()
-    self.inputField = nil
+    if self.inputField then
+        self.inputField.onSubmit:RemoveAllListeners()
+        self.inputField = nil
+    end
 
-    self.emojiPanel:Release()
-    self.emojiPanel = nil
-    -- phrase 常用短语
-    self.phrasePanel:Release()
-    self.phrasePanel.OnPhraseClickCallBack = nil
-    self.phrasePanel = nil
-
-    self.voicePanel.onSendCallback = nil
-    self.voicePanel:Release()
-    self.voicePanel = nil
-
-    self.msgScrollView.OSAScrollView.ChangeItemsCountCallback = nil
-    self.msgScrollView.OnCreateViewItemData = nil
-    self.msgScrollView.UpdateViewItemHandler = nil
-    self.msgScrollView:Release()
-    self.msgScrollView = nil
-
+    if self.emojiPanel then
+        self.emojiPanel:Release()
+        self.emojiPanel = nil
+    end
+    if self.phrasePanel then
+        self.phrasePanel:Release()
+        self.phrasePanel = nil
+    end
+    if self.voicePanel then
+        self.voicePanel:Release()
+        self.voicePanel = nil
+    end
+    if self.msgScrollView then
+        self.msgScrollView:Release()
+        self.msgScrollView = nil
+    end
 end
 
 function Class:OnDestroy()

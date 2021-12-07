@@ -724,11 +724,6 @@ PrefabInstance:
         type: 3}
       propertyPath: events.Array.data[0].UnityEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 5100810204676105362}
-    - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
-        type: 3}
-      propertyPath: events.Array.data[0].UnityEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
       objectReference: {fileID: 1991156215}
     - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
         type: 3}
@@ -740,31 +735,6 @@ PrefabInstance:
       propertyPath: events.Array.data[2].UnityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 847000489}
-    - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
-        type: 3}
-      propertyPath: events.Array.data[3].UnityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 5100810204676105362}
-    - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
-        type: 3}
-      propertyPath: events.Array.data[3].UnityEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 1991156215}
-    - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
-        type: 3}
-      propertyPath: events.Array.data[3].UnityEvent.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 1991156215}
-    - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
-        type: 3}
-      propertyPath: events.Array.data[4].UnityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2657902492453852458}
-    - target: {fileID: 1304461324910240662, guid: 0897f58384a690849a8714e3281bf560,
-        type: 3}
-      propertyPath: events.Array.data[4].UnityEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 1991156215}
     - target: {fileID: 1304461324910240663, guid: 0897f58384a690849a8714e3281bf560,
         type: 3}
       propertyPath: keyEvents.Array.data[0].keyEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1019,6 +989,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 440866186961788058, guid: 4f1c50e3b00693046b744454a74914bd,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1258658865347723685, guid: 4f1c50e3b00693046b744454a74914bd,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -1357,7 +1332,7 @@ PrefabInstance:
     - target: {fileID: 3461789270022365354, guid: 4f1c50e3b00693046b744454a74914bd,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -597.0003
+      value: -597.0002
       objectReference: {fileID: 0}
     - target: {fileID: 4059814919513395376, guid: 4f1c50e3b00693046b744454a74914bd,
         type: 3}
@@ -1802,30 +1777,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a223ce8ad7572e4ab3c5cdc26e9045a, type: 3}
---- !u!114 &2657902492453852458 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7073875075862000058, guid: 9a223ce8ad7572e4ab3c5cdc26e9045a,
-    type: 3}
-  m_PrefabInstance: {fileID: 2657902492453852457}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0390bd8b8ffd640b34fe25065ff1df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5100810204676105362 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7073875075862000059, guid: 9a223ce8ad7572e4ab3c5cdc26e9045a,
-    type: 3}
-  m_PrefabInstance: {fileID: 2657902492453852457}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0390bd8b8ffd640b34fe25065ff1df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6134874742376838289 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8528977277772909783, guid: 4f1c50e3b00693046b744454a74914bd,

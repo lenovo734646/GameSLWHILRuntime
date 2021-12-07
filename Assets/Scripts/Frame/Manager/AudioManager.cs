@@ -32,9 +32,43 @@ public class AudioManager : MonoBehaviour {
         }
         set {
             EffectAudio.volume = value;
+            foreach (var item in loopAudioSources)
+            {
+                item.volume = value;
+            }
             PlayerPrefs.SetFloat("EffectVolm", value);
         }
     }
+
+    public bool isMusicMute
+    {
+        get
+        {
+            return MusicAudio.mute;
+        }
+        set
+        {
+            MusicAudio.mute = value;
+            PlayerPrefs.SetInt("isMusicMute", value ? 1 : 0);
+        }
+    }
+    public bool isEffectMute
+    {
+        get
+        {
+            return EffectAudio.mute;
+        }
+        set
+        {
+            EffectAudio.mute = value;
+            foreach (var item in loopAudioSources)
+            {
+                item.mute = value;
+            }
+            PlayerPrefs.SetInt("isEffectMute", value ? 1 : 0);
+        }
+    }
+
     //兼容就方法
     public float GetBGMVolumScale() {
         return MusicVolum;
@@ -89,7 +123,9 @@ public class AudioManager : MonoBehaviour {
         initAudioSources();
 
         MusicVolum = PlayerPrefs.GetFloat("MusicVolum",1);
+        isMusicMute = PlayerPrefs.GetInt("isMusicMute", 0)==1;
         EffectVolm = PlayerPrefs.GetFloat("EffectVolm",1);
+        isEffectMute = PlayerPrefs.GetInt("isEffectMute", 0) == 1;
 
     }
 
@@ -128,11 +164,11 @@ public class AudioManager : MonoBehaviour {
 
     //设置静音
     public void SetMusicMute(bool isMute) {
-        MusicAudio.mute = isMute;
+        isMusicMute = isMute;
     }
     //设置音效静音
     public void SetEffectMute(bool isMute) {
-        EffectAudio.mute = isMute;
+        isEffectMute = isMute;
     }
 
     //播放背景音乐
@@ -261,7 +297,7 @@ public class AudioManager : MonoBehaviour {
         }
         if (autoClearLoop)
             CheckAndDestroyLoopSources(true);
-        var r = audioSources.Find(aud => {
+        var r = loopAudioSources.Find(aud => {
             if (aud == null || aud.clip == null) {
                 if (showLog)
                 {
@@ -281,7 +317,7 @@ public class AudioManager : MonoBehaviour {
             return aud.clip.name == eff;
         });
         if (r) {
-            audioSources.Remove(r);
+            loopAudioSources.Remove(r);
             Destroy(r.gameObject);
         }
     }
@@ -291,7 +327,7 @@ public class AudioManager : MonoBehaviour {
     /// </summary>
     /// <param name="clip">音效</param>
     public void StopSoundEff(AudioClip clip) {
-        var r = audioSources.Find(aud => {
+        var r = loopAudioSources.Find(aud => {
             if (aud == null || aud.clip == null)
             {
                 if (showLog)
@@ -313,7 +349,7 @@ public class AudioManager : MonoBehaviour {
             return aud.clip == clip;
         });
         if (r) {
-            audioSources.Remove(r);
+            loopAudioSources.Remove(r);
             Destroy(r.gameObject);
         } else
             StopSoundEff(clip.name);
@@ -353,7 +389,7 @@ public class AudioManager : MonoBehaviour {
         EffectAudio.PlayOneShot(clip);
     }
 
-    List<AudioSource> audioSources = new List<AudioSource>();
+    List<AudioSource> loopAudioSources = new List<AudioSource>();
 
     //用于兼容旧游戏的方法
     public void PlaySoundEff2D(AudioClip clip, bool loop) {
@@ -367,20 +403,20 @@ public class AudioManager : MonoBehaviour {
 
     public void CheckAndDestroyLoopSources(bool justInvalid = false)
     {
-        for (int i = audioSources.Count-1; i >= 0; i--)
+        for (int i = loopAudioSources.Count-1; i >= 0; i--)
         {
-            bool invalid = audioSources[i] == null || audioSources[i].clip == null;
+            bool invalid = loopAudioSources[i] == null || loopAudioSources[i].clip == null;
             if (invalid)
             {
-                if (audioSources[i])
+                if (loopAudioSources[i])
                 {
-                    Destroy(audioSources[i]);
+                    Destroy(loopAudioSources[i]);
                 }
-                audioSources.RemoveAt(i);
-            }else if (!justInvalid && audioSources[i].loop)
+                loopAudioSources.RemoveAt(i);
+            }else if (!justInvalid && loopAudioSources[i].loop)
             {
-                Destroy(audioSources[i]);
-                audioSources.RemoveAt(i);
+                Destroy(loopAudioSources[i]);
+                loopAudioSources.RemoveAt(i);
             }
         }
     }
@@ -394,7 +430,7 @@ public class AudioManager : MonoBehaviour {
                 CheckAndDestroyLoopSources(true);
             //Debug.LogWarning("目前音效不支持循环，考虑自己做循环控制");
             var audioSource = createAudioSource("LoopingAudioSource");
-            audioSources.Add(audioSource);//
+            loopAudioSources.Add(audioSource);//
             audioSource.clip = clip;
             audioSource.loop = true;
             if (vol != null) { 

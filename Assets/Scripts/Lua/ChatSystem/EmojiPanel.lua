@@ -55,11 +55,16 @@ function Class:OnShow(isOn)
 end
 
 function Class:Release()
-    print("EmojiPanel Release", self.scrollView.content)
-    --AssertUnityObjValid(self.scrollView.content)
-    for i = 0, self.scrollView.content.transform.childCount-1 do
-        local go = self.scrollView.content.transform:GetChild(i)
-        go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
+    print("EmojiPanel Release", self.scrollView.content, self.animatorHelper:GetAnimator())
+    if self.animatorHelper:GetAnimator() then
+        self.animatorHelper:Stop()
+    end
+    
+    if self.scrollView and self.scrollView.content then
+        for i = 0, self.scrollView.content.transform.childCount-1 do
+            local go = self.scrollView.content.transform:GetChild(i)
+            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
+        end
     end
 end
 

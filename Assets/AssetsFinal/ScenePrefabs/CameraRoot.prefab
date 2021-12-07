@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &109179333
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 109179334}
+  m_Layer: 15
+  m_Name: rotatePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &109179334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109179333}
+  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
+  m_LocalPosition: {x: 0, y: 40, z: -37}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2657902492430172763}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!114 &7073875075862000058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,13 +112,13 @@ MonoBehaviour:
   isActive: 1
   isValid: 1
   target: {fileID: 2657902492201434374}
-  animationType: 3
+  animationType: 4
   targetType: 11
   forcedTargetType: 0
   autoPlay: 0
   useTargetAsV3: 0
   endValueFloat: 0
-  endValueV3: {x: 35, y: 0, z: 0}
+  endValueV3: {x: 0, y: 0, z: 0}
   endValueV2: {x: 0, y: 0}
   endValueColor: {r: 1, g: 1, b: 1, a: 1}
   endValueString: 
@@ -187,11 +217,11 @@ MonoBehaviour:
   isActive: 1
   isValid: 1
   target: {fileID: 2657902492201434374}
-  animationType: 1
+  animationType: 2
   targetType: 11
   forcedTargetType: 0
   autoPlay: 0
-  useTargetAsV3: 1
+  useTargetAsV3: 0
   endValueFloat: 0
   endValueV3: {x: 0, y: 0, z: 0}
   endValueV2: {x: 0, y: 0}
@@ -203,7 +233,7 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
-  endValueTransform: {fileID: 2657902493911000154}
+  endValueTransform: {fileID: 0}
   optionalBool0: 0
   optionalFloat0: 0
   optionalInt0: 0
@@ -219,6 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2657902492430172763}
+  - component: {fileID: 2657902492453852461}
   m_Layer: 15
   m_Name: CameraRoot
   m_TagString: Untagged
@@ -240,9 +271,50 @@ Transform:
   - {fileID: 2657902492201434374}
   - {fileID: 2657902493074898479}
   - {fileID: 2657902493911000154}
+  - {fileID: 109179334}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2657902492453852461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2657902492430172760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objects: []
+  sortByName: 0
+  initList:
+  - name: normalPoint
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 2657902493074898479}
+    sType: 
+    manualName: 
+  - name: showPoint
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 2657902493911000154}
+    sType: 
+    manualName: 
+  - name: rotatePoint
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 109179334}
+    sType: 
+    manualName: 
+  - name: MainCamera
+    t: {fileID: 0}
+    monoType: {fileID: 0}
+    anyType: {fileID: 2657902492201434373}
+    sType: 
+    manualName: 
+  showlog: 0
 --- !u!1 &2657902493074898476
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2657902493074898476}
   m_LocalRotation: {x: 0.42261827, y: -0, z: -0, w: 0.9063079}
-  m_LocalPosition: {x: 0, y: 55, z: -38}
+  m_LocalPosition: {x: 0, y: 49.5, z: -36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2657902492430172763}
@@ -318,12 +390,12 @@ PrefabInstance:
     - target: {fileID: 5100810204425276576, guid: d66b2f5cf6040154fba8819708faab0e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 55
+      value: 49.5
       objectReference: {fileID: 0}
     - target: {fileID: 5100810204425276576, guid: d66b2f5cf6040154fba8819708faab0e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -38
+      value: -36
       objectReference: {fileID: 0}
     - target: {fileID: 5100810204425276576, guid: d66b2f5cf6040154fba8819708faab0e,
         type: 3}

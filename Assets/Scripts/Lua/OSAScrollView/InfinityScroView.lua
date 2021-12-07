@@ -176,12 +176,17 @@ function Class:Release()
     for key, vh in pairs(self.vhList) do
         vh.CollectViewsCallback = nil
     end
-    
-    self.OSAScrollViewCom.UpdateViewsHolderCallback = nil
-    self.OSAScrollViewCom.CreateViewsHolderCallback = nil
-    self.OSAScrollView:Release()
-    self.OSAScrollView = nil
-    self.OSAScrollViewCom = nil
+    self.OnCreateViewItemData = nil
+    self.UpdateViewItemHandler = nil
+    if self.OSAScrollViewCom then
+        self.OSAScrollViewCom.UpdateViewsHolderCallback = nil
+        self.OSAScrollViewCom.CreateViewsHolderCallback = nil
+        self.OSAScrollViewCom = nil
+    end
+    if self.OSAScrollView then
+        self.OSAScrollView:Release()
+        self.OSAScrollView = nil
+    end
 end
 
 return _ENV

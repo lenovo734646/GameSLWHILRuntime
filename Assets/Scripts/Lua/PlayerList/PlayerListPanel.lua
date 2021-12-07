@@ -146,10 +146,10 @@ function Class:OnSendPlayerListReq()
 end
 
 function Class:Release()
-    self.playerListScrollView.OnCreateViewItemData = nil
-    self.playerListScrollView.UpdateViewItemHandler = nil
-    self.playerListScrollView:Release()
-    self.playerListScrollView = nil
+    if self.playerListScrollView then
+        self.playerListScrollView:Release()
+        self.playerListScrollView = nil
+    end
     self.playerInfoItems = nil
 end
 

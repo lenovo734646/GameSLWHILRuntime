@@ -2,9 +2,12 @@ local Tweening = CS.DG.Tweening
 
 local Config={
     debug = false,
+    ShowRunTime = 2,
+    ShowSharkRunTime = 1,
     ShowAnimationTime = 8,
     ShowZhanShiTime = 4.1,    --中奖动物展示动画时间（固定3秒+跳入动画1.1，Victory动画长度不是3秒的进行了速度调整）
     ShowResultTime = 5,     --结算界面显示时间（可调整）
+    JumpTime = 1.1,
     RunItemCount = 24,
     AnimalCount = 4,
     -- 胜利音效名字（根据itemID）

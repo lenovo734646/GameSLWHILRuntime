@@ -17,10 +17,4 @@ public class LangTest : MonoBehaviour
     {
         
     }
-#if UNITY_EDITOR
-    public void OnPauseClick()
-    {
-        EditorApplication.isPaused = !EditorApplication.isPaused;
-    }
-#endif
 }

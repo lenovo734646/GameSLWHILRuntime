@@ -133,15 +133,23 @@ function Class:ResetAllPlayerTotalBets()
         self.playerListPanel:ResetAllPlayerTotalBets()
     end
 end
-
-function Class:Release()
-    -- self.chatPanel:Release() 
-    -- self.playerListPanel:Release()
-
-    self.chatPanel = nil
-    self.playerListPanel = nil
+function Class:OnCancelInput()
+    if self.chatPanel then
+        self.chatPanel:OnCancelInput()
+    end
 end
 
+function Class:Release()
+    print("MainUI Release")
+    if self.chatPanel then
+        self.chatPanel:Release()
+        self.chatPanel = nil
+    end
+    if self.playerListPanel then
+        self.playerListPanel:Release()
+        self.playerListPanel = nil
+    end
+end
 
 -- 以下代码为自动生成代码，请勿更改
 function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)

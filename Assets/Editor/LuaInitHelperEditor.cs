@@ -241,7 +241,7 @@ public class LuaInitHelperEditor : Editor {
             var name = data.name;
             if (map.ContainsKey(name)) {
                 var index2 = map[name];
-                Debug.LogWarning("包含重复的key:" + name + " target:" + data.name + " index:" + i + " index2:" + index2);
+                Debug.LogWarning("包含重复的key:" + name + " target:" + data.name + " index:" + i + " index2:" + index2+ "  targetcom:"+ targetcom.gameObject.name);
                 if(data.anyType is GameObject) {
                     var obj = (data.anyType as GameObject);
                     var parent = obj.transform.parent;

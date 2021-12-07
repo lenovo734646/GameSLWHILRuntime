@@ -158,7 +158,7 @@ function _OnAKeyDown()
         -- coroutine.resume(cameraco)
         -- gameView.cameraCtrl:ToNormalPoint()
         local data = {
-            left_time = 4,                            -- 此状态的剩余时间 2开奖状态时间应该是不固定的
+            left_time = 6,                            -- 此状态的剩余时间 2开奖状态时间应该是不固定的
             state = 2,                                -- 状态 1=下注 2=开奖 3=空闲 
             color_array = {3,2,3,3,1,3,2,3,3,1,1,1,2,3,1,2,2,2,3,1,3,2,2,3},                          -- 颜色列表1-24
             ratio_array = {46,23,13,8,35,17,10,6,28,14,8,5,2,8,2},                 -- 倍率列表1-12动物 13-15庄和闲

@@ -652,71 +652,49 @@ function Class:OnShowState(data)
         bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
         local winItemCount = #anim_result_list -- 中奖动物数量
         local leftTime = data.left_time
-        --
-        if leftTime < GameConfig.ShowResultTime + GameConfig.JumpTime then
-            bSkip = true
-            ShowResultTime = leftTime
-        end
-        -- 
-        local timedataList = {}
-        for i = 1, winItemCount, 1 do
-            local timedata = {}
-            if leftTime < GameConfig.JumpTime then -- 跳回时间
-                timedata.jumpToOriginalTime = leftTime
-            else
-                timedata.jumpToOriginalTime = GameConfig.JumpTime
-                leftTime = leftTime - GameConfig.JumpTime
-                if leftTime < GameConfig.ShowZhanShiTime then -- 展示时间
-                    timedata.showZhanShiTime = leftTime
-                else
-                    timedata.showZhanShiTime = GameConfig.ShowZhanShiTime
-                    leftTime = leftTime - GameConfig.ShowZhanShiTime
-                    if leftTime < GameConfig.JumpTime then -- 跳出时间
-                        timedata.jumpToWinStage = leftTime
-                    else
-                        timedata.jumpToWinStage = GameConfig.JumpTime
-                        leftTime = leftTime - GameConfig.JumpTime
-                        if leftTime < 1 then        -- 跑马灯时间
-                            timedata.bSkip = true   -- 跳过跑马灯
-                        else
-                            local tShowRunTime = GameConfig.ShowRunTime
-                            if i ~= winItemCount then
-                                tShowRunTime = GameConfig.ShowSharkRunTime
-                            end
-                            if leftTime < tShowRunTime then
-                                timedata.showRunTime = leftTime
-                            else
-                                timedata.showRunTime = tShowRunTime
-                                leftTime = leftTime - tShowRunTime
-                            end
-                        end
-                    end
-                end
-            end
-            tinsert(timedataList, 1, timedata)
-        end
-
-        --
-        if leftTime < GameConfig.JumpTime then -- 时间太短就不跳回了直接显示结算界面
-            bSkip = true
-            ShowZhanShiTime = 0
-            ShowResultTime = leftTime
-        else
-            leftTime = leftTime - GameConfig.JumpTime -- 最后动物跳回时间扣除
-            if leftTime < GameConfig.ShowResultTime then
-                bSkip = true
-                ShowZhanShiTime = 0
-                ShowResultTime = leftTime
-            else
-                -- 大于结算界面显示时间和最后动物跳出时间，判断是否可以跑马灯
-                leftTime =  leftTime - GameConfig.ShowResultTime
-                local tRunTime  = leftTime - ((GameConfig.ShowZhanShiTime + GameConfig.JumpTime)*winItemCount)
-                if tRunTime > 1 then
-                    ShowRunTime = tRunTime
-                    bSkip = false
-                end
-            end
-        end
+        -- --
+        -- if leftTime < GameConfig.ShowResultTime + GameConfig.JumpTime then
+        --     bSkip = true
+        --     ShowResultTime = leftTime
+        -- end
+        -- -- 
+        -- local timedataList = {}
+        -- for i = 1, winItemCount, 1 do
+        --     local timedata = {}
+        --     if leftTime < GameConfig.JumpTime and i ~= 1 then -- 跳回时间,最后一个不需要跳回，逆序插入的
+        --         timedata.jumpToOriginalTime = leftTime
+        --     else
+        --         timedata.jumpToOriginalTime = GameConfig.JumpTime
+        --         leftTime = leftTime - GameConfig.JumpTime
+        --         if leftTime < GameConfig.ShowZhanShiTime then -- 展示时间
+        --             timedata.showZhanShiTime = leftTime
+        --         else
+        --             timedata.showZhanShiTime = GameConfig.ShowZhanShiTime
+        --             leftTime = leftTime - GameConfig.ShowZhanShiTime
+        --             if leftTime < GameConfig.JumpTime then -- 跳出时间
+        --                 timedata.jumpToWinStage = leftTime
+        --             else
+        --                 timedata.jumpToWinStage = GameConfig.JumpTime
+        --                 leftTime = leftTime - GameConfig.JumpTime
+        --                 if leftTime < 1 then        -- 跑马灯时间
+        --                     timedata.bSkip = true   -- 跳过跑马灯
+        --                 else
+        --                     local tShowRunTime = GameConfig.ShowRunTime
+        --                     if i ~= winItemCount then
+        --                         tShowRunTime = GameConfig.ShowSharkRunTime
+        --                     end
+        --                     if leftTime < tShowRunTime then
+        --                         timedata.showRunTime = leftTime
+        --                     else
+        --                         timedata.showRunTime = tShowRunTime
+        --                         leftTime = leftTime - tShowRunTime
+        --                     end
+        --                 end
+        --             end
+        --         end
+        --     end
+        --     tinsert(timedataList, 1, timedata)
+        -- end
 
          -- 跑马灯动画时间
         local ShowRunTime = leftTime - (GameConfig.ShowResultTime + GameConfig.ShowZhanShiTime*winItemCount + JumpTime*winItemCount)
@@ -786,10 +764,10 @@ function Class:OnShowState(data)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
                 else
-                    ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
-                    if i == winItemCount then   -- 只显示最后一个，因为领奖台只能站一个动物
-                        itemData.JumpToWinStage(winItemCount, i, bSkip) 
-                    end
+                    -- ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
+                    -- if i == winItemCount then   -- 只显示最后一个，因为领奖台只能站一个动物
+                    --     itemData.JumpToWinStage(winItemCount, i, bSkip) 
+                    -- end
                 end
             end
             -- 如果跳过了跑马灯动画，并且扣除结算界面显示时间，还有剩余，就等一等，避免结算界面提前消失
@@ -823,7 +801,10 @@ function Class:OnShowState(data)
                     itemData.JumpToOriginal(bSkip)
                 end
             end
-            yield(WaitForSeconds(GameConfig.JumpTime))
+            if bSkip == false then
+                yield(WaitForSeconds(GameConfig.JumpTime))
+            end
+            
             -- print("关闭花瓣....")
             ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
             -- 开启聚光灯动画和宝石动画

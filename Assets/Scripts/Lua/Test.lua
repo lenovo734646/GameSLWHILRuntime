@@ -20,7 +20,7 @@ AudioManager = CS.AudioManager
 SUBGAME_EDITOR = true
 if SUBGAME_EDITOR then
     SEnv.loader = require'LuaAssetLoader'.Create()
-    local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
+    local playerRes = {diamond=0,currency=9000000,integral=0, selfUserID = 11111, userName = "Test", headID = 1, headFrameID = 1}
     SEnv.playerRes = playerRes
 
     SEnv.AutoUpdateHeadImage = function (img, headID, selfUserID)
@@ -152,13 +152,22 @@ function OnSceneLoaded(scene, mode)
     end
 end
 print("11gameView = ", gameView, cameraco)
--- 测试函数
-function _OnAKeyDown()
+
+
+local OnTestShowState = function (time)
     if gameView and cameraco then
         -- coroutine.resume(cameraco)
         -- gameView.cameraCtrl:ToNormalPoint()
+
+        local SelfWinResultNtfData = {
+            win_score = 0,         --本局输赢
+            bet_score = 0,    -- 本局下注
+            self_score = SEnv.playerRes.currency   -- 自己分数
+        }
+        gameView.ctrl:OnSelfWinResultNtf(SelfWinResultNtfData)
+        --
         local data = {
-            left_time = 6,                            -- 此状态的剩余时间 2开奖状态时间应该是不固定的
+            left_time = time,                            -- 此状态的剩余时间 2开奖状态时间应该是不固定的
             state = 2,                                -- 状态 1=下注 2=开奖 3=空闲 
             color_array = {3,2,3,3,1,3,2,3,3,1,1,1,2,3,1,2,2,2,3,1,3,2,2,3},                          -- 颜色列表1-24
             ratio_array = {46,23,13,8,35,17,10,6,28,14,8,5,2,8,2},                 -- 倍率列表1-12动物 13-15庄和闲
@@ -175,10 +184,22 @@ function _OnAKeyDown()
                     animal_id = 1,      -- 中奖动物ID
                     sixi_color_id = nil,-- 四喜的中奖颜色ID
                 }, 
+                -- -- 第二个结果
+                -- {
+                --     color_form = 10,
+                --     color_to = 1,
+                
+                --     animal_form = 10,
+                --     animal_to = 1,
+                
+                --     color_id = 3,       -- 中奖颜色ID（红、绿、黄、三元、四喜） 
+                --     animal_id = 2,      -- 中奖动物ID
+                --     sixi_color_id = nil,-- 四喜的中奖颜色ID
+                -- }, 
 
             },                       --开奖结果列表（RunItem起始点和结束点），正常只有一个，如果有送灯会有多个
             enjoy_game_ret = 1,                       -- 庄闲和开奖结果
-            ex_ret = 5,                               -- 额外中奖结果（彩金，送灯，闪电翻倍）
+            ex_ret = 5,                               -- 额外中奖结果（1彩金，2送灯，3两倍，4三倍，5没中）
             caijin_ratio = 0,                         -- 彩金倍数
             shandian_ratio = 0,                        -- 闪电翻倍倍数
             --int64 betMaxLimit = 10;                          -- 本局下注最大限制（防止超过庄家分数）
@@ -186,14 +207,45 @@ function _OnAKeyDown()
 
         }
         gameView.ctrl:OnStateChangeNtf(data)
+    else
+
     end
 end
 
+-- 测试函数
+function _OnAKeyDown()
+    OnTestShowState(5)
+end
+
+SEnv.TestProcessEnd = true
 function _OnSKeyDown()
     if gameView then
-        -- gameView.cameraCtrl:ToNormalPoint()
-        itemData.JumpToOriginal(false)
+        -- TestProcessEnd = false
+        -- SEnv.TestProcessEnd = false
+        -- print("11TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
+        -- gameView.ctrl:TTT()
+        -- print("TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
+        AutoTest()
     end
+end
+
+function AutoTest()
+    local time = 15
+    local count = 0 
+    CoroutineHelper.StartCoroutine(function ()
+        while time > 0 do
+            -- print("SEnv.TestProcessEnd = ", SEnv.TestProcessEnd)
+            if SEnv.TestProcessEnd == true then
+                time = time -1
+                count =  count +1
+                print("开始测试:time = ", time, count)
+                OnTestShowState(time)
+                SEnv.TestProcessEnd = false
+            end
+            yield()
+        end
+        print("时间为0 测试结束....")
+    end)
 end
 
 -- 退出游戏时调用：如果有必要可用来清理场景，关闭UI等

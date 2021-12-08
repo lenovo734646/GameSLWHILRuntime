@@ -167,13 +167,7 @@ function Class:OnSceneReady()
 
     -- 本局自己输赢和庄家输赢
     PBHelper.AddListener('SelfWinResultNtf', function (data)
-        -- print("结算：玩家分数: ", data.self_score, data.win_score, data.bet_score)
-        self.resultPanelData.winScore = data.win_score -- 本局输赢
-        self.resultPanelData.betScore = data.bet_score  -- 总输赢
-        self.selfScore = data.self_score
-        if self.resultPanelData.winScore > 0 then
-            AudioManager.Instance:PlaySoundEff2D("win_bet")
-        end
+        self:OnSelfWinResultNtf(data)
     end)
 
     -- 其他玩家下注广播
@@ -216,18 +210,8 @@ function Class:OnSceneReady()
     end)
     --
     local roomdata = self.roomdata
-    -- 根据上局中奖下标同步转盘和指针角度 0° 是第一格的位置所以 index-1
-    local zhizhenRot = (roomdata.last_color_index -1)*15
-    local animalIndex = roomdata.last_color_index - roomdata.last_animal_index 
-    if animalIndex < 0 then
-        animalIndex = animalIndex + GameConfig.RunItemCount
-    end
-    local animalRot = (animalIndex)*15
-    -- print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
-    -- print("同步动物角度:", roomdata.last_animal_index, animalRot)
-    self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
-    self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
-
+    self:__SetArrowAndAnimalRot(roomdata.last_color_index, roomdata.last_animal_index)
+    --
     self:SendHistoryReq()
     self:ResetView(roomdata)
     self:PlayIdleStateAnim() -- 开启空闲动画，避免中途加入时动物都是不动的
@@ -400,6 +384,7 @@ function Class:IsFreeState()
 end
 
 function Class:OnStateChangeNtf(data, isReconnection)
+    print("11111self.showCO = ", self.showCO)
     if isReconnection then
         self:ResetView(data)
     end
@@ -652,132 +637,118 @@ function Class:OnShowState(data)
         bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
         local winItemCount = #anim_result_list -- 中奖动物数量
         local leftTime = data.left_time
-        -- --
-        -- if leftTime < GameConfig.ShowResultTime + GameConfig.JumpTime then
-        --     bSkip = true
-        --     ShowResultTime = leftTime
-        -- end
-        -- -- 
-        -- local timedataList = {}
-        -- for i = 1, winItemCount, 1 do
-        --     local timedata = {}
-        --     if leftTime < GameConfig.JumpTime and i ~= 1 then -- 跳回时间,最后一个不需要跳回，逆序插入的
-        --         timedata.jumpToOriginalTime = leftTime
-        --     else
-        --         timedata.jumpToOriginalTime = GameConfig.JumpTime
-        --         leftTime = leftTime - GameConfig.JumpTime
-        --         if leftTime < GameConfig.ShowZhanShiTime then -- 展示时间
-        --             timedata.showZhanShiTime = leftTime
-        --         else
-        --             timedata.showZhanShiTime = GameConfig.ShowZhanShiTime
-        --             leftTime = leftTime - GameConfig.ShowZhanShiTime
-        --             if leftTime < GameConfig.JumpTime then -- 跳出时间
-        --                 timedata.jumpToWinStage = leftTime
-        --             else
-        --                 timedata.jumpToWinStage = GameConfig.JumpTime
-        --                 leftTime = leftTime - GameConfig.JumpTime
-        --                 if leftTime < 1 then        -- 跑马灯时间
-        --                     timedata.bSkip = true   -- 跳过跑马灯
-        --                 else
-        --                     local tShowRunTime = GameConfig.ShowRunTime
-        --                     if i ~= winItemCount then
-        --                         tShowRunTime = GameConfig.ShowSharkRunTime
-        --                     end
-        --                     if leftTime < tShowRunTime then
-        --                         timedata.showRunTime = leftTime
-        --                     else
-        --                         timedata.showRunTime = tShowRunTime
-        --                         leftTime = leftTime - tShowRunTime
-        --                     end
-        --                 end
-        --             end
-        --         end
-        --     end
-        --     tinsert(timedataList, 1, timedata)
-        -- end
-
-         -- 跑马灯动画时间
-        local ShowRunTime = leftTime - (GameConfig.ShowResultTime + GameConfig.ShowZhanShiTime*winItemCount + JumpTime*winItemCount)
-        if ShowRunTime <= 1 then -- 跑马灯时间小于1 就不跑了
-            bSkip = true
-        end
-        -- print("leftTime = ", leftTime, " bSkip = ", bSkip, "ShowRunTime = ", ShowRunTime, "winItemCount = ", winItemCount)
         --
-        local ShowRunTime_Shark = self.shark_more_show_time - (GameConfig.ShowZhanShiTime + JumpTime*winItemCount) -- 减去展示时间，只要跑马灯时间
-        if bSkip == false then
-            if winItemCount > 1 then
-                local t1 = ShowRunTime - ShowRunTime_Shark
-                if t1 < 1 then -- 减掉送灯跑马灯时间，留给第一圈的时间小于 1 时间就平分
-                    ShowRunTime = ShowRunTime/2
-                    ShowRunTime_Shark = ShowRunTime
+        print("data.left_time = ", data.left_time)
+        if leftTime < GameConfig.ShowResultTime + GameConfig.JumpTime then
+            bSkip = true
+            ShowResultTime = leftTime
+            leftTime = 0
+        else
+            leftTime = leftTime - GameConfig.ShowResultTime + GameConfig.JumpTime
+        end
+        print("leftTime = ", leftTime, bSkip, "ShowResultTime = ", ShowResultTime)
+        -- 
+        local timedataList = {}
+        for i = 1, winItemCount, 1 do
+            if leftTime <= 0 then
+                break
+            end
+            --
+            local timedata = {}
+            if leftTime < GameConfig.JumpTime and i ~= 1 then -- 跳回时间,最后一个不需要跳回，逆序插入的
+                timedata.jumpToOriginalTime = leftTime
+                timedata.skipJumpToOriginal = true
+            else
+                timedata.jumpToOriginalTime = GameConfig.JumpTime
+                leftTime = leftTime - GameConfig.JumpTime
+                -- 跳入+展示放一起
+                local tJumpAndVictory = GameConfig.ShowZhanShiTime + GameConfig.JumpTime
+                if leftTime < tJumpAndVictory then -- 展示时间
+                    timedata.jumpToWinStageAndVictoryTime = leftTime
+                    timedata.skipJumpToWinStageAndVictory = true
                 else
-                    ShowRunTime = t1
+                    timedata.jumpToWinStageAndVictoryTime = tJumpAndVictory
+                    leftTime = leftTime - tJumpAndVictory
+                    -- 跑马灯时间
+                    if leftTime < 1 then        
+                        -- 跳过跑马灯
+                    else
+                        local tShowRunTime = GameConfig.ShowRunTime
+                        if i ~= winItemCount then
+                            tShowRunTime = GameConfig.ShowSharkRunTime
+                        end
+                        if leftTime < tShowRunTime then
+                            timedata.showRunTime = leftTime
+                        else
+                            timedata.showRunTime = tShowRunTime
+                            leftTime = leftTime - tShowRunTime
+                        end
+                    end
                 end
             end
-        else
-            -- 结算界面显示时间
-            if leftTime <= GameConfig.ShowResultTime then
-                ShowZhanShiTime = 0
-                ShowResultTime = leftTime
-            else
-                ShowZhanShiTime = leftTime - GameConfig.ShowResultTime
-            end
+            tinsert(timedataList, 1, timedata)
         end
+        --
         winItemDataList = {} 
         ui.cameraCtrl:ToRotatePoint() -- 摄像机到转动位置
         print("ShowRunTime = ", ShowRunTime, "winItemCount = ", winItemCount)
-        CoroutineHelper.StartCoroutine(function ()
+        self.showCO = CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
                 local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
                 local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
                 local itemData = self.runItemDataList[animalTo]
                 table.insert(winItemDataList, itemData)
-                --print("data.left_time = ", data.left_time)
-                if not bSkip then
-                    local round = 2
-                    local showTime = ShowRunTime
-                    if i > 1 then -- 送灯，目前最多送一个，所以总中奖数最多为2
-                        round = 0
-                        showTime = ShowRunTime_Shark
+                local timeData = timedataList[i]
+                print("timeData =", timeData, " i = ", i )
+                if timeData ~= nil then
+                    -- 跑马灯
+                    if timeData.showRunTime ~= nil then 
+                        local round = 2
+                        if timeData.showRunTime < 2 then
+                            round = 1
+                        end
+                        yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, timeData.showRunTime))--播放跑马灯动画
+                    else -- 直接设置结果
+                        self:__SetArrowAndAnimalRot(colorTo, animalTo)
                     end
-                    yield(self:DoTweenShowResultAnim(colorFrom, colorTo, animalFrom, animalTo, round, showTime))--播放跑马灯动画
-                    -- 摄像机拉近动画
                     ui.cameraCtrl:ToShowPoint()
-                    -- print("花瓣打开....")
                     ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
-                    -- 中奖动物跳入并播放胜利动画
-                    -- print("动物跳入展示....")
-                    itemData.JumpToWinStage(winItemCount, i, bSkip)
-                    --
-                    yield(WaitForSeconds(ShowZhanShiTime))
-                    if winItemCount > 1 and i ~= winItemCount then   -- 轮流跳入
-                        itemData.JumpToOriginal(bSkip)
-                        -- 摄像机位置还原到转动位置
-                        ui.cameraCtrl:ToRotatePoint()
-                        yield(WaitForSeconds(JumpTime))  -- 跳入时间
+                    -- 跳入和展示
+                    if timeData.jumpToWinStageAndVictoryTime ~= nil then
+                        if timeData.skipJumpToWinStageAndVictory then
+                            print("跳过跳入动画", timeData.jumpToWinStageAndVictoryTime, timeData.skipJumpToWinStageAndVictory)
+                            itemData.JumpToWinStage(winItemCount, i, true) -- 跳过跳入动画直接设置位置到中间奖台
+                        else
+                            print("不跳过跳入动画并且播放胜利动画", timeData.jumpToWinStageAndVictoryTime, timeData.skipJumpToWinStageAndVictory)
+                            itemData.JumpToWinStage(winItemCount, i, false) -- false 不跳过跳入动画
+                        end
+                        yield(WaitForSeconds(timeData.jumpToWinStageAndVictoryTime))
+                    else
+                        print("直接设置结果到讲台.....")
+                        itemData.JumpToWinStage(winItemCount, i, true) -- 跳过跳入动画直接设置位置到中间奖台
                     end
-                    --ui.winStageAnimal:DOPlayBackwards()   -- 播放中奖动物收回动画
-                    --
+
+                    -- 多个结果轮流跳入
+                    if winItemCount > 1 and i ~= winItemCount then   -- 有多个结果且不是最后一个
+                        if timeData.jumpToOriginalTime ~= nil then
+                            if timeData.skipJumpToOriginal then
+                                itemData.JumpToOriginal(true)  
+                            else
+                                itemData.JumpToOriginal(false)  
+                            end
+                            yield(WaitForSeconds(timeData.jumpToOriginalTime))
+                        end
+                        ui.cameraCtrl:ToRotatePoint() -- 摄像机位置还原到转动位置，准备转下一个               
+                    end
                     local colordata = self.ui.colorDataList[colorTo]
                     colordata.animator:Play("BaoshiFlash", 0, 0)
                     colordata.animator:Update(0)
                     colordata.animator.enabled = false  -- 停止中奖颜色播放闪烁动画
                 else
-                    -- ui.winStage_huaban_animatorhelper:Play("Open") -- 播放花瓣打开动画
-                    -- if i == winItemCount then   -- 只显示最后一个，因为领奖台只能站一个动物
-                    --     itemData.JumpToWinStage(winItemCount, i, bSkip) 
-                    -- end
+                    -- 跳过
                 end
             end
-            -- 如果跳过了跑马灯动画，并且扣除结算界面显示时间，还有剩余，就等一等，避免结算界面提前消失
-            if bSkip then
-                if ShowZhanShiTime > 0 then
-                    yield(WaitForSeconds(ShowZhanShiTime))
-                    --itemData.StopShow() -- 停止播放动物胜利动画
-                end
-            end
-            
             -- 禁用聚光灯动画和宝石动画
             self.ui.SpotLight_Animal_animator.gameObject:SetActive(false)
             self.ui.SpotLight_Animal_animator.enabled = false
@@ -804,7 +775,6 @@ function Class:OnShowState(data)
             if bSkip == false then
                 yield(WaitForSeconds(GameConfig.JumpTime))
             end
-            
             -- print("关闭花瓣....")
             ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
             -- 开启聚光灯动画和宝石动画
@@ -825,7 +795,11 @@ function Class:OnShowState(data)
                 shandian_ratio = data.shandian_ratio,
             }
             ui.roadScrollView:InsertItem(ui:GetHistoryIconData(info))
+            SEnv.TestProcessEnd = true
+            print("测试结束self.showCO = ", SEnv.TestProcessEnd, self.showCO)
         end)
+        
+        
     end
 end
 
@@ -1164,6 +1138,21 @@ function Class:OnHistroyAck(data)
     end
 end
 
+function Class:OnSelfWinResultNtf(data)
+    -- print("结算：玩家分数: ", data.self_score, data.win_score, data.bet_score)
+    self.resultPanelData.winScore = data.win_score -- 本局输赢
+    self.resultPanelData.betScore = data.bet_score  -- 总输赢
+    self.selfScore = data.self_score
+    if self.resultPanelData.winScore > 0 then
+        AudioManager.Instance:PlaySoundEff2D("win_bet")
+    end
+end
+
+function Class:TTT()
+    TestProcessEnd = true
+    SEnv.TestProcessEnd = true
+end
+
 -- 获取中奖动物倍率
 function Class:__GetRatio(color_id, animal_id)
     color_id = color_id -1
@@ -1233,6 +1222,26 @@ function Class:__ResetCurWinResultData()
         self.resultPanelData.betScore = 0  -- 总输赢
     end
 end
+
+-- 根据下标设置动物和指针角度
+function Class:__SetArrowAndAnimalRot(color_index, animal_index)
+    -- 根据上局中奖下标同步转盘和指针角度 0° 是第一格的位置所以 index-1
+    local zhizhenRot = (color_index -1)*15
+    local animalIndex = color_index - animal_index
+    if animalIndex < 0 then
+        animalIndex = animalIndex + GameConfig.RunItemCount
+    end
+    local animalRot = (animalIndex)*15
+    -- print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
+    -- print("同步动物角度:", roomdata.last_animal_index, animalRot)
+    self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
+    self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
+end
+
+-- function Class:__SetAnimalRot(color_index, animal_index)
+    
+-- end
+
 
 function Class:Release()
 

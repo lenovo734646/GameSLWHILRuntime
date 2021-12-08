@@ -184,7 +184,32 @@ local OnTestShowState = function (time)
                     animal_id = 1,      -- 中奖动物ID
                     sixi_color_id = nil,-- 四喜的中奖颜色ID
                 }, 
-                -- -- 第二个结果
+                -- 第二个结果
+                -- {
+                --     color_form = 10,
+                --     color_to = 1,
+                
+                --     animal_form = 10,
+                --     animal_to = 1,
+                
+                --     color_id = 3,       -- 中奖颜色ID（红、绿、黄、三元、四喜） 
+                --     animal_id = 2,      -- 中奖动物ID
+                --     sixi_color_id = nil,-- 四喜的中奖颜色ID
+                -- }, 
+
+                -- -- 第三个结果
+                -- {
+                --     color_form = 1,
+                --     color_to = 10,
+                
+                --     animal_form = 1,
+                --     animal_to = 10,
+                
+                --     color_id = 1,       -- 中奖颜色ID（红、绿、黄、三元、四喜） 
+                --     animal_id = 1,      -- 中奖动物ID
+                --     sixi_color_id = nil,-- 四喜的中奖颜色ID
+                -- }, 
+                -- -- 第四个结果
                 -- {
                 --     color_form = 10,
                 --     color_to = 1,
@@ -200,6 +225,7 @@ local OnTestShowState = function (time)
             },                       --开奖结果列表（RunItem起始点和结束点），正常只有一个，如果有送灯会有多个
             enjoy_game_ret = 1,                       -- 庄闲和开奖结果
             ex_ret = 5,                               -- 额外中奖结果（1彩金，2送灯，3两倍，4三倍，5没中）
+            -- ex_ret = 2, 
             caijin_ratio = 0,                         -- 彩金倍数
             shandian_ratio = 0,                        -- 闪电翻倍倍数
             --int64 betMaxLimit = 10;                          -- 本局下注最大限制（防止超过庄家分数）
@@ -214,18 +240,22 @@ end
 
 -- 测试函数
 function _OnAKeyDown()
-    OnTestShowState(5)
+    if SUBGAME_EDITOR then
+        OnTestShowState(8)
+    end
 end
 
 SEnv.TestProcessEnd = true
 function _OnSKeyDown()
-    if gameView then
-        -- TestProcessEnd = false
-        -- SEnv.TestProcessEnd = false
-        -- print("11TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
-        -- gameView.ctrl:TTT()
-        -- print("TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
-        AutoTest()
+    if SUBGAME_EDITOR then
+        if gameView then
+            -- TestProcessEnd = false
+            -- SEnv.TestProcessEnd = false
+            -- print("11TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
+            -- gameView.ctrl:TTT()
+            -- print("TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
+            AutoTest()
+        end
     end
 end
 

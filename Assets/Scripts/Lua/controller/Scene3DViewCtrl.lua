@@ -297,9 +297,11 @@ function Class:InitAnimalAnimation()
         -- 跳到中间领奖台
         -- bSkipAnim 是否跳过DOTween动画（断线重连时间不够需要跳过动画）
         data.JumpToWinStage = function (winItemCount, index, bSkipAnim)
+            -- print("11111111111 JumpToWinStage", bSkipAnim)
             data.StopAnim()
             local jumpTargetPos = ui.JumpTarget_Transform.localPosition
             local jumpTargetRot = ui.JumpTarget_Transform.localEulerAngles - self.ui.animal_rotate_root_transform.localEulerAngles
+            -- print("jumpTargetRot = ", jumpTargetRot, bSkipAnim)
             -- local offset = 5.0
             -- local itemPos = jumpTargetPos
             -- local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
@@ -313,7 +315,7 @@ function Class:InitAnimalAnimation()
                 data.animatorHelper:Play("Idel1") -- 避免结算时进入动物不动
             else
                 data.transform:DOLocalMove(jumpTargetPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
-                data.transform:DOLocalRotate(jumpTargetRot, 0.2):SetDelay(1)
+                data.transform:DOLocalRotate(jumpTargetRot, 0.2):SetDelay(0.9)
                 data.animatorHelper:Play("Jump")
                 data.animatorHelper:SetBool("bJumpToCenter", true)
                 data.animatorHelper:SetBool("tResultVictoryToIdel1", true)
@@ -340,6 +342,7 @@ function Class:InitAnimalAnimation()
 
         end
         data.JumpToOriginal = function (bSkipAnim)
+            -- print("22222222222 JumpToOriginal", bSkipAnim)
             data.StopAnim()
             data.animatorHelper:SetBool("bJumpToCenter", false)
             data.animatorHelper:SetBool("tResultVictoryToIdel1", false)
@@ -349,7 +352,7 @@ function Class:InitAnimalAnimation()
                 data.transform.localEulerAngles = data.OriginalRot
             else
                 data.transform:DOLocalMove(data.OriginalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
-                data.transform:DOLocalRotate(data.OriginalRot, 0.2):SetDelay(1)
+                data.transform:DOLocalRotate(data.OriginalRot, 0.2):SetDelay(0.9)
                 data.animatorHelper:Play("Jump")
                 -- data.animatorHelper:SetBool("bJumpToCenter", false)
             end
@@ -556,7 +559,7 @@ function Class:OnShowState(data)
     local winAnimal = resultInfo.animal_id
     local winEnjoyGameType = data.enjoy_game_ret
     local exType = data.ex_ret
-    print("=====OnShowState=======:")
+    print("=====OnShowState=======left_time = ", data.left_time)
     print("颜色结果: ", winColor, "动物结果: ", winAnimal, "大四喜颜色结果: ", winSiXiColor, "庄和闲结果: ", winEnjoyGameType)
     print("额外大奖结果：", exType, "彩金倍率：", data.caijin_ratio, "闪电倍率：", data.shandian_ratio)
     if exType == ExWinType.SongDeng then
@@ -628,70 +631,78 @@ function Class:OnShowState(data)
     if anim_result_list then
         -- -- 检查剩余时间是否足够进行动画（断线重连可能在任意状态中任意时间恢复，会导致状态剩余时间不同）
         -- -- 剩余时间小于(结算界面+动画展示 + 2)直接显示结果，不进行动画
-        local ShowRunTime = 0
-        local ShowRunTime_Shark = 0
-        local JumpTime = GameConfig.JumpTime
-        local ShowZhanShiTime = GameConfig.ShowZhanShiTime
         local ShowResultTime = GameConfig.ShowResultTime
-
         bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
         local winItemCount = #anim_result_list -- 中奖动物数量
         local leftTime = data.left_time
         --
-        print("data.left_time = ", data.left_time)
-        if leftTime < GameConfig.ShowResultTime + GameConfig.JumpTime then
+        -- print("data.left_time = ", data.left_time)
+        if leftTime < (GameConfig.ShowResultTime + GameConfig.JumpTime) then
             bSkip = true
             ShowResultTime = leftTime
             leftTime = 0
         else
-            leftTime = leftTime - GameConfig.ShowResultTime + GameConfig.JumpTime
+            leftTime = leftTime - (GameConfig.ShowResultTime + GameConfig.JumpTime)
         end
-        print("leftTime = ", leftTime, bSkip, "ShowResultTime = ", ShowResultTime)
+        -- print("leftTime = ", leftTime, bSkip, "ShowResultTime = ", ShowResultTime)
         -- 
         local timedataList = {}
+        -- print("开始时间分片...leftTime = ", leftTime)
         for i = 1, winItemCount, 1 do
+            local timedata = {skipall = true}
+            tinsert(timedataList, 1, timedata)  -- 需要跳过也要有个占位的
             if leftTime <= 0 then
+                print("leftTime <= 0 时间分片结束...")
                 break
             end
             --
-            local timedata = {}
-            if leftTime < GameConfig.JumpTime and i ~= 1 then -- 跳回时间,最后一个不需要跳回，逆序插入的
-                timedata.jumpToOriginalTime = leftTime
-                timedata.skipJumpToOriginal = true
-            else
-                timedata.jumpToOriginalTime = GameConfig.JumpTime
-                leftTime = leftTime - GameConfig.JumpTime
-                -- 跳入+展示放一起
-                local tJumpAndVictory = GameConfig.ShowZhanShiTime + GameConfig.JumpTime
-                if leftTime < tJumpAndVictory then -- 展示时间
-                    timedata.jumpToWinStageAndVictoryTime = leftTime
-                    timedata.skipJumpToWinStageAndVictory = true
+            timedata.skipall = nil
+            -- 从舞台中间跳回
+            if i ~= 1 then
+                if leftTime < GameConfig.JumpTime then
+                    timedata.jumpToOriginalTime = leftTime
+                    timedata.skipJumpToOriginal = true
+                    leftTime = 0
                 else
-                    timedata.jumpToWinStageAndVictoryTime = tJumpAndVictory
-                    leftTime = leftTime - tJumpAndVictory
-                    -- 跑马灯时间
-                    if leftTime < 1 then        
-                        -- 跳过跑马灯
-                    else
-                        local tShowRunTime = GameConfig.ShowRunTime
-                        if i ~= winItemCount then
-                            tShowRunTime = GameConfig.ShowSharkRunTime
-                        end
-                        if leftTime < tShowRunTime then
-                            timedata.showRunTime = leftTime
-                        else
-                            timedata.showRunTime = tShowRunTime
-                            leftTime = leftTime - tShowRunTime
-                        end
-                    end
+                    timedata.jumpToOriginalTime = GameConfig.JumpTime
+                    leftTime = leftTime - GameConfig.JumpTime
+                end  
+            end
+            -- 跳入舞台中间+展示放一起
+            local tJumpAndVictory = GameConfig.ShowZhanShiTime + GameConfig.JumpTime
+            if leftTime < tJumpAndVictory then -- 展示时间
+                print("i = ", i, "leftTime = ", leftTime, "跳过跳入和展示动画...")
+                timedata.jumpToWinStageAndVictoryTime = leftTime
+                timedata.skipJumpToWinStageAndVictory = true
+                leftTime = 0
+            else
+                timedata.jumpToWinStageAndVictoryTime = tJumpAndVictory
+                leftTime = leftTime - tJumpAndVictory
+            end
+            -- 跑马灯时间
+            if leftTime < 1 then   
+                print("i = ", i, "leftTime < 1 ", leftTime, "跳过跑马灯动画...")     
+                leftTime = 0
+                -- 跳过跑马灯
+            else
+                local tShowRunTime = GameConfig.ShowRunTime
+                if i ~= winItemCount then
+                    tShowRunTime = GameConfig.ShowSharkRunTime
+                end
+                if leftTime < tShowRunTime then
+                    print("i = ", i, "leftTime = ", leftTime, "时间不够但不跳过跑马灯动画...")     
+                    timedata.showRunTime = leftTime
+                else
+                    timedata.showRunTime = tShowRunTime
+                    leftTime = leftTime - tShowRunTime
+                    print("i = ", i, "leftTime = ", leftTime, "时间足够分片完成...")   
                 end
             end
-            tinsert(timedataList, 1, timedata)
         end
         --
         winItemDataList = {} 
         ui.cameraCtrl:ToRotatePoint() -- 摄像机到转动位置
-        print("ShowRunTime = ", ShowRunTime, "winItemCount = ", winItemCount)
+        print("ShowRunTime = ", ShowResultTime, "winItemCount = ", winItemCount)
         self.showCO = CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
@@ -701,7 +712,7 @@ function Class:OnShowState(data)
                 table.insert(winItemDataList, itemData)
                 local timeData = timedataList[i]
                 print("timeData =", timeData, " i = ", i )
-                if timeData ~= nil then
+                if timeData ~= nil and not timeData.skipall then
                     -- 跑马灯
                     if timeData.showRunTime ~= nil then 
                         local round = 2
@@ -757,6 +768,7 @@ function Class:OnShowState(data)
             -- print("显示结算....中奖动物数：", #winItemDataList)
             local resultPanel = self.ui.mainUI.resultPanel
             resultPanel:ShowResult(self.resultPanelData)
+            ui.cameraCtrl:ToRotatePoint() --摄像机偷偷归位
             -- 以下挪到FreeState试试看
             yield(WaitForSeconds(ShowResultTime))
             resultPanel:HideResult()

@@ -290,7 +290,7 @@ function OnApplicationPause(b)
 end
 
 function OnApplicationFocus(b)
-    print("FQZS 失去焦点...")
+    print("SLWH 失去焦点...")
     if not b then -- 失去焦点，手机上切到后台不会调用这个函数而是调用 OnApplicationPause
         if gameView then
             if gameView.mainUI then

@@ -774,7 +774,7 @@ function Class:OnShowState(data)
             if winColor == GameConfig.ColorType.SanYuan or winColor == GameConfig.ColorType.SiXi then
                 AudioManager.Instance:StopAllSoudEff()   -- 三元四喜音乐太长这里截断（或看情况做其他处理）
             end
-            self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
+            
             -- 结算界面消失后动物再跳回，如果不调整结算状态时间，这里会占用空闲状态时间，看起来也问题不大，有时间考虑优化一下
             for _, itemData in pairs(winItemDataList) do
                 -- print("动物是否跳出:", itemData.bJump)
@@ -811,8 +811,9 @@ function Class:OnShowState(data)
                 shandian_ratio = data.shandian_ratio,
             }
             ui.roadScrollView:InsertItem(ui:GetHistoryIconData(info))
+            self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
             SEnv.TestProcessEnd = true
-            -- print("测试结束self.showCO = ", SEnv.TestProcessEnd, self.showCO)
+            print("开奖结束self.showCO = ", SEnv.TestProcessEnd, self.showCO)
         end)
     end
 end
@@ -996,6 +997,7 @@ function Class:OnFreeState()
 
     --
     local ui = self.ui
+    self.resultPanelData = {}
     -- 重置所有动物位置
     local runItemDataList = ui.runItemDataList
     for _, data in pairs(runItemDataList) do

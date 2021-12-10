@@ -404,6 +404,7 @@ function Class:OnStateChangeNtf(data, isReconnection)
     else -- 空闲
         self:OnFreeState()
     end
+    self.ui.mainUI:OnStateChange(state)
     --
     self.ui.mainUI.timeCounter:StartCountDown(data.left_time, state, function (time)
         self:PlayCountDownSound(time)

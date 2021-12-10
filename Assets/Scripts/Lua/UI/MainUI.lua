@@ -13,6 +13,7 @@ local TimerCounterUI = require 'UI.TimerCounterUI'
 local PlayerListPanel = require'PlayerList.PlayerListPanel'
 local AudioManager = AudioManager or CS.AudioManager
 local Helpers = require'LuaUtil.Helpers'
+local GameConfig = require 'GameConfig'
 local SEnv = SEnv
 _ENV = moduledef { seenamespace = CS }
 
@@ -100,6 +101,14 @@ end
 -- 设置当前局数（自己游戏局数非服务器总局数）
 function Class:SetGameCount(count)
     self.gameCountText.text = Helpers.GameNumberFormat(count)
+end
+
+function Class:OnStateChange(state)
+    if state == 1 or state == 3 then
+        self.tog_OpenBet.interactable = true
+    else
+        self.tog_OpenBet.interactable = false
+    end
 end
 
 function Class:ResetUI()

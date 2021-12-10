@@ -241,7 +241,8 @@ end
 -- 测试函数
 function _OnAKeyDown()
     if SUBGAME_EDITOR then
-        OnTestShowState(8)
+        -- OnTestShowState(8)
+        gameView.mainUI:OnStateChange(1)
     end
 end
 
@@ -249,12 +250,8 @@ SEnv.TestProcessEnd = true
 function _OnSKeyDown()
     if SUBGAME_EDITOR then
         if gameView then
-            -- TestProcessEnd = false
-            -- SEnv.TestProcessEnd = false
-            -- print("11TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
-            -- gameView.ctrl:TTT()
-            -- print("TestProcessEnd = ", TestProcessEnd, SEnv.TestProcessEnd)
-            AutoTest()
+            gameView.mainUI:OnStateChange(2)
+            -- AutoTest()
         end
     end
 end

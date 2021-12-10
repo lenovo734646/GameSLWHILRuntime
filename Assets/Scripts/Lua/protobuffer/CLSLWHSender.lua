@@ -160,7 +160,7 @@ end
 -- self_score            玩家当前的分数
 -- self_bet_info       自己下注信息
 -- errParam              错误参数：比如下注上限等
--- room_total_bet_info_list 房间总下注信息
+-- room_tatol_bet_info_list 房间总下注信息
 function Send_SetBetReq(callback, index_id, bet_id)
     local senddata = {index_id = index_id, bet_id = bet_id, }
    return AsyncRequest('CLSLWH.SetBetReq',senddata,'CLSLWH.SetBetAck',function (ack)

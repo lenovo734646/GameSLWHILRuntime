@@ -6,6 +6,7 @@ local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
 
 local tinsert = table.insert
 local tonumber = tonumber
+local Assert = Assert
 
 local GameObject = GameObject
 local DOTween = CS.DG.Tweening.DOTween
@@ -300,11 +301,13 @@ function Class:GetHistoryIconData(info)
     elseif ex_id == ExWinType.SongDeng and info.ressult_info_songdeng ~= nil then
         local songDengColorID = info.ressult_info_songdeng.songDengColorID
         local songDengAnimalID =  info.ressult_info_songdeng.songDengAnimalID
-        --print("获取历史数据 songDengColorID = ", songDengColorID, "  songDengAnimalID = ", songDengAnimalID)
+        print("获取历史数据 songDengColorID = ", songDengColorID, "  songDengAnimalID = ", songDengAnimalID)
         songDengInfo = {
             songDengColorSpr = self.roadColorSprites[songDengColorID],
             songDengAnimalSpr = self.roadAnimalSprites[songDengAnimalID],
         }
+        Assert(songDengInfo.songDengColorSpr, "送灯颜色错误：songDengColorID = ", songDengColorID)
+        Assert(songDengInfo.songDengAnimalSpr, "送灯动物错误：songDengAnimalID = ", songDengAnimalID)
     end
 
     return {

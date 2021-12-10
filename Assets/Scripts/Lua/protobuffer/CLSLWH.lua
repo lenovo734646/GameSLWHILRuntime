@@ -89,7 +89,7 @@ message SetBetAck
     int64 self_score = 2;           //玩家当前的分数
     BetInfo self_bet_info = 3;      //自己下注信息
     string errParam = 4;            // 错误参数：比如下注上限等
-    //repeated BetInfo room_total_bet_info_list = 4;//房间总下注信息
+    //repeated BetInfo room_tatol_bet_info_list = 4;//房间总下注信息
 }
 
 //

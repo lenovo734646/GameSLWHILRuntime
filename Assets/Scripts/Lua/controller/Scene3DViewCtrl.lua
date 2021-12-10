@@ -385,7 +385,7 @@ function Class:IsFreeState()
 end
 
 function Class:OnStateChangeNtf(data, isReconnection)
-    print("11111self.showCO = ", self.showCO)
+    -- print("11111self.showCO = ", self.showCO)
     if isReconnection then
         self:ResetView(data)
     end

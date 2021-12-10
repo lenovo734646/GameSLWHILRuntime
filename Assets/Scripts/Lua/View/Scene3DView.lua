@@ -267,7 +267,7 @@ function Class:GetHistoryIconData(info)
     local ex_id = info.win_exType
     local enjoyType_id = info.win_enjoyGameType
     local caijinRotio_ = info.caijin_ratio
-    --print("获取历史数据：color_id = ", color_id, "  siXIColor_id = ", siXIColor_id, "  animal_id = ", animal_id, 
+    -- print("获取历史数据：color_id = ", color_id, "  siXIColor_id = ", siXIColor_id, "  animal_id = ", animal_id, 
     --    "  ex_id = ", ex_id, "  enjoyType_id = ", enjoyType_id, "  caijinRotio_ = ", caijinRotio_)
     --
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
@@ -308,8 +308,8 @@ function Class:GetHistoryIconData(info)
             songDengColorSpr = self.roadColorSprites[songDengColorID],
             songDengAnimalSpr = self.roadAnimalSprites[songDengAnimalID],
         }
-        Assert(songDengInfo.songDengColorSpr, "送灯颜色错误：songDengColorID = ", songDengColorID)
-        Assert(songDengInfo.songDengAnimalSpr, "送灯动物错误：songDengAnimalID = ", songDengAnimalID)
+        -- Assert(songDengInfo.songDengColorSpr, "送灯颜色错误：songDengColorID = ", songDengColorID)
+        -- Assert(songDengInfo.songDengAnimalSpr, "送灯动物错误：songDengAnimalID = ", songDengAnimalID)
     end
 
     return {

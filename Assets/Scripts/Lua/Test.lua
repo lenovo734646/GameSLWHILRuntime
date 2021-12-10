@@ -242,7 +242,11 @@ end
 function _OnAKeyDown()
     if SUBGAME_EDITOR then
         -- OnTestShowState(8)
-        gameView.mainUI:OnStateChange(1)
+        local data = { -- 空闲状态
+            left_time = 3,                            -- 此状态的剩余时间 2开奖状态时间应该是不固定的
+            state = 3,  
+        }
+        gameView.ctrl:OnStateChangeNtf(data)
     end
 end
 
@@ -250,8 +254,8 @@ SEnv.TestProcessEnd = true
 function _OnSKeyDown()
     if SUBGAME_EDITOR then
         if gameView then
-            gameView.mainUI:OnStateChange(2)
-            -- AutoTest()
+            -- gameView.mainUI:OnStateChange(2)
+            AutoTest()
         end
     end
 end

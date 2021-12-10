@@ -306,8 +306,6 @@ function Class:InitAnimalAnimation()
             -- local itemPos = jumpTargetPos
             -- local c = (index -1 ) - (winItemCount-1)/2 -- 计算每个item的偏移
             -- itemPos.x = pos.x+c*offset
-            data.OriginalPos = data.transform.localPosition -- 记录一下原始位置，以便返回
-            data.OriginalRot = data.transform.localEulerAngles -- 记录一下原始角度
             data.bJump = true
             if bSkipAnim then
                 data.transform.localPosition = jumpTargetPos
@@ -348,11 +346,11 @@ function Class:InitAnimalAnimation()
             data.animatorHelper:SetBool("tResultVictoryToIdel1", false)
             data.bJump = false
             if bSkipAnim then
-                data.transform.localPosition = data.OriginalPos
-                data.transform.localEulerAngles = data.OriginalRot
+                data.transform.localPosition = data.originalPos
+                data.transform.localEulerAngles = data.originalRot
             else
-                data.transform:DOLocalMove(data.OriginalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
-                data.transform:DOLocalRotate(data.OriginalRot, 0.2):SetDelay(0.9)
+                data.transform:DOLocalMove(data.originalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
+                data.transform:DOLocalRotate(data.originalRot, 0.2):SetDelay(0.9)
                 data.animatorHelper:Play("Jump")
                 -- data.animatorHelper:SetBool("bJumpToCenter", false)
             end
@@ -809,10 +807,8 @@ function Class:OnShowState(data)
             }
             ui.roadScrollView:InsertItem(ui:GetHistoryIconData(info))
             SEnv.TestProcessEnd = true
-            print("测试结束self.showCO = ", SEnv.TestProcessEnd, self.showCO)
+            -- print("测试结束self.showCO = ", SEnv.TestProcessEnd, self.showCO)
         end)
-        
-        
     end
 end
 
@@ -992,9 +988,19 @@ function Class:OnFreeState()
     -- self.resultPanelData = {}   -- 清空结果数据避免冗余干扰
     -- -- print("进入空闲阶段....玩家分数重置")
     -- self:__ResetCurWinResultData()
+
     --
     local ui = self.ui
-    self.ui.cameraCtrl:ToNormalPoint()
+    -- 重置所有动物位置
+    local runItemDataList = ui.runItemDataList
+    for _, data in pairs(runItemDataList) do
+        data.transform.localPosition = data.originalPos
+        data.transform.localEulerAngles = data.originalRot
+        data.animatorHelper:SetBool("bJumpToCenter", false)
+        data.animatorHelper:SetBool("tResultVictoryToIdel1", false)
+        data.bJump = false
+    end
+    ui.cameraCtrl:ToNormalPoint()
     ui.viewEventBroadcaster:Broadcast('freeState')
     ui.directionallight_animationhelper:PlayByIndex(2)
     ui.pointlight_animationhelper:PlayByIndex(2)

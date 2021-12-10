@@ -93,6 +93,8 @@ function Class:__init(roomdata)
             winShowData = indexToFindMap[i],
             index = i,
             item_id = indexToFindMap[i].item_id, 
+            originalPos = t.localPosition, -- 记录一下原始位置，以便返回
+            originalRot = t.localEulerAngles, -- 记录一下原始角度
             Play = function ()
                 -- run item 
                 AudioManager.Instance:PlaySoundEff2D("run")

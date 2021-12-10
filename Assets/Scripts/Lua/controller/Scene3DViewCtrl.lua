@@ -797,11 +797,16 @@ function Class:OnShowState(data)
             self:OnMoneyChange(self.selfScore)
             self.selfScore = SEnv.playerRes.currency
             -- 开奖结束再更新record，避免剧透
+            local roadSongdengInfo = nil
+            if self.resultPanelData.songdengData then
+                roadSongdengInfo =  {winColor = self.resultPanelData.songdengData.songDengColorID, 
+                                     winAnimal = self.resultPanelData.songdengData.songDengAnimalID}
+            end
             local info  = {
                 ressult_info = {winColor = resultInfo.color_id, winSiXiColor = resultInfo.sixi_color_id, winAnimal = resultInfo.animal_id},
                 win_enjoyGameType = winEnjoyGameType,
                 win_exType = exType,
-                ressult_info_songdeng = self.resultPanelData.songdengData,
+                ressult_info_songdeng = roadSongdengInfo,
                 caijin_ratio = data.caijin_ratio,
                 shandian_ratio = data.shandian_ratio,
             }

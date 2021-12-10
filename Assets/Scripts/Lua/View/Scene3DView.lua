@@ -269,6 +269,9 @@ function Class:GetHistoryIconData(info)
     local caijinRotio_ = info.caijin_ratio
     -- print("获取历史数据：color_id = ", color_id, "  siXIColor_id = ", siXIColor_id, "  animal_id = ", animal_id, 
     --    "  ex_id = ", ex_id, "  enjoyType_id = ", enjoyType_id, "  caijinRotio_ = ", caijinRotio_)
+    -- if info.ressult_info_songdeng then
+    --     print("送灯信息:", info.ressult_info_songdeng.winColor, info.ressult_info_songdeng.winAnimal)
+    -- end
     --
     local colorSpr = self.roadColorSprites[color_id] --普通颜色1、2、3处理
     local sanYuanInfo = nil
@@ -301,15 +304,15 @@ function Class:GetHistoryIconData(info)
     elseif ex_id == ExWinType.SanBei then
         shanDianRatio = 3
     elseif ex_id == ExWinType.SongDeng and info.ressult_info_songdeng ~= nil then
-        local songDengColorID = info.ressult_info_songdeng.songDengColorID
-        local songDengAnimalID =  info.ressult_info_songdeng.songDengAnimalID
-        print("获取历史数据 songDengColorID = ", songDengColorID, "  songDengAnimalID = ", songDengAnimalID)
+        local songDengColorID = info.ressult_info_songdeng.winColor
+        local songDengAnimalID =  info.ressult_info_songdeng.winAnimal
+        -- print("获取历史数据 songDengColorID = ", songDengColorID, "  songDengAnimalID = ", songDengAnimalID)
         songDengInfo = {
             songDengColorSpr = self.roadColorSprites[songDengColorID],
             songDengAnimalSpr = self.roadAnimalSprites[songDengAnimalID],
         }
-        -- Assert(songDengInfo.songDengColorSpr, "送灯颜色错误：songDengColorID = ", songDengColorID)
-        -- Assert(songDengInfo.songDengAnimalSpr, "送灯动物错误：songDengAnimalID = ", songDengAnimalID)
+        Assert(songDengInfo.songDengColorSpr, "送灯颜色错误：songDengColorID = ", songDengColorID)
+        Assert(songDengInfo.songDengAnimalSpr, "送灯动物错误：songDengAnimalID = ", songDengAnimalID)
     end
 
     return {

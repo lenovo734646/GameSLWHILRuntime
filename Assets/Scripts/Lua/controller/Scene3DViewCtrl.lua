@@ -45,6 +45,7 @@ local AnimalType = GameConfig.AnimalType
 local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
 local winItemDataList = {} -- 记录本次所有中奖动物itemData
 local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
+local bOtherBetAudioPlay = false
 --
 local Class = class()
 
@@ -186,6 +187,14 @@ function Class:OnSceneReady()
             -- 同步总押分
             local total_bet = data.info.total_bet or 0
             self:__SetTotalBetScore(item_id, total_bet)
+            if not bOtherBetAudioPlay then
+                AudioManager.Instance:PlaySoundEff2D("betSound")
+                bOtherBetAudioPlay = true
+                CoroutineHelper.StartCoroutine(function ()
+                    yield(WaitForSeconds(0.05))
+                    bOtherBetAudioPlay = nil
+                end)
+            end
         end
         -- 更新玩家列表的本局下注
         self.ui.mainUI:UpdatePlayerTotalBets(data.user_id, data.total_bets)
@@ -392,7 +401,12 @@ function Class:OnStateChangeNtf(data, isReconnection)
     if SEnv.gamePause then
         return
     end
+    --
     local state = data.state
+    if state == self.state and not isReconnection then -- 避免重复执行某个状态（-- OnStateChangeNtf 和 Send_GetServerDataAck 可以同时收到，结果会产生重复）
+        return
+    end
+    --
     self.state = state
     if self:IsBetState() then --下注
         self.ui.mainUI:SetWaitNextStateTip(false)
@@ -1172,11 +1186,6 @@ function Class:OnSelfWinResultNtf(data)
     if self.resultPanelData.winScore > 0 then
         AudioManager.Instance:PlaySoundEff2D("win_bet")
     end
-end
-
-function Class:TTT()
-    TestProcessEnd = true
-    SEnv.TestProcessEnd = true
 end
 
 -- 获取中奖动物倍率

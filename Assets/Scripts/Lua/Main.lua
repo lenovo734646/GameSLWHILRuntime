@@ -1,4 +1,5 @@
 SEnv = SubGame_Env
+SEnv.CountDownTimerManager = require 'controller.CountDownTimerManager'
 -- if g_Env then
 --     print = function (...)--日志屏蔽
 --     end
@@ -204,6 +205,9 @@ function OnCloseSubGame()
     if gameView then
         gameView:Release()
         gameView:Release()
+    end
+    if SEnv.CountDownTimerManager then
+        SEnv.CountDownTimerManager.Clear()
     end
 end
 

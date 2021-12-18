@@ -1,0 +1,107 @@
+
+local _G = _G
+local class = class
+local print, tostring, SysDefines, typeof, debug,string, assert,ipairs, pairs,json,tonumber =
+      print, tostring, SysDefines, typeof, debug,string, assert,ipairs, pairs,json,tonumber
+
+local Log, LogW, LogE = Log, LogW, LogE
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
+local yield = coroutine.yield
+local Time = CS.UnityEngine.Time
+local WaitForSeconds = CS.UnityEngine.WaitForSeconds
+local floor = math.floor
+
+--
+local table = table
+local os = os
+local tinsert = table.insert
+local tremove = table.remove
+
+_ENV = {}
+
+local timerList = {}
+local count = 0
+
+-- 停止倒计时
+function StopTimer(id, iscallActionPerSec)
+    -- print("停止倒计时 id = ", id)
+    local timer = GetTimer(id)
+    if not timer then
+        LogE("StopTimer 未找到对应的定时器 id 错误或定时器已停止")
+        return 
+    end
+    --
+    local co = timer.co
+    if co then
+        CoroutineHelper.StopCoroutine(co)
+        co = nil
+    end
+    if iscallActionPerSec and timer.actionPerSec then
+        timer.actionPerSec(timer.leftTime, true)
+    end
+    table.removebyvalue(timerList, timer, true)
+    -- print("停止倒计时成功 #timerList = ", #timerList)
+end
+
+-- 开始倒计时，返回倒计时ID和协程
+function StartCountDown(time, actionPerSec)
+    -- print("倒计时开始:", time)
+    local cdStartTimestamp = os.time()
+    local leftTime = floor(time+0.5) -- 
+    --
+    count = count +1
+    if count >= 10000 then
+        count = 1
+    end
+    local timerdata = {id = count, duration = time, leftTime = time, isFinish = false, co = nil, actionPerSec = actionPerSec}
+    if actionPerSec then
+        actionPerSec(leftTime, false) -- 起始时就调用一次以便刷新界面
+    end
+    timerdata.co = CoroutineHelper.StartCoroutine(function ()
+        while leftTime > 0 do
+            yield(WaitForSeconds(1))
+            local nowTimestamp = os.time()
+            leftTime = time - (nowTimestamp - cdStartTimestamp)
+            if leftTime <= 0 then
+                leftTime = 0
+                break
+            end
+            timerdata.leftTime = leftTime
+            if actionPerSec then
+                actionPerSec(leftTime)
+            end
+        end
+        timerdata.leftTime = 0
+        timerdata.isFinish = true
+        if actionPerSec then
+            actionPerSec(0, true)
+        end
+        StopTimer(timerdata.id)
+    end)
+
+    tinsert(timerList, timerdata)
+    -- print("开始倒计时成功 #timerList = ", #timerList)
+    return count
+end
+
+function GetTimer(id)
+    local timer = table.FindBy(timerList, function (v)
+        return v.id == id
+    end)
+    return timer
+end
+
+function Clear()
+    -- print("清理倒计时 #timerList", #timerList)
+    for key, timer in pairs(timerList) do
+        -- print("ClearTimer timer.id = ", timer.id, "timer.isFinish:", timer.isFinish, "timer.co:", timer.co)
+        local co = timer.co
+        if co then
+            CoroutineHelper.StopCoroutine(co)
+            co = nil
+        end
+    end
+    timerList = {}
+end
+
+return _ENV

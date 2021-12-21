@@ -32,9 +32,11 @@ function Class:StartCountDown(time, state, playSoundFunc)
     -- if self.co then
     --     CoroutineHelper.StopCoroutine(self.co)
     -- end
-    if self.self.timerID then
-        CountDownTimerManager.StopTimer(self.self.timerID)
+    if CountDownTimerManager.HasTimer(self.timerID) then
+        CountDownTimerManager.StopTimer(self.timerID)
     end
+    self.timerID = nil -- 旧的定时器清理
+    
     self.time = time
     -- 游戏状态图片显示
     for i=1,3 do

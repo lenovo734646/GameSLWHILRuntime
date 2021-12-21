@@ -17,6 +17,10 @@ local os = os
 local tinsert = table.insert
 local tremove = table.remove
 
+-- 定时器管理
+-- 每次开始倒计时会重新启动一个定时器
+-- 定时器不用需要及时关闭，避免多个定时器调用同一个回调，导致每个tick回调多次执行（比如断线重连定时器需要关闭清理，避免重连成功新建定时器和老的定时器同时执行一个回调）
+
 _ENV = {}
 
 local timerList = {}
@@ -27,7 +31,7 @@ function StopTimer(id, iscallActionPerSec)
     -- print("停止倒计时 id = ", id)
     local timer = GetTimer(id)
     if not timer then
-        LogE("StopTimer 未找到对应的定时器 id 错误或定时器已停止")
+        LogW("StopTimer 未找到对应的定时器 id 错误或定时器已停止")
         return 
     end
     --
@@ -89,6 +93,11 @@ function GetTimer(id)
         return v.id == id
     end)
     return timer
+end
+
+function HasTimer(id)
+    local timer = GetTimer(id)
+    return timer ~= nil
 end
 
 function Clear()

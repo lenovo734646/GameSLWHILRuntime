@@ -204,7 +204,6 @@ function OnCloseSubGame()
     print("退出小游戏 OnCloseSubGame...")
     if gameView then
         gameView:Release()
-        gameView:Release()
     end
     if SEnv.CountDownTimerManager then
         SEnv.CountDownTimerManager.Clear()
@@ -223,6 +222,9 @@ function OnNetworkLost()
         if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
             LoadingUI:SetTipText(_G._STR_ '网络已断开，网络恢复将继续游戏...')
             CoroutineHelper.StopAllCoroutines()
+            if SEnv.CountDownTimerManager then
+                SEnv.CountDownTimerManager.Clear()
+            end
             LogW("网络连接断开...")
         else
             LoadingUI:SetTipText(_G._STR_ '与服务器断开连接，等待恢复中...')

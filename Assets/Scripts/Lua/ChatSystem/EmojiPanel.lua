@@ -47,6 +47,7 @@ function Class:OnEmojiClick(index)
 end
 
 function Class:OnShow(isOn)
+    self.panel:SetActive(isOn)
     if isOn then
         self.animatorHelper:Play("popup_in")
     else

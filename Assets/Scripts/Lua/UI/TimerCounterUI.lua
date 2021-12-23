@@ -9,8 +9,7 @@ local yield = coroutine.yield
 local Time = UnityEngine.Time
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local floor = math.floor
-
-local CountDownTimerManager = require 'controller.CountDownTimerManager'
+local SEnv = SEnv
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -32,11 +31,11 @@ function Class:StartCountDown(time, state, playSoundFunc)
     -- if self.co then
     --     CoroutineHelper.StopCoroutine(self.co)
     -- end
-    if CountDownTimerManager.HasTimer(self.timerID) then
-        CountDownTimerManager.StopTimer(self.timerID)
+    if SEnv.CountDownTimerManager.HasTimer(self.timerID) then
+        SEnv.CountDownTimerManager.StopTimer(self.timerID)
     end
     self.timerID = nil -- 旧的定时器清理
-    
+
     self.time = time
     -- 游戏状态图片显示
     for i=1,3 do
@@ -51,7 +50,7 @@ function Class:StartCountDown(time, state, playSoundFunc)
     timeText.text = tostring(floor(time+0.5))
 
     --
-    local function doOneSecond(leftTime)
+    local function doOneSecond(leftTime, bFinish)
         -- print("leftTime real = "..leftTime)
         self.time = leftTime
         leftTime = floor(leftTime+0.5)
@@ -65,7 +64,7 @@ function Class:StartCountDown(time, state, playSoundFunc)
         timeText.text = tostring(leftTime)
     end
 
-    self.timerID = CountDownTimerManager.StartCountDown(time, doOneSecond)
+    self.timerID = SEnv.CountDownTimerManager.StartCountDown(time, doOneSecond)
 
     -- self.co = CoroutineHelper.StartCoroutine(function ()
     --     local timerCounter = time - floor(time)

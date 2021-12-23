@@ -27,7 +27,7 @@ local timerList = {}
 local count = 0
 
 -- 停止倒计时
-function StopTimer(id, iscallActionPerSec)
+function StopTimer(id, iscallAction)
     -- print("停止倒计时 id = ", id)
     local timer = GetTimer(id)
     if not timer then
@@ -40,15 +40,16 @@ function StopTimer(id, iscallActionPerSec)
         CoroutineHelper.StopCoroutine(co)
         co = nil
     end
-    if iscallActionPerSec and timer.actionPerSec then
-        timer.actionPerSec(timer.leftTime, true)
+    if iscallAction and timer.actionPerInterval then
+        timer.actionPerInterval(timer.leftTime, true)
     end
     table.removebyvalue(timerList, timer, true)
     -- print("停止倒计时成功 #timerList = ", #timerList)
 end
 
 -- 开始倒计时，返回倒计时ID和协程
-function StartCountDown(time, actionPerSec)
+function StartCountDown(time, actionPerInterval, interval)
+    local interval = interval or 1
     -- print("倒计时开始:", time)
     local cdStartTimestamp = os.time()
     local leftTime = floor(time+0.5) -- 
@@ -57,13 +58,13 @@ function StartCountDown(time, actionPerSec)
     if count >= 10000 then
         count = 1
     end
-    local timerdata = {id = count, duration = time, leftTime = time, isFinish = false, co = nil, actionPerSec = actionPerSec}
-    if actionPerSec then
-        actionPerSec(leftTime, false) -- 起始时就调用一次以便刷新界面
+    local timerdata = {id = count, duration = time, leftTime = time, isFinish = false, co = nil, actionPerInterval = actionPerInterval}
+    if actionPerInterval then
+        actionPerInterval(leftTime, false) -- 起始时就调用一次以便刷新界面
     end
     timerdata.co = CoroutineHelper.StartCoroutine(function ()
         while leftTime > 0 do
-            yield(WaitForSeconds(1))
+            yield(WaitForSeconds(interval))
             local nowTimestamp = os.time()
             leftTime = time - (nowTimestamp - cdStartTimestamp)
             if leftTime <= 0 then
@@ -71,14 +72,14 @@ function StartCountDown(time, actionPerSec)
                 break
             end
             timerdata.leftTime = leftTime
-            if actionPerSec then
-                actionPerSec(leftTime)
+            if actionPerInterval then
+                actionPerInterval(leftTime)
             end
         end
         timerdata.leftTime = 0
         timerdata.isFinish = true
-        if actionPerSec then
-            actionPerSec(0, true)
+        if actionPerInterval then
+            actionPerInterval(0, true)
         end
         StopTimer(timerdata.id)
     end)
@@ -87,6 +88,8 @@ function StartCountDown(time, actionPerSec)
     -- print("开始倒计时成功 #timerList = ", #timerList)
     return count
 end
+
+
 
 function GetTimer(id)
     local timer = table.FindBy(timerList, function (v)

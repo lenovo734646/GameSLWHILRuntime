@@ -71,6 +71,7 @@ local CameraCtrl = require'controller.CameraCtrl'
 
 
 -- 定时器测试
+local CountDownTimerManager = require 'controller.CountDownTimerManager'
 local timerID = nil
 local countDownFinishCallback = function (time, b)
         print("Tick time = ", time, "bFinish = ", b)
@@ -86,7 +87,8 @@ end
 -- 测试函数
 function _OnAKeyDown()
     if SUBGAME_EDITOR then
-        timerID = SEnv.CountDownTimerManager.StartCountDown(10, countDownFinishCallback)
+        print("CountDownTimerManager = ", CountDownTimerManager)
+        timerID = CountDownTimerManager.StartCountDown(10, countDownFinishCallback, 0.1)
         -- CoroutineHelper.StartCoroutine(function ()
         --     while not bFinish do
         --         yield(WaitForSeconds(0.5))
@@ -113,7 +115,8 @@ end
 SEnv.TestProcessEnd = true
 function _OnSKeyDown()
     if SUBGAME_EDITOR then
-        SEnv.CountDownTimerManager.StopTimer(timerID, true)
+        print("SEnv.CountDownTimerManager = ", SEnv.CountDownTimerManager)
+        SEnv.CountDownTimerManager.Clear()
         -- CountDownTimerManager.Clear()
         -- if gameView then
         --     -- gameView.mainUI:OnStateChange(2)

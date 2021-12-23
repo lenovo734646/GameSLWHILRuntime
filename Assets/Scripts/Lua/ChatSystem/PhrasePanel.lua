@@ -8,6 +8,7 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
 local _STR_ = _STR_
+local SysDefines = SysDefines
 _ENV = moduledef { seenamespace = CS }
 
 -- 常用语快捷聊天界面
@@ -39,6 +40,7 @@ local PhraseDataTable = {
     { index = 23, txt = _STR_"有输就有赢，输得起才能赢得起",   sound = "game_chat_sound_23" },
     { index = 24, txt = _STR_"终于等到你，还好没放弃",          sound = "game_chat_sound_24" }
 }
+local FontSize = 30
 
 local Class = class()
 
@@ -54,12 +56,17 @@ function Class:__init(panel, itemPrefab)
         logError("emojiPrefab is nil")
         return
     end
+    local curLanguage = SysDefines.curLanguage
+    if curLanguage~='CN' then
+        FontSize = 20
+    end
     self.itemCount = #PhraseDataTable
     for k, v in pairs(PhraseDataTable) do
         local data = {}
         local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)
         go:GetComponent(typeof(LuaInitHelper)):Init(data)
         go.name = v.index
+        data.phraseText.fontSize = FontSize
         data.phraseText.text = v.txt
         data.item_phrase_button.onClick:AddListener(function ()
             self:OnPhraseClick(v)

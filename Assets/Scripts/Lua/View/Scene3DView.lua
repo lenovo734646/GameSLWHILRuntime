@@ -14,6 +14,7 @@ local Scene3DViewCtrl = require'controller.Scene3DViewCtrl'
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local GameConfig = require'GameConfig'
 local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
+local UnityHelper = CS.UnityHelper
 
 local OSACore = CS.Com.TheFallenGames.OSA.Core
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
@@ -152,6 +153,9 @@ function Class:__init(roomdata)
     end
     --数据更新接口实现（itemViewGameObject会自动回收使用，所以需要对itemViewGameObject进行更新）
     roadScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
+        if not viewItemData or not UnityHelper.IsUnityObjectValid(viewItemData.gameObject) then
+            return
+        end
         local SetAnimalImg = function (animalImg, spr)
             animalImg.sprite = spr
             animalImg:SetNativeSize()
@@ -221,6 +225,9 @@ function Class:__init(roomdata)
         
     end
     roadScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
+        if not self.roadScrollView then
+            return
+        end
         if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
             local itemsCount = self.roadScrollView:GetItemsCount()
             local tarIndex = itemsCount-1

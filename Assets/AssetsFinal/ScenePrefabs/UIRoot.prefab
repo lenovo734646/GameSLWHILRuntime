@@ -19548,12 +19548,12 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 20
+  m_fontSize: 30
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 30
   m_fontStyle: 2
   m_textAlignment: 513
   m_characterSpacing: 0
@@ -19645,7 +19645,7 @@ MonoBehaviour:
       selectedSprite: {fileID: 0}
       disabledSprite: {fileID: 0}
   - name: EN
-    content: please enter text
+    content: Please enter
     sprite: {fileID: 0}
     sprite2: {fileID: 0}
     gameObject: {fileID: 0}
@@ -22179,7 +22179,6 @@ GameObject:
   - component: {fileID: 8528977277741248422}
   - component: {fileID: 8528977277741248423}
   - component: {fileID: 2233114810272566734}
-  - component: {fileID: 1112486780}
   m_Layer: 5
   m_Name: tog_Emoji
   m_TagString: Untagged
@@ -22344,24 +22343,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  toggleFalseEvent:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1112486780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8528977277741248420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e8e1d8448891a4b8aa2429be4e9fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleTrueEvent:
-    m_PersistentCalls:
-      m_Calls: []
   toggleFalseEvent:
     m_PersistentCalls:
       m_Calls: []

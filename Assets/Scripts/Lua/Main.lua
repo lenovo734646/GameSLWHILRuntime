@@ -202,6 +202,7 @@ end
 -- 退出游戏时调用：如果有必要可用来清理场景，关闭UI等
 function OnCloseSubGame()
     print("退出小游戏 OnCloseSubGame...")
+    PBHelper.RemoveAllListener()
     if gameView then
         gameView:Release()
     end

@@ -1,5 +1,4 @@
 SEnv = SubGame_Env
-SEnv.CountDownTimerManager = require 'controller.CountDownTimerManager'
 -- if g_Env then
 --     print = function (...)--日志屏蔽
 --     end
@@ -22,6 +21,7 @@ SEnv.ShowErrorByHintHandler = function (errcode, msgName)
 end
 require'Prepare'
 require "LuaUtil/LuaRequires"
+SEnv.CountDownTimerManager = require 'controller.CountDownTimerManager'
 local PBHelper = require'protobuffer.PBHelper'
 local MessageCenter = require'Message.MessageCenter'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'

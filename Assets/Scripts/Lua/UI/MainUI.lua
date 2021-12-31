@@ -164,7 +164,7 @@ end
 -- 以下代码为自动生成代码，请勿更改
 function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)
     print("发送玩家列表请求")
-    self.playerListPanel:OnSendPlayerListReq()
+    self.playerListPanel:OnSendPlayerListReq(CLSLWHSender)
 end
 
 function Class:On_btn_Set_Event(btn_Set)

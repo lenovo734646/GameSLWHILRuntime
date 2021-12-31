@@ -42,6 +42,9 @@ function Class:__init(roomdata)
     self.gameObject = View
     local initHelper = View:GetComponent(typeof(LuaInitHelper))
     initHelper:Init(self)
+    -- 找一个不会被Inactive 的脚本用来运行协程
+    SEnv.CoroutineMonoBehaviour = self.viewEventBroadcaster
+    --
     self.colorMeshMaterialList = {}
     initHelper:ObjectsSetToLuaTable(self.colorMeshMaterialList)
     -- 进入即播放背景音乐，因为是否静音使用音量调节，所以这里一直播放就行了
@@ -253,9 +256,6 @@ function Class:__init(roomdata)
     self.betSelectToggles = {}
     self.betSelectBtnsInitHelper:ObjectsSetToLuaTable(self.betSelectToggles)
     self.betSelectBtnsInitHelper = nil
-
-    -- 找一个不会被Inactive 的脚本用来运行协程
-    SEnv.CoroutineMonoBehaviour = self.viewEventBroadcaster
 
     -- ctrl
     self.ctrl = Scene3DViewCtrl.Create(self,View,roomdata)

@@ -35,17 +35,19 @@ local Helpers = require 'LuaUtil.Helpers'
 local SEnv = SEnv
 local GameConfig = GameConfig
 local _Ver = _Ver
--- local GetHeadSprite = SEnv.GetHeadSprite
--- local GetHeadFrameSprite = SEnv.GetHeadFrameSprite
--- print("GetHeadSprite = ", GetHeadSprite, SEnv.GetHeadSprite)
 -- 
-local isOpen = false -- 是否显示聊天窗口
-local waitSendChatMsgViewList = {}
-local waitSendChatMsgView = nil
+print("ChatPanel使用小游戏自带脚本.....")
 
 _ENV = moduledef {
     seenamespace = CS
 }
+local isOpen = false -- 是否显示聊天窗口
+local waitSendChatMsgViewList = {}
+local waitSendChatMsgView = nil
+
+local CoroutineMonoBehaviour = nil
+local InActiveMsgDataList = {} -- 未显示的聊天数据
+
 
 local Class = class()
 
@@ -53,12 +55,14 @@ function Create(...)
     return Class(...)
 end
 
-function Class:__init(panel, loader, userData)
+function Class:__init(panel, loader, playerRes, coMonoBehaviour)
     self.loader = loader
     self.panel = panel
+    self.playerRes = playerRes
     local initHelper = panel:GetComponent(typeof(LuaInitHelper))
     initHelper:Init(self)
     self.eventListener:Init(self)
+    CoroutineMonoBehaviour = coMonoBehaviour
     -- 音频播放器
     local sounds = {}
     initHelper:ObjectsSetToLuaTable(sounds)
@@ -74,7 +78,7 @@ function Class:__init(panel, loader, userData)
     -- 未读消息
     self.unReadMsgCount = 0
     --
-    self.faceSpr = SEnv.GetHeadSprite(userData.headID)
+    self.faceSpr = SEnv.GetHeadSprite(playerRes.headID)
 
     -- msg scroll view
     self.msgScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
@@ -142,13 +146,7 @@ function Class:__init(panel, loader, userData)
     -- end)
 
     -- 兼容大厅版本
-    self.tog_Voice.gameObject:SetActive(false)
-    if _Ver and _Ver._ver >= 0.983 then
-        self.tog_Voice.gameObject:SetActive(true)
-    end
-    if g_Env == nil then
-        self.tog_Voice.gameObject:SetActive(true)
-    end
+    self.tog_Voice.gameObject:SetActive(true)
 end
 
 function Class:KeyControl()
@@ -222,7 +220,7 @@ end
 -- 用来记录消息发送状态，发送完毕（OnReceiveMsg 接收到）之后删除
 -- 发送错误用来重发
 function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, clipChannels, freq)
-    local playerRes = SEnv.playerRes
+    local playerRes = self.playerRes
     local headID = playerRes.headID
     local msgItemBgSpr = self:__GetMsgItemBGSpr(playerRes.selfUserID)
     local phraseIndex = -1
@@ -251,7 +249,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
     end
     waitSendChatMsgView = nil
     self.msgScrollView:InsertItem(msgData)
-    CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
+    CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
         while waitSendChatMsgView == nil do
             yield()
             -- print("获取 chatMsgView 中...")
@@ -262,7 +260,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
         -- 发送
         if msgType == 2 then    -- 音频发送
             if audioClip and clipData then
-                CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
+                CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
                     local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
                     if err then
                         waitSendChatMsgView:OnSendFailed(err)
@@ -272,7 +270,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                     local upload_url = data.upload_url
                     local download_url = data.download_url
                     print("语音上传链接请求成功上传链接:", upload_url..'\n下载链接：'..download_url)
-                    CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour, function ()
+                    CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour, function ()
                         -- TODO: 显示正在发送提示
                         local request = Helpers.WebRequestPut(upload_url, clipData)
                         request:SendWebRequest()
@@ -291,7 +289,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                         local metadata = { timeStampSec = timeStampSec,  clipChannels = clipChannels, freq = freq}
                         local metadataJson = _G.json.encode(metadata)
                         --self:OnReceiveMsg(111, "111", 2, download_url, metadata, headID)
-                        CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
+                        CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
                             CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, metadataJson, _G.ShowErrorByHintHandler)
                         end)
                     end)
@@ -302,12 +300,12 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                 return
             end
         elseif msgType == 3 then
-            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
+            CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, tostring(phraseIndex), tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
             --self:OnReceiveMsg(111, "111", 3, tostring(phraseIndex), 111, headID)
         else
-            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
+            CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
                 CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
             end)
             --self:OnReceiveMsg(111, "111", 1, content, 111, headID)
@@ -324,20 +322,6 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
         return
-    end
-    if not isOpen then
-        self.redDotTip:SetActive(true)
-        self.unReadMsgCount = self.unReadMsgCount +1
-        if self.unReadMsgCount > 99 then
-            self.unReadMsgCount = 99
-        end
-        self:__SetUnReadmsgCount(self.unReadMsgCount)
-    else
-        if self.redDotTip.activeSelf then
-            self.redDotTip:SetActive(false)
-        end
-        self:__SetUnReadmsgCount(0)
-
     end
     ---
     local timeStampSec, clipChannels, freq
@@ -364,6 +348,7 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
     --
     local index = -1
     local audioClip = nil
+    local msgData
     if msgType == 2 then    -- 音频消息
         if g_Env then
             if _Ver and _Ver._ver < 0.983 then
@@ -374,7 +359,7 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
         if content ~= nil then
             print("收到语音消息下载链接：", content)
             -- 下载语音消息
-            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
+            CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
                 local request = Helpers.WebRequestGet(content)
                 request:SendWebRequest()
                 while (not request.isDone) do
@@ -393,8 +378,8 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
                 -- 下载成功 转换成 audioClip
                 audioClip = self.voicePanel:ByteToAudioClip(request.downloadHandler.data, clipChannels, freq)
                 print("语音数据转换成AudioClip:", audioClip.length)
-                local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
-                self.msgScrollView:InsertItem(msgData)
+                msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
+                self:ProcessPanelInactive(msgData) -- 要等协程返回，不能放函数最后统一处理，不然等不到协程结果
             end)
         end
     elseif msgType == 3 then
@@ -404,9 +389,11 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
                 local data = self.phrasePanel:GetPhraseData(index)
                 if data ~= nil then
                     content = data.content
-                    self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])
-                    local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
-                    self.msgScrollView:InsertItem(msgData)
+                    if isOpen then
+                        self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])
+                    end
+                    msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
+                    self:ProcessPanelInactive(msgData)
                 else
                     LogE("获取快捷消息数据失败 index =" .. index)
                     return
@@ -417,7 +404,29 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
             end
         end
     else
-        local msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
+        msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
+        self:ProcessPanelInactive(msgData)
+    end
+end
+
+function Class:ProcessPanelInactive(msgData)
+    if not msgData then
+        return
+    end
+    if not isOpen then
+        self.redDotTip:SetActive(true)
+        self.unReadMsgCount = self.unReadMsgCount +1
+        if self.unReadMsgCount > 99 then
+            self.unReadMsgCount = 99
+        end
+        self:__SetUnReadmsgCount(self.unReadMsgCount)
+        tinsert(InActiveMsgDataList, msgData) -- 界面未打开，暂时把消息数据存起来
+        print("msg.Type = ", msgData.msgType, "数量：", #InActiveMsgDataList, "audioClip = ", msgData.audioClip)
+    else
+        if self.redDotTip.activeSelf then
+            self.redDotTip:SetActive(false)
+        end
+        self:__SetUnReadmsgCount(0)
         self.msgScrollView:InsertItem(msgData)
     end
 end
@@ -467,7 +476,7 @@ function Class:__SetUnReadmsgCount(count)
 end
 
 function Class:__IsSelf(userID)
-    if userID == SEnv.playerRes.selfUserID then
+    if userID == self.playerRes.selfUserID then
         return true
     end
     return false
@@ -519,7 +528,7 @@ function Class:On_tog_Voice_Event(tog_Voice)
     -- -- 权限检查
     if UnityHelper.GetPlatform() == "Android" then
         if UnityHelper.HasUserAuthorizedPermission and isOn == true then
-            CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour, function ()
+            CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour, function ()
                 self.voicePanel:RequestMicrophone()
                 yield()
                 local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
@@ -545,8 +554,6 @@ function Class:On_tog_Voice_Event(tog_Voice)
         end
         self.voicePanel:OnShow(isOn)
     end
-
-    --
 end
 
 function Class:On_tog_ChatPanel_Event(tog_ChatPanel)
@@ -558,6 +565,18 @@ function Class:On_tog_ChatPanel_Event(tog_ChatPanel)
         self:__SetUnReadmsgCount(0)
         self.msgScrollView:Refresh()
         self.msgScrollView:SmoothScrollToEnd()
+        --把隐藏的消息数据放出来
+        CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour, function ()
+            while #InActiveMsgDataList > 0 do
+                if not isOpen then
+                    break
+                end
+                local msgData = tremove(InActiveMsgDataList, 1)
+                print("1111111111111111msgData.msgType = ", msgData.msgType, msgData.audioClip)
+                self.msgScrollView:InsertItem(msgData)
+                yield()
+            end
+        end)
     else
         isOpen = false
     end
@@ -610,7 +629,21 @@ function Class:OnEndEdit()
     print("OnEndEdit....")
 end
 
+function Class:StopAllCoroutines()
+    if CoroutineMonoBehaviour then
+        CoroutineHelper.StopAllCoroutinesAuto(CoroutineMonoBehaviour)
+    end
+end
+
 function Class:Release()
+    print("ChatPanel Release")
+    PBHelper.RemoveAllListenerByName('CLCHATROOM.ChatMessageNtf')
+    self:StopAllCoroutines()
+    CoroutineMonoBehaviour = nil
+    InActiveMsgDataList = {}
+    waitSendChatMsgViewList = {}
+    waitSendChatMsgView = nil
+
     if self.inputField then
         self.inputField.onSubmit:RemoveAllListeners()
         self.inputField = nil

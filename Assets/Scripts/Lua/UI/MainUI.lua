@@ -14,6 +14,7 @@ local PlayerListPanel = require'PlayerList.PlayerListPanel'
 local AudioManager = AudioManager or CS.AudioManager
 local Helpers = require'LuaUtil.Helpers'
 local GameConfig = require 'GameConfig'
+local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SEnv = SEnv
 _ENV = moduledef { seenamespace = CS }
 
@@ -33,9 +34,9 @@ function Class:__init(roomdata, loader)
     self.eventListener:Init(self)
 
     -- 聊天界面
-    self.chatPanel = ChatPanel.Create(self.ChatPanel, SEnv.loader, SEnv.playerRes)
+    self.chatPanel = ChatPanel.Create(self.ChatPanel, SEnv.loader, SEnv.playerRes, SEnv.CoroutineMonoBehaviour)
     -- 玩家列表界面
-    self.playerListPanel = PlayerListPanel.Create(self.playerListPanel)
+    self.playerListPanel = PlayerListPanel.Create(self.playerListPanel, SEnv.CoroutineMonoBehaviour)
 
     -- 结算界面
     self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)
@@ -119,7 +120,7 @@ end
 -- 设置当前在线人数
 function Class:UpdateOnlinePlayerCount(count)
     if self.playerListPanel.panel.activeSelf then
-        self.playerListPanel:OnSendPlayerListReq()
+        self.playerListPanel:OnSendPlayerListReq(CLSLWHSender)
     end
 end
 

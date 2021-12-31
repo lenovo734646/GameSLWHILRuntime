@@ -16,13 +16,10 @@ local yield = coroutine.yield
 local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 
-local PBHelper = require 'protobuffer.PBHelper'
-local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
-local CLSLWHSender = require 'protobuffer.CLSLWHSender'
 local SEnv = SEnv
 local PlayerListItemData = require'PlayerList.PlayerListItemData'
 local PlayerListItemView = require'PlayerList.PlayerListItemView'
-
+print("PlayerListPanel使用小游戏自带脚本.....")
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -33,29 +30,18 @@ function Create(...)
     return Class(...)
 end
 
-function Class:__init(panel)
+function Class:__init(panel, coMonoBehaviour)
     self.panel = panel
     local initHelper = panel:GetComponent(typeof(LuaInitHelper))
     initHelper:Init(self)
     self.eventListener:Init(self)
+    CoroutineMonoBehaviour = coMonoBehaviour
     -- 神算子，大富豪图标
     self.rankImages = {}
     initHelper:ObjectsSetToLuaTable(self.rankImages)
     self.initHelper = nil
     --Item scroll view
     self.playerListScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
-    -- self.playerListScrollView.OSAScrollView.ChangeItemsCountCallback = function (_, changeMode, changedItemCount)
-    --     if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
-    --         local itemsCount = self.playerListScrollView:GetItemsCount()
-    --         local tarIndex = itemsCount-1
-    --         local DoneFunc = function ()
-    --             if itemsCount > 100 then                    -- 只保存100条数据
-    --                 self.playerListScrollView:RemoveOneFromStart(true)
-    --             end
-    --         end
-    --         self.playerListScrollView:SmoothScrollTo(tarIndex, 0.1, nil, DoneFunc)
-    --     end
-    -- end
     --itemRoot : RectTransform类型
     self.playerListScrollView.OnCreateViewItemData = function (itemRoot, itemIndex)
         return PlayerListItemView.Create(itemRoot)
@@ -122,10 +108,10 @@ end
 
 
 -- 发送 玩家列表请求
-function Class:OnSendPlayerListReq()
+function Class:OnSendPlayerListReq(sender)
     print("发送玩家列表请求")
-    CoroutineHelper.StartCoroutineAuto(SEnv.CoroutineMonoBehaviour,function ()
-        local data = CLSLWHSender.Send_QueryPlayerListReq_Async(0, 100, _G.ShowErrorByHintHandler)
+    CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
+        local data = sender.Send_QueryPlayerListReq_Async(0, 100, _G.ShowErrorByHintHandler)
         if data then
             self.playerInfoItemDatas = {}
             local count = data.total_amount
@@ -145,7 +131,14 @@ function Class:OnSendPlayerListReq()
     end)
 end
 
+function Class:StopAllCoroutines()
+    if CoroutineMonoBehaviour then
+        CoroutineHelper.StopAllCoroutinesAuto(CoroutineMonoBehaviour)
+    end
+end
+
 function Class:Release()
+    self:StopAllCoroutines()
     if self.playerListScrollView then
         self.playerListScrollView:Release()
         self.playerListScrollView = nil

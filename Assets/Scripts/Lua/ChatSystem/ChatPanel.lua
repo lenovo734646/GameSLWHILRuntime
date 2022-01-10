@@ -261,7 +261,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
         if msgType == 2 then    -- 音频发送
             if audioClip and clipData then
                 CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
-                    local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(_G.ShowErrorByHintHandler)
+                    local data, err = CLCHATROOMSender.Send_QueryUploadUrlReq_Async(SEnv.ShowErrorByHintHandler)
                     if err then
                         waitSendChatMsgView:OnSendFailed(err)
                         LogE("请求语音上传链接错误:", err)
@@ -290,7 +290,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                         local metadataJson = _G.json.encode(metadata)
                         --self:OnReceiveMsg(111, "111", 2, download_url, metadata, headID)
                         CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
-                            CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, metadataJson, _G.ShowErrorByHintHandler)
+                            CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, download_url, metadataJson, SEnv.ShowErrorByHintHandler)
                         end)
                     end)
                 end)
@@ -301,12 +301,12 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
             end
         elseif msgType == 3 then
             CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
-                CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, tostring(phraseIndex), tostring(timeStampSec), _G.ShowErrorByHintHandler)
+                CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, tostring(phraseIndex), tostring(timeStampSec), SEnv.ShowErrorByHintHandler)
             end)
             --self:OnReceiveMsg(111, "111", 3, tostring(phraseIndex), 111, headID)
         else
             CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
-                CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), _G.ShowErrorByHintHandler)
+                CLCHATROOMSender.Send_SendChatMessageReq_Async(msgType, content, tostring(timeStampSec), SEnv.ShowErrorByHintHandler)
             end)
             --self:OnReceiveMsg(111, "111", 1, content, 111, headID)
         end

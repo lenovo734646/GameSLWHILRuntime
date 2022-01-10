@@ -1117,7 +1117,7 @@ end
 function Class:OnSendBet(item_id, betid)
     -- 用下面这个StartCoroutineGo发送会导致ack顺序不能保证，会导致下注ack返回顺序错误，导致玩家分数错误
     -- CoroutineHelper.StartCoroutineGo(self.View, function()
-    --     local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, _G.ShowErrorByHintHandler)
+    --     local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SEnv.ShowErrorByHintHandler)
     --     if data then
     --         self:OnReceiveBetAck(data)
     --     end

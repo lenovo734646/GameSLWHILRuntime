@@ -22,7 +22,7 @@ local PlayerListItemView = require'PlayerList.PlayerListItemView'
 print("PlayerListPanel使用小游戏自带脚本.....")
 
 _ENV = moduledef { seenamespace = CS }
-
+local CoroutineMonoBehaviour = nil
 
 local Class = class()
 
@@ -111,7 +111,7 @@ end
 function Class:OnSendPlayerListReq(sender)
     print("发送玩家列表请求")
     CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour,function ()
-        local data = sender.Send_QueryPlayerListReq_Async(0, 100, _G.ShowErrorByHintHandler)
+        local data = sender.Send_QueryPlayerListReq_Async(0, 100, SEnv.ShowErrorByHintHandler)
         if data then
             self.playerInfoItemDatas = {}
             local count = data.total_amount
@@ -144,6 +144,7 @@ function Class:Release()
         self.playerListScrollView = nil
     end
     self.playerInfoItems = nil
+    CoroutineMonoBehaviour = nil
 end
 
 function Class:OnDestroy()

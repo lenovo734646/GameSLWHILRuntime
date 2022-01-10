@@ -4,17 +4,9 @@ SEnv = SubGame_Env
 --     end
 -- end
 
-ShowErrorByHint = function (msgName,errcode)
-    if g_Env then
-        g_Env.ShowTips(g_Env.GetServerErrorMsg(errcode,msgName))
-    else
-        print('服务器返回错误代码','msgName=',msgName,'errcode=',errcode)
-    end
-end
-
 SEnv.ShowErrorByHintHandler = function (errcode, msgName)
     if g_Env then
-        g_Env.ShowHitMessage(g_Env.GetServerErrorMsg(errcode,msgName))
+        g_Env.ShowErrorByHintHandler(errcode, msgName)
     else
         print('服务器返回错误 errcode=',errcode,'msgName=',msgName)
     end

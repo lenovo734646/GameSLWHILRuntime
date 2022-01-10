@@ -1163,8 +1163,12 @@ end
 
 function Class:OnHistroyAck(data)
     -- print('HistoryAck:'..json.encode(data))
+    if data.errcode == -1 then
+        _G.ShotHintMessage(_G._STR_("请求过于频繁"))
+        return
+    end
     if data.errcode ~= 0 then
-        _G.ShotHintMessage(_G._STR_("获取历史记录出错"))
+        _G.ShotHintMessage(_G._STR_("获取历史记录出错:"..tostring(data.errcode)))
     else
         local ui = self.ui
         local record_list = data.record_list

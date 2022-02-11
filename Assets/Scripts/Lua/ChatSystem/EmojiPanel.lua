@@ -3,10 +3,6 @@ local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logErro
 local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local CoroutineHelper = require 'CoroutineHelper'
-local yield = coroutine.yield
-local WaitForSeconds = UnityEngine.WaitForSeconds
-
 
 
 _ENV = moduledef { seenamespace = CS }
@@ -32,12 +28,12 @@ function Class:__init(panel, inputField, emojis, itemPrefab)
             local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)
             go:GetComponent(typeof(Image)).sprite = emojis[i]
             go.name = emojis[i].name
+            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
             go:GetComponent(typeof(Button)).onClick:AddListener(function ()
                 self:OnEmojiClick(i-1)
             end)
         end
     end
-
 end
 
 function Class:OnEmojiClick(index)
@@ -45,12 +41,13 @@ function Class:OnEmojiClick(index)
     if index < 0 or index > self.emojiCount then
         return
     end
-    str = "<sprite="..index..">"
+    str = string.format("<sprite=%02d>", index)
     self.inputField.text = self.inputField.text..str
     self.inputField:MoveTextEnd(false)
 end
 
 function Class:OnShow(isOn)
+    self.panel:SetActive(isOn)
     if isOn then
         self.animatorHelper:Play("popup_in")
     else
@@ -58,5 +55,22 @@ function Class:OnShow(isOn)
     end
 end
 
+function Class:Release()
+    print("EmojiPanel Release", self.scrollView.content, self.animatorHelper:GetAnimator())
+    if self.animatorHelper:GetAnimator() then
+        self.animatorHelper:Stop()
+    end
+    
+    if self.scrollView and self.scrollView.content then
+        for i = 0, self.scrollView.content.transform.childCount-1 do
+            local go = self.scrollView.content.transform:GetChild(i)
+            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
+        end
+    end
+end
+
+-- function Class:OnDestroy()
+--     print("1111111111111")
+-- end
 
 return _ENV

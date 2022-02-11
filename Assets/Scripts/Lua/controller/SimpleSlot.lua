@@ -7,12 +7,11 @@ local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, 
     UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
 local Image = UnityEngine.UI.Image
 local Vector2 = UnityEngine.Vector2
-local CoroutineHelper = require 'CoroutineHelper'
+local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 
 local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require 'OSAScrollView.InfinityScroView'
-local SubGame_Env = SubGame_Env
 
 _ENV = moduledef {
     seenamespace = CS

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XLua;
 
-public class KeyEventListener : MonoBehaviour
-{
+public class KeyEventListener : LuaBaseEventListener {
     public enum KeyEventType{
         KeyDown = 1,
         KeyUp,
@@ -28,38 +27,13 @@ public class KeyEventListener : MonoBehaviour
     public List<KeyEvent> keyEvents = new List<KeyEvent>();
     public List<MouseButtonEvent> mouseButtonEvents = new List<MouseButtonEvent>();
 
-    Dictionary<string, LuaFunction> funcache = new Dictionary<string, LuaFunction>();
-    HashSet<string> noFuncDic = new HashSet<string>();
-
-    LuaTable self;
-
-    public void Init(LuaTable self_) {
-        self = self_;
-    }
-
-    bool call(string name, object obj1 = null, object obj2 = null) {
-        if (self == null) return false;
-        if (noFuncDic.Contains(name)) return false;
-        LuaFunction f;
-        if (!funcache.TryGetValue(name, out f)) {
-            if (self.ContainsKey(name)) {
-                f = self.Get<LuaFunction>(name);
-            } else {
-                noFuncDic.Add(name);
-                return false;
-            }
-            if (f == null) {
-                noFuncDic.Add(name);
-                return false;
-            }
+    protected override void OnDestroyPrecall() {
+        foreach (var e in keyEvents) {
+            e.keyEvent.RemoveAllListeners();
         }
-        if (obj1 != null && obj2 != null) {
-            f.Call(self, obj1, obj2);
-        } else if (obj1 != null)
-            f.Call(self, obj1);
-        else
-            f.Call(self);
-        return true;
+        foreach (var e in mouseButtonEvents) {
+            e.keyEvent.RemoveAllListeners();
+        }
     }
 
     private void Update() {

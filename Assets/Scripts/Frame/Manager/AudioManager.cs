@@ -5,9 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : DDOLSingleton<AudioManager> {
+public class AudioManager : MonoBehaviour {
 
-    public bool showLog = true;
+    public static AudioManager Instance;
+
+    public bool showLog = false;
+
+    public bool autoClearLoop = true;
 
     public Func<object, object> LuaSoundHandler = null;//为以后出bug考虑可以在Lua里面执行
 
@@ -22,16 +26,49 @@ public class AudioManager : DDOLSingleton<AudioManager> {
             PlayerPrefs.SetFloat("MusicVolum", value);
         }
     }
-    float effectVolm = 1;
     public float EffectVolm {
         get {
-            return effectVolm;
+            return EffectAudio.volume;
         }
         set {
-            effectVolm = value;
+            EffectAudio.volume = value;
+            foreach (var item in loopAudioSources)
+            {
+                item.volume = value;
+            }
             PlayerPrefs.SetFloat("EffectVolm", value);
         }
     }
+
+    public bool isMusicMute
+    {
+        get
+        {
+            return MusicAudio.mute;
+        }
+        set
+        {
+            MusicAudio.mute = value;
+            PlayerPrefs.SetInt("isMusicMute", value ? 1 : 0);
+        }
+    }
+    public bool isEffectMute
+    {
+        get
+        {
+            return EffectAudio.mute;
+        }
+        set
+        {
+            EffectAudio.mute = value;
+            foreach (var item in loopAudioSources)
+            {
+                item.mute = value;
+            }
+            PlayerPrefs.SetInt("isEffectMute", value ? 1 : 0);
+        }
+    }
+
     //兼容就方法
     public float GetBGMVolumScale() {
         return MusicVolum;
@@ -60,7 +97,8 @@ public class AudioManager : DDOLSingleton<AudioManager> {
 
     public void AddAudioPackage(AudioPackage audioPackage) {
         audioPackages.Add(audioPackage);
-        Debug.Log("AddAudioPackage " + audioPackage);
+        if(showLog)
+            Debug.Log("AddAudioPackage " + audioPackage);
     }
 
     public AudioPackage GetAudioPackage(string name) {
@@ -71,23 +109,24 @@ public class AudioManager : DDOLSingleton<AudioManager> {
 
     public void RemoveAudioPackage(AudioPackage audioPackage) {
         audioPackages.Remove(audioPackage);
-        Debug.Log("RemoveAudioPackage " + audioPackage);
-    }
-
-    public override void Init() {
-
+        if (showLog)
+            Debug.Log("RemoveAudioPackage " + audioPackage);
     }
 
     private void Awake() {
+        Instance = this;
         gameObject.AddComponent<AudioListener>();
-
         MusicAudio = gameObject.AddComponent<AudioSource>();
         MusicAudio.playOnAwake = false;
         MusicAudio.loop = true;
-        if (PlayerPrefs.HasKey("MusicVolum"))
-            MusicVolum = PlayerPrefs.GetFloat("MusicVolum");
-        effectVolm = PlayerPrefs.GetFloat("EffectVolm", 1);
+
         initAudioSources();
+
+        MusicVolum = PlayerPrefs.GetFloat("MusicVolum",1);
+        isMusicMute = PlayerPrefs.GetInt("isMusicMute", 0)==1;
+        EffectVolm = PlayerPrefs.GetFloat("EffectVolm",1);
+        isEffectMute = PlayerPrefs.GetInt("isEffectMute", 0) == 1;
+
     }
 
     private void initAudioSources() {
@@ -95,6 +134,8 @@ public class AudioManager : DDOLSingleton<AudioManager> {
     }
 
     AudioSource createAudioSource(string name) {
+        if (showLog)
+            print("createAudioSource "+name);
         var obj = new GameObject(name);
         obj.transform.SetParent(transform);
         var audio = obj.AddComponent<AudioSource>();
@@ -123,11 +164,11 @@ public class AudioManager : DDOLSingleton<AudioManager> {
 
     //设置静音
     public void SetMusicMute(bool isMute) {
-        MusicAudio.mute = isMute;
+        isMusicMute = isMute;
     }
     //设置音效静音
     public void SetEffectMute(bool isMute) {
-        EffectAudio.mute = isMute;
+        isEffectMute = isMute;
     }
 
     //播放背景音乐
@@ -254,11 +295,29 @@ public class AudioManager : DDOLSingleton<AudioManager> {
             LuaSoundHandler(new object[] { "StopSoundEff", eff });
             return;
         }
-        var r = audioSources.Find(aud => {
+        if (autoClearLoop)
+            CheckAndDestroyLoopSources(true);
+        var r = loopAudioSources.Find(aud => {
+            if (aud == null || aud.clip == null) {
+                if (showLog)
+                {
+                    if (aud == null)
+                        throw new Exception("StopSoundEff aud == null");
+                    else
+                        throw new Exception($"StopSoundEff aud.clip == null aud:{aud}");
+                }
+                else { 
+                    if(aud == null)
+                        Debug.LogError("aud == null");
+                    else
+                        Debug.LogError($"aud.clip == null aud:{aud}");
+                }
+                return false;
+            }
             return aud.clip.name == eff;
         });
         if (r) {
-            audioSources.Remove(r);
+            loopAudioSources.Remove(r);
             Destroy(r.gameObject);
         }
     }
@@ -268,11 +327,29 @@ public class AudioManager : DDOLSingleton<AudioManager> {
     /// </summary>
     /// <param name="clip">音效</param>
     public void StopSoundEff(AudioClip clip) {
-        var r = audioSources.Find(aud => {
+        var r = loopAudioSources.Find(aud => {
+            if (aud == null || aud.clip == null)
+            {
+                if (showLog)
+                {
+                    if (aud == null)
+                        throw new Exception("StopSoundEff(clip) aud == null");
+                    else
+                        throw new Exception($"StopSoundEff(clip) aud.clip == null aud:{aud}");
+                }
+                else
+                {
+                    if (aud == null)
+                        Debug.LogError("aud == null");
+                    else
+                        Debug.LogError($"aud.clip == null aud:{aud}");
+                }
+                return false;
+            }
             return aud.clip == clip;
         });
         if (r) {
-            audioSources.Remove(r);
+            loopAudioSources.Remove(r);
             Destroy(r.gameObject);
         } else
             StopSoundEff(clip.name);
@@ -312,7 +389,7 @@ public class AudioManager : DDOLSingleton<AudioManager> {
         EffectAudio.PlayOneShot(clip);
     }
 
-    List<AudioSource> audioSources = new List<AudioSource>();
+    List<AudioSource> loopAudioSources = new List<AudioSource>();
 
     //用于兼容旧游戏的方法
     public void PlaySoundEff2D(AudioClip clip, bool loop) {
@@ -323,14 +400,37 @@ public class AudioManager : DDOLSingleton<AudioManager> {
         playSoundEff2D(clip, loop, vol);
     }
 
+
+    public void CheckAndDestroyLoopSources(bool justInvalid = false)
+    {
+        for (int i = loopAudioSources.Count-1; i >= 0; i--)
+        {
+            bool invalid = loopAudioSources[i] == null || loopAudioSources[i].clip == null;
+            if (invalid)
+            {
+                if (loopAudioSources[i])
+                {
+                    Destroy(loopAudioSources[i]);
+                }
+                loopAudioSources.RemoveAt(i);
+            }else if (!justInvalid && loopAudioSources[i].loop)
+            {
+                Destroy(loopAudioSources[i]);
+                loopAudioSources.RemoveAt(i);
+            }
+        }
+    }
+
     void playSoundEff2D(AudioClip clip, bool loop, float? vol = null) {
         if (clip == null)
             return;
         EffectAudio.PlayOneShot(clip);
         if (loop) {
+            if(autoClearLoop)
+                CheckAndDestroyLoopSources(true);
             //Debug.LogWarning("目前音效不支持循环，考虑自己做循环控制");
             var audioSource = createAudioSource("LoopingAudioSource");
-            audioSources.Add(audioSource);//
+            loopAudioSources.Add(audioSource);//
             audioSource.clip = clip;
             audioSource.loop = true;
             if (vol != null) { 
@@ -361,14 +461,7 @@ public class AudioManager : DDOLSingleton<AudioManager> {
         if (AudioDic.TryGetValue(path, out audioClip))
             return audioClip;
         if (showLog)
-            Debug.LogWarning($"未设置音频资源{path}\n使用旧的加载方式");
-        var obj = ResManager.Instance.LoadPrefab(path);
-        if (obj) {
-            var data = ResManager.Instance.LoadPrefab(path).GetComponent<AudioData>();
-            var clip = data.Clip;
-            AudioDic.Add(path, clip);
-            return clip;
-        }
+            Debug.LogWarning($"未设置音频资源{path}！");
         return null;
     }
 
@@ -378,5 +471,15 @@ public class AudioManager : DDOLSingleton<AudioManager> {
 
     public void Clear() {
         AudioDic.Clear();
+    }
+
+    public void StopAllLoopCoroutines() {
+        StopAllCoroutines();
+    }
+
+    private void OnDestroy() {
+        StopAllCoroutines();
+        Clear();
+        Instance = null;
     }
 }

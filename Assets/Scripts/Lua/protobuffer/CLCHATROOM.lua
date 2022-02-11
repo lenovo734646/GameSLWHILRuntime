@@ -1,4 +1,5 @@
-return[[syntax = "proto3";
+return [[
+syntax = "proto3";
 
 //客户端与聊天室之间的消息
 package CLCHATROOM;
@@ -12,7 +13,8 @@ message PlayerInfo
     int32 head = 4;                 //头像Id
     int32 vip_level = 5;            //vip等级
     int64 currency = 6;             //金币数量
-    int64 bind_currency = 7;        //绑定金币数量
+    int32 recently_setbets = 7;     //近20局下注
+    int32 recently_wincount = 8;    //近20局获胜次数
 }
 //玩家信息列表请求
 message QueryPlayerListReq
@@ -26,6 +28,16 @@ message QueryPlayerListAck
     int32 errcode = 1;                  //0成功 1你不在聊天室
     int32 total_amount = 2;             //聊天室总人数
     repeated PlayerInfo players = 3;    //玩家信息数组
+}
+
+//查询在线玩家数量请求
+message QueryPlayerAmountReq
+{
+}
+message QueryPlayerAmountAck
+{
+    int32 errcode = 1;                  //0成功 1你不在聊天室
+    int32 total_amount = 2;             //聊天室总人数
 }
 
 //获取语音上传链接回应
@@ -43,7 +55,7 @@ message QueryUploadUrlAck
 //发送文本聊天请求
 message SendChatMessageReq
 {
-    int32 message_type = 1;         //消息类型 1文本消息 2语音消息 
+    int32 message_type = 1;         //消息类型 1文本消息 2语音消息 3快捷消息
     string content = 2;             //消息内容
     string metadata = 3;            //消息内容的元数据（比如语音消息的时长信息）
 }

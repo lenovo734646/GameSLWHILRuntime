@@ -69,6 +69,15 @@ public class UITouch : Button//Selectable, IBeginDragHandler, IDragHandler, IEnd
         set { m_OnEndSlide = value; }
     }
 
+    protected override void OnDestroy() {
+         m_OnTouchDown.RemoveAllListeners();
+         m_OnTouchUp.RemoveAllListeners();
+         m_OnTouchExit.RemoveAllListeners();
+         m_OnBeginSlide.RemoveAllListeners();
+         m_OnSlide.RemoveAllListeners();
+         m_OnEndSlide.RemoveAllListeners();
+    }
+
     private void touchDownOption(PointerEventData eventData)
     {
         if (!IsActive() || !IsInteractable())

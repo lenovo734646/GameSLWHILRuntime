@@ -1,22 +1,136 @@
-﻿using System;
+﻿//using ICSharpCode.SharpZipLib.Zip;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
+
+public enum ResBuildType
+{
+    全部,
+    大厅,
+    公共,
+    捕鱼,
+}
+
+class BuildWindow : EditorWindow
+{
+
+    [MenuItem("打包工具/打开窗口")]
+    static void CreateBuildWindow()
+    {
+        GetWindow<BuildWindow>();
+    }
+
+    //ResBuildType buildType = ResBuildType.大厅;
+
+
+
+
+
+    //bool hallupload = true;
+    //bool commonupload = true;
+    //bool fishupload = true;
+
+    bool clearoldfiles = false;
+
+
+    int curSelectedPlatform = 0;
+
+
+
+    int platformtargettoindex(BuildTarget buildTarget)
+    {
+        switch (buildTarget)
+        {
+            case BuildTarget.Android: return 0;
+            case BuildTarget.iOS: return 1;
+            default: return 2;
+        }
+    }
+
+    BuildTarget indextoplatformtarget(int index)
+    {
+        switch (index)
+        {
+            case 0: return BuildTarget.Android;
+            case 1: return BuildTarget.iOS;
+            default: return BuildTarget.StandaloneWindows;
+        }
+    }
+
+    string platformtargettostring(BuildTarget buildTarget)
+    {
+        switch (buildTarget)
+        {
+            case BuildTarget.Android: return "Android";
+            case BuildTarget.iOS: return "iOS";
+            default: return "Win";
+        }
+    }
+
+    //bool uploadres = false;
+    private void OnEnable()
+    {
+        curSelectedPlatform = platformtargettoindex(AssetBundleTool.GetCurBuildTarget());
+    }
+
+    private void OnDisable()
+    {
+    }
+
+    private void OnGUI()
+    {
+
+        clearoldfiles = GUILayout.Toggle(clearoldfiles, "重新打包（清空之前的打包文件）");
+        curSelectedPlatform = EditorGUILayout.Popup("选择打包平台", curSelectedPlatform, new string[] {
+        "Android","iOS","Windows"
+        });
+
+        if (GUILayout.Button("开始打包"))
+        {
+            var target = indextoplatformtarget(curSelectedPlatform);
+            AssetBundleTool.BuildAllAssetBundles(target, clearoldfiles);
+        }
+
+    }
+
+
+
+}
 
 public class AssetBundleTool
 {
     public static string AssetBundle_Output_Path = "StreamingAssets";
+
+    private const string Version = "1.0.0.0";
+    private const string Bundle_PostFix = ".bundle";
+    //private const string Lua_Src_Path = "Assets/Script_HotUpdate/Lua";
+    //private const string Lua_Output_Path = "Assets/Lua";
+    //private const string Lua_Bundle_Name = "Lua";
+
+    private const string AssetBundle_Build_List_Name = "bundle_to_asset_map";
+    private const string AssetBundleManifest_Name = "assetbundle_manifest";
+    private const string File_List_Name = "ab_file_list.ftxt";
+
     public static string curbuildpath = "";
-
-
-    static void genpath(BuildTarget target) {
-        if (target == BuildTarget.Android) {
+    static void genpath(BuildTarget target)
+    {
+        if (target == BuildTarget.Android)
+        {
             curbuildpath = AssetBundle_Output_Path + "/Android";
-        } else if (target == BuildTarget.iOS) {
+        }
+        else if (target == BuildTarget.iOS)
+        {
             curbuildpath = AssetBundle_Output_Path + "/iOS";
-        } else curbuildpath = AssetBundle_Output_Path + "/Win";
+        }
+        else curbuildpath = AssetBundle_Output_Path + "/Win";
     }
 
     static string GetBuildTargetOutputPath(BuildTarget target)
@@ -25,136 +139,273 @@ public class AssetBundleTool
         return curbuildpath;
     }
 
-    [MenuItem("AssetBundle/Build/Current")]
-    static void Build_Current()
+
+    public static BuildTarget GetCurBuildTarget()
     {
 #if UNITY_ANDROID
-        BuildAllAssetBundles(BuildTarget.Android);
+        return BuildTarget.Android;
 #elif UNITY_IOS
-        BuildAllAssetBundles(BuildTarget.iOS);
+        return BuildTarget.iOS;
 #else
-        BuildAllAssetBundles(BuildTarget.StandaloneWindows);
+        return BuildTarget.StandaloneWindows;
 #endif
     }
 
-    [MenuItem("AssetBundle/Build/Android")]
-    static void Build_Android()
+    public static bool bclearOldFiles = false;
+
+    //[MenuItem("AssetBundle/Build/Current")]
+    public static void Build_Current()
     {
-        BuildAllAssetBundles(BuildTarget.Android);
+        BuildAllAssetBundles(GetCurBuildTarget(), bclearOldFiles);
     }
 
-    [MenuItem("AssetBundle/Build/iOS")]
-    static void Build_iOS()
+    public static void Build_Android()
     {
-        BuildAllAssetBundles(BuildTarget.iOS);
+        BuildAllAssetBundles(BuildTarget.Android, bclearOldFiles);
     }
 
-    [MenuItem("AssetBundle/Build/Windows")]
-    static void Build_Win()
+    public static void Build_iOS()
     {
-        BuildAllAssetBundles(BuildTarget.StandaloneWindows);
+        BuildAllAssetBundles(BuildTarget.iOS, bclearOldFiles);
     }
 
-    static void clearOldFiles() {
-        // DirectoryInfo directoryInfo = new DirectoryInfo(curbuildpath);
-        // if (directoryInfo.Exists) {
-        //     directoryInfo.Delete(true);
-        // }
-        // directoryInfo.Create();
+    public static void Build_Win()
+    {
+        BuildAllAssetBundles(BuildTarget.StandaloneWindows, bclearOldFiles);
     }
 
-    static void BuildAllAssetBundles(BuildTarget target)
+    public static void BuildAllAssetBundles(BuildTarget target, bool bclearOldFiles)
+    {
+        build(target, bclearOldFiles);
+    }
+
+    static void createEmptyBundleToAssetsMap()
+    {
+        var path = $"Assets/Editor/BundleToAssetsMap.txt";
+        File.WriteAllText(path, "");
+
+        AssetDatabase.Refresh();
+        //加标签
+        path = $"Assets/Editor/BundleToAssetsMap.txt";
+        var importer = AssetImporter.GetAtPath(path);
+        importer.SetAssetBundleNameAndVariant(AssetBundle_Build_List_Name, "bundle");
+    }
+
+    static void clearOldFiles()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(curbuildpath);
+        if (directoryInfo.Exists)
+        {
+            directoryInfo.Delete(true);
+        }
+        directoryInfo.Create();
+    }
+    static void build(BuildTarget target, bool bclearOldFiles)
     {
         genpath(target);
-        clearOldFiles();
+        if (bclearOldFiles)
+        {
+            clearOldFiles();
+        }
 
         LuaTool.CopyLuaFilesToBytes();
         LuaTool.SetLuaAssetBundleName();
 
-        StringBuilder sb = new StringBuilder();
+        createEmptyBundleToAssetsMap();
+        genChangeHashFiles();
+
+        
+
+        List<AssetBundleBuild> build_list = new List<AssetBundleBuild>();
+        StringBuilder stringbuilder = new StringBuilder();
         string[] abNames = AssetDatabase.GetAllAssetBundleNames();
         foreach (var abName in abNames)
         {
-            var abNameNoHashPostfix = abName.EndsWith(AssetConfig.Bundle_PostFix) ?
-                abName.Substring(0, abName.Length - AssetConfig.Bundle_PostFix.Length) : abName;
+            var abNameNoHashPostfix = abName.EndsWith(Bundle_PostFix) ?
+                abName.Substring(0, abName.Length - Bundle_PostFix.Length) : abName;
             var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(abName);
 
-            if (assetPaths != null && assetPaths.Length > 0 && !abName.EndsWith(AssetConfig.Bundle_PostFix))
+            if (assetPaths != null && assetPaths.Length > 0 && !abName.EndsWith(Bundle_PostFix))
             {
                 throw new Exception("No .bundle postfix for AssetBundle " + abName);
             }
-
-            if (!abNameNoHashPostfix.Equals(AssetConfig.AssetBundle_Build_List_Name) && assetPaths != null && assetPaths.Length > 0)
+            if (assetPaths != null && assetPaths.Length > 0)
             {
+                var sb = stringbuilder;
                 sb.Append(abNameNoHashPostfix).Append("\n");
                 foreach (var assetPath in assetPaths)
                 {
                     sb.Append("\t").Append(assetPath).Append("\n");
                 }
+                build_list.Add(new AssetBundleBuild() { assetBundleName = abName, assetNames = assetPaths });
             }
         }
 
-        var dir = Path.GetDirectoryName(AssetConfig.AssetBundle_Build_List_Path);
+
+
+        //写入ABList
+
+        var path = $"Assets/Editor/BundleToAssetsMap.txt";
+        var dir = Path.GetDirectoryName(path);
         if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
-        File.WriteAllText(AssetConfig.AssetBundle_Build_List_Path, sb.ToString());
+        var text = stringbuilder.ToString();
+        File.WriteAllText(path, text);
 
         AssetDatabase.Refresh();
 
-        var importer = AssetImporter.GetAtPath(AssetConfig.AssetBundle_Build_List_Path);
-        importer.SetAssetBundleNameAndVariant(AssetConfig.AssetBundle_Build_List_Name + AssetConfig.Bundle_PostFix, string.Empty);
 
         var output_path = GetBuildTargetOutputPath(target);
 
-        if (!Directory.Exists(output_path))
-            Directory.CreateDirectory(output_path);
-
-        var manifest = BuildPipeline.BuildAssetBundles(output_path,
-            BuildAssetBundleOptions.AppendHashToAssetBundleName |
-            BuildAssetBundleOptions.ChunkBasedCompression |
-            BuildAssetBundleOptions.DeterministicAssetBundle |
-            BuildAssetBundleOptions.StrictMode, target);
-
-        sb.Length = 0;
-
-        string[] abs = manifest.GetAllAssetBundles();
-        foreach (var ab in abs)
-        {
-            var hash = manifest.GetAssetBundleHash(ab).ToString();
-            var ab_no_hash = ab.Replace("_" + hash + AssetConfig.Bundle_PostFix, string.Empty);
-            var len = new FileInfo(output_path + "/" + ab).Length;
-            sb.Append(ab_no_hash).Append("|").Append(hash).Append("|").Append(len).Append("\n");
-        }
-
-        var manifestName = Path.GetFileName(output_path);
-        var md5 = Util.md5(sb.ToString());
-        var newFile = output_path + "/" + AssetConfig.AssetBundleManifest_Name + "_" + md5 + AssetConfig.Bundle_PostFix;
-        if (File.Exists(newFile))
-            File.Delete(newFile);
-        File.Move(output_path + "/" + manifestName, newFile);
-
-        var manifest_len = new FileInfo(newFile).Length;
-        var new_sb = new StringBuilder();
-        TimeSpan timeSpan = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-        new_sb.Append(AssetConfig.Version)
-            .Append("#")
-            .Append(abs.Length + 1)
-            .Append("#")
-            .Append(Convert.ToInt64(timeSpan.TotalMilliseconds))
-            .Append("\n");
-        new_sb.Append(sb);
-        new_sb.Append(AssetConfig.AssetBundleManifest_Name)
-            .Append("|")
-            .Append(md5)
-            .Append("|")
-            .Append(manifest_len)
-            .Append("\n");
-
-        File.WriteAllText(output_path + "/" + AssetConfig.File_List_Name, new_sb.ToString());
+        BuildABList(build_list, target, output_path);
+        Debug.Log($"打包完成!");
 
         AssetDatabase.Refresh();
         AssetDatabase.SaveAssets();
 
-        Debug.Log("done!");
+        //Debug.Log("全部打包完成!");
     }
+
+    static void BuildABList(List<AssetBundleBuild> builds, BuildTarget target, string output_path)
+    {
+        if (!Directory.Exists(output_path))
+            Directory.CreateDirectory(output_path);
+        List<AssetBundleBuild> buildvediolist = new List<AssetBundleBuild>();
+        StringBuilder abliststrinfo = new StringBuilder();
+        if (target == BuildTarget.Android)
+        {
+            foreach (var item in builds)
+            {
+                if (item.assetBundleName.ToLower().Contains("video"))
+                {
+                    buildvediolist.Add(item);
+                }
+            }
+            foreach (var item in buildvediolist)
+            {
+                builds.Remove(item);
+            }
+
+            startbuild(output_path, abliststrinfo, builds, target);
+            if (buildvediolist.Count > 0)
+            {
+                startbuild(output_path, abliststrinfo, buildvediolist, target, false);
+            }
+            writeabfile(abliststrinfo, output_path);
+        }
+        else
+        {
+            startbuild(output_path, abliststrinfo, builds, target);
+            writeabfile(abliststrinfo, output_path);
+        }
+
+
+
+    }
+    static void startbuild(string output_path, StringBuilder abliststrinfo, List<AssetBundleBuild> builds, BuildTarget target, bool isCompress = true)
+    {
+        AssetBundleManifest manifests;
+        BuildAssetBundleOptions buildAssetBundleOptions;
+        if (!isCompress)
+        {
+            buildAssetBundleOptions = BuildAssetBundleOptions.AppendHashToAssetBundleName |
+         BuildAssetBundleOptions.DeterministicAssetBundle |
+         BuildAssetBundleOptions.StrictMode |
+         BuildAssetBundleOptions.UncompressedAssetBundle |
+         BuildAssetBundleOptions.ForceRebuildAssetBundle;
+        }
+        else
+        {
+            buildAssetBundleOptions = BuildAssetBundleOptions.AppendHashToAssetBundleName |
+         BuildAssetBundleOptions.ChunkBasedCompression |
+         BuildAssetBundleOptions.DeterministicAssetBundle |
+         BuildAssetBundleOptions.StrictMode;
+        }
+        manifests = BuildPipeline.BuildAssetBundles(output_path, builds.ToArray(),
+         buildAssetBundleOptions, target);
+
+        string[] abscommon = manifests.GetAllAssetBundles();
+        foreach (var ab in abscommon)
+        {
+            var hash = manifests.GetAssetBundleHash(ab).ToString();
+            var ab_no_hash = ab.Replace("_" + hash + Bundle_PostFix, string.Empty);
+            var len = new FileInfo(output_path + "/" + ab).Length;
+            abliststrinfo.Append(string.Format("{0}|{1}|{2}\n", ab_no_hash, hash, len));
+        }
+
+    }
+
+    static void writeabfile(StringBuilder abliststrinfo, string output_path)
+    {
+        var manifestName = Path.GetFileName(output_path);
+        var sbstr = abliststrinfo.ToString();
+        var md5 = Util.md5(sbstr);
+        var newFile = output_path + "/" + AssetBundleManifest_Name + "_" + md5 + Bundle_PostFix;
+        if (File.Exists(newFile))
+            File.Delete(newFile);
+        File.Move(output_path + "/" + manifestName, newFile);//存在一个跟目录名相同的文件没有后缀 这儿当相当于重命名了一次
+
+
+        var manifest_len = new FileInfo(newFile).Length;
+        TimeSpan timeSpan = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+        var new_sb = new StringBuilder();
+        new_sb.Append(string.Format("{0}#{1}#{2}\n", Version, new_sb.Length + 1, Convert.ToInt64(timeSpan.TotalMilliseconds)));
+        new_sb.Append(abliststrinfo);
+        new_sb.Append(string.Format("{0}|{1}|{2}\n", AssetBundleManifest_Name, md5, manifest_len));
+
+        File.WriteAllText(output_path + "/" + File_List_Name, new_sb.ToString());
+    }
+
+    static void genChangeHashFiles()
+    {
+        if (Directory.Exists("Assets/Editor/changehash"))
+        {
+            Directory.Delete("Assets/Editor/changehash", true);
+        }
+        Directory.CreateDirectory("Assets/Editor/changehash");
+        AssetDatabase.Refresh();
+
+        string[] abNames = AssetDatabase.GetAllAssetBundleNames();
+
+        
+
+        //生成一个txt放到bundle中，用来改变bundle的hash
+        Dictionary<string, StringBuilder> changeHashTextMap = new Dictionary<string, StringBuilder>();
+        foreach (var abName in abNames)
+        {
+            if (abName.Contains(AssetBundle_Build_List_Name) || abName.Contains("scene")) continue;
+            StringBuilder sb = null;
+            changeHashTextMap.TryGetValue(abName, out sb);
+            var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(abName);
+            foreach (var item in assetPaths)
+            {
+                if (item.Contains("changehash_")) continue;
+                if (sb == null)
+                {
+                    sb = new StringBuilder();
+                    changeHashTextMap.Add(abName, sb);
+                }
+                sb.Append(item + "\n");
+            }
+        }
+
+
+
+        foreach (var item in changeHashTextMap)
+        {
+            var bundlename = item.Key;
+            var path_ = $"Assets/Editor/changehash/_{bundlename.Replace("/", "_")}.txt";
+            File.WriteAllText(path_, item.Value.ToString());
+        }
+        AssetDatabase.Refresh();
+        foreach (var item in changeHashTextMap)
+        {
+            var bundlename = item.Key;
+            var path_ = $"Assets/Editor/changehash/_{bundlename.Replace("/", "_")}.txt";
+            var importer = AssetImporter.GetAtPath(path_);
+            importer.SetAssetBundleNameAndVariant(bundlename, bundlename.EndsWith(Bundle_PostFix) ? "" : Bundle_PostFix.Replace(".", ""));
+        }
+    }
+
 }

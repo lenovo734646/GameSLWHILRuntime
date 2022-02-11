@@ -27,6 +27,12 @@ public class LuaInitHelperEditor : Editor {
                 EditorGUILayout.HelpBox($"警告！index:{i} name没有值！", MessageType.Warning);
             } else if (!data.anyType) {
                 EditorGUILayout.HelpBox($"警告！{name}没有值！", MessageType.Warning);
+            } else if (data.monoType) {
+                Debug.LogWarning($"删除多余的赋值 name:{data.name} value:{data.monoType}");
+                data.monoType = null;
+            } else if (data.t) {
+                Debug.LogWarning($"删除多余的赋值 name:{data.name} value:{data.t} root:{data.t.transform.root.name}");
+                data.t = null;
             }
 
         }
@@ -235,7 +241,7 @@ public class LuaInitHelperEditor : Editor {
             var name = data.name;
             if (map.ContainsKey(name)) {
                 var index2 = map[name];
-                Debug.LogWarning("包含重复的key:" + name + " target:" + data.name + " index:" + i + " index2:" + index2);
+                Debug.LogWarning("包含重复的key:" + name + " target:" + data.name + " index:" + i + " index2:" + index2+ "  targetcom:"+ targetcom.gameObject.name);
                 if(data.anyType is GameObject) {
                     var obj = (data.anyType as GameObject);
                     var parent = obj.transform.parent;

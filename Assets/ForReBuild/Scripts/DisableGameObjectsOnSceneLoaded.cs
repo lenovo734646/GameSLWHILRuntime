@@ -18,6 +18,7 @@ public class DisableGameObjectsOnSceneLoaded : MonoBehaviour
 
     private void OnDestroy() {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        @event.RemoveAllListeners();
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1) {

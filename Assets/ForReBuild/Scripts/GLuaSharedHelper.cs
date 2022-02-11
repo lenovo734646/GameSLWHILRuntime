@@ -38,6 +38,12 @@ public static class GLuaSharedHelper
         return CallLuaFunc.Call(args);
     }
 
+    public static void Dispose() {
+        callLua?.Dispose();
+        callLua = null;
+        g_Env.Dispose();
+        g_Env = null;
+    }
 
 
 }

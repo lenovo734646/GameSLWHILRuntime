@@ -13,4 +13,9 @@ public class LuaObjectBind : MonoBehaviour
     public void BindFunc(LuaFunction func) {
         luaFunction = func;
     }
+
+    private void OnDestroy() {
+        luaTable.Dispose();
+        luaFunction.Dispose();
+    }
 }

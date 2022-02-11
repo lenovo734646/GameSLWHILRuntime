@@ -1,4 +1,5 @@
-return[[syntax = "proto3";
+return [[
+syntax = "proto3";
 
 //客户端和平台服务器之间的协议
 package CLPF;
@@ -7,6 +8,10 @@ package CLPF;
 message LogoutReq
 {
     //nothing
+}
+message LogoutAck
+{
+    int32 errcode = 1;              //0成功
 }
 //资源同步通知
 message ResSyncNtf
@@ -19,10 +24,11 @@ message ResSyncNtf
 //资源变化通知
 message ResChangedNtf
 {
-    int32 res_type = 1;             //资源类型 1钻石 2金币 3绑定金币 4积分 5魔力值
+    int32 res_type = 1;             //资源类型 1钻石 2金币 3绑定金币 4积分 5魔力值 6银行金币
     int64 res_value = 2;            //资源值
     int64 res_delta = 3;            //资源变化量
     int64 res_id = 4;               //此次资源变化id，从客户端登录开始从0开始累加
+    int32 reason = 5;               //变化原因 reason=41是金库存入  reason=42是金库取出
 }
 //物品信息结构 STRUCT!!
 message ItemInfo
@@ -46,6 +52,7 @@ message ItemUseReq
 {
     ItemInfo item = 1;              //物品信息
     string server_name = 2;         //服务名称
+    bool auto_buy = 3;              //物品不足是否自动购买
 }
 //使用物品回应
 message ItemUseAck
@@ -74,41 +81,19 @@ message ShopBuyCountItem
     int32 shop_id = 1;              //商城购买项Id
     int32 buy_count = 2;            //购买次数
 }
-//商城购买次数请求
-message ShopQueryBuyCountReq
-{
-    //nothing
-}
-//商城购买次数回应
-message ShopQueryBuyCountAck
-{
-    repeated ShopBuyCountItem total_item_array = 1;         //总购买次数数组
-    repeated ShopBuyCountItem today_item_array = 2;         //当天购买次数数组
-    repeated ShopBuyCountItem today_real_goods_array = 3;   //当天兑换实物商品数组
-}
-//商城购买请求
-message ShopBuyReq
-{
-    int32 shop_id = 1;              //商城购买项Id
-    int32 buy_count = 2;            //购买数量
-}
-//商城购买回应
-message ShopBuyAck
-{
-    int32 errcode = 1;              //0成功 1无此购买项 2资源不足 3购买次数已达上限 4vip等级不足 5系统错误
-    repeated ItemInfo items = 2;    //物品数组
-}
 //通用充值请求
 message RechargeReq
 {
     int32 content_type = 1;         //购买内容类型 1商城充值 2购买月卡 3首充礼包 4每日充值 5投资炮倍 6出海保险 7持续奖励礼包 8充值升级炮倍
     int32 content_id = 2;           //购买内容Id
-    int32 pay_mode = 3;             //支付渠道 1微信支付 2支付宝 3支付猫微信 4支付猫支付宝 5聚合微信 6聚合支付宝 7线下支付 85秒支付微信 95秒支付支付宝 10和融通微信 11和融通支付宝 12联合支付微信 13联合支付宝 14使用道具充值
+    int32 pay_mode = 3;             //支付渠道 1支付宝 2微信 3银行卡 4云闪付 5代理充值
+    string extra_data = 4;          //支付附加数据，根据不同支付渠道进行区分
 }
 //通用充值回应
 message RechargeAck
 {
     int32 errcode = 1;              //0成功 1无此购买项 2不支持的支付渠道 3购买次数已达上限 4vip等级不足 5系统错误 6资源不足
+    string errmessage = 3;          //支付失败时的错误信息
     string pay_envir = 2;           //支付环境，json格式字符串
 }
 //充值到账通知
@@ -117,6 +102,38 @@ message RechargeSuccessNtf
     int32 content_type = 1;         //购买内容类型 1商城充值 2购买月卡 3首充礼包 4每日充值 5投资炮倍 6出海保险 7持续奖励礼包 8充值升级炮倍
     int32 content_id = 2;           //购买内容Id
     repeated ItemInfo items = 3;    //获得物品数组
+}
+//查询充值订单请求
+message RechargeOrder
+{
+    string order_no = 1;            //订单编号
+    int32 order_type = 2;           //1支付宝 2微信 3银行卡 4云闪付 5代理充值
+    int32 order_amount = 3;         //订单金额，单位分
+    int32 content_type = 4;         //购买内容类型
+    int32 content_id = 5;           //购买内容Id
+    int32 order_state = 6;          //支付状态 0未支付 1真支付到账 2假支付到账
+    uint32 create_time = 7;         //订单创建时间戳
+    uint32 finish_time = 8;         //订单完成时间戳
+    int32 evaluate_star = 9;        //0代表未评价 1-5代表几颗星
+}
+message RechargeOrderQueryListReq
+{
+}
+message RechargeOrderQueryListAck
+{
+    int32 errcode = 1;              //0成功
+    repeated RechargeOrder orders = 2;//订单列表
+}
+//订单评价请求
+message RechargeOrderEvaluateReq
+{
+    string order_no = 1;            //订单编号
+    int32 star = 2;                 //1-5颗星
+    string content = 3;             //评价文本
+}
+message RechargeOrderEvaluateAck
+{
+    int32 errcode = 1;              //0成功 1参数错误 2该订单不存在或已评价
 }
 //排行榜玩家信息 STRUCT!!
 message RankPlayerInfo
@@ -174,6 +191,7 @@ message ModifyNicknameAck
 message ModifyHeadReq
 {
     int32 new_head = 1;             //新的头像Id
+    int32 new_head_frame = 2;       //新的头像框Id
 }
 //修改头像回应
 message ModifyHeadAck
@@ -669,6 +687,21 @@ message GuildBagFetchItemNtf
 //消息广播通知
 message MessageBroadcastNtf
 {
+    /*
+        1击杀得金币:[昵称,vip等级,鱼名称,炮倍,获得金币]
+        2击杀得弹头:[昵称,vip等级,鱼名称,物品名称,弹头数量]
+        3抽奖得弹头:[昵称,vip等级,物品名称,弹头数量]
+        4击杀得奖券:[昵称,vip等级,鱼名称,奖券数量]
+        5抽奖得奖券:[昵称,vip等级,奖券数量]
+        6击杀世界boss:[昵称,vip等级,世界boss名称,获得金币]
+        7水浒传得金币:[昵称,vip等级,单线押注金币,命中倍数,获得金币]
+        8水浒传小玛丽:[昵称,vip等级,单线押注金币,获得小玛丽次数]
+        9拉霸机得金币:[昵称,vip等级,单线押注金币,命中倍数,获得金币]
+        10拉霸机中宝箱:[昵称,vip等级,单线押注金币,宝箱奖励金币]
+        11获得实物奖励:[昵称,vip等级,获得渠道名称,实物物品名称]
+        12后台轮播消息:[消息唯一Id,创建时间戳,持续总时间(0代表永久),轮播时间间隔单位秒,轮播内容字符串]
+        13取消轮播消息:[消息唯一Id]
+    */
     int32 type = 1;                 //消息类型，详细分类请查阅协议配置xml文件中的注释。
     string content = 2;             //json格式数组，数组中的字段内容根据type而不同
 }
@@ -1195,7 +1228,7 @@ message BankItemStoreReq
 //金库物品存入回应
 message BankItemStoreAck
 {
-    int32 errcode = 1;              //0成功 1权限不足 2参数无效 3资源数量不足
+    int32 errcode = 1;              //0成功 1权限不足 2参数无效 3资源数量不足 4您正在游戏中无法存入
 }
 //金库物品取出请求
 message BankItemFetchReq
@@ -1254,79 +1287,6 @@ message BankItemLogDetailQueryAck
     int32 errcode = 1;                      //0成功 1权限不足 2日志类型错误 3查询类型错误 4排序类型参数错误 5查询数量参数错误
     repeated BankItemLogInfo log_array = 2; //日志数组
 }
-//子账号数量信息结构 STRUCT!!
-message AgentSubAccountAmountInfo
-{
-    int32 level = 1;                //代理等级
-    int32 amount = 2;               //数量
-}
-//子账号贡献信息结构 STRUCT!!
-message AgentContributionInfo
-{
-    int32 user_id = 1;              //玩家Id
-    int32 register_time = 2;        //注册时间戳
-    string nickname = 3;            //昵称
-    int32 total_recharge = 4;       //充值总额，单位分
-    int32 total_contribution = 5;   //总贡献，客户端显示时先除以100
-    int32 today_recharge = 6;       //当天充值，单位分
-    int32 today_contribution = 7;   //当天贡献，客户端显示时先除以100
-    int32 agent_level = 8;          //代理级别
-}
-//子账号充值信息结构 STRUCT!!
-message AgentRechargeInfo
-{
-    int32 timestamp = 1;            //充值时间戳
-    int32 order_amount = 2;         //充值金额，单位分
-}
-//查询我的推广信息请求
-message AgentQueryInfoReq
-{
-    //nothing
-}
-//查询我的推广信息回应
-message AgentQueryInfoAck
-{
-    int32 errcode = 1;              //0成功 1全民代理尚未开放
-    string url_params = 2;          //我的推广链接附加参数信息
-    int32 current_assets = 3;       //我的当前点数，客户端需要除以100再显示
-    int32 today_assets = 4;         //当天获得的点数，客户端需要除以100再显示
-    int32 history_assets = 5;       //历史获得总点数，客户端需要除以100再显示
-}
-//查询子账号数量请求
-message AgentQuerySubAccountAmountReq
-{
-    //nothing
-}
-//查询子账号数量回应
-message AgentQuerySubAccountAmountAck
-{
-    int32 errcode = 1;                                  //0成功 1全民代理尚未开放
-    int32 total_amount = 2;                             //我下面的账号总数量
-    repeated AgentSubAccountAmountInfo data_array = 3;  //代理数量数组
-}
-//查询子账号的贡献列表请求
-message AgentQueryContributionListReq
-{
-    int32 page_index = 1;           //查询第几页？每页20条
-}
-//查询子账号的贡献列表回应
-message AgentQueryContributionListAck
-{
-    int32 errcode = 1;                              //0成功 1全民代理尚未开放
-    repeated AgentContributionInfo data_array = 2;  //子账号贡献数组
-}
-//查询某个玩家详细贡献请求
-message AgentQueryContributionUserReq
-{
-    int32 user_id = 1;              //要查询的玩家Id
-    int32 page_index = 2;           //请求第多少页数据？每页10条
-}
-//查询某个玩家详细贡献回应
-message AgentQueryContributionUserAck
-{
-    int32 errcode = 1;                          //0成功 1全民代理尚未开放
-    repeated AgentRechargeInfo data_array = 2;  //详细贡献数组
-}
 //领取N天持续奖励请求
 message ContinuousRewardFetchReq
 {
@@ -1337,42 +1297,6 @@ message ContinuousRewardFetchAck
 {
     int32 errcode = 1;              //0成功 1充值购买后才能领取 2当日已领取 3领取次数不足 4参数错误
     repeated ItemInfo items = 2;    //物品数组
-}
-//邮件礼物数据 STRUCT!!
-message MailGiftData
-{
-    int32 id = 1;                   //礼物Id
-    int32 amount = 2;               //礼物数量
-}
-//邮件礼物日志信息 STRUCT!!
-message MailGiftLogInfo
-{
-    int32 refer_user_id = 1;        //关联的玩家Id
-    string refer_nickname = 2;      //关联的玩家昵称
-    ItemInfo item = 3;              //赠送的物品信息
-    int32 timestamp = 4;            //时间戳
-}
-//赠送邮件礼物请求
-message MailGiftSendReq
-{
-    repeated MailGiftData gift_array = 1;   //礼物数组
-    int32 dest_user_id = 2;                 //目标玩家Id
-}
-//赠送邮件礼物回应
-message MailGiftSendAck
-{
-    int32 errcode = 1;              //0成功 1参数错误 2目标玩家不存在 3资源不足 4对方等级不足
-}
-//礼物赠送日志查询请求
-message MailGiftLogQueryReq
-{
-    //nothing
-}
-//礼物赠送日志查询回应
-message MailGiftLogQueryAck
-{
-    int32 errcode = 1;                      //0成功
-    repeated MailGiftLogInfo log_array = 2; //日志数组
 }
 //上次未结束的游戏查询请求
 message LastGameQueryReq
@@ -1518,72 +1442,6 @@ message ModifyGenderAck
 {
     int32 errcode = 1;              //0成功
 }
-//好友房桌子查询请求
-message PrivateRoomDeskQueryReq
-{
-    int32 desk_id = 1;              //桌子Id
-}
-//好友房桌子查询回应
-message PrivateRoomDeskQueryAck
-{
-    int32 errcode = 1;              //0成功 1房间不存在
-    int32 group_id = 2;             //游戏分组Id
-}
-//麻将日志分组信息 STRUCT!!
-message PrivateRoomMJGroupInfo
-{
-    int32 group_id = 1;             //日志组Id
-    int32 game_id = 2;              //游戏组Id
-    int32 room_id = 3;              //房间号
-    int32 host_user_id = 4;         //房主玩家Id
-    int32 capacity = 5;             //房间容量
-    int32 total_game_count = 6;     //总局数
-    string balance_data = 7;        //结算数据
-    int32 create_time = 8;          //创建时间戳
-}
-//麻将日志单局记录信息 STRUCT!!
-message PrivateRoomMJRecordInfo
-{
-    int32 record_id = 1;            //纪录Id
-    int32 result = 2;               //本局结果 0流局 1点炮 2自摸 3投票解散
-    int32 start_time = 3;           //开始时间戳
-    int32 end_time = 4;             //结束时间戳
-    string balance_data = 5;        //结算数据
-}
-//查询麻将日志组列表请求
-message PrivateRoomMJGroupListQueryReq
-{
-    //nothing
-}
-//查询麻将日志组回应
-message PrivateRoomMJGroupListQueryAck
-{
-    int32 errcode = 1;                              //0成功
-    repeated PrivateRoomMJGroupInfo data_array = 2; //数据数组
-}
-//查询麻将日志组内数据请求
-message PrivateRoomMJGroupDataQueryReq
-{
-    int32 group_id = 1;             //组Id
-}
-//查询麻将日志组内数据回应
-message PrivateRoomMJGroupDataQueryAck
-{
-    int32 errcode = 1;                                  //0成功 1日志组Id所对应的数据不存在 2权限不足
-    string config = 2;                                  //房间配置 json格式
-    repeated PrivateRoomMJRecordInfo record_array = 3;  //纪录数组
-}
-//回放纪录查询请求
-message PrivateRoomMJPlaybackQueryReq
-{
-    int32 record_id = 1;            //纪录Id
-}
-//回放纪录查询回应
-message PrivateRoomMJPlaybackQueryAck
-{
-    int32 errcode = 1;              //0成功 1不存在 2权限不足
-    string game_data = 2;           //游戏数据
-}
 //公会红包数据 STRUCT!!
 message GuildPacketData
 {
@@ -1678,4 +1536,102 @@ message MailSendAck
 {
     int32 errcode = 1;              //0成功 1收件人Id不存在
 }
+
+//周签到查询请求
+message WeekSignStateQueryReq
+{
+}
+message WeekSignStateQueryAck
+{
+    int32 errcode = 1;              //0成功
+    bool today_signed = 2;          //今天是否已签到
+    int32 signed_count = 3;         //已连续签到天数
+}
+//执行周签到请求
+message WeekSignActReq
+{
+}
+message WeekSignActAck
+{
+    int32 errcode = 1;              //0成功 1你今天已签到过 2系统错误，请先调用查询签到接口 3配置错误，无法获取对应的签到奖励
+    int32 signed_count = 2;         //连续签到天数
+    ItemInfo item = 3;              //获得的签到奖励物品
+}
+
+//反馈状态查询状态
+message FeedbackStateQueryReq
+{
+}
+message FeedbackStateQueryAck
+{
+    int32 errcode = 1;              //0成功
+    int32 unread_count = 2;         //未读数量
+    int32 total_count = 3;          //反馈总条数
+}
+//反馈提交请求
+message FeedbackSubmitReq
+{
+    string content = 1;             //提交内容，内容长度不能超过4k字节
+}
+message FeedbackSubmitAck
+{
+    int32 errcode = 1;              //0成功 1内容不合法
+    int32 id = 2;                   //唯一Id
+    uint32 timestamp = 3;           //提交时间戳
+}
+//反馈列表查询请求
+message FeedbackItem
+{
+    int32 id = 1;                   //唯一Id
+    string submit_content = 2;      //提交内容
+    uint32 submit_time = 3;         //提交时间戳
+    int32 state = 4;                //1未回复 2未读已回复 3已读已回复
+    string reply_content = 5;       //回复内容
+    uint32 reply_time = 6;          //回复时间戳
+}
+message FeedbackListQueryReq
+{
+    int32 page_index = 1;           //请求第几页？从0开始
+    int32 page_count = 2;           //每页多少条记录？
+}
+message FeedbackListQueryAck
+{
+    int32 errcode = 1;              //0成功
+    repeated FeedbackItem items = 2; //反馈列表
+}
+//反馈设置为已读请求
+message FeedbackReadReq
+{
+    int32 id = 1;                   //唯一Id
+}
+message FeedbackReadAck
+{
+    int32 errcode = 1;              //0成功 1无效的参数id
+}
+//反馈处理通知
+message FeedbackReplyNtf
+{
+    FeedbackItem item = 1;          //反馈信息
+}
+//添加行为日志
+message AddOperationLogRpt
+{
+    string operation_id = 1;        //操作行为
+    string param1 = 2;              //参数1
+    string param2 = 3;              //参数2
+    string param3 = 4;              //参数3
+    string param4 = 5;              //参数4
+}
+
+//代理投诉请求
+message RechargeAgentComplainReq
+{
+    string agent_info = 1;          //代理信息
+    string content = 2;             //投诉内容
+}
+message RechargeAgentComplainAck
+{
+    int32 errcode = 1;              //0成功 1代理信息不能为空 2代理信息文本内容太长 3投诉内容太少 4投诉文本内容太长
+}
+
 ]]

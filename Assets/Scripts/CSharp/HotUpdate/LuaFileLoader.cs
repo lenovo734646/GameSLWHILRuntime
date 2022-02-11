@@ -12,14 +12,10 @@ public class LuaFileLoader
 
     public byte[] LoadFile(ref string filePath)
     {
-#if UNITY_EDITOR
-        var path = UtilityEnv.StringConcat(_searchPath, filePath.Replace('.', '/'), ".lua");
+        var path = StringUtil.Concat(_searchPath, filePath.Replace('.', '/'), ".lua");
+       // Debug.Log("path="+path);
         if (File.Exists(path))
             return File.ReadAllBytes(path);
         return null;
-#else
-        Debug.LogError(filePath);
-        return null;
-#endif
     }
 }

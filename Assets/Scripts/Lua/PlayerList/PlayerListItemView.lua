@@ -4,11 +4,9 @@ local class, typeof, type, string, utf8, tostring= class, typeof, type, string, 
 
 local UnityEngine, GameObject, System, Sprite, AudioClip = UnityEngine, GameObject, System, UnityEngine.Sprite, UnityEngine.AudioClip
 local Color = UnityEngine.Color
-local CoroutineHelper = require 'CoroutineHelper'
-local yield = coroutine.yield
 local TextAnchor = UnityEngine.TextAnchor
-local SubGame_Env=SubGame_Env
-local ConvertNumberToString = SubGame_Env.ConvertNumberToString
+local SEnv=SEnv
+local Helpers = require'LuaUtil.Helpers'
 
 _ENV = moduledef { seenamespace = CS }
 
@@ -34,35 +32,37 @@ function Class:UpdateFromData(data)
     -- 头像和布局
     self.userID = data.userID
     self.TMP_f_UserNickName.text = data.userName
-    self.TMP_f_UserMoney.text = ConvertNumberToString(data.gold)
+    self.TMP_f_UserMoney.text = Helpers.GameNumberFormat(data.gold)
     if data.headID then
-        self.head_image.sprite = SubGame_Env.GetHeadSprite(data.headID)
+        SEnv.AutoUpdateHeadImage(self.image_f_UserHead, data.headID, data.userID)
     end
     
     if data.headFrameID ~= nil then
-        self.frame_image.sprite = SubGame_Env.GetHeadFrameSprite(data.headFrameID)
+        self.image_f_UserHeadFrame.sprite = SEnv.GetHeadFrameSprite(data.headFrameID)
+        self.image_f_UserHeadFrame:SetNativeSize()
     end
-    
+
     for i = 1, #self.rangimglist do
         self.rangimglist[i].gameObject:SetActive(false)
     end
+
     local img = self.rangimglist[data.rankid]
     if img then
         img.gameObject:SetActive(true)
     end
-
-    if data.rankImageSpr ~= nil then
-        -- self.rankImage.sprite = data.rankImageSpr
-        -- self.rankImage.gameObject:SetActive(true)
-        self.rankText.gameObject:SetActive(false)
-    else
-        -- self.rankImage.gameObject:SetActive(false)
-        self.rankText.gameObject:SetActive(true)
-        self.rankText.text = tostring(data.rank)
-    end
     
-    self.betScoreText.text = ConvertNumberToString(data.betScore)
-    self.winCountText.text = ConvertNumberToString(data.winCount)
+    -- if data.rankImageSpr ~= nil then
+    --     -- self.rankImage.sprite = data.rankImageSpr
+    --     -- self.rankImage.gameObject:SetActive(true)
+    --     self.rankText.gameObject:SetActive(false)
+    -- else
+    --     -- self.rankImage.gameObject:SetActive(false)
+    --     self.rankText.gameObject:SetActive(true)
+    --     self.rankText.text = tostring(data.rank)
+    -- end
+    self.rankText.gameObject:SetActive(false) -- 暂时取消这个显示，如果需要的话，以后风格布局统一修改再说
+    self.betScoreText.text = Helpers.GameNumberFormat(data.totalBets)
+    self.winCountText.text = Helpers.GameNumberFormat(data.winCount)
 end
 
 function Class:UserInfoBtnClick()

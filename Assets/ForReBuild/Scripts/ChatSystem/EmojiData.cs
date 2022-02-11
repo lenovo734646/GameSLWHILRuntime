@@ -11,5 +11,9 @@ namespace SP
         public int index;   // TMP图集中的index
         public Image image;
         public Action onClick;
+
+        private void OnDestroy() {
+            onClick = null;
+        }
     }
 }

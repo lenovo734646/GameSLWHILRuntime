@@ -108,4 +108,9 @@ public class LuaInitHelper :MonoBehaviour{
         if (autoDestroy)
             Destroy(this);
     }
+
+    private void OnDestroy() {
+        t?.Dispose();
+        t = null;
+    }
 }

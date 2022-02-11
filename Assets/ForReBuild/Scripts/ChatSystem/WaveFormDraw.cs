@@ -7,7 +7,7 @@ namespace SP
 	public class WaveFormDraw : MonoBehaviour
 	{
 
-		int resolution = 60;
+		public int resolution = 60;
 		private Color[] blankColorArr;
 		float[] waveForm;
 		float[] samples;
@@ -22,7 +22,6 @@ namespace SP
 			{
 				return;
 			}
-			resolution = 60;
 			AudioSource audio = GetComponent<AudioSource>();
 			audio.clip = myClip;
 			resolution = audio.clip.frequency / resolution;
@@ -38,6 +37,11 @@ namespace SP
 				//if too big of a waveform then make 10000 width and calculate the proper resolution to be at the proper ratio so the clip is in time
 				waveForm = new float[10000];
 				resolution = (audio.clip.samples * audio.clip.channels) / 10000;
+			}
+
+			if (waveForm.Length <= 0)
+			{
+				return;
 			}
 
 			//  Debug.Log(waveForm.Length + "Res "  + resolution);
@@ -60,6 +64,7 @@ namespace SP
 			{
 				blankColorArr[i] = Color.clear;
 			}
+			//Debug.Log("waveForm.Length = "+ waveForm.Length);
 			texture = new Texture2D(waveForm.Length, 100);
 			texture.SetPixels(blankColorArr, 0);
 			waveFromImg.texture = texture;
@@ -179,20 +184,22 @@ namespace SP
 
 		void Update()
 		{
-			if (waveForm == null)
-			{
-				return;
-			}
-			for (int i = 0; i < waveForm.Length - 1; i++)
-			{
-				Vector3 sv = new Vector3(i * .01f, waveForm[i] * 10, 0);
-				Vector3 ev = new Vector3(i * .01f, -waveForm[i] * 10, 0);
-				Debug.DrawLine(sv, ev, Color.yellow);
-			}
-			int current = referenceAsrc.timeSamples / resolution;
-			current *= 2;
-			Vector3 c = new Vector3(current * .01f, 0, 0);
-			Debug.DrawLine(c, c + Vector3.up * 10, Color.white);
+			//#if UNITY_EDITOR
+			//			if (waveForm == null)
+			//			{
+			//				return;
+			//			}
+			//			for (int i = 0; i < waveForm.Length - 1; i++)
+			//			{
+			//				Vector3 sv = new Vector3(i * .01f, waveForm[i] * 10, 0);
+			//				Vector3 ev = new Vector3(i * .01f, -waveForm[i] * 10, 0);
+			//				Debug.DrawLine(sv, ev, Color.yellow);
+			//			}
+			//			int current = referenceAsrc.timeSamples / resolution;
+			//			current *= 2;
+			//			Vector3 c = new Vector3(current * .01f, 0, 0);
+			//			Debug.DrawLine(c, c + Vector3.up * 10, Color.white);
+			//#endif
 		}
 
 		void DrawLine(Texture2D tex, int x1, int y1, int x0, int y0, Color col)

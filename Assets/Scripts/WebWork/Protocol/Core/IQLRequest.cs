@@ -8,7 +8,7 @@ namespace QL.Core
     /// <summary>
     /// QL请求接口。
     /// </summary>
-    public interface IQLRequest<T> where T : QLResponse
+    public interface IQLRequest
     {
         /// <summary>
         /// 获取QL请求的API名称。

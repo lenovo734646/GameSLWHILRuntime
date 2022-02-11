@@ -1,5 +1,23 @@
 require 'LuaUtil.dumper'
+local pairs = pairs
+local debug = debug
+local tostring = tostring
+local setmetatable = setmetatable
+local string = string
+local table = table
+local require = require
+local type = type
+local print = print
+local select=select
+local unpack = table.unpack
+local yield = coroutine.yield
+local IsUnityObjectValid=CS.UnityHelper.IsUnityObjectValid
+local Destroy=CS.UnityEngine.Object.Destroy
+local DestroyImmediate=CS.UnityEngine.Object.DestroyImmediate
 
+local sfind = string.find
+local ssub = string.sub
+local tinsert = table.insert
 
 function __TRACKBACK__(errorMsg)
     local track_text = debug.traceback(tostring(errorMsg))
@@ -31,6 +49,8 @@ function class(super, cls)
             return self:New(...)
         else
             return default_ctor(self, ...)
+
+            
         end
     end
     setmetatable(cls, mt)
@@ -68,12 +88,61 @@ function import(moduleName, currentModuleName)
     return require(moduleFullName)
 end
 
-function table.print(t)
-    local str = "["
-    for k, v in pairs(t) do
-        str = str .. tostring(k) .. ":" .. tostring(v) .. ","
+functional = {}
+
+function functional.bind(func, count, ...)
+    local args_origin = {...}
+    return function(...)
+        local args = {...}
+        local num = table.maxn(args)
+        for i = num, 1, -1 do
+            args[i + count] = args[i]
+        end
+        for i = 1, count do
+            args[i] = args_origin[i]
+        end
+        return func(table.unpack(args))
     end
-    str = str .. "]"
+end
+
+function functional.bindself(self, fname)
+    return functional.bind1(self[fname], self)
+end
+
+function functional.bind1(func, obj1)
+    return function(...)
+        return func(obj1, ...)
+    end
+end
+
+function functional.bind2(func, obj1, obj2)
+    return function(...)
+        return func(obj1, obj2, ...)
+    end
+end
+
+function table.copy(src, dest)
+    for k, v in pairs(src) do
+        if type(v) == "table" then
+            dest[k] = {}
+            table.copy(v, dest[k])
+        else
+            dest[k] = v
+        end
+    end
+end
+
+function table.print(t)
+    local str = "{"
+    for k, v in pairs(t) do
+        if type(v) == 'table' then
+            str = str .. tostring(k) .. ":{"
+            str = str .. table.print(v)
+        else
+            str = str .. tostring(k) .. ":" .. tostring(v) .. ","
+        end
+    end
+    str = str .. "}"
     return str
 end
 
@@ -107,6 +176,17 @@ function table.contains(tbl, value)
         end
     end
 end
+--  通过key获取到table中的元素
+function table.trygetvalue(tbl, key)
+    local value = nil
+    for k, v in pairs(tbl) do
+        if k == key then
+            value = v
+            return value
+        end
+    end
+    return nil
+end
 
 function table.removebyvalue(array, value, removeall)
     local c, i, max = 0, 1, #array
@@ -114,7 +194,7 @@ function table.removebyvalue(array, value, removeall)
         if array[i] == value then
             table.remove(array, i)
             if not removeall then
-                break
+                return c+1
             end
             c = c + 1
             i = i - 1
@@ -125,6 +205,23 @@ function table.removebyvalue(array, value, removeall)
     return c
 end
 
+function table.removebyfunc(array, func, removeall)
+    local c, i, max = 0, 1, #array
+    while i <= max do
+        if func(array[i]) then
+            table.remove(array, i)
+            if not removeall then
+                return c + 1
+            end
+            c = c + 1
+            i = i - 1
+            max = max - 1
+        end
+        i = i + 1
+    end
+    return c
+end
+-- 交集
 function table.intersect(tblA, tblB)
     local tblT = {}
     for k, v in ipairs(tblA) do
@@ -134,15 +231,34 @@ function table.intersect(tblA, tblB)
     end
     return tblT
 end
-
-function table.findBy(tbl, func)
-    local ret
-    for k, v in ipairs(tbl) do
-        if func(v) then
-            ret = v
+-- 差集 tblA对tblB取差集
+function table.except(tblA, tblB)
+    local tblT = {}
+    table.copy(tblA, tblT)
+    for k, v in pairs(tblA) do
+        if table.contains(tblB, v) then
+            table.remove(tblT, table.findKey(tblT, function(a)
+                return v == a
+            end))
         end
     end
-    return ret
+    return tblT
+end
+
+function table.FindBy(tbl, func)
+    for _, v in pairs(tbl) do
+        if func(v) then
+            return v
+        end
+    end
+end
+
+function table.Find(tbl, func)
+    for k, v in pairs(tbl) do
+        if func(v, k) then
+            return v, k
+        end
+    end
 end
 
 function table.findArray(tbl, func)
@@ -155,8 +271,8 @@ function table.findArray(tbl, func)
     return tblR
 end
 
-function table.findKey(tbl,func)
-    local key = 0
+function table.findKey(tbl, func)
+    local key = nil
     for k, v in pairs(tbl) do
         if func(v) then
             key = k
@@ -164,6 +280,14 @@ function table.findKey(tbl,func)
         end
     end
     return key
+end
+
+function table.findKV(tbl, func)
+    for k, v in pairs(tbl) do
+        if func(k, v) then
+            return k, v
+        end
+    end
 end
 
 function table.findMap(tbl, func)
@@ -179,28 +303,48 @@ end
 function table.count(tbl)
     local count = 0
     for _, _ in pairs(tbl) do
-        count=count+1
+        count = count + 1
     end
     return count
 end
 
-function table.keys(tbl)
-    local keys = {}
-    for k, v in pairs(tbl) do
-        -- log("table.keys:"..k)
-        table.insert(keys, k)
+function table.countWithoutKeys(tbl, withoutKeysList)
+    local count = 0
+    local withoutKeysCache = {}
+    for _, value in ipairs(withoutKeysList) do
+        withoutKeysCache[value] = true
     end
-    return keys
-end
-
-function table.values(tbl)
-    local values = {}
-    for k, v in pairs(tbl) do
-        if v ~= nil then
-            table.insert(values, v)
+    for k, _ in pairs(tbl) do
+        if not withoutKeysCache[k] then
+            count = count + 1
         end
     end
-    return values
+    return count
+end
+
+function table.reverse(tbl)
+    local tmp = {}
+    table.copy(tbl, tmp)
+    for k, v in ipairs(tbl) do
+        tbl[k] = tmp[#tmp + 1 - k]
+    end
+    return tbl
+end
+
+function table.foreach(tbl, func)
+    for k, v in pairs(tbl) do
+        func(v)
+    end
+end
+-- 单独取出tbl中所有元素中的某个字段
+function table.select(tbl, selector)
+    local tmp = {}
+    for k, v in pairs(tbl) do
+        if selector(v) ~= nil then
+            table.insert(tmp, selector(v))
+        end
+    end
+    return tmp
 end
 
 function string.split(input, delimiter)
@@ -248,56 +392,21 @@ function string.lastindexof(str, searchStr)
     return lastindex
 end
 
--- 以tab格式赶回
-function THelperTab(THelper)
-    local id = 1
-    local tab = {}
-    local count = THelper.DataMap.Count
-    while (id < count or id == count) do
-        local v = THelper.GetRow(id)
-        if v == nil then
-            break
-        end
-        tab[id] = v
-        id = id + 1
-    end
-    return tab
+-- 以某个字符串开始
+function string.startswith(target_string, start_pattern, plain)
+    plain = plain or true
+    local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, 1, plain)
+    return find_pos_begin == 1
 end
 
--- 返回发现的第一个对象
-function THelperWhere(THelper, wherefunc)
-    local id = 1
-    while true do
-        local v = THelper.GetRow(id)
-        if v == nil then
-            break
-        end
-        if wherefunc(v) then
-            return v
-        end
-        id = id + 1
-    end
+-- 以某个字符串结尾
+function string.endswith(target_string, start_pattern, plain)
+    plain = plain or true
+    local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, -#start_pattern, plain)
+    return find_pos_end == #target_string
 end
--- 返回发现的所有对象
-function THelperWhereReturnTab(THelper, wherefunc)
-    local i = 1
-    local tabIndex = 1
-    local tab = {}
-    local count = THelper.DataMap.Count
-    while (i < count or i == count) do
-        local v = THelper.GetRow(i)
-        if v == nil then
-            break
-        end
-        if wherefunc(v) then
-            tab[tabIndex] = v
-            tabIndex = tabIndex + 1
-        end
-        i = i + 1
-    end
-    return tab
-end
-
+string.Startswith = string.startswith
+string.Endswith = string.endswith
 function ReloadModule(name)
     local status, err = xpcall(function()
         package.loaded[name] = nil
@@ -316,9 +425,7 @@ function UnLoadModule(name)
     print('UnLoadModule ' .. name)
 end
 
-local sfind = string.find
-local ssub = string.sub
-local tinsert = table.insert
+
 string.replace = function(s, pattern, repl)
     local i, j = sfind(s, pattern, 1, true)
     if i and j then
@@ -335,13 +442,36 @@ string.replace = function(s, pattern, repl)
     end
     return s
 end
+string.Replace = string.replace
 
 string.Find = function(s, pattern)
     return sfind(s, pattern, 1, true)
 end
 
-function PrintTable(str)
-    print(DataDumper(str))
+function PrintDataDumper(t)
+    print(DataDumper(t))
+end
+
+local _PrintTable
+_PrintTable = function(mark, t, spaces)
+    local str 
+    if mark then
+        str = mark .. ':\n'
+    else
+        str = spaces
+    end
+	spaces=spaces or ''
+    for key, value in pairs(t) do
+        str = str .. ' key:' .. tostring(key) .. '  value:' .. tostring(value) .. '\n'
+        if type(value) == "table" then
+            str = str .. _PrintTable(nil, value,spaces.. '  ')
+        end
+    end
+    return str
+end
+
+function PrintTable(mark,t)
+    return print(_PrintTable(mark,t))
 end
 
 local function dump_value_(v)
@@ -429,7 +559,6 @@ function math.newrandomseed()
 end
 
 function math.round(value)
-    value = checknumber(value)
     return math.floor(value + 0.5)
 end
 
@@ -522,6 +651,7 @@ function table.nums(t)
     return count
 end
 
+
 function table.keys(hashtable)
     local keys = {}
     for k, v in pairs(hashtable) do
@@ -538,9 +668,15 @@ function table.values(hashtable)
     return values
 end
 
-function table.merge(dest, src)
-    for k, v in pairs(src) do
-        dest[k] = v
+function table.merge(dest, ...)
+    local params = {...}
+    local startIndex = #dest
+    for i = 1, #params do
+        local param = params[i]
+        for j = 1, #param do
+            dest[startIndex + j] = param[j]
+        end
+        startIndex = startIndex + #param
     end
 end
 
@@ -572,23 +708,6 @@ function table.keyof(hashtable, value)
         end
     end
     return nil
-end
-
-function table.removebyvalue(array, value, removeall)
-    local c, i, max = 0, 1, #array
-    while i <= max do
-        if array[i] == value then
-            table.remove(array, i)
-            c = c + 1
-            i = i - 1
-            max = max - 1
-            if not removeall then
-                break
-            end
-        end
-        i = i + 1
-    end
-    return c
 end
 
 function table.map(t, fn)
@@ -732,16 +851,13 @@ function string.formatnumberthousands(num)
     return formatted
 end
 
-
 string.ToLower = string.lower
 
-
-math.floor2 = function (value)
-    value = value*100
+math.floor2 = function(value)
+    value = value * 100
     value = math.floor(value)
     return value / 100
 end
-
 -- 类似C#的格式化，但是下标从1开始
 function string.Format2(fmt, ...)
     assert(fmt ~= nil, "Format error:Invalid Format String")
@@ -752,3 +868,64 @@ function string.Format2(fmt, ...)
     end
     return (string.gsub(fmt, "{(%d)}", search))
 end
+
+local function _callp(func, params1, len1, params2, len2)
+    local ap = {}
+    for i=1,len1 do
+        ap[i] = params1[i]
+    end
+    for i=1,len2 do
+        ap[len1 + i] = params2[i]
+    end
+    return func((table.unpack or unpack)(ap, 1, len1 + len2))
+end
+function Handler(callback, ...)
+    local params1 = {...}
+    local len1 = select("#", ...)
+    return function(...)
+        local len2 = select("#", ...)
+        return _callp(callback, params1, len1, {...}, len2)
+    end
+end
+
+
+local _RandomInt = CS.UnityHelper.RandomInt
+function RandomInt(min,max)
+    return _RandomInt(min,max+1)
+end
+
+local _WaitForSeconds = CS.UnityEngine.WaitForSeconds
+function WaitForSeconds(time)
+    return yield(_WaitForSeconds(time))
+end
+
+local function SubUTF8String(s, n)
+    local dropping = string.byte(s, n + 1)
+    if not dropping then
+        return s
+    end
+    if dropping >= 128 and dropping < 192 then
+        return SubUTF8String(s, n - 1)
+    end
+    return string.sub(s, 1, n)
+end
+
+function string.Clamp(str, len)
+    if #str > len then
+        str = SubUTF8String(str, len)
+        return str .. '...'
+    end
+    return str
+end
+
+function SafeDestroy(unityObj,isImmediate)
+    if IsUnityObjectValid(unityObj) then
+        if isImmediate then
+            DestroyImmediate(unityObj)
+        else
+            Destroy(unityObj)
+        end
+    end
+end
+
+string.SubUTF8String = SubUTF8String 

@@ -71,6 +71,7 @@ namespace ForReBuild.UIHelper
 
         public float GetDuration(string animName)
         {
+            if (!animator) return 0;
             AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
             {
@@ -89,26 +90,31 @@ namespace ForReBuild.UIHelper
 
         public void SetSpeed( float speed)
         {
+            if (!animator) return;
             animator.speed = speed;
         }
 
         public void SetBool(string name, bool v)
         {
+            if (!animator) return;
             animator.SetBool(name, v);
         }
 
         public void SetInteger(string name, int v)
         {
+            if (!animator) return;
             animator.SetInteger(name, v);
         }
 
         public void SetFloat(string name, float v)
         {
+            if (!animator) return;
             animator.SetFloat(name, v);
         }
 
         public void SetTrigger(string name)
         {
+            if (!animator) return;
             animator.SetTrigger(name);
         }
 
@@ -120,6 +126,7 @@ namespace ForReBuild.UIHelper
 
         public void Play(string animName)
         {
+            if (!animator) return;
             if (gameObject.activeSelf == false)
                 gameObject.SetActive(true);
             if (animator.enabled == false)
@@ -135,6 +142,7 @@ namespace ForReBuild.UIHelper
 
         public void Play(string animName, Action startAct, Action completeAct)
         {
+            if (!animator) return;
             if (gameObject.activeSelf == false)
                 gameObject.SetActive(true);
             if(animator.enabled == false)
@@ -147,7 +155,10 @@ namespace ForReBuild.UIHelper
 
         public void Stop()
         {
-            animator.enabled = false;
+            if (animator)
+            {
+                animator.enabled = false;
+            }
         }
 
 
@@ -206,6 +217,10 @@ namespace ForReBuild.UIHelper
                 }
             }
             return null;
+        }
+
+        private void OnDestroy() {
+            curAnimatorStateInfoEvent = null;
         }
     }
 }

@@ -24,8 +24,25 @@ public class KeyListener : MonoBehaviour {
 
     LuaTable self;
 
+    bool isAwake = false;
+    private void Awake() {
+        isAwake = true;
+    }
+
     public void Init(LuaTable self_) {
         self = self_;
+        if (!isAwake) {
+            Debug.LogError($"{gameObject.name} 没有激活的情况下初始化会导致Lua引用不能被正确释放");
+        }
+    }
+
+    private void OnDestroy() {
+        OnKeyDown.RemoveAllListeners();
+        OnKeyUp.RemoveAllListeners();
+        OnKey.RemoveAllListeners();
+        OnMouseButtonDown.RemoveAllListeners();
+        OnMouseButtonUp.RemoveAllListeners();
+        OnMouseButton.RemoveAllListeners();
     }
 
     bool call(string name, params object[] args) {

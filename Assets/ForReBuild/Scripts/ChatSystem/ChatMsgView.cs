@@ -50,6 +50,10 @@ namespace SP
             colorAtInit = contentBackImage.color;
         }
 
+        private void OnDestroy() {
+            onClick = null;
+        }
+
         public void UpdateFromData(ChatMsgData data)
         {
             if (data == null)

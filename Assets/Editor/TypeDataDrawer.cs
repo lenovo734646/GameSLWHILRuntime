@@ -70,7 +70,7 @@ public class TypeDataDrawer : PropertyDrawer {
                     TypeData.anyType = com;
                     if (b) {
 
-                        TypeData.name = (com.name+"_"+com.GetType().Name).ToLower();
+                        TypeData.name = (com.name+"_"+com.GetType().Name);
                     }
                     EditorUtility.SetDirty(TypeData.anyType);
                 };
@@ -161,6 +161,7 @@ class SetAnyTypeWindow : EditorWindow {
 
             if (clickbtn && Event.current.button == (int)MouseButton.LeftMouse)
             {
+                //Debug.Log(Event.current.type);
                 setTargetFunc(p.Value, b);
                 Close();
             }
@@ -174,4 +175,32 @@ class SetAnyTypeWindow : EditorWindow {
         }
         EditorGUILayout.EndScrollView();
     }
+
+    //bool bleft = false;
+    //bool bright = false;
+    //private void Update()
+    //{
+        
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        bleft = true;
+    //        Debug.Log("你按下了鼠标左键");
+    //    }
+    //    if (Input.GetMouseButtonUp(0))
+    //    {
+    //        bleft = false;
+    //        Debug.Log("你抬起了鼠标左键");
+    //    }
+    //    //
+    //    if (Input.GetMouseButtonDown(1))
+    //    {
+    //        bright = true;
+    //        Debug.Log("你按下了鼠标右键");
+    //    }
+    //    if (Input.GetMouseButtonUp(1))
+    //    {
+    //        bright = false;
+    //        Debug.Log("你抬起了鼠标左键");
+    //    }
+    //}
 }

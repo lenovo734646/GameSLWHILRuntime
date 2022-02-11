@@ -15,7 +15,6 @@
 
 using DG.Tweening;
 using ICSharpCode.SharpZipLib.Zip;
-using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,13 +26,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
-using XLua;
 using ZXing;
-using static XLua.LuaEnv;
+using UnityEngine.SceneManagement;
+using UnityEngine.Profiling;
+using UnityEngine.UI;
 
 public static class UnityHelper
 {
-    static UnityHelper() {
+    static UnityHelper()
+    {
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
     }
 
@@ -106,7 +107,8 @@ public static class UnityHelper
     }
 
     //UI层是5
-    public static bool IsPointerOverUnityUIObject(int filterLayer = 5) {
+    public static bool IsPointerOverUnityUIObject(int filterLayer = 5)
+    {
         if (EventSystem.current == null)
             return false;
 
@@ -120,8 +122,10 @@ public static class UnityHelper
 
         var count = results.Count - 1;
         var rcount = 0;
-        if (filterLayer > 0) {
-            for (int i = count; i >= 0; i--) {
+        if (filterLayer > 0)
+        {
+            for (int i = count; i >= 0; i--)
+            {
                 if (results[i].gameObject.layer == filterLayer)
                     rcount++;
             }
@@ -136,7 +140,7 @@ public static class UnityHelper
     /// <param name="y">服务器点的y的值</param>
     /// <param name="z">服务器点的z的值</param>
     /// <returns></returns>
-    public static Vector3 ConvertToVector3(RectTransform rectTransform, float x,float y,float z)
+    public static Vector3 ConvertToVector3(RectTransform rectTransform, float x, float y, float z)
     {
         //todo 根据游戏屏幕做适配 目前的标准是 1920*1080
         //x = -(9.6f - x * 19.2f);
@@ -144,9 +148,19 @@ public static class UnityHelper
         //z = -(49.0f - z * 98.0f);
         //return new Vector3(x, y, z);
         // var rect = GlobalLuaShareWithCSharp.GetUnityObject<RectTransform>("UIParent").rect;
-        var rect = rectTransform.rect;
-        var widthInSpace = rect.width * 0.01f;
-        var heightInSpace = rect.height * 0.01f;
+        var widthInSpace = 0f;
+        var heightInSpace = 0f;
+        if (SysDefines.isFixedScreen)
+        {
+            widthInSpace = SysDefines.DesignWidth * 0.01f;
+            heightInSpace = SysDefines.DesignHeight * 0.01f;
+        }
+        else
+        {
+            var rect = rectTransform.rect;
+            widthInSpace = rect.width * 0.01f;
+            heightInSpace = rect.height * 0.01f;
+        }
         x = -(widthInSpace * 0.5f - x * widthInSpace);
         y = -(heightInSpace * 0.5f - y * heightInSpace);
         z = -(49.0f - z * 98.0f);
@@ -249,6 +263,7 @@ public static class UnityHelper
     /// <param name="loop">是否循环播放</param>
     public static void PlaySpineAnim(GameObject obj, string anim, bool loop)
     {
+        /*
         SkeletonGraphic graphic = obj.GetComponent<SkeletonGraphic>();
         if (graphic == null)
             return;
@@ -256,6 +271,7 @@ public static class UnityHelper
         graphic.startingAnimation = anim;
         graphic.startingLoop = loop;
         graphic.Initialize(true);
+        */
     }
 
     /// <summary>
@@ -307,7 +323,8 @@ public static class UnityHelper
         Transform searchTrans = FindTheChild(goParent, childName);
         return ReferenceEquals(searchTrans, null) ? null : searchTrans.GetOrAddComponent<T>();
     }
-    public static Component GetTheChildComponent(GameObject goParent, string childName, Type type){
+    public static Component GetTheChildComponent(GameObject goParent, string childName, Type type)
+    {
         Transform searchTrans = FindTheChild(goParent, childName);
         return ReferenceEquals(searchTrans, null) ? null : searchTrans.GetOrAddComponent(type);
     }
@@ -324,7 +341,8 @@ public static class UnityHelper
         Transform searchTrans = FindTheChild(goParent, childName);
         return ReferenceEquals(searchTrans, null) ? null : searchTrans.GetOrAddComponent<T>();
     }
-    public static Component AddTheChildComponent(GameObject goParent, string childName, Type type) {
+    public static Component AddTheChildComponent(GameObject goParent, string childName, Type type)
+    {
         Transform searchTrans = FindTheChild(goParent, childName);
         return ReferenceEquals(searchTrans, null) ? null : searchTrans.GetOrAddComponent(type);
     }
@@ -348,10 +366,11 @@ public static class UnityHelper
     /// <param name="content">复制的内容</param>
     public static void CopyToClipboard(string content)
     {
-        TextEditor te = new TextEditor();
-        te.text = new GUIContent(content).text;
-        te.SelectAll();
-        te.Copy();
+        //TextEditor te = new TextEditor();
+        //te.text = new GUIContent(content).text;
+        //te.SelectAll();
+        //te.Copy();
+        GUIUtility.systemCopyBuffer = content;
     }
 
     /// <summary>
@@ -519,27 +538,23 @@ public static class UnityHelper
 
         return str + end;
     }
-    
-    public static Transform PhysicsHit(Vector3 pos, float maxDistance, int layerMask)
+
+    public static Transform PhysicsHit2(Camera cam, Vector3 pos, float maxDistance, int layerMask)
     {
-        Debug.LogWarning("最好不要使用这个函数");
-        var ray = GLuaSharedHelper.GetUnityObject<Camera>("MainCamera").ScreenPointToRay(pos);
-        RaycastHit hit;
-        return Physics.Raycast(ray, out hit, maxDistance, layerMask) ? hit.transform : null;
-    }
-    public static Transform PhysicsHit2(Camera cam, Vector3 pos, float maxDistance, int layerMask) {
         var ray = cam.ScreenPointToRay(pos);
         RaycastHit hit;
         return Physics.Raycast(ray, out hit, maxDistance, layerMask) ? hit.transform : null;
     }
 
-    public static Transform PhysicsHit2(Camera cam, Vector3 pos, float maxDistance) {
+    public static Transform PhysicsHit2(Camera cam, Vector3 pos, float maxDistance)
+    {
         var ray = cam.ScreenPointToRay(pos);
         RaycastHit hit;
         return Physics.Raycast(ray, out hit, maxDistance) ? hit.transform : null;
     }
 
-    public static Transform PhysicsHit2(Camera cam, Vector3 pos) {
+    public static Transform PhysicsHit2(Camera cam, Vector3 pos)
+    {
         var ray = cam.ScreenPointToRay(pos);
         RaycastHit hit;
         return Physics.Raycast(ray, out hit) ? hit.transform : null;
@@ -550,22 +565,32 @@ public static class UnityHelper
         return Physics.Raycast(ray, out hitInfo, maxDistance, layerMask);
     }
 
-    public static int GenMask(int mask, int gentype = 1) {
+    public static bool RaycastLayerMask(Ray ray, out RaycastHit hitInfo, float maxDistance, LayerMask layerMask) {
+        return Physics.Raycast(ray, out hitInfo, maxDistance, layerMask);
+    }
+
+    public static int GenMask(int mask, int gentype = 1)
+    {
         LayerMask layerMask = new LayerMask();
-        switch (gentype) {
+        switch (gentype)
+        {
             case 1: return layerMask = 1 << mask;//只打开
             case 2: return layerMask = 0 << mask;//排除
         }
         return layerMask.value;
     }
-    public static int GenMasks(params int[] mask) {
+    public static int GenMasks(params int[] mask)
+    {
         bool first = true;
         LayerMask layerMask = new LayerMask();
-        foreach (var v in mask) {
-            if (first) {
+        foreach (var v in mask)
+        {
+            if (first)
+            {
                 layerMask = 1 << v;
                 first = false;
-            } else
+            }
+            else
                 layerMask = layerMask | 1 << v;
         }
         return layerMask.value;
@@ -609,15 +634,10 @@ public static class UnityHelper
         return str;
     }
 
-    //小游戏读取大厅配置表
-    public static string LoadConfigByTableName(string fileName) {
-        
-        return GLuaSharedHelper.g_Env.Get<LuaTable>("dicConfig").Get<string>(fileName);
-
-    }
-
-    public static void ShakeCamera(DOTweenAnimation CameraAnim, int power) {
-        switch (power) {
+    public static void ShakeCamera(DOTweenAnimation CameraAnim, int power)
+    {
+        switch (power)
+        {
             case 1:
                 CameraAnim.duration = 0.6f;
                 CameraAnim.endValueV3 = Vector3.one * 20;
@@ -644,7 +664,8 @@ public static class UnityHelper
         }
     }
 
-    public static void World2UI(Vector3 wpos, RectTransform uiParent, RectTransform uiTarget, Camera uicamera, Camera wordCamera) {
+    public static void World2UI(Vector3 wpos, RectTransform uiParent, RectTransform uiTarget, Camera uicamera, Camera wordCamera)
+    {
         Vector3 spos = wordCamera.WorldToScreenPoint(wpos);
         Vector2 retPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(uiParent, new Vector2(spos.x, spos.y),
@@ -652,7 +673,8 @@ public static class UnityHelper
         uiTarget.localPosition = retPos;
     }
 
-    public static string CalMd5(byte[] content) {
+    public static string CalMd5(byte[] content)
+    {
         MD5 md5 = MD5.Create();
         byte[] bytes = md5.ComputeHash(content);
 
@@ -662,24 +684,29 @@ public static class UnityHelper
 
         return result.ToString();
     }
-    public static string CalFileMd5(string filename) {
+    public static string CalFileMd5(string filename)
+    {
         return CalMd5(ReadAllBytes(filename));
     }
-    public static string CalStringMd5(string str) {
+    public static string CalStringMd5(string str)
+    {
         return CalMd5(Encoding.UTF8.GetBytes(str));
     }
 
 
-    public static byte[] ProcessGZipDecode(byte[] content) {
-        
-        try {
+    public static byte[] ProcessGZipDecode(byte[] content)
+    {
+
+        try
+        {
             var wms = new MemoryStream();
             var ms = new MemoryStream(content, 0, content.Length);
             ms.Seek(0, SeekOrigin.Begin);
             var zip = new GZipStream(ms, CompressionMode.Decompress, true);
             var buf = new byte[4096];
             int n;
-            while ((n = zip.Read(buf, 0, buf.Length)) != 0) {
+            while ((n = zip.Read(buf, 0, buf.Length)) != 0)
+            {
                 wms.Write(buf, 0, n);
             }
             zip.Close();
@@ -688,15 +715,19 @@ public static class UnityHelper
             Array.Copy(wms.GetBuffer(), r, wms.Length);
 
             return r;
-        } catch(Exception e) {
-            Debug.LogError("ProcessGZipDecode "+e.Message);
         }
-        
+        catch (Exception e)
+        {
+            Debug.LogError("ProcessGZipDecode " + e.Message);
+        }
+
         return null;
     }
-    public static string ReadUtf8String(BinaryReader br) {
+    public static string ReadUtf8String(BinaryReader br)
+    {
         MemoryStream ms = new MemoryStream();
-        while (true) {
+        while (true)
+        {
             byte a = br.ReadByte();
             if (a == 0)
                 break;
@@ -705,167 +736,189 @@ public static class UnityHelper
         return Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int)ms.Length);
     }
 
-    public class WaitWriteFile: CustomYieldInstruction {
+    public class WaitWriteFile : CustomYieldInstruction
+    {
         bool ok = false;
         public string errmsg = "";
-        public override bool keepWaiting {
-            get {
+        public override bool keepWaiting
+        {
+            get
+            {
                 return !ok;
             }
         }
 
-        public WaitWriteFile(string filename, byte[] data, bool logerror = true) {
-            writeFileAsync(filename, data, obj=> {
+        public WaitWriteFile(string filename, byte[] data, bool logerror = true)
+        {
+            writeFileAsync(filename, data, obj =>
+            {
                 errmsg = (string)obj;
                 ok = true;
-                if(!string.IsNullOrEmpty(errmsg)&& logerror) {
+                if (!string.IsNullOrEmpty(errmsg) && logerror)
+                {
                     Debug.LogError(errmsg);
                 }
             });
         }
     }
 
-    public static void WriteFileAsync(string fn, byte[] data, Action<object> callback=null) {
-        writeFileAsync(fn,data,callback);
+    public static void WriteFileAsync(string fn, byte[] data, Action<object> callback = null)
+    {
+        writeFileAsync(fn, data, callback);
     }
 
-    private static async void writeFileAsync(string fn, byte[] data, Action<object> callback) {
+    private static async void writeFileAsync(string fn, byte[] data, Action<object> callback)
+    {
         var errmsg = "";
-        await Task.Run(() => {
-            try {
+        await Task.Run(() =>
+        {
+            try
+            {
                 File.WriteAllBytes(fn, data);
-            } catch (System.Exception ex) {
+            }
+            catch (System.Exception ex)
+            {
                 errmsg = ex.Message;
             }
         });
         callback?.Invoke(errmsg);
     }
-    public class WaitReadFile : CustomYieldInstruction {
+    public class WaitReadFile : CustomYieldInstruction
+    {
         bool ok = false;
         public string errmsg = "";
         public byte[] data = null;
-        public override bool keepWaiting {
-            get {
+        public override bool keepWaiting
+        {
+            get
+            {
                 return !ok;
             }
         }
 
-        public WaitReadFile(string filename, bool logerror = true) {
-            readFileAsync(filename, (data, errmsg) => {
+        public WaitReadFile(string filename, bool logerror = true)
+        {
+            readFileAsync(filename, (data, errmsg) =>
+            {
                 ok = true;
                 this.data = data;
-                if (!string.IsNullOrEmpty(errmsg) && logerror) {
+                if (!string.IsNullOrEmpty(errmsg) && logerror)
+                {
                     Debug.LogError(errmsg);
                 }
             });
         }
     }
-    private static async void readFileAsync(string fn, Action<byte[], string> callback) {
+    private static async void readFileAsync(string fn, Action<byte[], string> callback)
+    {
         var errmsg = "";
         byte[] data = null;
-        await Task.Run(() => {
-            try {
+        await Task.Run(() =>
+        {
+            try
+            {
                 data = File.ReadAllBytes(fn);
-            } catch (System.Exception ex) {
+            }
+            catch (System.Exception ex)
+            {
                 errmsg = ex.Message;
             }
         });
         callback?.Invoke(data, errmsg);
     }
 
-    public static void UnZipFileAsync(string zipFileName, string targetDirectory, Action<object> callback, string fileFilter="") {
+    public static void UnZipFileAsync(string zipFileName, string targetDirectory, Action<object> callback, string fileFilter = "")
+    {
         unZipFileAsync(zipFileName, targetDirectory, fileFilter, callback);
     }
-    private static async void unZipFileAsync(string zipFileName, string targetDirectory, string fileFilter, Action<object> callback) {
+    private static async void unZipFileAsync(string zipFileName, string targetDirectory, string fileFilter, Action<object> callback)
+    {
         var errmsg = "";
-        await Task.Run(() => {
-            try {
+        await Task.Run(() =>
+        {
+            try
+            {
                 var zip = new FastZip();
                 zip.ExtractZip(zipFileName, targetDirectory, fileFilter);
-            } catch (System.Exception ex) {
+            }
+            catch (System.Exception ex)
+            {
                 errmsg = ex.Message;
             }
         });
         callback?.Invoke(errmsg);
     }
 
-    public class WaitCreatePlayer : CustomYieldInstruction {
-        bool ok = false;
-        public GamePlayer data = null;
-        public override bool keepWaiting {
-            get {
-                return !ok;
-            }
-        }
-
-        public WaitCreatePlayer(CLGT.LoginAck ack) {
-            newGamePlayerAsync(ack, (data) => {
-                this.data = data;
-                ok = true;
-            });
-        }
-    }
-
-    static async void newGamePlayerAsync(CLGT.LoginAck ack, Action<GamePlayer> callback) {
-        GamePlayer player = null;
-        await Task.Run(() => {
-            player = new GamePlayer(ack);
-        });
-        callback(player);
-    }
-    public static string CalSha256(byte[] bytes) {
+    public static string CalSha256(byte[] bytes)
+    {
         byte[] hash = SHA256.Create().ComputeHash(bytes);
 
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < hash.Length; i++) {
+        for (int i = 0; i < hash.Length; i++)
+        {
             builder.Append(hash[i].ToString("X2"));
         }
 
         return builder.ToString();
     }
-    public static string CalSha256(string data) {
+    public static string CalSha256(string data)
+    {
         byte[] bytes = Encoding.UTF8.GetBytes(data);
         return CalSha256(bytes);
     }
 
-    public static byte[] ReadAllBytes(string path) {
-        if (path.StartsWith("jar:")) {
-            var filepath = path;
+    public static byte[] ReadAllBytes(string path)
+    {
+        if (path.StartsWith("jar:"))
+        {
             var www = UnityWebRequest.Get(path);
             www.SendWebRequest();
 
             while (!www.isDone) { System.Threading.Thread.Sleep(1); }
-            if (!string.IsNullOrEmpty(www.error)) {
-             //   Debug.LogError(www.error + "\npath:"+ path);
+            if (!string.IsNullOrEmpty(www.error))
+            {
+                //   Debug.LogError(www.error + "\npath:"+ path);
                 return null;
             }
-            if (www.isNetworkError) {
-              //  Debug.LogError("NetworkError \npath: "+ path);
+            if (www.isNetworkError)
+            {
+                //  Debug.LogError("NetworkError \npath: "+ path);
                 return null;
             }
-            if(path.ToLower().EndsWith(".lua"))
+            if (path.ToLower().EndsWith(".lua"))
                 return Encoding.UTF8.GetBytes(www.downloadHandler.text);
             else
                 return www.downloadHandler.data;
         }
 
-        if (File.Exists(path))
+        if (File.Exists(path)) {
+            //Debug.Log($"ReadAllBytes {path}");
             return File.ReadAllBytes(path);
+        }
+        else
+        {
+            if(!path.Contains("xlua"))
+                Debug.LogWarning($"ReadAllBytes can not find:{path}");
+        }
         return null;
     }
 
-    public static string ReadFile(string path) {
-        if (path.StartsWith("jar:")) {
+    public static string ReadFile(string path)
+    {
+        if (path.StartsWith("jar:"))
+        {
             var filepath = path;
             var www = UnityWebRequest.Get(path);
             www.SendWebRequest();
 
             while (!www.isDone) { System.Threading.Thread.Sleep(1); }
-            if (!string.IsNullOrEmpty(www.error)) {
+            if (!string.IsNullOrEmpty(www.error))
+            {
                 //   Debug.LogError(www.error + "\npath:"+ path);
                 return null;
             }
-            if (www.isNetworkError) {
+            if (www.isNetworkError)
+            {
                 //  Debug.LogError("NetworkError \npath: "+ path);
                 return null;
             }
@@ -878,28 +931,139 @@ public static class UnityHelper
         return null;
     }
 
-
-    public static void WechatLoginReq(string appid) {
+    // 微信登录授权
+    public static void WechatLoginReq(string appid)
+    {
+#if UNITY_EDITOR
+        Debug.Log("WechatLoginReq:" + appid);
+#else
 #if UNITY_ANDROID
         AndroidJavaClass jc = new AndroidJavaClass("com.qq1798.buyu.MainActivity");
         AndroidJavaClass jc_default = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
         jc.CallStatic("WechatLogin", jo, appid);
 #elif UNITY_IOS
-        ToiOS.LoginWeChat(appid);
+        //ToiOS.LoginWeChat(appid);
+#endif
 #endif
     }
 
-    public static string GetPlatform() {
+    // 获取微信登录token
+    public static void WechatGetAccessToken(string appid, string appsecret, string code)
+    {
+#if UNITY_EDITOR
+        Debug.Log("WechatGetAccessToken:" + appid);
+#else
+#if UNITY_ANDROID
+        AndroidJavaClass jc = new AndroidJavaClass("com.qq1798.buyu.MainActivity");
+        AndroidJavaClass jc_default = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        //AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
+        jc.CallStatic("getAccessToken", appid, appsecret, code);
+#elif UNITY_IOS
+        //ToiOS.WechatGetAccessToken(appid, appsecret, code);
+#endif
+#endif
+    }
+    // 判断微信登录token是否有效
+    public static void IsAccessTokenIsInvalid(string accessToken, string openID)
+    {
+#if UNITY_ANDROID
+        AndroidJavaClass jc = new AndroidJavaClass("com.qq1798.buyu.MainActivity");
+        AndroidJavaClass jc_default = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        //AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
+        jc.CallStatic("isAccessTokenIsInvalid", accessToken, openID);
+#elif UNITY_IOS
+        //ToiOS.isAccessTokenIsInvalid(accessToken, openID);
+#endif
+    }
+    // 更新或续期微信登录token
+    public static void RefreshAccessToken(string refreshToken)
+    {
+#if UNITY_EDITOR
+        Debug.Log("RefreshAccessToken:" + refreshToken);
+#else
+#if UNITY_ANDROID
+        AndroidJavaClass jc = new AndroidJavaClass("com.qq1798.buyu.MainActivity");
+        AndroidJavaClass jc_default = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        //AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
+        jc.CallStatic("refreshAccessToken", refreshToken);
+#elif UNITY_IOS
+        //ToiOS.refreshAccessToken(refreshToken);
+#endif
+#endif
+    }
+
+    // 微信分享（网页）
+    // judge ： 好友：0 ；朋友圈：1
+    public static void WechatShareReq(string url, string title, string description, string imgUrl, int judge)
+    {
+#if UNITY_EDITOR
+        Debug.Log("WechatShareReq:" + url);
+#else
+#if UNITY_ANDROID
+        AndroidJavaClass jc = new AndroidJavaClass("com.qq1798.buyu.MainActivity");
+        AndroidJavaClass jc_default = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject jo = jc_default.GetStatic<AndroidJavaObject>("currentActivity");
+        jc.CallStatic("WxUrlShare", jo, url, title, description, imgUrl, judge);
+#elif UNITY_IOS
+        // TODO：IOS Wechat Share
+        //ToiOS.ShareWeChat(appid, url, title, description, imgUrl, judge);
+#endif
+#endif
+    }
+
+    // 打开app wechat："com.tencent.mm"
+    public static bool OpenApp(string pkgName)
+    {
+#if UNITY_EDITOR
+        Debug.Log("OpenApp:"+pkgName);
+#else
+#if UNITY_ANDROID
+        AndroidJavaClass UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        var activity = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+
+        using (AndroidJavaObject joPackageManager = activity.Call<AndroidJavaObject>("getPackageManager"))
+        {
+            using (AndroidJavaObject joIntent = joPackageManager.Call<AndroidJavaObject>("getLaunchIntentForPackage", pkgName))
+            {
+                if (null != joIntent)
+                {
+                    activity.Call("startActivity", joIntent);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("未安装此软件");
+                    return false;
+                }
+            }
+        }
+#elif UNITY_IOS
+        // TODO：IOS Open Wechat
+        //Application.OpenURL("weixin://")
+#endif
+#endif
+        return false;
+    }
+
+    public static string GetPlatform()
+    {
 #if UNITY_ANDROID
         return "Android";
 #elif UNITY_IOS
         return "iOS";
+#elif UNITY_WEBGL
+        return "WebGL";
 #else
+        if(Application.platform== RuntimePlatform.OSXPlayer||
+            Application.platform == RuntimePlatform.OSXEditor) {
+            return "MacOS";
+        }
         return "Win";
 #endif
     }
-    public static int GetPlatformInt() {
+    public static int GetPlatformInt()
+    {
 #if UNITY_ANDROID
         return 2;
 #elif UNITY_IOS
@@ -918,7 +1082,8 @@ public static class UnityHelper
     /// <param name="plainText">明文字符串</param>  
     /// <param name="strKey">密钥</param>  
     /// <returns>返回加密后的密文字节数组</returns>  
-    public static byte[] AESEncrypt(byte[] inputByteArray, byte[] keyBytes) {
+    public static byte[] AESEncrypt(byte[] inputByteArray, byte[] keyBytes)
+    {
         //分组加密算法  
         SymmetricAlgorithm des = Rijndael.Create();
         //byte[] inputByteArray = Encoding.UTF8.GetBytes(plainText);//得到需要加密的字节数组      
@@ -943,7 +1108,8 @@ public static class UnityHelper
     /// <param name="cipherText">密文字节数组</param>  
     /// <param name="strKey">密钥</param>  
     /// <returns>返回解密后的字符串</returns>  
-    public static byte[] fck(byte[] cipherText, byte[] keyBytes) {
+    public static byte[] fck(byte[] cipherText, byte[] keyBytes)
+    {
         SymmetricAlgorithm des = Rijndael.Create();
         des.Key = keyBytes;
         des.IV = _offsetkey1;
@@ -957,37 +1123,45 @@ public static class UnityHelper
         return decryptBytes;
     }
 
-    // 此函数小游戏单独用不到，注释掉了，避免报错
-    // 不要同步到大厅
-    //public class WaitLuaRequest : CustomYieldInstruction {
-    //    bool ok = false;
-    //    public string body;
-    //    public override bool keepWaiting => !ok;
+    public class WaitLuaRequest : CustomYieldInstruction
+    {
+        bool ok = false;
+        public string body;
+        public override bool keepWaiting => !ok;
 
-    //    public WaitLuaRequest(QLUploadRequest request) {
-    //        NetController.Instance.PostLuaRequest(request, obj=> {
-    //            body = (string)obj;
-    //            ok = true;
-    //        });
-    //    }
-    //    public WaitLuaRequest(QWebRequset request) {
-    //        NetController.Instance.PostLuaRequest(request, obj => {
-    //            body = (string)obj;
-    //            ok = true;
-    //        });
-    //    }
-    //}
+        public WaitLuaRequest(QLUploadRequest request)
+        {
+            NetController.Instance.PostLuaRequest(request, obj =>
+            {
+                body = (string)obj;
+                ok = true;
+            });
+        }
+        public WaitLuaRequest(QWebRequset request)
+        {
+            NetController.Instance.PostLuaRequest(request, obj =>
+            {
+                body = (string)obj;
+                ok = true;
+            });
+        }
+    }
 
-    public class WaitUnZip : CustomYieldInstruction {
+    public class WaitUnZip : CustomYieldInstruction
+    {
         public override bool keepWaiting => !ok;
         bool ok = false;
 
-        public WaitUnZip(string srcpath, string dstpath, byte[] bytes = null) {
+        public WaitUnZip(string srcpath, string dstpath, byte[] bytes = null)
+        {
             UnZip(srcpath, dstpath, bytes);
         }
-        async void UnZip(string srcpath, string dstpath, byte[] bytes) {
-            await Task.Run(()=> {
-                if (bytes != null) {
+        async void UnZip(string srcpath, string dstpath, byte[] bytes)
+        {
+            await Task.Run(() =>
+            {
+                if (bytes != null)
+                {
                     File.WriteAllBytes(srcpath, bytes);
                 }
                 new FastZip().ExtractZip(srcpath, dstpath, "");
@@ -995,40 +1169,52 @@ public static class UnityHelper
         }
     }
 
-    public static bool IsUnityObjectValid(UnityEngine.Object @object) {
+    public static bool IsUnityObjectValid(UnityEngine.Object @object)
+    {
         return @object;
     }
 
-    public static bool IsDir(string path) {
+    public static bool IsDir(string path)
+    {
         // get the file attributes for file or directory
         FileAttributes attr = File.GetAttributes(path);
         return attr.HasFlag(FileAttributes.Directory);
     }
 
-    public static void ForeachFile(string dir, Action<string> filehandler) {
-        try {
+    public static void ForeachFile(string dir, Action<string> filehandler)
+    {
+        try
+        {
             string[] files = Directory.GetFiles(dir);
-            foreach (string file in files) {
+            foreach (string file in files)
+            {
                 filehandler(file);
             }
 
             string[] dirs = Directory.GetDirectories(dir);
-            foreach (string dir_ in dirs) {
+            foreach (string dir_ in dirs)
+            {
                 ForeachFile(dir_, filehandler);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Debug.LogError(ex);
         }
     }
 
-    public static void CopyDirectory(string sourceDirPath, string saveDirPath, 
-        Action<string> filehandler = null) {
-        try {
-            if (!Directory.Exists(saveDirPath)) {
+    public static void CopyDirectory(string sourceDirPath, string saveDirPath,
+        Action<string> filehandler = null)
+    {
+        try
+        {
+            if (!Directory.Exists(saveDirPath))
+            {
                 Directory.CreateDirectory(saveDirPath);
             }
             string[] files = Directory.GetFiles(sourceDirPath);
-            foreach (string file in files) {
+            foreach (string file in files)
+            {
                 string pFilePath = saveDirPath + "/" + Path.GetFileName(file);
                 if (File.Exists(pFilePath))
                     continue;
@@ -1037,22 +1223,28 @@ public static class UnityHelper
             }
 
             string[] dirs = Directory.GetDirectories(sourceDirPath);
-            foreach (string dir in dirs) {
+            foreach (string dir in dirs)
+            {
                 CopyDirectory(dir, saveDirPath + "/" + Path.GetFileName(dir), filehandler);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Debug.LogError(ex);
         }
     }
 
 
     // 添加EventTrigger类型事件
-    public static void AddTriggersListener(GameObject obj, EventTriggerType eventTriggerType, Action callback) {
+    public static void AddTriggersListener(GameObject obj, EventTriggerType eventTriggerType, Action callback)
+    {
         EventTrigger trigger = obj.GetComponent<EventTrigger>();
-        if (trigger == null) {
+        if (trigger == null)
+        {
             trigger = obj.AddComponent<EventTrigger>();
         }
-        if (trigger.triggers.Count == 0) {
+        if (trigger.triggers.Count == 0)
+        {
             trigger.triggers = new List<EventTrigger.Entry>();
         }
 
@@ -1064,22 +1256,197 @@ public static class UnityHelper
         trigger.triggers.Add(entry);
     }
 
-    public static float RandomFloat(float min, float max) {
-        return UnityEngine.Random.Range(min,max);
+    public static float RandomFloat(float min, float max)
+    {
+        return UnityEngine.Random.Range(min, max);
     }
-    public static int RandomInt(int min, int max) {
+    public static int RandomInt(int min, int max)
+    {
         return UnityEngine.Random.Range(min, max);
     }
 
-    public static string CalHash128(byte[] bytes) {
+    public static string CalHash128(byte[] bytes)
+    {
         var has128 = new Hash128();
         HashUtilities.ComputeHash128(bytes, ref has128);
         return has128.ToString();
     }
-    public static string CalHash128UTF8(string str) {
+    public static string CalHash128UTF8(string str)
+    {
         return CalHash128(Encoding.UTF8.GetBytes(str));
     }
-    public static string CalHash128ASCII(string str) {
+    public static string CalHash128ASCII(string str)
+    {
         return CalHash128(Encoding.ASCII.GetBytes(str));
+    }
+
+    public static void OpenMobileQQ()
+    {
+#if UNITY_ANDROID
+        AndroidJavaClass UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject activity = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        AndroidJavaObject joPackageManager = activity.Call<AndroidJavaObject>("getPackageManager");
+        AndroidJavaObject joIntent = joPackageManager.Call<AndroidJavaObject>("getLaunchIntentForPackage", "com.tencent.mobileqq");
+        if(joIntent != null)
+        {
+            activity.Call("startActivity", joIntent);
+        }
+        else
+        {
+            Debug.Log("未安装QQ");
+            //GLuaSharedHelper.CallLua( "CreateHintMessage","您未安装QQ");
+        }
+#elif UNITY_IOS
+#endif
+    }
+
+    public static List<GameObject> GetDontDestroyOnLoadObjects()
+    {
+        List<GameObject> result = new List<GameObject>();
+
+        List<GameObject> rootGameObjectsExceptDontDestroyOnLoad = new List<GameObject>();
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            rootGameObjectsExceptDontDestroyOnLoad.AddRange(SceneManager.GetSceneAt(i).GetRootGameObjects());
+        }
+
+        List<GameObject> rootGameObjects = new List<GameObject>();
+        Transform[] allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+        for (int i = 0; i < allTransforms.Length; i++)
+        {
+            Transform root = allTransforms[i].root;
+            if (root.hideFlags == HideFlags.None && !rootGameObjects.Contains(root.gameObject))
+            {
+                rootGameObjects.Add(root.gameObject);
+            }
+        }
+
+        for (int i = 0; i < rootGameObjects.Count; i++)
+        {
+            if (!rootGameObjectsExceptDontDestroyOnLoad.Contains(rootGameObjects[i])) {
+                result.Add(rootGameObjects[i]);
+
+            }
+        }
+
+        //foreach( GameObject obj in result )
+        //    Debug.Log( obj );
+
+        return result;
+    }
+
+    public static Texture2D LoadTextureFromFile(string FilePath) {
+        byte[] FileData = ReadAllBytes(FilePath);
+        if (FileData != null) {
+            var Tex2D = new Texture2D(2, 2);           // Create new "empty" texture
+            if (Tex2D.LoadImage(FileData))           // Load the imagedata into the texture (size is set automatically)
+                return Tex2D;                      // Return null if load failed
+        }
+        
+        return null;
+    }
+
+    public static Sprite LoadSpriteFromFile(string FilePath, float PixelsPerUnit = 100.0f) {
+
+        // Load a PNG or JPG image from disk to a Texture2D, assign this texture to a new sprite and return its reference
+        var SpriteTexture = LoadTextureFromFile(FilePath);
+        var NewSprite = Sprite.Create(SpriteTexture, 
+            new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0, 0), PixelsPerUnit);
+
+        return NewSprite;
+    }
+
+    public static bool Is64BitSystem {
+        get => IntPtr.Size == 8;
+    }
+
+    public static int IntPtrSize { get => IntPtr.Size; }
+
+    public static void GC() {
+        System.GC.Collect();
+    }
+
+    public static int SystemMemorySize { get => SystemInfo.systemMemorySize; }
+    public static int GraphicsMemorySize { get => SystemInfo.graphicsMemorySize;}
+    public static long ScriptMemorySize { get => System.GC.GetTotalMemory(false)/1024/1024; }
+    public static long UsedMemorySize { get => Profiler.GetTotalAllocatedMemoryLong() / 1024/1024; }
+
+    public static long RealUsedMemorySize { 
+        get => (Profiler.GetTotalAllocatedMemoryLong()- Profiler.GetTotalUnusedReservedMemoryLong()) / 1024 / 1024; }
+
+    // 获取时间戳（秒）
+    public static long GetTimeStampSecond()
+    {
+        TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        return Convert.ToInt64(ts.TotalSeconds);
+    }
+
+    // 获取时间戳（毫秒）
+    public static long GetTimeStampMilliSecond()
+    {
+        TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        return Convert.ToInt64(ts.TotalMilliseconds);
+    }
+    // 获取时间戳（100纳秒）
+    public static long GetTimeStampTicks()
+    {
+        TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        return ts.Ticks;
+    }
+
+    // 判断鼠标是否在target上
+    public static bool IsMouseCorveredTarget(GameObject target, GraphicRaycaster gr)
+    {
+        var corverList = GetOverGameObject(gr);
+        if (corverList == null || corverList.Count <= 0)
+            return false;
+        foreach (var ret in corverList)
+        {
+            if (ret.gameObject == target)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 获取鼠标悬停位置的GameObject返回go层级为由下到上
+    public static List<RaycastResult> GetOverGameObject(GraphicRaycaster raycaster)
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerEventData, results);
+        return results;
+    }
+
+    public static bool IsNullOrWhiteSpace(string str)
+    {
+        return string.IsNullOrWhiteSpace(str);
+    }
+
+    public static bool HasUserAuthorizedPermission(string permissionName)
+    {
+#if UNITY_ANDROID
+        permissionName = "android.permission." + permissionName;
+        return UnityEngine.Android.Permission.HasUserAuthorizedPermission(permissionName);
+#elif UNITY_IOS
+        UserAuthorization authorization = UserAuthorization.Microphone;
+        if (permissionName == "CAMERA")
+            authorization = UserAuthorization.WebCam;
+        else if (permissionName == "RECORD_AUDIO")
+            authorization = UserAuthorization.Microphone;
+        else
+            return false;
+        return Application.HasUserAuthorization(authorization);
+#else
+        return true;
+#endif
+
+    }
+
+    public static string GetCountry()
+    {
+        return System.Globalization.RegionInfo.CurrentRegion.Name;
     }
 }

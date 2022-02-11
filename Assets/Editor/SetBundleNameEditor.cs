@@ -90,9 +90,16 @@ public class SetBundleNameEditor : EditorWindow
         foreach (var guid in guids)
         {
             var assetPath = AssetDatabase.GUIDToAssetPath(guid);
-            SetAssetBundleName(assetPath, bundleNameNoEx);
+            var importer = AssetImporter.GetAtPath(assetPath);
+            //Debug.Log("importer = "+ importer.GetType());
+            if (importer != null && importer.GetType() != typeof(UnityEditor.MonoImporter))
+            {
+                importer.SetAssetBundleNameAndVariant(bundleName, string.Empty);
+                Debug.Log($"已清空：{assetPath}");
+            }
+            //var selectGuids = Selection.assetGUIDs;
+
         }
-        //var selectGuids = Selection.assetGUIDs;
 
     }
 

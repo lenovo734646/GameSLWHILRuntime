@@ -15,3 +15,9 @@ public class CustomUnityStringEvent : UnityEvent<string> {}
 public class CustomUnityIntEvent : UnityEvent<int> {}
 [System.Serializable]
 public class CustomUnityFloatEvent : UnityEvent<float> {}
+
+[System.Serializable]
+public class CustomUnityObjectsEvent : UnityEvent<Object, object[]> { }
+
+[System.Serializable]
+public class CustomObjectsEvent : UnityEvent<object[]> { }

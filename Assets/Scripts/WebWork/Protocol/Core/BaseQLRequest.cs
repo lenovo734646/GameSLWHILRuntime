@@ -8,7 +8,7 @@ namespace QL.Core
     /// <summary>
     /// 基础QL请求类，存放一些通用的请求参数。
     /// </summary>
-    public abstract class BaseQLRequest<T> : IQLRequest<T> where T : QLResponse
+    public abstract class BaseQLRequest<T> : IQLRequest where T : QLResponse
     {
         /// <summary>
         /// HTTP请求头参数

@@ -3,13 +3,19 @@ local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logErro
 local class, typeof, type, string, utf8= class, typeof, type, string, utf8
 
 local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local CoroutineHelper = require 'CoroutineHelper'
+local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 local WaitForSeconds = UnityEngine.WaitForSeconds
-local IsMouseCorveredTarget = CS.UnityHelper.IsMouseCorveredTarget
-
+local UnityHelper = CS.UnityHelper
+local SEnv = SEnv
+local _STR_ = _STR_
+local _ERR_STR_ = _ERR_STR_
+local ShowHitMessage = ShowHitMessage
 
 _ENV = moduledef { seenamespace = CS }
+
+local musicMute = false
+local audioMute = false
 
 local Class = class()
 
@@ -22,29 +28,56 @@ function Class:__init(panel, gr, maxRecordTime)
     self.panel = panel
     self.gr = gr
     self.maxRecordTime = maxRecordTime
+    -- self.recorder.RecordVOLEnhanceMulti = 1 -- 声音放大
 
+    self.btnPressRecording.OnTouchDown:RemoveAllListeners()
     self.btnPressRecording.OnTouchDown:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(true)
-        self.recorder:StartRecording(self.maxRecordTime)
+        local bStart = self.recorder:StartRecording(self.maxRecordTime)
+        if not bStart then
+            if g_Env then
+                g_Env.ShowHitMessage(_STR_("录音失败，请检查权限"))
+            else
+                print("录音失败，请检查权限")
+            end
+        else
+            self:PauseMusicAndAudio()
+        end
     end)
 
+    self.btnPressRecording.OnTouchUp:RemoveAllListeners()
     self.btnPressRecording.OnTouchUp:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(false)
-        if IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
+        if UnityHelper.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
             if clipData ~= nil then
-                print("OnTouchUp....发送消息")
+                local clipChannels = self.recorder:GetRecordingClipChannels()
                 if self.onSendCallback then
-                    self.onSendCallback(clipData)
+                    print("OnTouchUp....发送消息", #clipData, type(clipData))
+                    self.onSendCallback(clipData, clipChannels, self.recorder.freq)
                 end
                 self.recorder:CancelRecording()
             end
         else
             --松手时不在录音按钮上就取消
             self.recorder:CancelRecording()
+            SEnv.ShowHintMessage(_G._STR_("取消语音发送"))
         end
+        self:RecoverMusicAndAudio()
     end)
+end
+
+function Class:RequestMicrophone()
+    self.recorder:Init()
+end
+-- 取消音频输入
+function Class:CancelVoiceInput()
+    if self.recorder.isRecording then
+        self.recorder:CancelRecording()
+        SEnv.ShowHintMessage(_G._STR_("取消语音发送"))
+        self:RecoverMusicAndAudio()
+    end
 end
 
 function Class:OnShow(isOn)
@@ -52,13 +85,40 @@ function Class:OnShow(isOn)
     self.sliderPanel.gameObject:SetActive(not isOn)
 end
 
-function Class:ByteToAudioClip(clipData)
+function Class:ByteToAudioClip(clipData, clipChannels, freq)
     if clipData == nil then
         logError("ByteToAudioClip clipData is nil")
         return nil
     end
 
-    return self.recorder:ByteToAudioClip(clipData)
+    return self.recorder:ByteToAudioClip(clipData, clipChannels, freq)
 end
+
+function Class:Release()
+    self.btnPressRecording.OnTouchDown:RemoveAllListeners()
+    self.btnPressRecording.OnTouchUp:RemoveAllListeners()
+    self.onSendCallback = nil
+end
+
+function Class:PauseMusicAndAudio()
+    if not AudioManager.Instance.MusicAudio.mute then
+        AudioManager.Instance.MusicAudio.mute = true
+        musicMute = false
+    else
+        musicMute = true
+    end
+    if not AudioManager.Instance.EffectAudio.mute then
+        AudioManager.Instance.EffectAudio.mute = true
+        audioMute = false
+    else
+        audioMute = true
+    end
+end
+
+function Class:RecoverMusicAndAudio()
+    AudioManager.Instance.MusicAudio.mute = musicMute
+    AudioManager.Instance.EffectAudio.mute = audioMute
+end
+
 
 return _ENV

@@ -30,6 +30,13 @@ public class EventBroadcaster : MonoBehaviour
         Init();
     }
 
+    private void OnDestroy() {
+        eventMap.Clear();
+        foreach (var e in events) {
+            e.UnityEvent.RemoveAllListeners();
+        }
+    }
+
     public void Broadcast(string evetName) {
         
         if (eventMap.TryGetValue(evetName, out Event @event)) {

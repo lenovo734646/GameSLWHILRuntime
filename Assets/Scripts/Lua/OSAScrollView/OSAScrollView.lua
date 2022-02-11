@@ -10,7 +10,7 @@ local OSAScrollView = OSA.OSAScrollView
 local MyParam = OSA.MyParam
 local MyItemViewHolder = OSA.MyItemViewHolder
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
-
+local OSAItemViewHolder = OSA.ItemViewHolder
 
 
 _ENV = {}
@@ -128,10 +128,14 @@ end
 function Class:GetItemsCount()
     return self.OSAScrollViewCom:GetItemsCount()
 end
-
+-- 添加后马上获取不一定能获取到，要更新了 VisibleItemsCount 之后才能获取到
 function Class:GetItemViewsHolder(index)
-    --print("GetItemViewsHolder index = ", index)
-    return self.OSAScrollViewCom:GetItemViewsHolder(index).bindData -- 
+    print("VisibleItemsCount = ", self.OSAScrollViewCom.VisibleItemsCount)
+    local vh = self.OSAScrollViewCom:GetItemViewsHolder(index)
+    if vh then
+        return vh.bindData 
+    end
+    return nil
 end
 
 function Class:SmoothScrollTo(itemIndex, duration, normalizedOffsetFromViewportStart, 
@@ -145,7 +149,18 @@ function Class:SmoothScrollTo(itemIndex, duration, normalizedOffsetFromViewportS
     normalizedPositionOfItemPivotToUse, onProgressFunc, onDoneFunc, overrideCurrentScrollingAnimation)
 end
 
-
-
+function Class:Release()
+    self.OSAScrollViewCom.StartCallback = nil
+    self.OSAScrollViewCom.UpdateCallback = nil
+    
+    self.OSAScrollViewCom.OnBeforeRecycleOrDisableViewsHolderCallback = nil
+    self.OSAScrollViewCom.RebuildLayoutDueToScrollViewSizeChangeCallback = nil
+    self.OSAScrollViewCom.ChangeItemsCountCallback = nil
+    
+    self.OSAScrollViewCom.DisposeCallback = nil
+    self.OSAScrollViewCom.OnItemHeightChangedPreTwinPassCallback = nil
+    self.OSAScrollViewCom.OnItemWidthChangedPreTwinPassCallback = nil
+    self.OSAScrollViewCom = nil
+end
 
 return _ENV

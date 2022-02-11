@@ -11,6 +11,11 @@ public class LuaAutoInitHelper : MonoBehaviour
 
     public string[] typefilter;
 
+    private void OnDestroy() {
+        t?.Dispose();
+        t = null;
+    }
+
     public LuaTable Init(LuaTable self, object[] typefilter_ = null, bool autoDestroy = false) {
         t = self;
         if (typefilter_ == null) {

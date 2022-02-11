@@ -1,17 +1,15 @@
-local _G = _G
+local _G, CS = _G, CS
 
 local protoc = require "protobuffer.protoc"
 local pb = require "pb"
 local pbencode = pb.encode
 local pbdecode = pb.decode
-local netComponent = CS.NetController.Instance.netComponent
-local assert,debug,print,require,io =
-assert,debug,print,require,io
+
+local assert, debug, print, require, io, tostring = assert, debug, print, require, io, tostring
 local tinsert = table.insert
 local tremove = table.remove
-local logError,logWarning,log = logError,logWarning,log
-local json = json
-local Config = require'GameConfig'
+local logError, logWarning, log = logError, logWarning, print
+local Config = require 'Config'
 _ENV = {}
 
 -- local function LogE(str)
@@ -19,15 +17,15 @@ _ENV = {}
 -- end
 
 local function LogW(str)
-    logWarning('[PBHelper]'..str..'\n'..debug.traceback())
+    logWarning('[PBHelper]' .. str .. '\n' .. debug.traceback())
 end
 
 local function Log(str)
-    log('[PBHelper]'..str..'\n'..debug.traceback())
+    log('[PBHelper]' .. str .. '\n' .. debug.traceback())
 end
 
-local comSendFunc = netComponent.Send
-
+local netComponent
+local comSendFunc
 local ackcallbackmap = {}
 local listenermap = {}
 local listenercheckmap = {}
@@ -38,11 +36,20 @@ local function netFunc(name, bytes)
     comSendFunc(netComponent, name, bytes)
 end
 
-
-
 function Init(defautpbpackagename_)
-    defautpkgnamewithpoint = defautpbpackagename_..'.'
+    if not netComponent then
+        local NetInstance = CS.NetController.Instance
+        netComponent = NetInstance.netComponent
+        comSendFunc = netComponent.Send
+        assert(netComponent)
+        assert(comSendFunc)
+    end
+    defautpkgnamewithpoint = defautpbpackagename_ .. '.'
     protoc:load(Config:LoadPBString(defautpbpackagename_), defautpbpackagename_)
+end
+function Reset()
+    netComponent = CS.NetController.Instance.netComponent
+    comSendFunc = netComponent.Send
 end
 
 function AddPbPkg(pbpackagename_)
@@ -52,12 +59,14 @@ end
 function Send(name, dataT)
     local bytes = pbencode(name, dataT)
     netFunc(name, bytes)
-    print('Send '.. name)
+    -- print('Send ' .. name)
 end
 
 function AsyncRequest(name, dataT, ackname, callback)
     assert(dataT)
+    -- print('AsyncRequest '.. name)
     local bytes = pbencode(name, dataT)
+    -- print('AsyncRequest name：' .. name .. " bytes:" .. tostring(bytes))
     netFunc(name, bytes)
     local list = ackcallbackmap[ackname]
     if not list then
@@ -65,14 +74,12 @@ function AsyncRequest(name, dataT, ackname, callback)
         ackcallbackmap[ackname] = list
     end
     tinsert(list, callback)
-    --print('AsyncRequest '.. name)
 end
 
-
 function AddListener(name, callback, self)
-    Log('AddListener name:'..name)
+    -- Log('AddListener name:'..name)
     if not name:Contains('.') then
-        name = defautpkgnamewithpoint..name
+        name = defautpkgnamewithpoint .. name
     end
 
     if listenercheckmap[callback] then
@@ -87,25 +94,32 @@ function AddListener(name, callback, self)
     end
     if self then
         local classMemberFunc = callback
-        callback = function (data)
-            classMemberFunc(self,data)
+        callback = function(data)
+            classMemberFunc(self, data)
         end
-        tinsert(list, {callback=callback,classMemberFunc=classMemberFunc})
+        tinsert(list, {
+            callback = callback,
+            classMemberFunc = classMemberFunc
+        })
     else
-        tinsert(list, {callback=callback})
+        tinsert(list, {
+            callback = callback
+        })
     end
 
 end
 
 function RemoveListener(name, callback, self)
-    name = defautpkgnamewithpoint..name
+    if not name:Contains('.') then
+        name = defautpkgnamewithpoint .. name
+    end
     if listenercheckmap[callback] then
         listenercheckmap[callback] = nil
         local list = listenermap[name]
         assert(list)
         for i = 1, #list do
             if self then
-                if list[i].classMemberFunc==callback then
+                if list[i].classMemberFunc == callback then
                     tremove(list, i)
                     break
                 end
@@ -118,11 +132,13 @@ function RemoveListener(name, callback, self)
 end
 
 function RemoveAllListenerByName(name)
-    name = defautpkgnamewithpoint..name
+    if not name:Contains('.') then
+        name = defautpkgnamewithpoint .. name
+    end
     local list = listenermap[name]
     if list then
         local len = #list
-        for i=1,len do
+        for i = 1, len do
             listenercheckmap[list[i]] = nil
         end
         listenermap[name] = nil
@@ -134,32 +150,31 @@ function RemoveAllListener()
     listenercheckmap = {}
 end
 
-
 function OnReceiveNetData(data, packName)
-    -- if packName~='CLGT.KeepAliveAck' then
-    --     Log('OnReceiveNetData '..packName)
+    -- if packName ~= 'CLGT.KeepAliveAck' then
+    --     Log('OnReceiveNetData ' .. packName)
     -- end
-
+    --print("packName = ", packName)
+    local pbdata = data.pbdata
     local cblist = ackcallbackmap[packName]
     local decodeddata
     if cblist then
         local cb = cblist[1]
-        decodeddata = pbdecode(packName, data.pbdata)
+        decodeddata = pbdecode(packName, pbdata)
         cb(decodeddata)
         tremove(cblist, 1)
-        if #cblist==0 then
+        if #cblist == 0 then
             ackcallbackmap[packName] = nil
         end
     end
     local list = listenermap[packName]
+    -- print('packname:'..packName.." 消息队列是不是空："..tostring(list==nil))
     if list then
-        local data = decodeddata or pbdecode(packName, data.pbdata)
-        for i=1,#list do
+        local data = decodeddata or pbdecode(packName, pbdata)
+        for i = 1, #list do
             list[i].callback(data)
         end
     end
 end
-
-
 
 return _ENV

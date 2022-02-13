@@ -80,7 +80,8 @@ local AssetList = {
     "Assets/AssetsFinal/EmojiPics.prefab"
 }
 local SoundPkgList = {
-    'Assets/AssetsFinal/SLWHSounds.prefab'
+    'Assets/AssetsFinal/commonSound.prefab',
+    'Assets/AssetsFinal/voice_'..CS.SysDefines.curLanguage..'.prefab',
 }
 local LoadList = {AssetList, SoundPkgList, SceneList}
 local GetLoadCount = function ()

@@ -537,7 +537,7 @@ function Class:OnShowState(data)
     -- print("进入结算阶段....")
     local ui = self.ui
     ui.viewEventBroadcaster:Broadcast('showState')
-    AudioManager.Instance:PlaySoundEff2D("stop") 
+    AudioManager.Instance:PlaySoundEff2D("stop_bet") 
     ui.directionallight_animationhelper:PlayByIndex(1)
     ui.pointlight_animationhelper:PlayByIndex(1)
     --

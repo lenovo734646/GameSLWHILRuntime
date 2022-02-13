@@ -257,34 +257,34 @@ namespace ToAudio
             //    //Debug.LogError("common====>" + x + ", ab=" + ai.assetBundleName + ", v=" + ai.assetBundleVariant);
             //});
 
-            //// 最终-常用
-            //var _ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + "commonSound.prefab");
-            //if (_ai != null)
-            //{
-            //    _ai.assetBundleName = resName + "_sounds.bundle";
-            //    _ai.assetBundleVariant = "";
-            //}
+            // 最终-常用
+            var _ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + "commonSound.prefab");
+            if (_ai != null)
+            {
+                _ai.assetBundleName = resName + "_sounds.bundle";
+                _ai.assetBundleVariant = "";
+            }
 
-            //foreach (string language in AudioConfig.LanguageList)
-            //{
-            //    // 音效-多语言
-            //    var language_list = LoadAudioList(resPath + language);
-            //    language_list?.ForEach(x =>
-            //    {
-            //        var ai = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(x));
-            //        ai.assetBundleName = ("voice_" + language).ToLower()+ ".bundle";
-            //        ai.assetBundleVariant = "";
-            //        //Debug.LogError("language====>" + x + ", ab=" + ai.assetBundleName + ", v=" + ai.assetBundleVariant);
-            //    });
+            foreach (string language in AudioConfig.LanguageList)
+            {
+                //// 音效-多语言
+                //var language_list = LoadAudioList(resPath + language);
+                //language_list?.ForEach(x =>
+                //{
+                //    var ai = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(x));
+                //    ai.assetBundleName = ("voice_" + language).ToLower() + ".bundle";
+                //    ai.assetBundleVariant = "";
+                //    //Debug.LogError("language====>" + x + ", ab=" + ai.assetBundleName + ", v=" + ai.assetBundleVariant);
+                //});
 
-            //    // 最终-多语言
-            //    var __ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + "voice_" + language + ".prefab");
-            //    if (__ai != null)
-            //    {
-            //        __ai.assetBundleName = ("voice_" + language).ToLower()+ ".bundle";
-            //        __ai.assetBundleVariant = "";
-            //    }
-            //}
+                // 最终-多语言
+                var __ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + "voice_" + language + ".prefab");
+                if (__ai != null)
+                {
+                    __ai.assetBundleName = ("voice_" + language).ToLower() + ".bundle";
+                    __ai.assetBundleVariant = "";
+                }
+            }
 
             AssetDatabase.Refresh();
         }

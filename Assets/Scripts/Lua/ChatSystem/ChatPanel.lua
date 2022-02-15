@@ -17,6 +17,7 @@ local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, 
 local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
 local UnityHelper = UnityHelper
 -- local TouchScreenKeyboard_Status = UnityEngine.TouchScreenKeyboard.Status
+local AudioManager = AudioManager or CS.AudioManager
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
@@ -64,12 +65,6 @@ function Class:__init(panel, loader, playerRes, coMonoBehaviour)
     self.eventListener:Init(self)
     CoroutineMonoBehaviour = coMonoBehaviour
     -- 音频播放器
-    local sounds = {}
-    initHelper:ObjectsSetToLuaTable(sounds)
-    self.soundClips = {}
-    for key, clip in pairs(sounds) do
-        self.soundClips[clip.name] = clip
-    end
     self.msgItemBGs = {}
     self.msgItemBGInitHelper:ObjectsSetToLuaTable(self.msgItemBGs)
     self.msgItemBGInitHelper = nil
@@ -231,7 +226,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                 local data = self.phrasePanel:GetPhraseData(phraseIndex)
                 if data ~= nil then
                     content = data.content
-                    self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. phraseIndex])
+                    AudioManager.Instance:PlaySoundEff2D("game_chat_sound_" .. phraseIndex)
                 else
                     LogE("获取快捷消息数据失败 index =" .. phraseIndex)
                     return
@@ -390,7 +385,7 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
                 if data ~= nil then
                     content = data.content
                     if isOpen then
-                        self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. index])
+                        AudioManager.Instance:PlaySoundEff2D("game_chat_sound_" .. index)
                     end
                     msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
                     self:ProcessPanelInactive(msgData)

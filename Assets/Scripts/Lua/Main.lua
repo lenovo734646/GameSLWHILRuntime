@@ -82,6 +82,7 @@ local AssetList = {
 local SoundPkgList = {
     'Assets/AssetsFinal/commonSound.prefab',
     'Assets/AssetsFinal/voice_'..CS.SysDefines.curLanguage..'.prefab',
+    'Assets/AssetsFinal/phrase_'..CS.SysDefines.curLanguage..'_Sound.prefab',
 }
 local LoadList = {AssetList, SoundPkgList, SceneList}
 local GetLoadCount = function ()

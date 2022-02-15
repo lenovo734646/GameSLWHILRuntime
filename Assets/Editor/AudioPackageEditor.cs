@@ -34,18 +34,18 @@ public class AudioConfig
     public static string[] ExtList = { ".wav", ".mp3", ".ogg" };
     public static string[] LanguageList = { "CN", "EN" };
     public const string FinalPath = "Assets/AssetsFinal/";
-    public const string resName = "";     // 默认不填就根据resPath选取, 填写就指定名称, 格式：jx
-    public const string resPath = "Assets/Dance/Sound/";     // 默认不填就自动搜索, 填写就指定目录, 格式：Assets/JiuXian/Sound/
+    //public const string resName = "";     // 默认不填就根据resPath选取, 填写就指定名称, 格式：jx
+    //public const string resPath = "Assets/BCBM/music/";     // 默认不填就自动搜索, 填写就指定目录, 格式：Assets/JiuXian/Sound/
 }
 
 [CustomEditor(typeof(AudioPackage))]
 public class AudioPackageEditor : Editor
 {
-    [MenuItem("Tools/Audio/Update")]
-    static void UpdateAudio()
-    {
-        ToAudio.Tools.Generate_AudioInfo();
-    }
+    //[MenuItem("Tools/Audio/Update")]
+    //static void UpdateAudio()
+    //{
+    //    ToAudio.Tools.Generate_AudioInfo();
+    //}
 
     #region 处理音频加载逻辑
 
@@ -112,8 +112,8 @@ namespace ToAudio
 
     public class Tools
     {
-        private static string resName = AudioConfig.resName; // 不填就根据resPath选取, 填写就指定名称
-        private static string resPath = AudioConfig.resPath; // 不填就自动搜索, 填写就指定目录
+        private static string resName = ""; // 不填就根据resPath选取, 填写就指定名称
+        private static string resPath = ""; // 不填就自动搜索, 填写就指定目录
         private static string szFileCount = "";              // 记录文件数量
 
         #region 常用逻辑
@@ -167,7 +167,7 @@ namespace ToAudio
         {
             var audios = new List<AudioClip>();
 
-            int index = 0;
+            //int index = 0;
             DirectoryInfo dis = new DirectoryInfo(path);
             List<FileInfo> list = new List<FileInfo>();
 
@@ -191,8 +191,10 @@ namespace ToAudio
         #endregion
 
         #region 处理自动生成逻辑
-        public static void Generate_AudioInfo()
+        public static void Generate_AudioInfo(string resPath_, string resName_)
         {
+            resPath = resPath_;
+            resName = resName_;
             // 自动搜索音频目录
             if (Search_AudioPath())
             {
@@ -221,8 +223,8 @@ namespace ToAudio
                 Debug.LogError("搜索音频失败, 存放音频目录格式错误或者没有存放音效文件");
                 return false;
             }
-            string tmp = resPath.Replace("Assets", "").Replace("Sound", "").Replace("/", "");
-            resName = tmp.ToLower();//GetUpperCharToLoweChar(tmp);
+            //string tmp = resPath.Replace("Assets", "").Replace("Sound", "").Replace("/", "");
+            //resName = tmp.ToLower();//GetUpperCharToLoweChar(tmp);
 
             if (resName == string.Empty)
             {
@@ -258,10 +260,10 @@ namespace ToAudio
             //});
 
             // 最终-常用
-            var _ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + "commonSound.prefab");
+            var _ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + resName+"_CommonSound.prefab");
             if (_ai != null)
             {
-                _ai.assetBundleName = resName + "_sounds.bundle";
+                _ai.assetBundleName = resName + "_commonsound.bundle";
                 _ai.assetBundleVariant = "";
             }
 
@@ -272,16 +274,16 @@ namespace ToAudio
                 //language_list?.ForEach(x =>
                 //{
                 //    var ai = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(x));
-                //    ai.assetBundleName = ("voice_" + language).ToLower() + ".bundle";
+                //    ai.assetBundleName = (resName+"_" + language).ToLower() + ".bundle";
                 //    ai.assetBundleVariant = "";
                 //    //Debug.LogError("language====>" + x + ", ab=" + ai.assetBundleName + ", v=" + ai.assetBundleVariant);
                 //});
 
                 // 最终-多语言
-                var __ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + "voice_" + language + ".prefab");
+                var __ai = AssetImporter.GetAtPath(AudioConfig.FinalPath + resName+"_" + language + "_Sound.prefab");
                 if (__ai != null)
                 {
-                    __ai.assetBundleName = ("voice_" + language).ToLower() + ".bundle";
+                    __ai.assetBundleName = (resName+"_" + language).ToLower() + "_sound.bundle";
                     __ai.assetBundleVariant = "";
                 }
             }
@@ -300,22 +302,29 @@ namespace ToAudio
                 return;
             }
 
-            szFileCount = string.Format("【通用】音频数量={0}", LogicCreatePre(resPath, "commonSound.prefab"));
+            szFileCount = string.Format("【通用】音频数量={0}", LogicCreatePre(resPath, resName+ "_CommonSound.prefab"));
             foreach (string language in AudioConfig.LanguageList)
             {
-                szFileCount += string.Format(", 【{0}】音频数量={1}", language, LogicCreatePre(resPath + language, "voice_" + language + ".prefab"));
+                szFileCount += string.Format(", 【{0}】音频数量={1}", language, LogicCreatePre(resPath + language, resName+"_" + language + "_Sound.prefab"));
             }
         }
 
         private static int LogicCreatePre(string respath, string saveName)
         {
+            var clips = LoadAudioList(respath).ToArray();
+            if (clips.Length <= 0)
+            {
+                Debug.Log($"respath:{respath} 中没有音频，跳过创建....");
+                return 0;
+            }
+
             if (Directory.Exists(AudioConfig.FinalPath) == false) { Directory.CreateDirectory(AudioConfig.FinalPath); }
-            if (Directory.Exists(respath) == false) { Directory.CreateDirectory(respath); }
+            //if (Directory.Exists(respath) == false) { Directory.CreateDirectory(respath); }
 
             GameObject obj = new GameObject();
             var src = obj.AddComponent<AudioPackage>();
             src.initOnStart = true;
-            src.audioClips = LoadAudioList(respath).ToArray();
+            src.audioClips = clips;
             LoadBasePath(src);
             LoadAudioClipDatas(src);
             obj.AddComponent<DontDestroyOnNextScene>();

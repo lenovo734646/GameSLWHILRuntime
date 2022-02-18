@@ -22,3 +22,5 @@
 /命令行打包上传pull spring.dev.bat
 /*.sln
 /*.apk
+/Assets/Editor/changehash
+/Assets/Editor/changehash.meta

@@ -294,6 +294,8 @@ function OnApplicationPause(b)
                     gameView.ctrl:OnStateChangeNtf(ack, true)
                 end
             end)
+        else
+            SEnv.gamePause = nil
         end
     end
 end

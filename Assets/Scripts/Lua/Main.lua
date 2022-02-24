@@ -25,6 +25,8 @@ local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 
 local Sprite = UnityEngine.Sprite
 local GameObject = UnityEngine.GameObject
+--
+SEnv.LanguageConvert = require'Table.LanguageConvert'
 
 
 

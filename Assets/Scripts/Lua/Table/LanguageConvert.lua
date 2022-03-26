@@ -9,7 +9,7 @@ local constantStringConvertor = {
     [""] = {EN = ""},
     [""] = {EN = ""},
     [""] = {EN = ""},
-    [""] = {EN = ""},
+    ["上局没有下注记录"] = {EN = "There was no betting record in the last game"},
     [" 大四喜x{1} "] = {EN = "Big Four x {1}"},
     [" 大三元x{1} "] = {EN = "Big Three x {1}"},
     [" 庄x{1} "] = {EN = "Dealer x {1}"},

@@ -1,4 +1,6 @@
 SEnv = SubGame_Env
+SEnv.roomCfg = {}
+
 -- if g_Env then
 --     print = function (...)--日志屏蔽
 --     end
@@ -15,19 +17,17 @@ require'Prepare'
 require "LuaUtil/LuaRequires"
 SEnv.CountDownTimerManager = require 'controller.CountDownTimerManager'
 local PBHelper = require'protobuffer.PBHelper'
-local MessageCenter = require'Message.MessageCenter'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
+local RoomSelectView = require'View.RoomSelectView'
 local SceneView = require'View.Scene3DView'
---
-local UnityHelper = CS.UnityHelper
-local yield = coroutine.yield
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-
-local Sprite = UnityEngine.Sprite
-local GameObject = UnityEngine.GameObject
---
+local MessageCenter = require "Message.MessageCenter"
 SEnv.LanguageConvert = require'Table.LanguageConvert'
-
+SEnv.messageCenter = MessageCenter()
+--
+local UnityHelper = GS.UnityHelper
+local tostring = tostring
+local AudioManager = AudioManager or GS.AudioManager
 
 
 function Main()
@@ -38,53 +38,38 @@ function Main()
 
     if g_Env == nil then
         -- 在大厅中将使用大厅的环境
-        local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
-        SEnv.playerRes = playerRes
-
+        -- local playerRes = {diamond=0,currency=0,integral=0, selfUserID = 0, userName = "", headID = 0, headFrameID = 0}
+        -- SEnv.playerRes = playerRes
+        SEnv.playerRes = {}
         SEnv.AutoUpdateHeadImage = function (img, headID, selfUserID)
             img.sprite = SEnv.GetHeadSprite(headID)
         end
     
         SEnv.GetHeadSprite = function (headID)
-            return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..(headID+1)..".png", typeof(Sprite))
+            return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/head_"..(headID+1)..".png", typeof(GS.Sprite))
         end
     
         SEnv.GetHeadFrameSprite = function (headFrameID)
-            return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(Sprite))
+            return SEnv.loader:Load("Assets/ForReBuild/Res/PlazaUI/Common/Head/headFrame_"..(headFrameID+1)..".png", typeof(GS.Sprite))
         end
         local commonSounds = SEnv.loader:Load("Assets/Resources/commonSounds.prefab")
-        CS.UnityEngine.Object.DontDestroyOnLoad(_G.Instantiate(commonSounds)) -- 公共音频资源
+        GS.UnityEngine.Object.DontDestroyOnLoad(GS.Instantiate(commonSounds)) -- 公共音频资源
         print("SUBGAME_EDITOR!")
     end
-    SEnv.loader:LoadScene('LoadingScene')
+    SEnv.loader:LoadScene('RoomSelectScene')
     _WaitSubGameLoadDone = false
 end
 
 
-
-
-local roomdata = {
-    last_bet_id = 1,
-    bet_config_array = {},
-    state = 1,
-    left_time = 0,
-    room_total_bet_info_list = {},
-    self_bet_info_list = {},
-    self_score = 0,
-    self_user_id = 0,
-    self_user_name = "",
-    self_user_Head = 0,
-    self_user_HeadFrame = 0,
-}
-
+--
 local SceneList = {"MainScene"}
 local AssetList = {
     "Assets/AssetsFinal/EmojiPics.prefab"
 }
 local SoundPkgList = {
     'Assets/AssetsFinal/commonSound.prefab',
-    'Assets/AssetsFinal/voice_'..CS.SysDefines.curLanguage..'.prefab',
-    'Assets/AssetsFinal/phrase_'..CS.SysDefines.curLanguage..'_Sound.prefab',
+    'Assets/AssetsFinal/voice_'..GS.SysDefines.curLanguage..'.prefab',
+    'Assets/AssetsFinal/phrase_'..GS.SysDefines.curLanguage..'_Sound.prefab',
 }
 local LoadList = {AssetList, SoundPkgList, SceneList}
 local GetLoadCount = function ()
@@ -99,17 +84,17 @@ end
 local loadMatTexByLangAsync = function(matpath,texpath_without_ext,texidname)
     local loader = SEnv.loader
     local mat = loader:LoadAsync(matpath)
-    local mask = SysDefines.curLanguage=='EN' and '_EN' or ''
+    local mask = GS.SysDefines.curLanguage=='EN' and '_EN' or ''
     local texpath = texpath_without_ext .. mask .. '.png'
     local tex = loader:LoadAsync(texpath)
     return mat:SetTexture(texidname, tex)
 end
 
 -- EnterRoomReq 回应处理
-local OnEnterRoomAck = function(data, err)
-    err = err or data.errcode
+local OnEnterRoomAck = function(enterRoomAckData, room_id, err)
+    err = err or enterRoomAckData.errcode
+    print('Send_EnterRoomAck:'..json.encode(enterRoomAckData))
     if err ~= 0 then
-        print('Send_EnterRoomAck:'..json.encode(data))
         if g_Env then
             g_Env.MessageBox{
                 content = err,
@@ -122,30 +107,104 @@ local OnEnterRoomAck = function(data, err)
         end
         return false
     else
-        roomdata = data
-        for key, value in pairs(roomdata.bet_config_array) do
-            print("bet_config_array: "..key..",  "..value)
+        -- 重新申请当前房间的配置信息，避免房间配置更新之后玩家在游戏内各个房间进出无法拿到最新的房间配置信息
+        local roomCfgData, err = CLSLWHSender.Send_RoomConfigReq_Async(room_id)
+        print("roomCfgData:", json.encode(roomCfgData))
+        if roomCfgData.errcode ~= 0 then
+            -- 获取房间信息失败 返回房间选择列表
+            SEnv.ShowHintMessage(_STR_("获取房间信息失败"..":roomid:"..tostring(room_id).."err:"..tostring(err)))
+            return
+        else
+            local roomCfg = roomCfgData.room_config
+            SEnv.roomCfg.banker_condition = roomCfg.banker_condition
+            SEnv.roomCfg.room_bet_limit = roomCfg.room_bet_limit
+            SEnv.roomCfg.user_area_bet_limit = roomCfg.user_area_bet_limit
+            SEnv.roomCfg.user_all_bet_limit = roomCfg.user_all_bet_limit
+            SEnv.roomCfg.bet_list = roomCfg.bet_list
+            SEnv.roomCfg.free_time = roomCfg.free_time
+            SEnv.roomCfg.bet_time = roomCfg.bet_time
+            SEnv.roomCfg.wait_show_time = roomCfg.wait_show_time
+            SEnv.roomCfg.show_time = roomCfg.show_time
+            SEnv.roomCfg.more_show_time = roomCfg.more_show_time
         end
-        
-        SEnv.playerRes.currency = roomdata.self_score
-        SEnv.playerRes.selfUserID = roomdata.self_user_id
-        SEnv.playerRes.userName = roomdata.self_user_name
-        SEnv.playerRes.headID = roomdata.self_user_Head
-        SEnv.playerRes.headFrameID = roomdata.self_user_HeadFrame
-        print("进入房间成功:UserID = ", SEnv.playerRes.selfUserID, SEnv.playerRes.headID, SEnv.playerRes.headFrameID)
+
+        for key, value in pairs(roomCfgData.room_config.bet_list) do
+            print("bet_list: "..key..",  "..value)
+        end
+
+        SEnv.self_bet_info_list = enterRoomAckData.self_bet_info_list
+        SEnv.room_total_bet_info_list = enterRoomAckData.room_total_bet_info_list
+
+        SEnv.playerRes.currency = enterRoomAckData.self_score
+        SEnv.playerRes.selfUserID = enterRoomAckData.self_user_id
+        SEnv.playerRes.userName = enterRoomAckData.self_user_name
+        SEnv.playerRes.headID = enterRoomAckData.self_user_Head
+        SEnv.playerRes.headFrameID = enterRoomAckData.self_user_HeadFrame
+        SEnv.playerRes.last_bet_id = enterRoomAckData.last_bet_id
+        print("进入房间成功:UserID = ", SEnv.playerRes.selfUserID, SEnv.playerRes.headID, "currency:", SEnv.playerRes.currency, "headID:", SEnv.playerRes.headID)
     end
     return true
 end
 
 local gameView
 function OnSceneLoaded(scene, mode)
+    if scene.name == "RoomSelectScene" then
+        gameView = nil
+        CoroutineHelper.StartCoroutine(function ()
+            local data, err = CLSLWHSender.Send_AllRoomConfigReq_Async()
+            print('111Send_AllRoomConfigReq_Async:', json.encode(data))
+            -- print("data.errcode:", data.errcode)
+            if data.errcode ~= 0 then
+                if g_Env then
+                    g_Env.MessageBox{
+                        content = err,
+                        onOK = function()
+                            g_Env.SubGameCtrl.Leave()
+                        end
+                    }
+                else
+                    print('获取房间信息失败: ', err)
+                end
+                return false
+            else
+                -- 根据房间信息创建房间界面
+                -- local data = {
+                --     errcode = 0,
+                --     room_count = 3,
+                --     RoomConfigMsg = {{room_id = 1, room_name = "初级房", min_enter_score = 100},
+                --     {room_id = 2, room_name = "中级房", min_enter_score = 200},
+                --     {room_id = 3, room_name = "高级房", min_enter_score = 300},},
+                -- }
+                local OnRoomClickCallback = function (room_id)
+                    CoroutineHelper.StartCoroutine(function ()
+                        local data, err = CLSLWHSender.Send_EnterRoomReq_Async(room_id)
+                        print("EnterRoomAck:", json.encode(data))
+                        local success = OnEnterRoomAck(data, room_id, err)
+                        if not success then
+                            print("非重连进入房间失败....")
+                            return 
+                        end
+                        print("进入房间成功 room_id = ", room_id, "开始加载 LoadingScene")
+                        SEnv.loader:LoadScene('LoadingScene')
+                    end)
+                end
+                RoomSelectView.Create(data, OnRoomClickCallback)
+            end
+            -- CLSLWHSender.Send_AllRoomConfigReq(function (data)
+                
+            -- end)
+            -- print('111Send_AllRoomConfigReq_Async:', json.encode(data))
+            
+        end)
+    end
+
     if scene.name == "LoadingScene" then
         CoroutineHelper.StartCoroutine(function ()
-            -- 进入房间请求
-            local data, err = CLSLWHSender.Send_EnterRoomReq_Async()
-            OnEnterRoomAck(data, err)
+            -- -- 进入房间请求
+            -- local data, err = CLSLWHSender.Send_EnterRoomReq_Async()
+            -- OnEnterRoomAck(data, err)
             -- 进度处理和资源加载
-            local sliderGo = GameObject.Find("Slider")
+            local sliderGo = GS.GameObject.Find("Slider")
             local slider = sliderGo:GetComponent("Slider")
             slider.value = 0.25
             local loader = SEnv.loader
@@ -175,18 +234,17 @@ function OnSceneLoaded(scene, mode)
                 elseif k == 3 then
                     for _, sceneName in pairs(v) do
                         print("加载场景：", sceneName)
-                        SceneManager.LoadSceneAsync(sceneName)
+                        GS.SceneManager.LoadSceneAsync(sceneName)
                         updateProgress()
                     end
                 end
             end
             --#region
         end)
-        
     end
     if scene.name == "MainScene" then
         SEnv.messageCenter = MessageCenter()
-        gameView = SceneView.Create(roomdata)
+        gameView = SceneView.Create(SEnv.roomCfg)
         if SEnv.isLostConnect then
             OnNetworkLost()
         end
@@ -209,10 +267,22 @@ function OnCloseSubGame()
     PBHelper.RemoveAllListener()
     if gameView then
         gameView:Release()
+        gameView = nil
+        SEnv.messageCenter:RemoveAllListener()
+        SEnv = SubGame_Env
+        SEnv.roomCfg = {}
     end
     if SEnv.CountDownTimerManager then
         SEnv.CountDownTimerManager.Clear()
-    end
+end
+
+-- 返回选房间界面
+function ReturnToSelectRoom()
+    print("============>ReturnToSelectRoom<============")
+    AudioManager.Instance:StopMusic()
+    AudioManager.Instance:StopEffect()
+    OnCloseSubGame()
+    SEnv.loader:LoadScene('RoomSelectScene') -- 返回选房间界面
 end
 
 local LogW = LogW
@@ -222,9 +292,10 @@ local LogW = LogW
 -- 这里的中断是在游戏过程中网络中断，是互联网断开，不是与服务器断开
 function OnNetworkLost()
     SEnv.isLostConnect = true
+    SEnv.gamePause = true
     if gameView then
         local LoadingUI = g_Env.uiManager:OpenUI('LoadingUI')
-        if Application.internetReachability == UnityEngine.NetworkReachability.NotReachable then
+        if GS.Application.internetReachability == GS.UnityEngine.NetworkReachability.NotReachable then
             LoadingUI:SetTipText(_G._STR_ '网络已断开，网络恢复将继续游戏...')
             CoroutineHelper.StopAllCoroutines()
             if SEnv.CountDownTimerManager then
@@ -247,14 +318,23 @@ function OnNetworkReConnect()
     if gameView then
         PBHelper.Reset() -- 一定要重置网络模块
         g_Env.uiManager:CloseUI('LoadingUI')
+        CoroutineHelper.StopAllCoroutines()
         -- 先重新请求进入房间
-        CLSLWHSender.Send_EnterRoomReq(OnEnterRoomAck)
+        CLSLWHSender.Send_EnterRoomReq(function (data)
+            local success = OnEnterRoomAck(data)
+            if not success then
+                print("网络重连成功，进入房间失败....")
+                return 
+            end
+        end)
         -- 再请求路单(这里防止加载的时候断网，导致OnSceneReady中的请求发送失败，这里补上)
-        gameView.ctrl:SendHistoryReq()
+        CLSLWHSender.Send_HistoryReq(function (data)
+            gameView.ctrl:OnHistroyAck(data)
+        end)
         -- 再请求服务器数据
         CLSLWHSender.Send_GetServerDataReq(function(ack)
             if ack._errmessage then
-                SEnv.ShowHintMessage(ack._errmessage)
+                g_Env.CreateHintMessage(ack._errmessage)
             else
                 SEnv.gamePause = nil
                 gameView.ctrl:OnStateChangeNtf(ack, true)
@@ -269,6 +349,7 @@ local lastStateLeftTime = nil
 function OnApplicationPause(b)
     if b then -- 进入后台
         print("SLWH 进入后台...")
+        SEnv.gamePause = true
         pauseTimestamp = UnityHelper.GetTimeStampSecond()
         if gameView then
             if gameView.mainUI then
@@ -283,14 +364,13 @@ function OnApplicationPause(b)
         local passTime = tempTime - pauseTimestamp + 1 -- 加一秒冗余，避免小数情况判断不到 
         print("passTime = ", passTime, "lastStateLeftTime = ", lastStateLeftTime)
         if passTime > lastStateLeftTime or passTime > 3 then
-            SEnv.gamePause = true
             CoroutineHelper.StopAllCoroutines() -- 确定要重新刷新数据才停止所有协程
             CLSLWHSender.Send_HistoryReq(function (data)
                 gameView.ctrl:OnHistroyAck(data)
             end)
             CLSLWHSender.Send_GetServerDataReq(function(ack)    -- 这里短时间内不能多次请求，应记录游戏状态和时间，同一状态判断时间间隔（避免转一轮过去），不同状态直接请求
                 if ack._errmessage then
-                    SEnv.ShowHintMessage(ack._errmessage)
+                    g_Env.CreateHintMessage(ack._errmessage)
                 else
                     SEnv.gamePause = nil
                     gameView.ctrl:OnStateChangeNtf(ack, true)

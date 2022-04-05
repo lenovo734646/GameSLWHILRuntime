@@ -1,9 +1,10 @@
-
-local _G, assert, print, log, table, pairs, setmetatable,getmetatable = _G, assert, print, log, table, pairs, setmetatable, getmetatable
-local class, typeof, type, string, utf8, logError = class, typeof, type, string, utf8, logError
+local GS = GS
+local GF = GF
+local _G, assert, print, table, pairs, setmetatable, getmetatable
+    = _G, assert, print, table, pairs, setmetatable, getmetatable
+local class, typeof, type, string, utf8
+    = class, typeof, type, string, utf8
 local next = next
-
-
 
 _ENV = {}
 
@@ -60,7 +61,7 @@ end
 
 function Class:InsertOne(index, item, freezeEndEdge)
     if item == nil then
-        logError("InsertItems models is null index = "..index)
+        GF.logError("InsertItems models is null index = "..index)
     end
     table.insert(self.itemList, index, item)
     return self:Insert(index, 1, freezeEndEdge)

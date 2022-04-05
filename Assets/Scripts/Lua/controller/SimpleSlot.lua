@@ -1,21 +1,19 @@
-local _G, g_Env, print, log, LogE, os, math = _G, g_Env, print, log, LogE, os, math
-local class, typeof, type, string, utf8, pairs = class, typeof, type, string, utf8, pairs
 
-local tostring, tonumber = tostring, tonumber
+local GS = GS
+local GF = GF
+local _G = _G
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset,
-    UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
-local Image = UnityEngine.UI.Image
-local Vector2 = UnityEngine.Vector2
+local Image = GS.UnityEngine.UI.Image
+local Vector2 = GS.UnityEngine.Vector2
 local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
 
-local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require 'OSAScrollView.InfinityScroView'
 
-_ENV = moduledef {
-    seenamespace = CS
-}
+_ENV = {}
 
 local Class = class()
 
@@ -50,7 +48,7 @@ function Class:__init(slotPanelInitHelper)
         self.updateIndex = index
     end
     local data
-    if SysDefines.curLanguage == 'EN' then
+    if GS.SysDefines.curLanguage == 'EN' then
         data = {{
             sprite = self.sprs[4]
         }, {
@@ -96,14 +94,7 @@ function Class:Run111(ret, time)
             end
 
         end
-
-        -- while self.OSAScrollViewCom.Velocity.y > -200 do
-        --     print("Velocity.y = ", self.OSAScrollViewCom.Velocity.y)
-        --     self.slotScrollView:SmoothScrollTo(ret, 0.1, nil, nil)
-        --     break
-        -- end
     end)
-
 end
 
 return _ENV

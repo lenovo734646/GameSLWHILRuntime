@@ -1,17 +1,16 @@
-local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
-    typeof, type, print, table, tonumber, SysDefines
-local LuaInitHelper = CS.LuaInitHelper
+local GS = GS
+local GF = GF
+local string, tostring, math, pairs, typeof, type, print, table, tonumber 
+    = string, tostring, math, pairs, typeof, type, print, table, tonumber
 
-local DestroyImmediate = DestroyImmediate
-local CS,AssertUnityObjValid = CS,AssertUnityObjValid
 local getmetatable = getmetatable
-local assert=assert
-local select=select
+local assert = assert
+local select = select
 _ENV = {}
 
 --转换成万或者亿
 function GameNumberFormat(n)
-    local isEn = SysDefines.curLanguage ~= 'CN'
+    local isEn = GS.SysDefines.curLanguage ~= 'CN'
     local unit = ''
     if isEn then
         if n >= 1000000000 then
@@ -54,7 +53,7 @@ end
 -- 目前账号手机号格式为：国家码+手机号（如果0开头，则不需要输入0）
 function IsPhoneNumValid(phoneStr)
     print("phoneStr = ", phoneStr)
-    if string.IsNullOrEmpty(phoneStr) or string.len(phoneStr) < 10 then
+    if GF.string.IsNullOrEmpty(phoneStr) or string.len(phoneStr) < 10 then
         return false
     end
     return true
@@ -75,7 +74,7 @@ function BuildStr(...)
 end
 
 function GetFileNameFromPath(path)
-    path = path:replace('\\', '/')
+    path = GF.string.replace(path,'\\', '/')
     return path:match("^.+/(.+)$") or ''
 end
 
@@ -142,7 +141,7 @@ function GetInitHelperWithTable(obj, autoDestroy)
     if autoDestroy == nil then
         autoDestroy = true
     end
-    return obj:GetComponent(typeof(LuaInitHelper)):Init(t, autoDestroy)
+    return obj:GetComponent(typeof(GS.LuaInitHelper)):Init(t, autoDestroy)
 end
 
 function PrintTable(t, spacestr)
@@ -156,8 +155,8 @@ function PrintTable(t, spacestr)
 end
 -- 数值转换为金额格式
 function NumberToMoney(n)
-    local numInterval = SysDefines.curLanguage == "CN" and 3 or 4
-    local lowLimit = SysDefines.curLanguage == "CN" and 999 or 9999
+    local numInterval = GS.SysDefines.curLanguage == "CN" and 3 or 4
+    local lowLimit = GS.SysDefines.curLanguage == "CN" and 999 or 9999
     if n <= lowLimit then
         return tostring(n)
     else
@@ -187,7 +186,7 @@ function NumberToMoney(n)
 end
 
 function MoneyToNumber(str)
-    local numStr = string.replace(str, ',', '')
+    local numStr = GF.string.replace(str, ',', '')
     if numStr ~= '' then
         return tonumber(numStr)
     else
@@ -197,7 +196,7 @@ end
 
 
 -- 下载
-local UnityWebRequest = CS.UnityEngine.Networking.UnityWebRequest
+local UnityWebRequest = GS.UnityEngine.Networking.UnityWebRequest
 function WebRequestGet(url, timeout)
     local request = UnityWebRequest.Get(url)
     --request.certificateHandler = CS.CertHandler()
@@ -216,6 +215,94 @@ function WebRequestPut(url, data, timeout)
     return request
 end
 
+function HookEvent(eventObj, hookdata)
+    assert(eventObj)
+    local mt = getmetatable(eventObj)
+    assert(mt)
+    local __index_old = mt.__index
+    hookdata.mtMap[mt] = __index_old
+    local userdataMap = hookdata.userdataMap
+    mt.__index = function(userdata, funcname)
+        local funcdata = hookdata[userdata]
+        if (funcname == 'AddListener' or funcname == 'RemoveListener') and not funcdata then
+            funcdata = {
+                __count = 0,
+                RemoveAllListenersFunc = __index_old(userdata, 'RemoveAllListeners')
+            }
+            userdataMap[userdata] = funcdata
+        end
 
+        if funcname == 'AddListener' then
+            funcdata.__count = funcdata.__count + 1
+        elseif funcname == 'RemoveAllListeners' then
+            userdataMap[userdata] = nil
+        elseif funcname == 'RemoveListener' then
+            funcdata.__count = funcdata.__count - 1
+        end
+
+        if funcdata and funcdata.__count == 0 then
+            userdataMap[userdata] = nil
+        end
+        -- local f = oldf(t, funcname)
+        -- print('__index ', t, funcname,f)
+        return __index_old(userdata, funcname)
+    end
+end
+
+function HookUnityEvents()
+    local hookdata = {
+        userdataMap = {},
+        mtMap = {}
+    }
+    function hookdata:Clear()
+        for userdata, funcdata in pairs(self.userdataMap) do
+            funcdata.RemoveAllListenersFunc(userdata)
+            print('Clear Listeners ', userdata)
+        end
+        -- reset mt
+        for mt, __index_old in pairs(self.mtMap) do
+            mt.__index = __index_old
+        end
+    end
+    local go = GS.GameObject()
+    local com = go:AddComponent(typeof(GS.Button))
+    HookEvent(com.onClick, hookdata)
+    GS.DestroyImmediate(com)
+    local com = go:AddComponent(typeof(GS.TMPro.TMP_InputField))
+    HookEvent(com.onSubmit, hookdata)
+    HookEvent(com.onEndEdit, hookdata)
+    HookEvent(com.onValueChanged, hookdata)
+    GS.DestroyImmediate(go)
+    return hookdata
+end
+
+-- 设置天数的下拉列表
+function OnSelectMonth(dropDown, selectIndex, optionsDateMap)
+    print("OnSelectMonth: index = ", selectIndex, dropDown.name)
+    local selectDate = optionsDateMap[selectIndex+1] -- selectIndex 是c# 过来的 下标是0 optionsDateMap是lua表下标是1
+    local year = selectDate.year
+    local month = selectDate.month
+    local days = GS.DateTime.DaysInMonth(year, month)
+    if year == GS.DateTime.Now.Year and month == GS.DateTime.Now.Month then
+        days = GS.DateTime.Now.Day;
+    end
+    local dayOptions = {}
+    for i = 1, days do
+        local dStr = string.format("%02d", i).."日"
+        --print("dStr = ", dStr)
+        table.insert(dayOptions, GS.TMPro.TMP_Dropdown.OptionData(dStr))
+    end
+    dropDown:ClearOptions()
+    dropDown:AddOptions(dayOptions)
+    dropDown.value = 0
+end
+
+-- 设置下拉列表的显示层级，默认default，如果父对象有设置其他层级，那么谢啦列表将被遮挡
+function SetDropDownListLayer(dropDown, layerName)
+    local canvasList = dropDown:GetComponentsInChildren(typeof(GS.UnityEngine.Canvas))
+    for i = 0, canvasList.Length-1 do  -- canvasList 为c#传过来的数组类型
+        canvasList[i].sortingLayerName = layerName
+    end
+end
 
 return _ENV

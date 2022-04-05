@@ -1,14 +1,15 @@
-local _G, g_Env = _G, g_Env
-local class = class
-local print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs =
-      print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs
+local GS = GS
+local GF = GF
+local _G = _G
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
 
-local GameObject = GameObject
-local DOTweenAnimation = CS.DG.Tweening.DOTweenAnimation
+local DOTweenAnimation = GS.DG.Tweening.DOTweenAnimation
 -- local DOTween_AnimationType = DOTweenAnimation.AnimationType
 
 local SEnv = SEnv
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 -- 控制摄像机DOTween 动画
 local Class = class()
@@ -18,9 +19,9 @@ function Create(...)
 end
 
 function Class:__init()
-    local CameraRoot = GameObject.Find('CameraRoot')
+    local CameraRoot = GS.GameObject.Find('CameraRoot')
     self.root = CameraRoot
-    CameraRoot:GetComponent(typeof(LuaInitHelper)):Init(self)
+    CameraRoot:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     -- self.eventListener:Init(self)
 	local coms = self.MainCamera:GetComponents(typeof(DOTweenAnimation))
 	print("coms = ", coms.Length)

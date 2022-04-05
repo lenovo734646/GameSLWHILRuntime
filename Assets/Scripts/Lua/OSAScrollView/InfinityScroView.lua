@@ -1,15 +1,12 @@
 
-local _G, assert, print, log, logError, os, math = _G, assert, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
+local GS = GS
+local GF = GF
+local _G, assert, print, os, math
+    = _G, assert, print, os, math
+local class, typeof, type, string, utf8
+    = class, typeof, type, string, utf8
 
-local UnityEngine, GameObject = UnityEngine, GameObject
-local EditorAssetLoader = CS.EditorAssetLoader
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-
-local OSA = CS.OSAHelper
-local ContentGravity = OSA.ContentGravity
-local OSAItemViewHolder = OSA.ItemViewHolder
 local OSAScrollView = require 'OSAScrollView.OSAScrollView'
 local ScrollItemViewDataHelper = require 'OSAScrollView.ScrollItemViewDataHelper'
 
@@ -47,7 +44,7 @@ function Class:__init(OSAScrollViewCom)
     OSAScrollViewCom.CreateViewsHolderCallback = function (paramters_)
         local itemIndex = paramters_[1]
         local osaParam = OSAScrollViewCom.Parameters
-        local viewsHolder = OSAItemViewHolder()
+        local viewsHolder = GS.ItemViewHolder()
         viewsHolder.CollectViewsCallback = function ()
             if self.OnCreateViewItemData then
                 viewsHolder.bindData = self.OnCreateViewItemData(viewsHolder.root,itemIndex)

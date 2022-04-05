@@ -1,23 +1,23 @@
-local _G, g_Env = _G, g_Env
-local class = class
-local print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs =
-      print, tostring, _STR_, typeof, debug, LogE, LogW,string, assert,pairs
 
-local GameObject = GameObject
-local Screen = UnityEngine.Screen
-local Vector2 = UnityEngine.Vector2
+local GS = GS
+local GF = GF
+local _G = _G
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+
+local GameObject = GS.GameObject
+local Screen = GS.UnityEngine.Screen
+local Vector2 = GS.UnityEngine.Vector2
 local ChatPanel = require'ChatSystem.ChatPanel'
 local ResultPanel = require'UI.ResultPanel'
 local UserInfo = require'UI.UserInfo'
 local TimerCounterUI = require 'UI.TimerCounterUI'
 local PlayerListPanel = require'PlayerList.PlayerListPanel'
-local AudioManager = AudioManager or CS.AudioManager
 local Helpers = require'LuaUtil.Helpers'
-local GameConfig = require 'GameConfig'
 local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local SEnv = SEnv
-_ENV = moduledef { seenamespace = CS }
-
+_ENV = {}
 
 
 local Class = class()
@@ -30,7 +30,7 @@ end
 function Class:__init(roomdata, loader)
     local View = GameObject.Find('UIRoot/Canvas/MainPanel')
     self.panel = View
-    View:GetComponent(typeof(LuaInitHelper)):Init(self)
+    View:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     self.eventListener:Init(self)
 
     -- 聊天界面
@@ -70,12 +70,12 @@ end
 
 -- 设置统计数据
 function Class:SetStatisticData(sixiCount, sanyuanCount, zhuangCount, xianCount, heCount, allGameCount)
-    self.statisicalData.sixiText.text =  string.Format2(_STR_" 大四喜x{1} ",(sixiCount))
-    self.statisicalData.sanyuanText.text =  string.Format2(_STR_" 大三元x{1} ",(sanyuanCount))
-    self.statisicalData.zhuangText.text =  string.Format2(_STR_" 庄x{1} ",(zhuangCount))
-    self.statisicalData.xianText.text =  string.Format2(_STR_" 闲x{1} ",(xianCount))
-    self.statisicalData.heText.text =  string.Format2(_STR_" 和x{1} ",(heCount))
-    self.statisicalData.allText.text =  string.Format2(_STR_" 总局数x{1} ",(allGameCount))
+    self.statisicalData.sixiText.text =  GF.string.Format2(_STR_" 大四喜x{1} ",(sixiCount))
+    self.statisicalData.sanyuanText.text =  GF.string.Format2(_STR_" 大三元x{1} ",(sanyuanCount))
+    self.statisicalData.zhuangText.text =  GF.string.Format2(_STR_" 庄x{1} ",(zhuangCount))
+    self.statisicalData.xianText.text =  GF.string.Format2(_STR_" 闲x{1} ",(xianCount))
+    self.statisicalData.heText.text =  GF.string.Format2(_STR_" 和x{1} ",(heCount))
+    self.statisicalData.allText.text =  GF.string.Format2(_STR_" 总局数x{1} ",(allGameCount))
 end
 
 function Class:SetCaiJinCount(caijin_count)

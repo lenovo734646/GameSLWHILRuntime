@@ -1,16 +1,8 @@
-local debug = debug
-local assert = assert
 local BuildStr = require'LuaUtil.Helpers'.BuildStr
-local UnityHelper = CS.UnityHelper
-local gLuaEntryCom=gLuaEntryCom
-local logError=logError
-local log = log
-local logWarning=logWarning
-local print=print
 
 function TraceErr(str)
     str = str or ''
-    logError(str .. '\n' .. debug.traceback())
+    GF.logError(str .. '\n' .. debug.traceback())
 end
 
 function LogE(...)
@@ -18,34 +10,41 @@ function LogE(...)
 end
 
 function LogW(...)
-    logWarning('[Lua]' .. BuildStr(...) .. '\n' .. debug.traceback())
+    GF.logWarning('[Lua]' .. BuildStr(...) .. '\n' .. debug.traceback())
 end
 
 function Log(...)
-    log('[Lua]' .. BuildStr(...) .. '\n' .. debug.traceback())
+    GF.log('[Lua]' .. BuildStr(...) .. '\n' .. debug.traceback())
 end
+print = Log
 
-function LogTrace(str)
-    str = str or ''
-    print(str .. ' in ' .. debug.traceback())
-end
+-- function LogTrace(str)
+--     str = str or ''
+--     print(str .. ' in ' .. debug.traceback())
+-- end
 
 function Assert(b, ...)
     if not b then
+        LogE("Assert: "..BuildStr(...))
         assert(b, BuildStr(...))
     end
 end
 
 function AssertAndShowError(b,...)
     if not b then
-        gLuaEntryCom:ShowError(BuildStr(...)..": "..debug.traceback())
+        -- gLuaEntryCom:ShowError(BuildStr(...)..": "..debug.traceback())
+        g_Env.HandleError(BuildStr(...))
     end
 end
 
 function AssertUnityObjValid(obj, ...)
-    if not UnityHelper.IsUnityObjectValid(obj) then
-        -- gLuaEntryCom:ShowError("无效的UnityObject: "..BuildStr(...)..": "..debug.traceback())
+    if not GS.UnityHelper.IsUnityObjectValid(obj) then
+        -- g_Env.HandleError("无效的UnityObject: "..BuildStr(...)..": "..debug.traceback())
         LogE("AssertUnityObjValid: 无效的UnityObject: "..BuildStr(...)..": "..debug.traceback())
     end
-    return assert(UnityHelper.IsUnityObjectValid(obj), BuildStr(...))
+    return assert(GS.UnityHelper.IsUnityObjectValid(obj), BuildStr(...))
 end
+
+
+
+

@@ -1,20 +1,19 @@
+local GS = GS
+local GF = GF
 local _G = _G
-local SEnv, class = SEnv, class
-local print, tostring, Log, LogE, debug, pairs, string, assert = print, tostring, Log, LogE, debug, pairs, string,
-    assert
+local class = class
+local print, tostring, type, debug, pairs, string, assert
+    = print, tostring, type, debug, pairs, string, assert
 
-local logError = logError
--- local AssetBundle = UnityEngine.AssetBundle
+local LogE = LogE
+-- local Log = Log
+-- local LogW = LogW
+-- local Assert = Assert
 local config = require 'Config'
 local yield = coroutine.yield
-local SceneManager = SceneManager
--- local Resources = UnityEngine.Resources
+local SceneManager = GS.SceneManager
 
-require 'LuaUtil.Functions'
-
-_ENV = moduledef {
-    seenamespace = CS
-}
+_ENV = {}
 -----------------------------------------
 
 
@@ -31,13 +30,13 @@ end
 -- notCache在大厅运行时有用
 function Class:Load(path, type)
 
-    local isRawPath = path:Contains('Assets/')
+    local isRawPath = GF.string.Contains(path, 'Assets/')
     Log('Load from editor ' ,path, isRawPath)
     local r
     if type then
-        r = ResHelper.Load(path, type, isRawPath)
+        r = GS.ResHelper.Load(path, type, isRawPath)
     else
-        r = ResHelper.Load(path, isRawPath)
+        r = GS.ResHelper.Load(path, isRawPath)
     end
     if r then
         return r
@@ -49,11 +48,11 @@ end
 
 -- 载入所有
 function Class:LoadAll(path, type)
-    local isRawPath = path:Contains('Assets/')
+    local isRawPath = GF.string.Contains(path, 'Assets/')
 
     Log('LoadAll from editor ' ,path, isRawPath)
     local r
-    r = ResHelper.LoadAll(path, isRawPath)
+    r = GS.ResHelper.LoadAll(path, isRawPath)
     if r then
         return r
     else
@@ -74,10 +73,10 @@ end
 --异步加载，在编辑器模式下看不出效果，但是建议使用此方法以提升加载流畅度
 function Class:LoadAsync(path, infoOut)
     yield()
-    local isRawPath = path:Contains('Assets/')
+    local isRawPath = GF.string.Contains(path, 'Assets/')
     infoOut = infoOut or {}
     infoOut.progress = 0
-    return doDone(infoOut, ResHelper.Load(path, isRawPath))
+    return doDone(infoOut, GS.ResHelper.Load(path, isRawPath))
 end
 -- 可以根据bundlename进行加载，在编辑器模式下无效
 function Class:LoadBundle(bundlename)
@@ -87,7 +86,6 @@ end
 function Class:LoadBundleAsync(bundlename)
     assert(bundlename)
     yield()
-    return
 end
 
 function Class:LoadBundleAllAsync(bundlename)
@@ -129,12 +127,12 @@ end
 
 function Class:LoadSoundsPackageAsync(path)
     local prefab = self:LoadAsync(path)
-    return _G.Instantiate(prefab) -- 声音装载
+    return GS.Instantiate(prefab) -- 声音装载
 end
 
 function Class:LoadSoundsPackage(path)
     local prefab = self:Load(path)
-    return _G.Instantiate(prefab) -- 声音装载
+    return GS.Instantiate(prefab) -- 声音装载
 end
 -- 释放所有资源
 function Class:Clear()

@@ -1,14 +1,13 @@
+local GS = GS
+local GF = GF
+local _G, g_Env, print, os, math
+    = _G, g_Env, print, os, math
+local class, typeof, type, string, utf8, tostring
+    = class, typeof, type, string, utf8, tostring
 
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8, tostring= class, typeof, type, string, utf8, tostring
-
-local UnityEngine, GameObject, System, Sprite, AudioClip = UnityEngine, GameObject, System, UnityEngine.Sprite, UnityEngine.AudioClip
-local Color = UnityEngine.Color
-local TextAnchor = UnityEngine.TextAnchor
-local SEnv=SEnv
 local Helpers = require'LuaUtil.Helpers'
-
-_ENV = moduledef { seenamespace = CS }
+local SEnv = SEnv
+_ENV = {}
 
 local Class = class()
 
@@ -19,14 +18,14 @@ end
 --root:RectTransform类型
 function Class:__init(view)
     self.view = view
-    view:GetComponent(typeof(LuaInitHelper)):InitWithList(self,'rangimglist')
+    view:GetComponent(typeof(GS.LuaInitHelper)):InitWithList(self,'rangimglist')
     self.onClick = nil
 end
 
 -- data : ChatMsgData.lua类型
 function Class:UpdateFromData(data)
     if data == nil then
-        logError("UpdateFromData data is nil")
+        GF.logError("UpdateFromData data is nil")
         return
     end
     -- 头像和布局

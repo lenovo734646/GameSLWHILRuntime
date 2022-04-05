@@ -1,143 +1,73 @@
-require 'LuaUtil.dumper'
-local pairs = pairs
-local debug = debug
-local tostring = tostring
-local setmetatable = setmetatable
-local string = string
-local table = table
-local require = require
-local type = type
-local print = print
-local select=select
+-- 全局函数采用GF前缀管理
+GF = {}
+
+local meta_GF = {}
+local meta_table = {}
+local meta_string = {}
+local meta_functional = {}
+local meta_math = {}
+local meta_io = {}
+
+-- Debug.Log
+meta_GF.log = GS.UnityEngine.Debug.Log
+meta_GF.logWarning = GS.UnityEngine.Debug.LogWarning
+meta_GF.logError = GS.UnityEngine.Debug.LogError
+
 local unpack = table.unpack
-local yield = coroutine.yield
-local IsUnityObjectValid=CS.UnityHelper.IsUnityObjectValid
-local Destroy=CS.UnityEngine.Object.Destroy
-local DestroyImmediate=CS.UnityEngine.Object.DestroyImmediate
 
-local sfind = string.find
-local ssub = string.sub
-local tinsert = table.insert
-
-function __TRACKBACK__(errorMsg)
-    local track_text = debug.traceback(tostring(errorMsg))
-    logError(track_text)
-    return false;
-end
-
-local function default_ctor(self, ...)
-    local obj = {}
-    setmetatable(obj, self)
-    if obj.__init then
-        obj:__init(...)
-    end
-    return obj
-end
-
-function class(super, cls)
-    if not cls then
-        cls = {}
-    end
-    local mt = {}
-    if super then
-        setmetatable(mt, super)
-        cls.super = super
-    end
-    mt.__index = mt
-    mt.__call = function(self, ...)
-        if self.New then
-            return self:New(...)
-        else
-            return default_ctor(self, ...)
-
-            
-        end
-    end
-    setmetatable(cls, mt)
-    cls.__index = cls
-    return cls
-end
+-- function __TRACKBACK__(errorMsg)
+--     local track_text = debug.traceback(tostring(errorMsg))
+--     meta_GF.logError(track_text)
+--     return false;
+-- end
 
 -- import function
-function import(moduleName, currentModuleName)
-    local currentModuleNameParts
-    local moduleFullName = moduleName
-    local offset = 1
+-- function import(moduleName, currentModuleName)
+--     local currentModuleNameParts
+--     local moduleFullName = moduleName
+--     local offset = 1
 
-    while true do
-        if string.byte(moduleName, offset) ~= 46 then -- .
-            moduleFullName = string.sub(moduleName, offset)
-            if currentModuleNameParts and #currentModuleNameParts > 0 then
-                moduleFullName = table.concat(currentModuleNameParts, ".") .. "." .. moduleFullName
-            end
-            break
-        end
-        offset = offset + 1
+--     while true do
+--         if string.byte(moduleName, offset) ~= 46 then -- .
+--             moduleFullName = string.sub(moduleName, offset)
+--             if currentModuleNameParts and #currentModuleNameParts > 0 then
+--                 moduleFullName = table.concat(currentModuleNameParts, ".") .. "." .. moduleFullName
+--             end
+--             break
+--         end
+--         offset = offset + 1
 
-        if not currentModuleNameParts then
-            if not currentModuleName then
-                local n, v = debug.getlocal(3, 1)
-                currentModuleName = v
-            end
+--         if not currentModuleNameParts then
+--             if not currentModuleName then
+--                 local n, v = debug.getlocal(3, 1)
+--                 currentModuleName = v
+--             end
 
-            currentModuleNameParts = string.split(currentModuleName, ".")
-        end
-        table.remove(currentModuleNameParts, #currentModuleNameParts)
-    end
+--             currentModuleNameParts = meta_string.split(currentModuleName, ".")
+--         end
+--         table.remove(currentModuleNameParts, #currentModuleNameParts)
+--     end
 
-    return require(moduleFullName)
-end
+--     return require(moduleFullName)
+-- end
 
-functional = {}
-
-function functional.bind(func, count, ...)
-    local args_origin = {...}
-    return function(...)
-        local args = {...}
-        local num = table.maxn(args)
-        for i = num, 1, -1 do
-            args[i + count] = args[i]
-        end
-        for i = 1, count do
-            args[i] = args_origin[i]
-        end
-        return func(table.unpack(args))
-    end
-end
-
-function functional.bindself(self, fname)
-    return functional.bind1(self[fname], self)
-end
-
-function functional.bind1(func, obj1)
-    return function(...)
-        return func(obj1, ...)
-    end
-end
-
-function functional.bind2(func, obj1, obj2)
-    return function(...)
-        return func(obj1, obj2, ...)
-    end
-end
-
-function table.copy(src, dest)
+meta_table.copy = function(src, dest)
     for k, v in pairs(src) do
         if type(v) == "table" then
             dest[k] = {}
-            table.copy(v, dest[k])
+            meta_table.copy(v, dest[k])
         else
             dest[k] = v
         end
     end
 end
 
-function table.print(t)
+meta_table.print = function(t)
     local str = "{"
     for k, v in pairs(t) do
         if type(v) == 'table' then
             str = str .. tostring(k) .. ":{"
-            str = str .. table.print(v)
+            str = str .. meta_table.print(v)
         else
             str = str .. tostring(k) .. ":" .. tostring(v) .. ","
         end
@@ -146,7 +76,7 @@ function table.print(t)
     return str
 end
 
-function table.maxn(tbl)
+meta_table.maxn = function(tbl)
     local max = nil
     local count = 0
     for k, v in pairs(tbl) do
@@ -169,15 +99,16 @@ function table.maxn(tbl)
     return max
 end
 
-function table.contains(tbl, value)
+meta_table.contains = function(tbl, value)
     for k, v in pairs(tbl) do
         if v == value then
             return k
         end
     end
 end
+
 --  通过key获取到table中的元素
-function table.trygetvalue(tbl, key)
+meta_table.trygetvalue = function(tbl, key)
     local value = nil
     for k, v in pairs(tbl) do
         if k == key then
@@ -188,7 +119,7 @@ function table.trygetvalue(tbl, key)
     return nil
 end
 
-function table.removebyvalue(array, value, removeall)
+meta_table.removebyvalue = function(array, value, removeall)
     local c, i, max = 0, 1, #array
     while i <= max do
         if array[i] == value then
@@ -205,7 +136,7 @@ function table.removebyvalue(array, value, removeall)
     return c
 end
 
-function table.removebyfunc(array, func, removeall)
+meta_table.removebyfunc = function(array, func, removeall)
     local c, i, max = 0, 1, #array
     while i <= max do
         if func(array[i]) then
@@ -221,23 +152,25 @@ function table.removebyfunc(array, func, removeall)
     end
     return c
 end
+
 -- 交集
-function table.intersect(tblA, tblB)
+meta_table.intersect = function(tblA, tblB)
     local tblT = {}
     for k, v in ipairs(tblA) do
-        if table.contains(tblB, v) then
+        if meta_table.contains(tblB, v) then
             table.insert(tblT, v)
         end
     end
     return tblT
 end
+
 -- 差集 tblA对tblB取差集
-function table.except(tblA, tblB)
+meta_table.except = function(tblA, tblB)
     local tblT = {}
-    table.copy(tblA, tblT)
+    meta_table.copy(tblA, tblT)
     for k, v in pairs(tblA) do
-        if table.contains(tblB, v) then
-            table.remove(tblT, table.findKey(tblT, function(a)
+        if meta_table.contains(tblB, v) then
+            table.remove(tblT, meta_table.findKey(tblT, function(a)
                 return v == a
             end))
         end
@@ -245,7 +178,7 @@ function table.except(tblA, tblB)
     return tblT
 end
 
-function table.FindBy(tbl, func)
+meta_table.FindBy = function(tbl, func)
     for _, v in pairs(tbl) do
         if func(v) then
             return v
@@ -253,7 +186,7 @@ function table.FindBy(tbl, func)
     end
 end
 
-function table.Find(tbl, func)
+meta_table.Find = function(tbl, func)
     for k, v in pairs(tbl) do
         if func(v, k) then
             return v, k
@@ -261,7 +194,7 @@ function table.Find(tbl, func)
     end
 end
 
-function table.findArray(tbl, func)
+meta_table.findArray = function(tbl, func)
     local tblR = {}
     for k, v in pairs(tbl) do
         if func(v) then
@@ -271,7 +204,7 @@ function table.findArray(tbl, func)
     return tblR
 end
 
-function table.findKey(tbl, func)
+meta_table.findKey = function(tbl, func)
     local key = nil
     for k, v in pairs(tbl) do
         if func(v) then
@@ -282,7 +215,7 @@ function table.findKey(tbl, func)
     return key
 end
 
-function table.findKV(tbl, func)
+meta_table.findKV = function(tbl, func)
     for k, v in pairs(tbl) do
         if func(k, v) then
             return k, v
@@ -290,7 +223,7 @@ function table.findKV(tbl, func)
     end
 end
 
-function table.findMap(tbl, func)
+meta_table.findMap = function(tbl, func)
     local tblR = {}
     for k, v in ipairs(tbl) do
         if func(v) then
@@ -300,7 +233,7 @@ function table.findMap(tbl, func)
     return tblR
 end
 
-function table.count(tbl)
+meta_table.count = function(tbl)
     local count = 0
     for _, _ in pairs(tbl) do
         count = count + 1
@@ -308,7 +241,7 @@ function table.count(tbl)
     return count
 end
 
-function table.countWithoutKeys(tbl, withoutKeysList)
+meta_table.countWithoutKeys = function(tbl, withoutKeysList)
     local count = 0
     local withoutKeysCache = {}
     for _, value in ipairs(withoutKeysList) do
@@ -322,22 +255,23 @@ function table.countWithoutKeys(tbl, withoutKeysList)
     return count
 end
 
-function table.reverse(tbl)
+meta_table.reverse = function(tbl)
     local tmp = {}
-    table.copy(tbl, tmp)
+    meta_table.copy(tbl, tmp)
     for k, v in ipairs(tbl) do
         tbl[k] = tmp[#tmp + 1 - k]
     end
     return tbl
 end
 
-function table.foreach(tbl, func)
+meta_table.foreach = function(tbl, func)
     for k, v in pairs(tbl) do
         func(v)
     end
 end
+
 -- 单独取出tbl中所有元素中的某个字段
-function table.select(tbl, selector)
+meta_table.select = function(tbl, selector)
     local tmp = {}
     for k, v in pairs(tbl) do
         if selector(v) ~= nil then
@@ -347,7 +281,112 @@ function table.select(tbl, selector)
     return tmp
 end
 
-function string.split(input, delimiter)
+meta_table.nums = function(t)
+    local count = 0
+    for k, v in pairs(t) do
+        count = count + 1
+    end
+    return count
+end
+
+
+meta_table.keys = function(hashtable)
+    local keys = {}
+    for k, v in pairs(hashtable) do
+        keys[#keys + 1] = k
+    end
+    return keys
+end
+
+meta_table.values = function(hashtable)
+    local values = {}
+    for k, v in pairs(hashtable) do
+        values[#values + 1] = v
+    end
+    return values
+end
+
+meta_table.merge = function(dest, ...)
+    local params = {...}
+    local startIndex = #dest
+    for i = 1, #params do
+        local param = params[i]
+        for j = 1, #param do
+            dest[startIndex + j] = param[j]
+        end
+        startIndex = startIndex + #param
+    end
+end
+
+-- meta_table.insertto = function(dest, src, begin)
+--     begin = checkint(begin)
+--     if begin <= 0 then
+--         begin = #dest + 1
+--     end
+
+--     local len = #src
+--     for i = 0, len - 1 do
+--         dest[i + begin] = src[i + 1]
+--     end
+-- end
+
+meta_table.indexof = function(array, value, begin)
+    for i = begin or 1, #array do
+        if array[i] == value then
+            return i
+        end
+    end
+    return false
+end
+
+meta_table.keyof = function(hashtable, value)
+    for k, v in pairs(hashtable) do
+        if v == value then
+            return k
+        end
+    end
+    return nil
+end
+
+meta_table.map = function(t, fn)
+    for k, v in pairs(t) do
+        t[k] = fn(v, k)
+    end
+end
+
+meta_table.walk = function(t, fn)
+    for k, v in pairs(t) do
+        fn(v, k)
+    end
+end
+
+meta_table.filter = function(t, fn)
+    for k, v in pairs(t) do
+        if not fn(v, k) then
+            t[k] = nil
+        end
+    end
+end
+
+meta_table.unique = function(t, bArray)
+    local check = {}
+    local n = {}
+    local idx = 1
+    for k, v in pairs(t) do
+        if not check[v] then
+            if bArray then
+                n[idx] = v
+                idx = idx + 1
+            else
+                n[k] = v
+            end
+            check[v] = true
+        end
+    end
+    return n
+end
+
+meta_string.split = function(input, delimiter)
     input = tostring(input)
     delimiter = tostring(delimiter)
     if delimiter == '' then
@@ -364,22 +403,20 @@ function string.split(input, delimiter)
     return arr
 end
 
-string.Split = string.split
-
-function string.IsNullOrEmpty(str)
+meta_string.IsNullOrEmpty = function(str)
     return not str or str == ""
 end
 
-function string.indexof(str, searchStr)
+meta_string.indexof = function(str, searchStr)
     local startIndex = string.find(str, searchStr, 1, true)
     return startIndex
 end
 
-function string.Contains(str, searchStr)
+meta_string.Contains = function(str, searchStr)
     return string.find(str, searchStr, 1, true) ~= nil
 end
 
-function string.lastindexof(str, searchStr)
+meta_string.lastindexof = function(str, searchStr)
     local lastindex = nil
     local p = string.find(str, searchStr, 1, true)
     lastindex = p
@@ -393,21 +430,324 @@ function string.lastindexof(str, searchStr)
 end
 
 -- 以某个字符串开始
-function string.startswith(target_string, start_pattern, plain)
+meta_string.startswith = function(target_string, start_pattern, plain)
     plain = plain or true
     local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, 1, plain)
     return find_pos_begin == 1
 end
 
 -- 以某个字符串结尾
-function string.endswith(target_string, start_pattern, plain)
+meta_string.endswith = function(target_string, start_pattern, plain)
     plain = plain or true
     local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, -#start_pattern, plain)
     return find_pos_end == #target_string
 end
-string.Startswith = string.startswith
-string.Endswith = string.endswith
-function ReloadModule(name)
+
+meta_string.replace = function(s, pattern, repl)
+    local i, j = string.find(s, pattern, 1, true)
+    if i and j then
+        local ret = {}
+        local start = 1
+        while i and j do
+            table.insert(ret, string.sub(s, start, i - 1))
+            table.insert(ret, repl)
+            start = j + 1
+            i, j = string.find(s, pattern, start, true)
+        end
+        table.insert(ret, string.sub(s, start))
+        return table.concat(ret)
+    end
+    return s
+end
+
+meta_string.Find = function(s, pattern)
+    return string.find(s, pattern, 1, true)
+end
+
+
+meta_string._htmlspecialchars_set = {}
+meta_string._htmlspecialchars_set["&"] = "&amp;"
+meta_string._htmlspecialchars_set["\""] = "&quot;"
+meta_string._htmlspecialchars_set["'"] = "&#039;"
+meta_string._htmlspecialchars_set["<"] = "&lt;"
+meta_string._htmlspecialchars_set[">"] = "&gt;"
+
+meta_string.htmlspecialchars = function(input)
+    for k, v in pairs(meta_string._htmlspecialchars_set) do
+        input = string.gsub(input, k, v)
+    end
+    return input
+end
+
+meta_string.restorehtmlspecialchars = function(input)
+    for k, v in pairs(meta_string._htmlspecialchars_set) do
+        input = string.gsub(input, v, k)
+    end
+    return input
+end
+
+meta_string.nl2br = function(input)
+    return string.gsub(input, "\n", "<br />")
+end
+
+meta_string.text2html = function(input)
+    input = string.gsub(input, "\t", "    ")
+    input = meta_string.htmlspecialchars(input)
+    input = string.gsub(input, " ", "&nbsp;")
+    input = meta_string.nl2br(input)
+    return input
+end
+
+meta_string.ltrim = function(input)
+    return string.gsub(input, "^[ \t\n\r]+", "")
+end
+
+meta_string.rtrim = function(input)
+    return string.gsub(input, "[ \t\n\r]+$", "")
+end
+
+meta_string.trim = function(input)
+    input = string.gsub(input, "^[ \t\n\r]+", "")
+    return string.gsub(input, "[ \t\n\r]+$", "")
+end
+
+meta_string.ucfirst = function(input)
+    return string.upper(string.sub(input, 1, 1)) .. string.sub(input, 2)
+end
+
+local function urlencodechar(char)
+    return "%" .. string.format("%02X", string.byte(char))
+end
+meta_string.urlencode = function(input)
+    -- convert line endings
+    input = string.gsub(tostring(input), "\n", "\r\n")
+    -- escape all characters but alphanumeric, '.' and '-'
+    input = string.gsub(input, "([^%w%.%- ])", urlencodechar)
+    -- convert spaces to "+" symbols
+    return string.gsub(input, " ", "+")
+end
+
+-- meta_string.urldecode = function(input)
+--     input = string.gsub(input, "+", " ")
+--     input = string.gsub(input, "%%(%x%x)", function(h)
+--         return string.char(checknumber(h, 16))
+--     end)
+--     input = string.gsub(input, "\r\n", "\n")
+--     return input
+-- end
+
+meta_string.utf8len = function(input)
+    local len = string.len(input)
+    local left = len
+    local cnt = 0
+    local arr = {0, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc}
+    while left ~= 0 do
+        local tmp = string.byte(input, -left)
+        local i = #arr
+        while arr[i] do
+            if tmp >= arr[i] then
+                left = left - i
+                break
+            end
+            i = i - 1
+        end
+        cnt = cnt + 1
+    end
+    return cnt
+end
+
+-- meta_string.formatnumberthousands = function(num)
+--     local formatted = tostring(checknumber(num))
+--     local k
+--     while true do
+--         formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+--         if k == 0 then
+--             break
+--         end
+--     end
+--     return formatted
+-- end
+
+-- 类似C#的格式化，但是下标从1开始
+meta_string.Format2 = function(fmt, ...)
+    assert(fmt ~= nil, "Format error:Invalid Format String")
+    local parms = {...}
+    local function search(k)
+        k = tonumber(k)
+        return tostring(parms[k])
+    end
+    return (string.gsub(fmt, "{(%d)}", search))
+end
+
+meta_string.SubUTF8String = function(s, n)
+    local dropping = string.byte(s, n + 1)
+    if not dropping then
+        return s
+    end
+    if dropping >= 128 and dropping < 192 then
+        return meta_string.SubUTF8String(s, n - 1)
+    end
+    return string.sub(s, 1, n)
+end
+
+meta_string.Clamp = function(str, len)
+    if #str > len then
+        str = meta_string.SubUTF8String(str, len)
+        return str .. '...'
+    end
+    return str
+end
+
+meta_string.FormatDate = function(month,day,year)
+    year = year or 2019
+    if GS.SysDefines.curLanguage=='CN' then
+        os.setlocale("chs")
+        return os.date("%Y年%m月%d日",os.time{year=year,month=month,day=day})
+    else
+        os.setlocale("eng")
+        return os.date("%b/%d/%Y",os.time{year=year,month=month,day=day})
+    end    
+end
+
+meta_math.newrandomseed = function()
+    local ok, socket = pcall(function()
+        return require("socket")
+    end)
+
+    if ok then
+        math.randomseed(socket.gettime() * 1000)
+    else
+        math.randomseed(os.time())
+    end
+    local random1 = math.random()
+    random1 = math.random()
+    random1 = math.random()
+    random1 = math.random()
+end
+
+meta_math.round = function(value)
+    return math.floor(value + 0.5)
+end
+
+local pi_div_180 = math.pi / 180
+meta_math.angle2radian = function(angle)
+    return angle * pi_div_180
+end
+
+local pi_mul_180 = math.pi * 180
+meta_math.radian2angle = function(radian)
+    return radian / pi_mul_180
+end
+
+meta_math.floor2 = function(value)
+    value = value * 100
+    value = math.floor(value)
+    return value / 100
+end
+
+meta_io.exists = function(path)
+    local file = io.open(path, "r")
+    if file then
+        io.close(file)
+        return true
+    end
+    return false
+end
+
+meta_io.readfile = function(path)
+    local file = io.open(path, "r")
+    if file then
+        local content = file:read("*a")
+        io.close(file)
+        return content
+    end
+    return nil
+end
+
+meta_io.writefile = function(path, content, mode)
+    mode = mode or "w+b"
+    local file = io.open(path, mode)
+    if file then
+        if file:write(content) == nil then
+            return false
+        end
+        io.close(file)
+        return true
+    else
+        return false
+    end
+end
+
+meta_io.pathinfo = function(path)
+    local pos = string.len(path)
+    local extpos = pos + 1
+    while pos > 0 do
+        local b = string.byte(path, pos)
+        if b == 46 then -- 46 = char "."
+            extpos = pos
+        elseif b == 47 then -- 47 = char "/"
+            break
+        end
+        pos = pos - 1
+    end
+
+    local dirname = string.sub(path, 1, pos)
+    local filename = string.sub(path, pos + 1)
+    extpos = extpos - pos
+    local basename = string.sub(filename, 1, extpos - 1)
+    local extname = string.sub(filename, extpos)
+    return {
+        dirname = dirname,
+        filename = filename,
+        basename = basename,
+        extname = extname
+    }
+end
+
+meta_io.filesize = function(path)
+    local size = false
+    local file = io.open(path, "r")
+    if file then
+        local current = file:seek()
+        size = file:seek("end")
+        file:seek("set", current)
+        io.close(file)
+    end
+    return size
+end
+
+meta_functional.bind = function(func, count, ...)
+    local args_origin = {...}
+    return function(...)
+        local args = {...}
+        local num = meta_table.maxn(args)
+        for i = num, 1, -1 do
+            args[i + count] = args[i]
+        end
+        for i = 1, count do
+            args[i] = args_origin[i]
+        end
+        return func(table.unpack(args))
+    end
+end
+
+meta_functional.bindself = function(self, fname)
+    return meta_functional.bind1(self[fname], self)
+end
+
+meta_functional.bind1 = function(func, obj1)
+    return function(...)
+        return func(obj1, ...)
+    end
+end
+
+meta_functional.bind2 = function(func, obj1, obj2)
+    return function(...)
+        return func(obj1, obj2, ...)
+    end
+end
+
+meta_GF.ReloadModule = function (name)
     local status, err = xpcall(function()
         package.loaded[name] = nil
         require(name)
@@ -416,39 +756,16 @@ function ReloadModule(name)
     if status then
         return err
     else
-        logError(err)
+        meta_GF.logError(err)
     end
 end
 
-function UnLoadModule(name)
+meta_GF.UnLoadModule = function(name)
     package.loaded[name] = nil
     print('UnLoadModule ' .. name)
 end
 
-
-string.replace = function(s, pattern, repl)
-    local i, j = sfind(s, pattern, 1, true)
-    if i and j then
-        local ret = {}
-        local start = 1
-        while i and j do
-            tinsert(ret, ssub(s, start, i - 1))
-            tinsert(ret, repl)
-            start = j + 1
-            i, j = sfind(s, pattern, start, true)
-        end
-        tinsert(ret, ssub(s, start))
-        return table.concat(ret)
-    end
-    return s
-end
-string.Replace = string.replace
-
-string.Find = function(s, pattern)
-    return sfind(s, pattern, 1, true)
-end
-
-function PrintDataDumper(t)
+meta_GF.PrintDataDumper = function(t)
     print(DataDumper(t))
 end
 
@@ -470,7 +787,7 @@ _PrintTable = function(mark, t, spaces)
     return str
 end
 
-function PrintTable(mark,t)
+meta_GF.PrintTable = function(mark,t)
     return print(_PrintTable(mark,t))
 end
 
@@ -481,7 +798,7 @@ local function dump_value_(v)
     return tostring(v)
 end
 
-function Dump(value, desciption, nesting)
+meta_GF.Dump = function(value, desciption, nesting)
     if type(nesting) ~= "number" then
         nesting = 3
     end
@@ -489,8 +806,8 @@ function Dump(value, desciption, nesting)
     local lookupTable = {}
     local result = {}
 
-    local traceback = string.split(debug.traceback("", 2), "\n")
-    print("dump from: " .. string.trim(traceback[3]))
+    local traceback = meta_string.split(debug.traceback("", 2), "\n")
+    print("dump from: " .. meta_string.trim(traceback[3]))
 
     local function dump_(value, desciption, indent, nest, keylen)
         desciption = desciption or "<var>"
@@ -542,333 +859,6 @@ function Dump(value, desciption, nesting)
     end
 end
 
-function math.newrandomseed()
-    local ok, socket = pcall(function()
-        return require("socket")
-    end)
-
-    if ok then
-        math.randomseed(socket.gettime() * 1000)
-    else
-        math.randomseed(os.time())
-    end
-    math.random()
-    math.random()
-    math.random()
-    math.random()
-end
-
-function math.round(value)
-    return math.floor(value + 0.5)
-end
-
-local pi_div_180 = math.pi / 180
-function math.angle2radian(angle)
-    return angle * pi_div_180
-end
-
-local pi_mul_180 = math.pi * 180
-function math.radian2angle(radian)
-    return radian / pi_mul_180
-end
-
-function io.exists(path)
-    local file = io.open(path, "r")
-    if file then
-        io.close(file)
-        return true
-    end
-    return false
-end
-
-function io.readfile(path)
-    local file = io.open(path, "r")
-    if file then
-        local content = file:read("*a")
-        io.close(file)
-        return content
-    end
-    return nil
-end
-
-function io.writefile(path, content, mode)
-    mode = mode or "w+b"
-    local file = io.open(path, mode)
-    if file then
-        if file:write(content) == nil then
-            return false
-        end
-        io.close(file)
-        return true
-    else
-        return false
-    end
-end
-
-function io.pathinfo(path)
-    local pos = string.len(path)
-    local extpos = pos + 1
-    while pos > 0 do
-        local b = string.byte(path, pos)
-        if b == 46 then -- 46 = char "."
-            extpos = pos
-        elseif b == 47 then -- 47 = char "/"
-            break
-        end
-        pos = pos - 1
-    end
-
-    local dirname = string.sub(path, 1, pos)
-    local filename = string.sub(path, pos + 1)
-    extpos = extpos - pos
-    local basename = string.sub(filename, 1, extpos - 1)
-    local extname = string.sub(filename, extpos)
-    return {
-        dirname = dirname,
-        filename = filename,
-        basename = basename,
-        extname = extname
-    }
-end
-
-function io.filesize(path)
-    local size = false
-    local file = io.open(path, "r")
-    if file then
-        local current = file:seek()
-        size = file:seek("end")
-        file:seek("set", current)
-        io.close(file)
-    end
-    return size
-end
-
-function table.nums(t)
-    local count = 0
-    for k, v in pairs(t) do
-        count = count + 1
-    end
-    return count
-end
-
-
-function table.keys(hashtable)
-    local keys = {}
-    for k, v in pairs(hashtable) do
-        keys[#keys + 1] = k
-    end
-    return keys
-end
-
-function table.values(hashtable)
-    local values = {}
-    for k, v in pairs(hashtable) do
-        values[#values + 1] = v
-    end
-    return values
-end
-
-function table.merge(dest, ...)
-    local params = {...}
-    local startIndex = #dest
-    for i = 1, #params do
-        local param = params[i]
-        for j = 1, #param do
-            dest[startIndex + j] = param[j]
-        end
-        startIndex = startIndex + #param
-    end
-end
-
-function table.insertto(dest, src, begin)
-    begin = checkint(begin)
-    if begin <= 0 then
-        begin = #dest + 1
-    end
-
-    local len = #src
-    for i = 0, len - 1 do
-        dest[i + begin] = src[i + 1]
-    end
-end
-
-function table.indexof(array, value, begin)
-    for i = begin or 1, #array do
-        if array[i] == value then
-            return i
-        end
-    end
-    return false
-end
-
-function table.keyof(hashtable, value)
-    for k, v in pairs(hashtable) do
-        if v == value then
-            return k
-        end
-    end
-    return nil
-end
-
-function table.map(t, fn)
-    for k, v in pairs(t) do
-        t[k] = fn(v, k)
-    end
-end
-
-function table.walk(t, fn)
-    for k, v in pairs(t) do
-        fn(v, k)
-    end
-end
-
-function table.filter(t, fn)
-    for k, v in pairs(t) do
-        if not fn(v, k) then
-            t[k] = nil
-        end
-    end
-end
-
-function table.unique(t, bArray)
-    local check = {}
-    local n = {}
-    local idx = 1
-    for k, v in pairs(t) do
-        if not check[v] then
-            if bArray then
-                n[idx] = v
-                idx = idx + 1
-            else
-                n[k] = v
-            end
-            check[v] = true
-        end
-    end
-    return n
-end
-
-string._htmlspecialchars_set = {}
-string._htmlspecialchars_set["&"] = "&amp;"
-string._htmlspecialchars_set["\""] = "&quot;"
-string._htmlspecialchars_set["'"] = "&#039;"
-string._htmlspecialchars_set["<"] = "&lt;"
-string._htmlspecialchars_set[">"] = "&gt;"
-
-function string.htmlspecialchars(input)
-    for k, v in pairs(string._htmlspecialchars_set) do
-        input = string.gsub(input, k, v)
-    end
-    return input
-end
-
-function string.restorehtmlspecialchars(input)
-    for k, v in pairs(string._htmlspecialchars_set) do
-        input = string.gsub(input, v, k)
-    end
-    return input
-end
-
-function string.nl2br(input)
-    return string.gsub(input, "\n", "<br />")
-end
-
-function string.text2html(input)
-    input = string.gsub(input, "\t", "    ")
-    input = string.htmlspecialchars(input)
-    input = string.gsub(input, " ", "&nbsp;")
-    input = string.nl2br(input)
-    return input
-end
-
-function string.ltrim(input)
-    return string.gsub(input, "^[ \t\n\r]+", "")
-end
-
-function string.rtrim(input)
-    return string.gsub(input, "[ \t\n\r]+$", "")
-end
-
-function string.trim(input)
-    input = string.gsub(input, "^[ \t\n\r]+", "")
-    return string.gsub(input, "[ \t\n\r]+$", "")
-end
-
-function string.ucfirst(input)
-    return string.upper(string.sub(input, 1, 1)) .. string.sub(input, 2)
-end
-
-local function urlencodechar(char)
-    return "%" .. string.format("%02X", string.byte(char))
-end
-function string.urlencode(input)
-    -- convert line endings
-    input = string.gsub(tostring(input), "\n", "\r\n")
-    -- escape all characters but alphanumeric, '.' and '-'
-    input = string.gsub(input, "([^%w%.%- ])", urlencodechar)
-    -- convert spaces to "+" symbols
-    return string.gsub(input, " ", "+")
-end
-
-function string.urldecode(input)
-    input = string.gsub(input, "+", " ")
-    input = string.gsub(input, "%%(%x%x)", function(h)
-        return string.char(checknumber(h, 16))
-    end)
-    input = string.gsub(input, "\r\n", "\n")
-    return input
-end
-
-function string.utf8len(input)
-    local len = string.len(input)
-    local left = len
-    local cnt = 0
-    local arr = {0, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc}
-    while left ~= 0 do
-        local tmp = string.byte(input, -left)
-        local i = #arr
-        while arr[i] do
-            if tmp >= arr[i] then
-                left = left - i
-                break
-            end
-            i = i - 1
-        end
-        cnt = cnt + 1
-    end
-    return cnt
-end
-
-function string.formatnumberthousands(num)
-    local formatted = tostring(checknumber(num))
-    local k
-    while true do
-        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
-        if k == 0 then
-            break
-        end
-    end
-    return formatted
-end
-
-string.ToLower = string.lower
-
-math.floor2 = function(value)
-    value = value * 100
-    value = math.floor(value)
-    return value / 100
-end
--- 类似C#的格式化，但是下标从1开始
-function string.Format2(fmt, ...)
-    assert(fmt ~= nil, "Format error:Invalid Format String")
-    local parms = {...}
-    local function search(k)
-        k = tonumber(k)
-        return tostring(parms[k])
-    end
-    return (string.gsub(fmt, "{(%d)}", search))
-end
-
 local function _callp(func, params1, len1, params2, len2)
     local ap = {}
     for i=1,len1 do
@@ -879,7 +869,8 @@ local function _callp(func, params1, len1, params2, len2)
     end
     return func((table.unpack or unpack)(ap, 1, len1 + len2))
 end
-function Handler(callback, ...)
+
+meta_GF.Handler = function(callback, ...)
     local params1 = {...}
     local len1 = select("#", ...)
     return function(...)
@@ -889,43 +880,88 @@ function Handler(callback, ...)
 end
 
 
-local _RandomInt = CS.UnityHelper.RandomInt
-function RandomInt(min,max)
-    return _RandomInt(min,max+1)
+meta_GF.RandomInt = function(min,max)
+    return GS.UnityHelper.RandomInt(min,max+1)
 end
 
-local _WaitForSeconds = CS.UnityEngine.WaitForSeconds
-function WaitForSeconds(time)
-    return yield(_WaitForSeconds(time))
+meta_GF.WaitForSeconds = function(time)
+    return coroutine.yield(GS.UnityEngine.WaitForSeconds(time))
 end
 
-local function SubUTF8String(s, n)
-    local dropping = string.byte(s, n + 1)
-    if not dropping then
-        return s
-    end
-    if dropping >= 128 and dropping < 192 then
-        return SubUTF8String(s, n - 1)
-    end
-    return string.sub(s, 1, n)
-end
-
-function string.Clamp(str, len)
-    if #str > len then
-        str = SubUTF8String(str, len)
-        return str .. '...'
-    end
-    return str
-end
-
-function SafeDestroy(unityObj,isImmediate)
-    if IsUnityObjectValid(unityObj) then
+meta_GF.SafeDestroy = function(unityObj,isImmediate)
+    if GS.UnityHelper.IsUnityObjectValid(unityObj) then
         if isImmediate then
-            DestroyImmediate(unityObj)
+            GS.DestroyImmediate(unityObj)
         else
-            Destroy(unityObj)
+            GS.Destroy(unityObj)
         end
     end
 end
 
-string.SubUTF8String = SubUTF8String 
+
+
+
+-- ==================设置GF表为只读表==================
+local setonlyreadtable = function(tab, metatab)
+    setmetatable(tab, {
+        __index = function(t, k)
+            return metatab[k]
+        end,
+        __newindex = function(t, k, v)
+            Assert(false, 'table GF is only read', k)
+        end
+    })
+end
+
+local t_table = {}
+local t_string = {}
+local t_functional = {}
+local t_math = {}
+local t_io = {}
+
+setonlyreadtable(t_table, meta_table)
+setonlyreadtable(t_string, meta_string)
+setonlyreadtable(t_functional, meta_functional)
+setonlyreadtable(t_math, meta_math)
+setonlyreadtable(t_io, meta_io)
+
+meta_GF.table = t_table
+meta_GF.string = t_string
+meta_GF.functional = t_functional
+meta_GF.math = t_math
+meta_GF.io = t_io
+
+setonlyreadtable(GF, meta_GF)
+
+
+
+--涉及需要functions.lua中的函数，GS部分放到functions.lua最后来定义
+-- Global
+
+-- 操作系统语言判断
+local _sysLanguage = GS.PlayerPrefs.GetString('_sysLanguage')
+local sysLanguage = "CN"
+if GS.Application.systemLanguage == GS.UnityEngine.SystemLanguage.Chinese or
+    GS.Application.systemLanguage == GS.UnityEngine.SystemLanguage.ChineseSimplified or
+    GS.Application.systemLanguage == GS.UnityEngine.SystemLanguage.ChineseTraditional then
+    sysLanguage = "CN"
+else
+    sysLanguage = "EN"
+end
+
+print("curLanguage = ", GS.SysDefines.curLanguage, GS.Application.systemLanguage, _sysLanguage, sysLanguage)
+if GF.string.IsNullOrEmpty(_sysLanguage) or _sysLanguage ~= sysLanguage then
+    GS.PlayerPrefs.SetString('_sysLanguage', sysLanguage)
+    GS.PlayerPrefs.SetString('_curLanguage', sysLanguage)
+end
+
+-- app 语言判断
+local curLanguage = GS.PlayerPrefs.GetString('_curLanguage')
+if GF.string.IsNullOrEmpty(curLanguage) then
+    GS.SysDefines.curLanguage = sysLanguage
+    GS.PlayerPrefs.SetString('_curLanguage', sysLanguage)
+else
+    GS.SysDefines.curLanguage = curLanguage
+end
+
+print('curLanguage= ',GS.SysDefines.curLanguage, curLanguage)

@@ -1,47 +1,32 @@
-local _G, g_Env, print, log, LogE, os, math = _G, g_Env, print, log, LogE, os, math
-local class, typeof, type, string, utf8, pairs = class, typeof, type, string, utf8, pairs
+local GS = GS
+local GF = GF
+local _G, print, LogE, os, math
+    = _G, print, LogE, os, math
+local class, typeof, type, string, utf8, pairs
+    = class, typeof, type, string, utf8, pairs
 local LogW = LogW
-
 local tostring, tonumber = tostring, tonumber
 local table = table
-local tinsert = table.insert
-local tremove = table.remove
 local sfind = string.find
 local ssub = string.sub
 local slen = string.len
-local sstartwith = string.startswith
-local sendwith = string.endswith
-
-local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset,
-    UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
-local GraphicRaycaster = UnityEngine.UI.GraphicRaycaster
-local UnityHelper = UnityHelper
--- local TouchScreenKeyboard_Status = UnityEngine.TouchScreenKeyboard.Status
-local AudioManager = AudioManager or CS.AudioManager
+local yield = coroutine.yield
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require 'OSAScrollView.InfinityScroView'
 local EmojiPanel = require "ChatSystem.EmojiPanel"
 local PhrasePanel = require "ChatSystem.PhrasePanel"
 local VoicePanel = require "ChatSystem.VoicePanel"
 local ChatMsgData = require "ChatSystem.ChatMsgData"
 local ChatMsgView = require 'ChatSystem.ChatMsgView'
-
 local PBHelper = require 'protobuffer.PBHelper'
 local CLCHATROOMSender = require 'protobuffer.CLCHATROOMSender'
 local Helpers = require 'LuaUtil.Helpers'
-
 local SEnv = SEnv
-local GameConfig = GameConfig
-local _Ver = _Ver
--- 
+
 print("ChatPanel使用小游戏自带脚本.....")
 
-_ENV = moduledef {
-    seenamespace = CS
-}
+_ENV = moduledef {}
 local isOpen = false -- 是否显示聊天窗口
 local waitSendChatMsgViewList = {}
 local waitSendChatMsgView = nil
@@ -60,11 +45,17 @@ function Class:__init(panel, loader, playerRes, coMonoBehaviour)
     self.loader = loader
     self.panel = panel
     self.playerRes = playerRes
-    local initHelper = panel:GetComponent(typeof(LuaInitHelper))
+    local initHelper = panel:GetComponent(typeof(GS.LuaInitHelper))
     initHelper:Init(self)
     self.eventListener:Init(self)
     CoroutineMonoBehaviour = coMonoBehaviour
     -- 音频播放器
+    -- local sounds = {}
+    -- initHelper:ObjectsSetToLuaTable(sounds)
+    -- self.soundClips = {}
+    -- for key, clip in pairs(sounds) do
+    --     self.soundClips[clip.name] = clip
+    -- end
     self.msgItemBGs = {}
     self.msgItemBGInitHelper:ObjectsSetToLuaTable(self.msgItemBGs)
     self.msgItemBGInitHelper = nil
@@ -74,12 +65,12 @@ function Class:__init(panel, loader, playerRes, coMonoBehaviour)
     self.unReadMsgCount = 0
     --
     self.faceSpr = SEnv.GetHeadSprite(playerRes.headID)
-
+    print("chatPanel init = ", self)
     -- msg scroll view
     self.msgScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
     self.msgScrollView.OSAScrollView.ChangeItemsCountCallback =
         function(_, changeMode, changedItemCount)
-            if changeMode == ItemCountChangeMode.INSERT then -- 插入则自动滚动到末尾
+            if changeMode == GS.ItemCountChangeMode.INSERT then -- 插入则自动滚动到末尾
                 local itemsCount = self.msgScrollView:GetItemsCount()
                 local tarIndex = itemsCount - 1
                 local DoneFunc = function()
@@ -93,7 +84,7 @@ function Class:__init(panel, loader, playerRes, coMonoBehaviour)
 
     -- itemRoot : RectTransform类型
     self.msgScrollView.OnCreateViewItemData = function(itemRoot, itemIndex)
-        return ChatMsgView.Create(itemRoot)
+        return ChatMsgView.Create(itemRoot, self)
     end
 
     self.msgScrollView.UpdateViewItemHandler = function(itemdata, index, viewItemHoder)
@@ -108,8 +99,8 @@ function Class:__init(panel, loader, playerRes, coMonoBehaviour)
     -- emojiPanel 表情
     local emojis = {}
     local emojiPicsPrefab = loader:Load("Assets/AssetsFinal/EmojiPics.prefab")
-    emojiPicsPrefab:GetComponent(typeof(LuaInitHelper)):ObjectsSetToLuaTable(emojis)
-    -- local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(Sprite), true)
+    emojiPicsPrefab:GetComponent(typeof(GS.LuaInitHelper)):ObjectsSetToLuaTable(emojis)
+    -- local emojis = loader:LoadAll("Assets/ChatSystem/Texture/Emoji/Emoji.png", typeof(GS.Sprite), true)
     self.emojiPanel = EmojiPanel.Create(self.emojiPanelGo, self.inputField, emojis, self.Item_Emoji)
 
     -- phrase 常用短语
@@ -145,7 +136,7 @@ function Class:__init(panel, loader, playerRes, coMonoBehaviour)
 end
 
 function Class:KeyControl()
-    if Input.GetKeyDown(KeyCode.KeypadEnter) or Input.GetKeyDown(KeyCode.Return) then
+    if GS.Input.GetKeyDown(GS.KeyCode.KeypadEnter) or GS.Input.GetKeyDown(GS.KeyCode.Return) then
         print("键盘事件：Enter or Return...")
         self:OnSendTextFromInputField(self.inputField)
     end
@@ -154,7 +145,7 @@ end
 -- 发送语音
 function Class:OnSendVoice(clipData, clipChannels, freq)
     if clipData == nil then
-        logError("OnSendVoice clipData is null")
+        GF.logError("OnSendVoice clipData is null")
         return
     end
     if self.tog_Emoji.isOn then
@@ -186,7 +177,7 @@ function Class:OnSendTextFromInputField(inputField)
 end
 
 function Class:OnSendText(text)
-    if string.IsNullOrEmpty(text) or text == " " or text == '\n' or text == '\r' or text == '\t' or text == [[\u2000']] then
+    if GF.string.IsNullOrEmpty(text) or text == " " or text == '\n' or text == '\r' or text == '\t' or text == [[\u2000']] then
         return
     end
     if self.tog_Emoji.isOn then
@@ -219,14 +210,16 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
     local headID = playerRes.headID
     local msgItemBgSpr = self:__GetMsgItemBGSpr(playerRes.selfUserID)
     local phraseIndex = -1
-    if msgType == 3 then
+    if msgType == 3 then -- 快捷语音消息
         if content ~= nil then
             phraseIndex = tonumber(content)
             if phraseIndex ~= nil then
                 local data = self.phrasePanel:GetPhraseData(phraseIndex)
                 if data ~= nil then
                     content = data.content
-                    AudioManager.Instance:PlaySoundEff2D("game_chat_sound_" .. phraseIndex)
+                    local clip = GS.AudioManager.Instance:GetClipByName("game_chat_sound_" .. phraseIndex)
+                    self:OnPlayAudioClip(clip)
+                    -- self.audioSource:PlayOneShot(self.soundClips["game_chat_sound_" .. phraseIndex])
                 else
                     LogE("获取快捷消息数据失败 index =" .. phraseIndex)
                     return
@@ -251,7 +244,7 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
         end
 
         -- print("获取 chatMsgView 成功... timeStampSec = ", timeStampSec, waitSendChatMsgView.msgData.timestampSec, waitSendChatMsgView.msgData.text)
-        tinsert(waitSendChatMsgViewList, waitSendChatMsgView) -- 添加到等待发送列表
+        table.insert(waitSendChatMsgViewList, waitSendChatMsgView) -- 添加到等待发送列表
         -- 发送
         if msgType == 2 then    -- 音频发送
             if audioClip and clipData then
@@ -273,8 +266,8 @@ function Class:OnSendMsg(msgType, content, timeStampSec, audioClip, clipData, cl
                             yield()
                             waitSendChatMsgView:OnUpdateProgress(request.uploadProgress)
                         end
-                        if not string.IsNullOrEmpty(request.error) then
-                            _G.ShotHintMessage(_G._ERR_STR_(request.error))
+                        if not GF.string.IsNullOrEmpty(request.error) then
+                            SEnv.ShowHintMessage(_G._ERR_STR_(request.error))
                             print("上传发送出错:", request.error)
                             return
                         end
@@ -313,6 +306,7 @@ end
 
 -- msgType: 1文本消息 2语音消息 3快捷消息
 function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID)
+    print("收到消息: chatPanel = ", self)
     -- print("OnReceiveMsg: msgTypee = ", msgType, content)
     if content == nil then
         LogE("OnReceiveMsg: content is nil ")
@@ -345,12 +339,6 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
     local audioClip = nil
     local msgData
     if msgType == 2 then    -- 音频消息
-        if g_Env then
-            if _Ver and _Ver._ver < 0.983 then
-                return 
-            end
-        end
-
         if content ~= nil then
             print("收到语音消息下载链接：", content)
             -- 下载语音消息
@@ -363,8 +351,8 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
                     -- req.ui:SetTipText(_G._STR_ '正在同步...' .. floor2(request.downloadProgress * 100) .. '%')
                     --print("正在下载...")
                 end
-                if not string.IsNullOrEmpty(request.error) then
-                    _G.ShotHintMessage(_G._ERR_STR_(request.error))
+                if not GF.string.IsNullOrEmpty(request.error) then
+                    SEnv.ShowHintMessage(_G._ERR_STR_(request.error))
                     print("下载出错:", request.error)
                     return
                 end
@@ -385,7 +373,8 @@ function Class:OnReceiveMsg(userID, nickName, msgType, content, metadata, headID
                 if data ~= nil then
                     content = data.content
                     if isOpen then
-                        AudioManager.Instance:PlaySoundEff2D("game_chat_sound_" .. index)
+                        local clip = GS.AudioManager.Instance:GetClipByName("game_chat_sound_" .. index)
+                        self:OnPlayAudioClip(clip)
                     end
                     msgData = ChatMsgData.Create(msgType, timeStampSec, userID, nickName, isMine, content, audioClip, headID, msgItemBgSpr)
                     self:ProcessPanelInactive(msgData)
@@ -415,7 +404,7 @@ function Class:ProcessPanelInactive(msgData)
             self.unReadMsgCount = 99
         end
         self:__SetUnReadmsgCount(self.unReadMsgCount)
-        tinsert(InActiveMsgDataList, msgData) -- 界面未打开，暂时把消息数据存起来
+        table.insert(InActiveMsgDataList, msgData) -- 界面未打开，暂时把消息数据存起来
         print("msg.Type = ", msgData.msgType, "数量：", #InActiveMsgDataList, "audioClip = ", msgData.audioClip)
     else
         if self.redDotTip.activeSelf then
@@ -440,7 +429,7 @@ end
 
 function Class:ShowSendBtnByInput(inputField)
     -- print('inputField.text',inputField.text)
-    if not string.IsNullOrEmpty(inputField.text) then
+    if not GF.string.IsNullOrEmpty(inputField.text) then
         self.btnSend.gameObject:SetActive(true)
     else
         self.btnSend.gameObject:SetActive(false)
@@ -486,7 +475,7 @@ function Class:__GetMsgItemBGSpr(userID)
 end
 
 function Class:__GetWaitSendChatMsgView(timestampSec)
-    local chatMsgView, index = table.Find(waitSendChatMsgViewList, function (v)
+    local chatMsgView, index = GF.table.Find(waitSendChatMsgViewList, function (v)
         -- print("v.timestampSec = ", v.msgData.timestampSec, " target = ", timestampSec)
         return v.msgData.timestampSec == timestampSec
     end)
@@ -495,13 +484,90 @@ function Class:__GetWaitSendChatMsgView(timestampSec)
         return nil
     end
     -- 移出旧的
-    tremove(waitSendChatMsgViewList, index)
+    table.remove(waitSendChatMsgViewList, index)
     return chatMsgView
 end
 -- 当游戏状态发生变化时取消输入状态，主要是取消语音输入
 function Class:OnCancelInput()
     self.voicePanel:CancelVoiceInput()
     self.inputField.onEndEdit:Invoke(self.inputField.text)
+end
+
+local curPlayClip
+local curwfDraw
+local isPlayingAudioClip
+local musicMute = false
+local audioMute = false
+local curPlayCO
+function Class:OnPlayAudioClip(clip, wfDraw)
+    if not clip then
+        LogE("clip is nil")
+        return
+    end
+    -- 
+    if curPlayClip then
+        self:OnStopAudioClip(curwfDraw)
+    end
+    
+    if curPlayClip ~= clip then
+        -- 音乐音效状态记录
+        if not GS.AudioManager.Instance.MusicAudio.mute then
+            GS.AudioManager.Instance.MusicAudio.mute = true
+            musicMute = false
+        else
+            musicMute = true
+        end
+        if not GS.AudioManager.Instance.EffectAudio.mute then
+            GS.AudioManager.Instance.EffectAudio.mute = true
+            audioMute = false
+        else
+            audioMute = true
+        end
+        --
+        curPlayClip = clip
+        curwfDraw = wfDraw
+        isPlayingAudioClip = true
+        self.audioSource.clip = clip
+        self.audioSource:Play()
+        local clipChannels = clip.channels
+        -- 协程等待播放结束
+        curPlayCO = CoroutineHelper.StartCoroutine(function ()
+            -- if not isPlayingAudioClip then
+            --     return
+            -- end
+            while isPlayingAudioClip do
+                yield()
+                if curwfDraw then
+                    curwfDraw.playbackSli.value = self.audioSource.timeSamples * clipChannels
+                end
+                if self.audioSource.isPlaying == false then
+                    self:OnStopAudioClip(curwfDraw)
+                    break
+                end
+            end
+        end)
+    --
+    end
+end
+
+function Class:OnStopAudioClip(wfDraw)
+    self.audioSource:Stop()
+    self.audioSource.clip = nil
+    if wfDraw then
+        wfDraw.playbackSli.value = 0
+        curwfDraw = nil
+    end
+    
+    curPlayClip = nil
+    isPlayingAudioClip = nil
+    -- 恢复声音
+    GS.AudioManager.Instance.MusicAudio.mute = musicMute
+    GS.AudioManager.Instance.EffectAudio.mute = audioMute
+    isPlayingAudioClip = false
+    if curPlayCO then
+        CoroutineHelper.StopCoroutine(curPlayCO)
+        curPlayCO = nil
+    end
 end
 
 
@@ -521,18 +587,14 @@ end
 function Class:On_tog_Voice_Event(tog_Voice)
     local isOn = tog_Voice.isOn
     -- -- 权限检查
-    if UnityHelper.GetPlatform() == "Android" then
-        if UnityHelper.HasUserAuthorizedPermission and isOn == true then
+    if GS.UnityHelper.GetPlatform() == "Android" then
+        if GS.UnityHelper.HasUserAuthorizedPermission and isOn == true then
             CoroutineHelper.StartCoroutineAuto(CoroutineMonoBehaviour, function ()
                 self.voicePanel:RequestMicrophone()
                 yield()
-                local hasPermission = UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
+                local hasPermission = GS.UnityHelper.HasUserAuthorizedPermission("RECORD_AUDIO")
                 if not hasPermission then
-                    if g_Env then
-                        g_Env.ShowHitMessage(_G._STR_("录音需要麦克风权限，请手动打开麦克风权限"))
-                    else
-                        print("录音需要麦克风权限，请手动打开麦克风权限")
-                    end
+                    SEnv.ShowHintMessage(_G._STR_("录音需要麦克风权限，请手动打开麦克风权限"))
                     tog_Voice.isOn = false
                 else
                     print("已获取麦克风权限")
@@ -566,7 +628,7 @@ function Class:On_tog_ChatPanel_Event(tog_ChatPanel)
                 if not isOpen then
                     break
                 end
-                local msgData = tremove(InActiveMsgDataList, 1)
+                local msgData = table.remove(InActiveMsgDataList, 1)
                 print("1111111111111111msgData.msgType = ", msgData.msgType, msgData.audioClip)
                 self.msgScrollView:InsertItem(msgData)
                 yield()
@@ -593,7 +655,7 @@ function Class:On_msgInputField_Event(inputField)
         -- print("1111tStr = ", tStr, "tempStr = ", tempStr);
         tempStr = ssub(tempStr, 1, slen(tempStr)- spriteLen)
         -- print("2222tStr = ",tStr, "tempStr = ",tempStr);
-        if not sstartwith(tStr, "<") or not sendwith(tStr,">") then
+        if not GF.string.startswith(tStr, "<") or not GF.string.endswith(tStr,">") then
             local index = sfind(tStr, "<")
             if index ~= nil then
                 tStr = ssub(tStr, 1, index-1);
@@ -641,6 +703,7 @@ function Class:Release()
 
     if self.inputField then
         self.inputField.onSubmit:RemoveAllListeners()
+        self.inputField.onSubmit:Invoke("")
         self.inputField = nil
     end
 

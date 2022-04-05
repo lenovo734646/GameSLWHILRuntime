@@ -1,11 +1,12 @@
-local _G, g_Env = _G, g_Env
-local class = class
-local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
-      print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
+local GS = GS
+local GF = GF
+local _G = _G
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
 
-local Helpers = require'LuaUtil.Helpers'
 local SEnv = SEnv
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 local Class = class()
 
@@ -14,18 +15,18 @@ function Create(...)
 end
 
 
-function Class:__init(userInfoInitHelper, roomData)
+function Class:__init(userInfoInitHelper, playerRes)
     userInfoInitHelper:Init(self)
-    self.eventListener:Init(self)
-
+    self.userInfoEventListener:Init(self)
+    print("userInfo:", json.encode(playerRes))
     if g_Env and g_Env.CommonUICtrl then  -- 使用GamePlayer 大厅数据
         g_Env.CommonUICtrl.SetPlayerValues(self)
     else    -- 使用进入房间返回的数据(独立运行不能设置头像和头像框)
-        self.selfUserID = roomData.self_user_id
-        self.TMP_f_UserNickName.text = roomData.self_user_name
-        self:OnChangeMoney(roomData.self_score)
-        self:OnChangeHead(roomData.self_user_Head)
-        self:OnChangeHeadFrame(roomData.self_user_HeadFrame)
+        self.selfUserID = playerRes.selfUserID
+        self.TMP_f_UserNickName.text = playerRes.userName
+        self:OnChangeMoney(playerRes.currency)
+        self:OnChangeHead(playerRes.headID)
+        self:OnChangeHeadFrame(playerRes.headFrameID)
     end
 
 end
@@ -40,11 +41,10 @@ end
 
 function Class:OnChangeHeadFrame(headFrameID)
     self.image_f_UserHeadFrame.sprite = SEnv.GetHeadFrameSprite(headFrameID)
+    self.image_f_UserHeadFrame:SetNativeSize()
 end
 
-
--- 以下为自动生成代码
-function Class:On_btn_UserInfo_Event(btn_UserInfo)
+function Class:On_btnUserInfo_Event(btnUserInfo)
     print("On_btnUserInfo Click....打开个人信息窗口....")
 end
 

@@ -1,27 +1,26 @@
+local GS = GS
+local GF = GF
+local _G, g_Env, print, LogW, LogE, os, math
+    = _G, g_Env, print, LogW, LogE, os, math
+local class, typeof, type, string, utf8, pairs, ipairs
+    = class, typeof, type, string, utf8, pairs, ipairs
 
-local _G, g_Env, print, log, LogW, LogE, os, math = _G, g_Env, print, log, LogW, LogE, os, math
-local class, typeof, type, string, utf8, pairs, ipairs= class, typeof, type, string, utf8, pairs, ipairs
-
-local tostring, tonumber = tostring, tonumber
 local table = table
-local tinsert = table.insert
-local tremove = table.remove
 local _STR_=_STR_
-
-local UnityEngine, GameObject, TextAsset, Sprite, Input, KeyCode = UnityEngine, GameObject, UnityEngine.TextAsset, UnityEngine.Sprite, UnityEngine.Input, UnityEngine.KeyCode
-local DOTweenAnimation = CS.DG.Tweening.DOTweenAnimation
+local yield = coroutine.yield
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local ItemCountChangeMode = CS.Com.TheFallenGames.OSA.Core.ItemCountChangeMode
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
-
-local SEnv = SEnv
+local PBHelper = require 'protobuffer.PBHelper'
+local CLCHATROOMSender = require'protobuffer.CLCHATROOMSender'
 local PlayerListItemData = require'PlayerList.PlayerListItemData'
 local PlayerListItemView = require'PlayerList.PlayerListItemView'
+local SEnv = SEnv
 print("PlayerListPanel使用小游戏自带脚本.....")
 
-_ENV = moduledef { seenamespace = CS }
+_ENV = moduledef {
+    -- seenamespace = CS
+}
 local CoroutineMonoBehaviour = nil
 
 local Class = class()
@@ -32,7 +31,7 @@ end
 
 function Class:__init(panel, coMonoBehaviour)
     self.panel = panel
-    local initHelper = panel:GetComponent(typeof(LuaInitHelper))
+    local initHelper = panel:GetComponent(typeof(GS.LuaInitHelper))
     initHelper:Init(self)
     self.eventListener:Init(self)
     CoroutineMonoBehaviour = coMonoBehaviour
@@ -55,7 +54,7 @@ function Class:__init(panel, coMonoBehaviour)
     self.playerInfoItemDatas = {}
 end
 function Class:UpdateOnLineCount(count)
-    self.onlineCount.text = string.Format2(_STR_"在线人数：{1}",count)
+    self.onlineCount.text = GF.string.Format2(_STR_"在线人数：{1}",count)
 end
 
 -- 更新玩家列表的胜利次数
@@ -117,13 +116,13 @@ function Class:OnSendPlayerListReq(sender)
             local count = data.total_amount
             -- print("在线人数 = ", count)
             local players = data.players
-            self.onlineCount.text = string.Format2(_STR_"在线人数：{1}",count)
+            self.onlineCount.text = GF.string.Format2(_STR_"在线人数：{1}",count)
             for key, info in pairs(players) do
                 -- print("玩家列表：", key, info.nickname, info.bets, info.winCount)
                 local rankImageSpr = self.rankImages[key]
                 local itemData = PlayerListItemData.Create(info.user_id, info.nickname, info.head, info.headFrame, 
                                                             info.currency, info.bets, info.winCount, key, rankImageSpr)
-                tinsert(self.playerInfoItemDatas, itemData)
+                                                            table.insert(self.playerInfoItemDatas, itemData)
                 itemData.rankid = key
             end
             self.playerListScrollView:ReplaceItems(self.playerInfoItemDatas)

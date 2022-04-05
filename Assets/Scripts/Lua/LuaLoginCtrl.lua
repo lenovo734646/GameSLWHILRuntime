@@ -1,20 +1,21 @@
+local GS = GS
+local GF = GF
 local _G = _G
-local SEnv, class = SEnv, class
-local table, print, tostring, SysDefines, typeof, LogW, LogE, string, assert, coroutine = table, print, tostring,
-    SysDefines, typeof, LogW, LogE, string, assert, coroutine
+local class = class
+local print, tostring, type, debug, pairs, string, assert
+    = print, tostring, type, debug, pairs, string, assert
 
-local UnityEngine = UnityEngine
+local LogW = LogW
+local json = json
 local CLGTSender = require 'protobuffer.CLGTSender'
 local GamePlayer = require 'Module.GamePlayer'
 local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
 local GetGateConnectionAsync = require'WebRequest'.GetGateConnectionAsync
-
+local SEnv = SEnv
 
 local yield = coroutine.yield
 
-_ENV = moduledef {
-    seenamespace = CS
-}
+_ENV = {}
 
 local Class = class()
 
@@ -33,9 +34,9 @@ function Class:AutoLoginAsync()
         Ip = Ip,
         Port = Port,
     }
-    print('Port',Port)
+    print('Ip', Ip, 'Port',Port)
 
-    if (string.IsNullOrEmpty(SEnv.ipinfo.Ip)) then
+    if (GF.string.IsNullOrEmpty(SEnv.ipinfo.Ip)) then
         SEnv.gamectrl.GetIpPort(true)
         return false, _G._STR_"连接服务器出了点问题，请稍后再试！"
     end
@@ -43,7 +44,7 @@ function Class:AutoLoginAsync()
 
     print('正在登录...')
 
-    local req = NetController.WaitForConnect(SEnv.ipinfo.Ip, SEnv.ipinfo.Port)
+    local req = GS.NetController.WaitForConnect(SEnv.ipinfo.Ip, SEnv.ipinfo.Port)
     yield(req)
     local state = req.state
     if state ~= 'Established' then
@@ -57,15 +58,15 @@ function Class:AutoLoginAsync()
     end
 
     -- 登录配置
-    local deviceUniqueIdentifier = UnityEngine.SystemInfo.deviceUniqueIdentifier
-    local rsp, err = CLGTSender.Send_HandReq_Async(UnityHelper.GetPlatformInt(), 1, 1, deviceUniqueIdentifier,
+    local deviceUniqueIdentifier = GS.UnityEngine.SystemInfo.deviceUniqueIdentifier
+    local rsp, err = CLGTSender.Send_HandReq_Async(GS.UnityHelper.GetPlatformInt(), 1, 1, deviceUniqueIdentifier,
                          SEnv.channel, "ZH-CN", "CN")
 
     if err then
         return false, err
     end
-    print(_G.json.encode(rsp))
-    NetController.Instance:SetKey(rsp.session_guid, rsp.random_key_arr)
+    print(json.encode(rsp))
+    GS.NetController.Instance:SetKey(rsp.session_guid, rsp.random_key_arr)
     SEnv.isNetConnected = true
     SEnv.LoginType = loginType
     local token
@@ -83,13 +84,13 @@ function Class:AutoLoginAsync()
     if err then
         return false, err
     end
-    print('玩家账号信息：'..table.print(rsp))
+    print('玩家账号信息：', json.encode(rsp))
     SEnv.gamePlayer = GamePlayer(rsp)
     self:StartAliveCor()
     SEnv.curLoginState = true
     -- 注册Module
 
-    local serverName = LuaEntry.Instance.gameName
+    local serverName = GS.LuaEntry.Instance.gameName
     print('登录',serverName)
     local data, errmsg = CLGTSender.Send_AccessServiceReq_Async(serverName,1,'')
     if errmsg then
@@ -105,7 +106,7 @@ end
 function Class:StartAliveCor()
     self.co = CoroutineHelper.StartCoroutine(function()
         while true do
-            yield(UnityEngine.WaitForSeconds(9))
+            yield(GS.UnityEngine.WaitForSeconds(9))
             CLGTSender.Send_KeepAliveReq_Async()
         end
     end)

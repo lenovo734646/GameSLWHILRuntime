@@ -1,17 +1,10 @@
 
-local _G, g_Env, print, log, logError = _G, g_Env, print, log, logError
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-local UnityEngine, GameObject, Sprite = UnityEngine, GameObject, Sprite
-
-local OSA = CS.OSAHelper
-local OSACore = CS.Com.TheFallenGames.OSA.Core
-local OSAScrollView = OSA.OSAScrollView
-local MyParam = OSA.MyParam
-local MyItemViewHolder = OSA.MyItemViewHolder
-local ItemCountChangeMode = OSACore.ItemCountChangeMode
-local OSAItemViewHolder = OSA.ItemViewHolder
-
+local GS = GS
+local GF = GF
+local _G, g_Env, print
+    = _G, g_Env, print
+local class, typeof, type, string, utf8
+    = class, typeof, type, string, utf8
 
 _ENV = {}
 
@@ -103,10 +96,10 @@ function Class:ChangeItemsCount(paramters_)
     -- local osaView = paramters_[0]
     local changeMode = paramters_[1] -- 更改方式
     local itemsCount = paramters_[2] -- 更改数量
-    -- if changeMode == ItemCountChangeMode.RESET then
+    -- if changeMode == GS.ItemCountChangeMode.RESET then
     --     self:SetAllModelsHavePendingSizeChange()
     -- end
-    -- log(changeMode)
+    -- GF.log(changeMode)
     if self.ChangeItemsCountCallback then
         self:ChangeItemsCountCallback(changeMode, itemsCount)
     end

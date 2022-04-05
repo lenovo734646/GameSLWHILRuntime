@@ -1,7 +1,9 @@
 
 
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
+local _G, g_Env, print, os, math
+    = _G, g_Env, print, os, math
+local class, typeof, type, string, utf8
+    = class, typeof, type, string, utf8
 
 _ENV = {}
 

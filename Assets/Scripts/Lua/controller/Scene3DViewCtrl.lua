@@ -1,22 +1,20 @@
 
-local _G, g_Env = _G, g_Env
-local class = class
-local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber =
-      print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,LogE, LogW,tonumber
+local GS = GS
+local GF = GF
+local _G = _G
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local _STR_ = _STR_
 local math,pairs = math,pairs
-local Vector3 = CS.UnityEngine.Vector3
-local DOTween = CS.DG.Tweening.DOTween
-local Ease = CS.DG.Tweening.Ease
-local RotateMode = CS.DG.Tweening.RotateMode
+local Vector3 = GS.UnityEngine.Vector3
+local Ease = GS.DG.Tweening.Ease
+local RotateMode = GS.DG.Tweening.RotateMode
 local table = table
 local tinsert = table.insert
-local tremove = table.remove
-local PrintTable = PrintTable
 
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local WaitForSeconds = UnityEngine.WaitForSeconds
+local WaitForSeconds = GS.WaitForSeconds
 local yield = coroutine.yield
 
 local PBHelper = require 'protobuffer.PBHelper'
@@ -24,25 +22,19 @@ local CLSLWHSender = require'protobuffer.CLSLWHSender'
 local GameConfig = require 'GameConfig'
 local Helpers = require'LuaUtil.Helpers'
 
-local Destroy = Destroy
-local Instantiate = Instantiate
-local GameObject = GameObject
-local RandomInt = UnityHelper.RandomInt
-local RandomFloat = UnityHelper.RandomFloat
-
-local Input = UnityEngine.Input
+local RandomInt = GS.UnityHelper.RandomInt
 local clock = os.clock
 
-local AudioManager = AudioManager or CS.AudioManager
+local AudioManager = AudioManager or GS.AudioManager
 local SEnv=SEnv
 
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 local ColorType = GameConfig.ColorType
 local ExWinType = GameConfig.ExWinType
 local AnimalType = GameConfig.AnimalType
 
-local Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+local Stopwatch = GS.System.Diagnostics.Stopwatch.StartNew()
 local winItemDataList = {} -- 记录本次所有中奖动物itemData
 local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
 local bOtherBetAudioPlay = false
@@ -59,8 +51,8 @@ function Class:__init(ui,View,roomdata)
     self.View = View
     self.roomdata = roomdata
 
-    View:GetComponent(typeof(LuaUnityEventListener)):Init(self)
-    View:GetComponent(typeof(KeyEventListener)):Init(self)
+    View:GetComponent(typeof(GS.LuaUnityEventListener)):Init(self)
+    View:GetComponent(typeof(GS.KeyEventListener)):Init(self)
     --
     self.bet_config_array = roomdata.bet_config_array
     self.self_user_id = roomdata.self_user_id

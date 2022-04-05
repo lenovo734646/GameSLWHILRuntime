@@ -1,22 +1,23 @@
 
+local GS = GS
+local GF = GF
 local _G = _G
-local class = class
-local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
-      print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
 local tinsert = table.insert
 local tonumber = tonumber
 local Assert = Assert
 
-local GameObject = GameObject
-local DOTween = CS.DG.Tweening.DOTween
+local Ease = GS.DG.Tweening.Ease
 local Scene3DViewCtrl = require'controller.Scene3DViewCtrl'
 local InfinityScroView = require'OSAScrollView.InfinityScroView'
 local GameConfig = require'GameConfig'
 local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
-local UnityHelper = CS.UnityHelper
+local UnityHelper = GS.UnityHelper
 
-local OSACore = CS.Com.TheFallenGames.OSA.Core
+local OSACore = GS.OSA.Core
 local ItemCountChangeMode = OSACore.ItemCountChangeMode
 
 local MainUI =  require'UI.MainUI'
@@ -25,7 +26,7 @@ local CameraCtrl = require'controller.CameraCtrl'
 local SEnv = SEnv
 
 
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 local RUN_ITEM_COUNT = GameConfig.RunItemCount
 local ColorType = GameConfig.ColorType
@@ -38,9 +39,9 @@ function Create(...)
 end
 
 function Class:__init(roomdata)
-    local View = GameObject.Find('View')
+    local View = GS.GameObject.Find('View')
     self.gameObject = View
-    local initHelper = View:GetComponent(typeof(LuaInitHelper))
+    local initHelper = View:GetComponent(typeof(GS.LuaInitHelper))
     initHelper:Init(self)
     -- 找一个不会被Inactive 的脚本用来运行协程
     SEnv.CoroutineMonoBehaviour = self.viewEventBroadcaster
@@ -64,13 +65,13 @@ function Class:__init(roomdata)
     local winStageDataList = {}
     local indexToFindMap = {}   -- 下标对应的winStageData
     for name,child in pairs(winStageChildren) do
-        local arr = string.split(name,',')
+        local arr = GF.string.split(name,',')
         local gameObject = child.gameObject
         local childdata = {
             transform = child,
             gameObject = gameObject,
             item_id = tonumber(gameObject.name),
-            animatorHelper = child:GetComponent(typeof(ForReBuild.UIHelper.AnimatorHelper)), 
+            animatorHelper = child:GetComponent(typeof(GS.AnimatorHelper)), 
         }
         tinsert(winStageDataList, childdata)
         gameObject:SetActive(false)
@@ -89,7 +90,7 @@ function Class:__init(roomdata)
     local runItemDataList = {}
     for i=1,RUN_ITEM_COUNT do
         local t = runItemIndexs:GetChild(i-1)
-        local animatorHelper = t:GetComponent(typeof(ForReBuild.UIHelper.AnimatorHelper)) 
+        local animatorHelper = t:GetComponent(typeof(GS.AnimatorHelper)) 
         --print("animatorHelper = ",animatorHelper)
         local data = {
             transform = t,
@@ -150,7 +151,7 @@ function Class:__init(roomdata)
     --数据提供接口实现
     roadScrollView.OnCreateViewItemData = function (itemViewGameObject,itemIndex)
         local viewItemData = {}
-        itemViewGameObject:GetComponent(typeof(LuaInitHelper)):Init(viewItemData, false)
+        itemViewGameObject:GetComponent(typeof(GS.LuaInitHelper)):Init(viewItemData, false)
         viewItemData.gameObject = itemViewGameObject
         return viewItemData
     end

@@ -1,25 +1,15 @@
+
+local GS = GS
+local GF = GF
 local _G = _G
-local class = class
-local print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs =
-      print, tostring, SysDefines, typeof, debug, LogE,string, assert,pairs
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local DOTween = CS.DG.Tweening.DOTween
-
-local tinsert = table.insert
-local tremove = table.remove
-local tonumber = tonumber
-
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-
-local Destroy = Destroy
-local Instantiate = Instantiate
-local GameObject = GameObject
-local Vector3 = Vector3
 
 local GameConfig = require'GameConfig'
 
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 
 local Class = class()
@@ -32,13 +22,13 @@ end
 function Class:__init(resultPanelGameObject)
     self.resultPanel = resultPanelGameObject
     -- 结算界面
-    local resultInitHelper = self.resultPanel:GetComponent(typeof(LuaInitHelper))
+    local resultInitHelper = self.resultPanel:GetComponent(typeof(GS.LuaInitHelper))
     resultInitHelper:Init(self)
     self.resultAnimals = {} -- 普通中奖动物
     resultInitHelper:ObjectsSetToLuaTable(self.resultAnimals)
     --
     local multiList = {}
-    local multiListInitHelper = self.resultPanel:GetComponent(typeof(LuaInitMultiListHelper))
+    local multiListInitHelper = self.resultPanel:GetComponent(typeof(GS.LuaInitMultiListHelper))
     multiListInitHelper:Init(multiList)
     --
     self.enjoyGameData = {}
@@ -149,7 +139,7 @@ end
 function Class:HideResult()
     self.resultPanel:SetActive(false)
     for i = 0, self.resuletScrollView.content.childCount-1, 1 do
-        Destroy(self.resuletScrollView.content:GetChild(i).gameObject)
+        GS.Destroy(self.resuletScrollView.content:GetChild(i).gameObject)
     end
     --
     --self.enjoyGameData.winEnjoyGameGO:SetActive(false)
@@ -163,10 +153,10 @@ end
 
 -- 初始化一个中奖动物
 function Class:__AddAnimal(animal_id, colorSpr, ratio, resultAnimals, isSanYuanSiXi)
-    local go = Instantiate(resultAnimals[animal_id], self.resuletScrollView.content)
-    go.transform.localPosition = Vector3.zero
+    local go = GS.Instantiate(resultAnimals[animal_id], self.resuletScrollView.content)
+    go.transform.localPosition = GS.Vector3.zero
     local animalData = {}
-    go:GetComponent(typeof(LuaInitHelper)):Init(animalData, false)
+    go:GetComponent(typeof(GS.LuaInitHelper)):Init(animalData, false)
     animalData.color.sprite = colorSpr
     animalData.ratioText.text = "x"..ratio
     if not isSanYuanSiXi then

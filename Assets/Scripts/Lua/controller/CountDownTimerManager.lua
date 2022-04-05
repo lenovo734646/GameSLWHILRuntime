@@ -1,14 +1,15 @@
 
+local GS = GS
+local GF = GF
 local _G = _G
-local class = class
-local print, tostring, SysDefines, typeof, debug,string, assert,ipairs, pairs,json,tonumber =
-      print, tostring, SysDefines, typeof, debug,string, assert,ipairs, pairs,json,tonumber
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
 
 local Log, LogW, LogE = Log, LogW, LogE
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
 local yield = coroutine.yield
-local Time = CS.UnityEngine.Time
-local WaitForSeconds = CS.UnityEngine.WaitForSeconds
+local WaitForSeconds = GS.WaitForSeconds
 local floor = math.floor
 
 --
@@ -43,7 +44,7 @@ function StopTimer(id, iscallAction)
     if iscallAction and timer.actionPerInterval then
         timer.actionPerInterval(timer.leftTime, true)
     end
-    table.removebyvalue(timerList, timer, true)
+    GF.table.removebyvalue(timerList, timer, true)
     -- print("停止倒计时成功 #timerList = ", #timerList)
 end
 
@@ -92,7 +93,7 @@ end
 
 
 function GetTimer(id)
-    local timer = table.FindBy(timerList, function (v)
+    local timer = GF.table.FindBy(timerList, function (v)
         return v.id == id
     end)
     return timer

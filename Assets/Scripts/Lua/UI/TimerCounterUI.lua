@@ -1,17 +1,15 @@
 
+local GS = GS
+local GF = GF
 local _G = _G
-local class = class
-local print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,tonumber =
-      print, tostring, SysDefines, typeof, debug,string, assert,ipairs,json,tonumber
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local Time = UnityEngine.Time
-local WaitForSeconds = UnityEngine.WaitForSeconds
 local floor = math.floor
 local SEnv = SEnv
 
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 local Class = class()
 

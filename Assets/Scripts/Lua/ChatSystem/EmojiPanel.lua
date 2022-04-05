@@ -1,11 +1,13 @@
+local GS = GS
+local GF = GF
+local _G, g_Env, print, os, math
+    = _G, g_Env, print, os, math
+local class, typeof, type, string, utf8
+    = class, typeof, type, string, utf8
 
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-
-
-_ENV = moduledef { seenamespace = CS }
+_ENV = moduledef {
+    -- seenamespace = CS 
+}
 
 local Class = class()
 
@@ -15,21 +17,21 @@ end
 
 function Class:__init(panel, inputField, emojis, itemPrefab)
     self.panel = panel
-    panel:GetComponent(typeof(LuaInitHelper)):Init(self)
+    panel:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     --
     if itemPrefab == nil then
-        logError("emojiPrefab is nil")
+        GF.logError("emojiPrefab is nil")
         return
     end
     self.inputField = inputField
     self.emojiCount = #emojis
     if emojis ~= nil and self.emojiCount > 0 then
         for i = 1, self.emojiCount do
-            local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)
-            go:GetComponent(typeof(Image)).sprite = emojis[i]
+            local go = GS.Instantiate(itemPrefab, self.scrollView.content.transform)
+            go:GetComponent(typeof(GS.Image)).sprite = emojis[i]
             go.name = emojis[i].name
-            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
-            go:GetComponent(typeof(Button)).onClick:AddListener(function ()
+            go:GetComponent(typeof(GS.Button)).onClick:RemoveAllListeners()
+            go:GetComponent(typeof(GS.Button)).onClick:AddListener(function ()
                 self:OnEmojiClick(i-1)
             end)
         end
@@ -64,7 +66,9 @@ function Class:Release()
     if self.scrollView and self.scrollView.content then
         for i = 0, self.scrollView.content.transform.childCount-1 do
             local go = self.scrollView.content.transform:GetChild(i)
-            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
+            local btn = go:GetComponent(typeof(GS.Button))
+            btn.onClick:RemoveAllListeners()
+            btn.onClick:Invoke()
         end
     end
 end

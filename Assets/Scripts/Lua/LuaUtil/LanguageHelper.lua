@@ -1,26 +1,25 @@
+local GS = GS
+local GF = GF
 local _G = _G
-local SEnv, class = SEnv, class
-local table, print, tostring, SysDefines, typeof, LogW, LogE, string, assert, pairs = table, print, tostring,
-    SysDefines, typeof, LogW, LogE, string, assert, pairs
+local g_Env, class = g_Env, class
+local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
+    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
 
 local LanguageErrcode = require 'Table.LanguageErrcode'
 local DisconnectTips = require 'Table.DisconnectTips'
 local LanguageT = require 'Table.Language'
 local os=os
-local SysDefines = SysDefines
-
-_ENV = moduledef {
-    seenamespace = CS
-}
+local SEnv = SEnv
+_ENV = {}
 
 function GetServerErrorMsg(code, msgName)
     msgName = msgName:Replace('.', '')
     local key = msgName ..'_' ..code
     print('GetServerErrorMsg',key)
-    local _,rt = table.Find(LanguageErrcode, function(k, v)
+    local _,rt = GF.table.Find(LanguageErrcode, function(k, v)
         return v.key == key
     end)
-    local curLanguage = SysDefines.curLanguage
+    local curLanguage = GS.SysDefines.curLanguage
     if rt then
         local err = rt[curLanguage]
         if err then
@@ -37,7 +36,7 @@ end
 
 function GetDisconnectTips(ntf)
     local code = ntf.code
-    local curLanguage = SysDefines.curLanguage
+    local curLanguage = GS.SysDefines.curLanguage
     local tiplang = 'Tips'
     if curLanguage~='CN' then
         tiplang = 'Tips_'..curLanguage
@@ -47,7 +46,7 @@ function GetDisconnectTips(ntf)
         return ntf.errmessage
     end
 
-    local tips = table.Find(DisconnectTips, function(v)
+    local tips = GF.table.Find(DisconnectTips, function(v)
         return v.Code == code
     end)[tiplang]
     if tips then
@@ -61,15 +60,15 @@ function GetDisconnectTips(ntf)
 end
 
 function GetLanguageT(key)
-    local tt = table.Find(LanguageT, function(t)
+    local tt = GF.table.Find(LanguageT, function(t)
         return t.key == key
     end)
-    return tt[SysDefines.curLanguage] or tt.CN
+    return tt[GS.SysDefines.curLanguage] or tt.CN
 end
 
 SEnv.GetLanguageT = SEnv.GetLanguageT or GetLanguageT
 SEnv.ConvertByLang = SEnv.ConvertByLang or function (prefabName)
-    return prefabName:Replace('.prefab','_'..SysDefines.curLanguage..'.prefab')
+    return prefabName:Replace('.prefab','_'..GS.SysDefines.curLanguage..'.prefab')
 end
 
 local constantStringConvertor = {}
@@ -79,7 +78,7 @@ _G._STR_ = _G._STR_ or function (str)
     if not t then
         return str
     end
-    return t[SysDefines.curLanguage] or str
+    return t[GS.SysDefines.curLanguage] or str
 end
 -- 统一调用格式
 _G._ERR_STR_ = _G._ERR_STR_ or function (str)
@@ -88,7 +87,7 @@ end
 
 function string.FormatDate(month,day,year)
     year = year or 2019
-    if SysDefines.curLanguage=='CN' then
+    if GS.SysDefines.curLanguage=='CN' then
         os.setlocale("chs")
         return os.date("%Y%b%d日",os.time{year=year,month=month,day=day})
     else

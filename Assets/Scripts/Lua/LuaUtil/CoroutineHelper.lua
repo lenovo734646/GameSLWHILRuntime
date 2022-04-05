@@ -1,10 +1,12 @@
+
+-- 小游戏专用，以后尝试和大厅统一下
+local GS = GS
+local GF = GF
 local util = require 'xlua.util'
 
-local cs_coroutine_runner = gLuaEntryCom
-
-local typeCache = typeof(CS.SubGameCoStarter)
-local IsUnityObjectValid = CS.UnityHelper.IsUnityObjectValid
--- print('cs_coroutine_runner:',cs_coroutine_runner)
+local cs_coroutine_runner = GS.gLuaEntryCom
+local typeCache = typeof(GS.SubGameCoStarter)
+local IsUnityObjectValid = GS.UnityHelper.IsUnityObjectValid
 
 
 local unpack = table.unpack

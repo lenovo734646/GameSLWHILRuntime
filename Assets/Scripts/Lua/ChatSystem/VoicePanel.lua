@@ -1,18 +1,14 @@
+local GS = GS
+local GF = GF
+local _G, g_Env, print, os, math
+    = _G, g_Env, print, os, math
+local class, typeof, type, string, utf8
+    = class, typeof, type, string, utf8
 
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local WaitForSeconds = UnityEngine.WaitForSeconds
-local UnityHelper = CS.UnityHelper
-local SEnv = SEnv
 local _STR_ = _STR_
-local _ERR_STR_ = _ERR_STR_
-local ShowHitMessage = ShowHitMessage
+local SEnv = SEnv
 
-_ENV = moduledef { seenamespace = CS }
+_ENV = {}
 
 local musicMute = false
 local audioMute = false
@@ -24,7 +20,7 @@ function Create(...)
 end
 
 function Class:__init(panel, gr, maxRecordTime)
-    panel:GetComponent(typeof(LuaInitHelper)):Init(self)
+    panel:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     self.panel = panel
     self.gr = gr
     self.maxRecordTime = maxRecordTime
@@ -35,11 +31,7 @@ function Class:__init(panel, gr, maxRecordTime)
         self.sliderPanel.gameObject:SetActive(true)
         local bStart = self.recorder:StartRecording(self.maxRecordTime)
         if not bStart then
-            if g_Env then
-                g_Env.ShowHitMessage(_STR_("录音失败，请检查权限"))
-            else
-                print("录音失败，请检查权限")
-            end
+            SEnv.ShowHintMessage(_STR_("录音失败，请检查权限"))
         else
             self:PauseMusicAndAudio()
         end
@@ -48,7 +40,7 @@ function Class:__init(panel, gr, maxRecordTime)
     self.btnPressRecording.OnTouchUp:RemoveAllListeners()
     self.btnPressRecording.OnTouchUp:AddListener(function ()
         self.sliderPanel.gameObject:SetActive(false)
-        if UnityHelper.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
+        if GS.UnityHelper.IsMouseCorveredTarget(self.btnPressRecording.gameObject, self.gr) then
             --send msg
             local clipData = self.recorder:GetSendDataBuff()
             if clipData ~= nil then
@@ -87,7 +79,7 @@ end
 
 function Class:ByteToAudioClip(clipData, clipChannels, freq)
     if clipData == nil then
-        logError("ByteToAudioClip clipData is nil")
+        GF.logError("ByteToAudioClip clipData is nil")
         return nil
     end
 
@@ -96,19 +88,21 @@ end
 
 function Class:Release()
     self.btnPressRecording.OnTouchDown:RemoveAllListeners()
+    self.btnPressRecording.OnTouchDown:Invoke()
     self.btnPressRecording.OnTouchUp:RemoveAllListeners()
+    self.btnPressRecording.OnTouchUp:Invoke()
     self.onSendCallback = nil
 end
 
 function Class:PauseMusicAndAudio()
-    if not AudioManager.Instance.MusicAudio.mute then
-        AudioManager.Instance.MusicAudio.mute = true
+    if not GS.AudioManager.Instance.MusicAudio.mute then
+        GS.AudioManager.Instance.MusicAudio.mute = true
         musicMute = false
     else
         musicMute = true
     end
-    if not AudioManager.Instance.EffectAudio.mute then
-        AudioManager.Instance.EffectAudio.mute = true
+    if not GS.AudioManager.Instance.EffectAudio.mute then
+        GS.AudioManager.Instance.EffectAudio.mute = true
         audioMute = false
     else
         audioMute = true
@@ -116,8 +110,8 @@ function Class:PauseMusicAndAudio()
 end
 
 function Class:RecoverMusicAndAudio()
-    AudioManager.Instance.MusicAudio.mute = musicMute
-    AudioManager.Instance.EffectAudio.mute = audioMute
+    GS.AudioManager.Instance.MusicAudio.mute = musicMute
+    GS.AudioManager.Instance.EffectAudio.mute = audioMute
 end
 
 

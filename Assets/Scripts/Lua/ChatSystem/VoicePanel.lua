@@ -1,21 +1,11 @@
-local GS = GS
-local GF = GF
-local _G, g_Env, print, os, math
-    = _G, g_Env, print, os, math
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
 
-local _STR_ = _STR_
-local SEnv = SEnv
-
-_ENV = {}
-
+-- 快捷消息
 local musicMute = false
 local audioMute = false
 
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -31,7 +21,7 @@ function Class:__init(panel, gr, maxRecordTime)
         self.sliderPanel.gameObject:SetActive(true)
         local bStart = self.recorder:StartRecording(self.maxRecordTime)
         if not bStart then
-            SEnv.ShowHintMessage(_STR_("录音失败，请检查权限"))
+            ShowTips(_STR_("录音失败，请检查权限"))
         else
             self:PauseMusicAndAudio()
         end
@@ -46,7 +36,7 @@ function Class:__init(panel, gr, maxRecordTime)
             if clipData ~= nil then
                 local clipChannels = self.recorder:GetRecordingClipChannels()
                 if self.onSendCallback then
-                    print("OnTouchUp....发送消息", #clipData, type(clipData))
+                    Log("OnTouchUp....发送消息", #clipData, type(clipData))
                     self.onSendCallback(clipData, clipChannels, self.recorder.freq)
                 end
                 self.recorder:CancelRecording()
@@ -54,7 +44,7 @@ function Class:__init(panel, gr, maxRecordTime)
         else
             --松手时不在录音按钮上就取消
             self.recorder:CancelRecording()
-            SEnv.ShowHintMessage(_G._STR_("取消语音发送"))
+            ShowTips(_G._STR_("取消语音发送"))
         end
         self:RecoverMusicAndAudio()
     end)
@@ -67,7 +57,7 @@ end
 function Class:CancelVoiceInput()
     if self.recorder.isRecording then
         self.recorder:CancelRecording()
-        SEnv.ShowHintMessage(_G._STR_("取消语音发送"))
+        ShowTips(_G._STR_("取消语音发送"))
         self:RecoverMusicAndAudio()
     end
 end
@@ -115,4 +105,4 @@ function Class:RecoverMusicAndAudio()
 end
 
 
-return _ENV
+return Class

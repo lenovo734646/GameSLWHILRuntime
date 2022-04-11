@@ -1,17 +1,4 @@
-local GS = GS
-local GF = GF
-local _G, g_Env, print, os, math
-    = _G, g_Env, print, os, math
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
 
-local pairs = pairs
-local yield = coroutine.yield
-local _STR_ = _STR_
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-_ENV = moduledef {
-    -- seenamespace = CS
-}
 
 -- 常用语快捷聊天界面
 -- 快速聊天
@@ -46,7 +33,7 @@ local FontSize = 30
 
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -77,7 +64,7 @@ function Class:__init(panel, itemPrefab)
 end
 
 function Class:OnPhraseClick(data)
-    print("点击快捷常用语：index = ", data.index, data.txt, data.sound)
+    Log("点击快捷常用语：index = ", data.index, data.txt, data.sound)
 
     if self.OnPhraseClickCallBack ~= nil then
         self.OnPhraseClickCallBack(data)
@@ -118,4 +105,4 @@ function Class:Release()
     self.OnPhraseClickCallBack = nil
 end
 
-return _ENV
+return Class

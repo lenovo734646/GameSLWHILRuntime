@@ -1,5 +1,5 @@
 
-print'此文件只在小游戏编辑器模式使用 Cofig.lua'
+Log'此文件只在小游戏编辑器模式使用 Cofig.lua'
 
 local Config = {
     debug = true,

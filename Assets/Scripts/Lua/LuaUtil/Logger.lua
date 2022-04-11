@@ -2,25 +2,24 @@ local BuildStr = require'LuaUtil.Helpers'.BuildStr
 
 function TraceErr(str)
     str = str or ''
-    GF.logError(str .. '\n' .. debug.traceback())
+    GF.logError(str..'\n'..debug.traceback())
 end
 
-function LogE(...)
-    return TraceErr('[Lua]' .. BuildStr(...))
+function LogE (...)
+    return TraceErr('[Lua]'..BuildStr(...))
 end
 
 function LogW(...)
-    GF.logWarning('[Lua]' .. BuildStr(...) .. '\n' .. debug.traceback())
+    GF.logWarning('[Lua]'..BuildStr(...)..'\n'..debug.traceback())
 end
 
 function Log(...)
-    GF.log('[Lua]' .. BuildStr(...) .. '\n' .. debug.traceback())
+    GF.log('[Lua]'..BuildStr(...)..'\n'..debug.traceback())
 end
-print = Log
 
 -- function LogTrace(str)
 --     str = str or ''
---     print(str .. ' in ' .. debug.traceback())
+--     Log(str .. ' in ' .. debug.traceback())
 -- end
 
 function Assert(b, ...)

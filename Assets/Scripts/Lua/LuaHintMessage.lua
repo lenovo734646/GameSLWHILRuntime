@@ -1,31 +1,32 @@
+local _CreateHintMessage
 
-local GS = GS
-local GF = GF
+local Class = class()
 
-local Log = Log
-local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local SEnv=SEnv
-_ENV = {}
----------------------
-function Create()
+function Class.Create()
     local this = {
         showingMsgT = {}
     }
-    this.ShowHintMessage = function(self, ...)
-        return ShowHintMessage(self, ...)
+    this.CreateHintMessage = function(self, ...)
+        return _CreateHintMessage(self, ...)
     end
     return this
 end
 
-function ShowHintMessage(this, msg)
-    Log('ShowHintMessage', msg, print(type(msg)))
+function _CreateHintMessage(this, msg,parent)
+    Log('_CreateHintMessage', msg, type(msg))
     if this.showingMsgT[msg] then
         return -- 同一个消息只显示一次
     end
     local prefab = GS.UnityEngine.Resources.Load('popupTipsUI')
-    local gameObject = GS.UnityEngine.Object.Instantiate(prefab,SEnv.UIParent)
+    local uiParent = GS.GameObject.Find('HintMessage')
+    local gameObject = GS.UnityEngine.Object.Instantiate(prefab, uiParent)
+    
     local initer = gameObject:GetComponent(typeof(GS.LuaInitHelper))
+
+    if parent then
+        gameObject.transform:SetParent(parent, false)   
+    end
+
     local t = {}
     initer:Init(t)
     t.tipsfont_text.text = msg
@@ -35,8 +36,8 @@ function ShowHintMessage(this, msg)
         end
     }
     this.showingMsgT[msg] = true
-    CoroutineHelper.StartCoroutine(function()
-        yield(GS.UnityEngine.WaitForSeconds(3.8))
+    GG.CoroutineHelper.StartCoroutine(function()
+        GF.WaitForSeconds(3.8)
         if this.showingMsgT[msg] then
             GS.Destroy(gameObject)
         end
@@ -44,4 +45,4 @@ function ShowHintMessage(this, msg)
 end
 
 
-return _ENV
+return Class

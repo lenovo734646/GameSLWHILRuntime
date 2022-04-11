@@ -1,17 +1,8 @@
-local GS = GS
-local GF = GF
-local _G, g_Env, print, os, math
-    = _G, g_Env, print, os, math
-local class, typeof, type, string, utf8, tostring
-    = class, typeof, type, string, utf8, tostring
 
-local Helpers = require'LuaUtil.Helpers'
-local SEnv = SEnv
-_ENV = {}
-
+-- 玩家列表条目
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -31,7 +22,7 @@ function Class:UpdateFromData(data)
     -- 头像和布局
     self.userID = data.userID
     self.TMP_f_UserNickName.text = data.userName
-    self.TMP_f_UserMoney.text = Helpers.GameNumberFormat(data.gold)
+    self.TMP_f_UserMoney.text = GG.Helpers.GameNumberFormat(data.gold)
     if data.headID then
         SEnv.AutoUpdateHeadImage(self.image_f_UserHead, data.headID, data.userID)
     end
@@ -60,8 +51,8 @@ function Class:UpdateFromData(data)
     --     self.rankText.text = tostring(data.rank)
     -- end
     self.rankText.gameObject:SetActive(false) -- 暂时取消这个显示，如果需要的话，以后风格布局统一修改再说
-    self.betScoreText.text = Helpers.GameNumberFormat(data.totalBets)
-    self.winCountText.text = Helpers.GameNumberFormat(data.winCount)
+    self.betScoreText.text = GG.Helpers.GameNumberFormat(data.totalBets)
+    self.winCountText.text = GG.Helpers.GameNumberFormat(data.winCount)
 end
 
 function Class:UserInfoBtnClick()
@@ -70,4 +61,4 @@ function Class:UserInfoBtnClick()
 end
 
 
-return _ENV
+return Class

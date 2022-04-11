@@ -1,22 +1,16 @@
-
 local GS = GS
 local GF = GF
 local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
+local pairs, ipairs, json, table, math, Log, tostring, typeof, debug, LogE, string, assert
+    = pairs, ipairs, json, table, math, Log, tostring, typeof, debug, LogE, string, assert
 
 local Log, LogW, LogE = Log, LogW, LogE
 local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local WaitForSeconds = GS.WaitForSeconds
 local floor = math.floor
-
 --
 local table = table
 local os = os
 local tinsert = table.insert
-local tremove = table.remove
 
 -- 定时器管理
 -- 每次开始倒计时会重新启动一个定时器
@@ -29,7 +23,7 @@ local count = 0
 
 -- 停止倒计时
 function StopTimer(id, iscallAction)
-    -- print("停止倒计时 id = ", id)
+    -- Log("停止倒计时 id = ", id)
     local timer = GetTimer(id)
     if not timer then
         LogW("StopTimer 未找到对应的定时器 id 错误或定时器已停止")
@@ -45,13 +39,13 @@ function StopTimer(id, iscallAction)
         timer.actionPerInterval(timer.leftTime, true)
     end
     GF.table.removebyvalue(timerList, timer, true)
-    -- print("停止倒计时成功 #timerList = ", #timerList)
+    -- Log("停止倒计时成功 #timerList = ", #timerList)
 end
 
 -- 开始倒计时，返回倒计时ID和协程
 function StartCountDown(time, actionPerInterval, interval)
     local interval = interval or 1
-    -- print("倒计时开始:", time)
+    -- Log("倒计时开始:", time)
     local cdStartTimestamp = os.time()
     local leftTime = floor(time+0.5) -- 
     --
@@ -65,7 +59,7 @@ function StartCountDown(time, actionPerInterval, interval)
     end
     timerdata.co = CoroutineHelper.StartCoroutine(function ()
         while leftTime > 0 do
-            yield(WaitForSeconds(interval))
+            GF.WaitForSeconds(interval)
             local nowTimestamp = os.time()
             leftTime = time - (nowTimestamp - cdStartTimestamp)
             if leftTime <= 0 then
@@ -86,7 +80,7 @@ function StartCountDown(time, actionPerInterval, interval)
     end)
 
     tinsert(timerList, timerdata)
-    -- print("开始倒计时成功 #timerList = ", #timerList)
+    -- Log("开始倒计时成功 #timerList = ", #timerList)
     return count
 end
 
@@ -105,9 +99,9 @@ function HasTimer(id)
 end
 
 function Clear()
-    -- print("清理倒计时 #timerList", #timerList)
+    -- Log("清理倒计时 #timerList", #timerList)
     for key, timer in pairs(timerList) do
-        -- print("ClearTimer timer.id = ", timer.id, "timer.isFinish:", timer.isFinish, "timer.co:", timer.co)
+        -- Log("ClearTimer timer.id = ", timer.id, "timer.isFinish:", timer.isFinish, "timer.co:", timer.co)
         local co = timer.co
         if co then
             CoroutineHelper.StopCoroutine(co)
@@ -115,6 +109,7 @@ function Clear()
         end
     end
     timerList = {}
+    count = 0
 end
 
 return _ENV

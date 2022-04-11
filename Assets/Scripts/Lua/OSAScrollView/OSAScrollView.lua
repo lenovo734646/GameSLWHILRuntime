@@ -1,16 +1,8 @@
 
-local GS = GS
-local GF = GF
-local _G, g_Env, print
-    = _G, g_Env, print
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
-
-_ENV = {}
-
+-- c# OSAScrollView 的lua回调设置
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end 
 
@@ -123,7 +115,7 @@ function Class:GetItemsCount()
 end
 -- 添加后马上获取不一定能获取到，要更新了 VisibleItemsCount 之后才能获取到
 function Class:GetItemViewsHolder(index)
-    print("VisibleItemsCount = ", self.OSAScrollViewCom.VisibleItemsCount)
+    Log("VisibleItemsCount = ", self.OSAScrollViewCom.VisibleItemsCount)
     local vh = self.OSAScrollViewCom:GetItemViewsHolder(index)
     if vh then
         return vh.bindData 
@@ -156,4 +148,4 @@ function Class:Release()
     self.OSAScrollViewCom = nil
 end
 
-return _ENV
+return Class

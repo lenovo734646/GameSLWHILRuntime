@@ -1,21 +1,8 @@
-local GS = GS
-local GF = GF
-local _G, g_Env, print, os, math
-    = _G, g_Env, print, os, math
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
 
-local _STR_ = _STR_
-local SEnv = SEnv
-
-_ENV = moduledef {}
-
-local musicMute = false
-local audioMute = false
 
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -110,7 +97,7 @@ function Class:FixEmojiSize(text, fixSize)
     fixSize = fixSize or 45
     local tempText = text
     tempText = string.gsub(text, "<sprite=%d+>", function (s)
-        -- print(s)
+        -- Log(s)
         return "<size="..fixSize..">"..s.."</size>"
     end)
     return tempText
@@ -128,26 +115,26 @@ function Class:OnSendSuccess()
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(false)
     self.msgData.IsSendSusseed = true
-    print("发送成功...")
+    Log("发送成功...")
 end
 
 function Class:OnSendFailed(err)
-    SEnv.ShowHintMessage(_STR_'发送失败:'..err)
+    -- ShowTips(_STR_'发送失败:'..err)
     self.progressSliderRoot:SetActive(false)
     self.btn_ReSend.gameObject:SetActive(true)
 end
 
 function Class:OnUpdateProgress(progress)
     self.progressSlider.value = progress
-    -- print("发送进度:", progress*100)
+    -- Log("发送进度:", progress*100)
 end
 
 function Class:OnDestroy()
-    -- print("ChatMsgViewItem OnDestroy.............")
+    -- Log("ChatMsgViewItem OnDestroy.............")
 end
 
 -- function Class:OnEnable()
---     print("ChatMsgView OnEnable.............")
+--     Log("ChatMsgView OnEnable.............")
 -- end
 
 function Class:On_btn_ReSend_Event(btn_ReSend)
@@ -161,4 +148,4 @@ function Class:On_btn_PlaySound_Event(btn_PlaySound)
 end
 
 
-return _ENV
+return Class

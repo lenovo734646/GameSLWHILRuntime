@@ -1,29 +1,8 @@
-local GS = GS
-local GF = GF
-local _G = _G
-local class = class
-local print, tostring, type, debug, pairs, string, assert
-    = print, tostring, type, debug, pairs, string, assert
-
-local LogE = LogE
--- local Log = Log
--- local LogW = LogW
--- local Assert = Assert
-local config = require 'Config'
 local yield = coroutine.yield
-local SceneManager = GS.SceneManager
-
-_ENV = {}
------------------------------------------
-
-
-local function Log(...)
-    -- log('[LuaAssetLoader]' .. str .. '\n' .. debug.traceback())
-end
 
 local Class = class()
 
-function Create()
+function Class.Create()
     return Class()
 end
 
@@ -31,7 +10,7 @@ end
 function Class:Load(path, type)
 
     local isRawPath = GF.string.Contains(path, 'Assets/')
-    Log('Load from editor ' ,path, isRawPath)
+    Log('Load from editor ', path, isRawPath)
     local r
     if type then
         r = GS.ResHelper.Load(path, type, isRawPath)
@@ -41,7 +20,7 @@ function Class:Load(path, type)
     if r then
         return r
     else
-        LogE('can not load from editor ' .. path )
+        LogE('can not load from editor ' .. path)
     end
     return Log('Load ' .. path)
 end
@@ -50,13 +29,13 @@ end
 function Class:LoadAll(path, type)
     local isRawPath = GF.string.Contains(path, 'Assets/')
 
-    Log('LoadAll from editor ' ,path, isRawPath)
+    Log('LoadAll from editor ', path, isRawPath)
     local r
     r = GS.ResHelper.LoadAll(path, isRawPath)
     if r then
         return r
     else
-        LogE('can not load from editor ' .. path )
+        LogE('can not load from editor ' .. path)
     end
     return Log('LoadAll ' .. path)
 end
@@ -70,7 +49,7 @@ local function doDone(req, assert)
     end
     return assert
 end
---异步加载，在编辑器模式下看不出效果，但是建议使用此方法以提升加载流畅度
+-- 异步加载，在编辑器模式下看不出效果，但是建议使用此方法以提升加载流畅度
 function Class:LoadAsync(path, infoOut)
     yield()
     local isRawPath = GF.string.Contains(path, 'Assets/')
@@ -89,25 +68,37 @@ function Class:LoadBundleAsync(bundlename)
 end
 
 function Class:LoadBundleAllAsync(bundlename)
-    
+    local abinfo = self:LoadBundleAsync(bundlename)
+    if not abinfo then
+        return
+    end
+
+    local allnames = abinfo:GetAllAssetNames()
+    local len = allnames.Length - 1
+    for i = 0, len do
+        local name = allnames[i]
+        local req = abinfo:LoadAssetAsync(name)
+        yield(req)
+    end
+    return abinfo
 end
 
 function Class:LoadScene(name)
-    if config.isLoadFromEditor then
-        SceneManager.LoadScene(name)
+    if GG.Config.isLoadFromEditor then
+        GS.SceneManager.LoadScene(name)
         return
     end
     local path = [[Assets/Scenes/]] .. name .. '.unity'
     self:Load(path)
-    return SceneManager.LoadScene(name)
+    return GS.SceneManager.LoadScene(name)
 end
 
 function Class:LoadSceneAsync(name, infoOut)
-    if not config.isLoadFromEditor then
+    if not GG.Config.isLoadFromEditor then
         local path = [[Assets/Scenes/]] .. name .. '.unity'
         self:LoadAsync(path)
     end
-    local req = SceneManager.LoadSceneAsync(name)
+    local req = GS.SceneManager.LoadSceneAsync(name)
     if infoOut then
         infoOut.progress = 0
         while not req.isDone do
@@ -139,4 +130,4 @@ function Class:Clear()
 
 end
 
-return _ENV
+return Class

@@ -1,13 +1,15 @@
 SEnv = SEnv or {}
 RUN_IN_TEST_MODE = true
-print('运行在无网络测试模式')
-GameConfig = GameConfig or require'Config' -- 在大厅模式下会传给小游戏这个数值
+Log('运行在无网络测试模式')
+GG.GameConfig = GG.GameConfig or require'Config' -- 在大厅模式下会传给小游戏这个数值
 
-ShowErrorByHintHandler = function (errcode, msgName)
-    if g_Env then
-        g_Env.ShowHitMessage(g_Env.GetServerErrorMsg(errcode,msgName))
+local hintMessage = GG.LuaHintMessage.Create()
+-- 小游戏统一提示函数
+ShowTips = function(...)
+    if IsRunInHall then
+        g_Env.ShowTips(...)
     else
-        print('服务器返回错误 errcode=',errcode,'msgName=',msgName)
+        hintMessage:CreateHintMessage(...)
     end
 end
 -- require'Prepare'
@@ -59,7 +61,7 @@ if 1 then
         end
         -- local commonSounds = SEnv.loader:Load("Assets/Resources/commonSounds.prefab")
         -- CS.UnityEngine.Object.DontDestroyOnLoad(_G.Instantiate(commonSounds)) -- 公共音频资源
-        -- print("SUBGAME_EDITOR!")
+        -- Log("SUBGAME_EDITOR!")
 end
 
 GS.SceneManager.LoadScene("MainScene")
@@ -117,10 +119,8 @@ end
 
 function _OnSKeyDown()
     if gameView then
-        print("11")
-        gameView.ctrl.choumaFly:FlyOut()
-        -- for i = 1, 10, 1 do
-        --     gameView.ctrl.choumaFly:FlyOut()
+        -- if gameView.ctrl.carRunTween then
+        --     gameView.ctrl.carRunTween:Kill()
         -- end
     end
 end

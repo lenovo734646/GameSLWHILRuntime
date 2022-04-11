@@ -1,17 +1,9 @@
-local GS = GS
-local GF = GF
-local _G, g_Env, print, os, math
-    = _G, g_Env, print, os, math
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
 
-_ENV = moduledef {
-    -- seenamespace = CS 
-}
 
+-- 表情界面
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -58,7 +50,7 @@ function Class:OnShow(isOn)
 end
 
 function Class:Release()
-    print("EmojiPanel Release", self.scrollView.content, self.animatorHelper:GetAnimator())
+    Log("EmojiPanel Release", self.scrollView.content, self.animatorHelper:GetAnimator())
     if self.animatorHelper:GetAnimator() then
         self.animatorHelper:Stop()
     end
@@ -74,7 +66,7 @@ function Class:Release()
 end
 
 -- function Class:OnDestroy()
---     print("1111111111111")
+--     Log("1111111111111")
 -- end
 
-return _ENV
+return Class

@@ -26,14 +26,10 @@ function Class:__init(initHelper)
 end
 
 function Class:StartCountDown(time, state, playSoundFunc)
-    -- if self.co then
-    --     CoroutineHelper.StopCoroutine(self.co)
-    -- end
     if SEnv.CountDownTimerManager.HasTimer(self.timerID) then
         SEnv.CountDownTimerManager.StopTimer(self.timerID)
     end
     self.timerID = nil -- 旧的定时器清理
-
     self.time = time
     -- 游戏状态图片显示
     for i=1,3 do
@@ -63,24 +59,6 @@ function Class:StartCountDown(time, state, playSoundFunc)
     end
 
     self.timerID = SEnv.CountDownTimerManager.StartCountDown(time, doOneSecond)
-
-    -- self.co = CoroutineHelper.StartCoroutine(function ()
-    --     local timerCounter = time - floor(time)
-    --     while true do
-    --         yield()
-    --         local dt = Time.deltaTime
-    --         time = time - dt
-    --         timerCounter = timerCounter - dt
-    --         self.time = time
-    --         if timerCounter <= 0 then
-    --             timerCounter = timerCounter + 1
-    --             if doOneSecond(time) then
-    --                 break
-    --             end
-    --         end
-    --     end
-    --     self.co = nil
-    -- end)
 end
 
 return _ENV

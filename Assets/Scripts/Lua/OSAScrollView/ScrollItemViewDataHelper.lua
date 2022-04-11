@@ -1,16 +1,8 @@
-local GS = GS
-local GF = GF
-local _G, assert, print, table, pairs, setmetatable, getmetatable
-    = _G, assert, print, table, pairs, setmetatable, getmetatable
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
-local next = next
 
-_ENV = {}
-
+-- OSAScorllView 数据管理帮助模块
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -150,4 +142,4 @@ function Class:NotifyListChangeExternally(freezeEndEdge)
     self.OSAScrollView:ResetItems(self:Count(), freezeEndEdge, self.keepVelocityOnCountChange)
 end
 
-return _ENV
+return Class

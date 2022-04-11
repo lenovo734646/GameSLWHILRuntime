@@ -15,7 +15,7 @@ local UserInfo = require'UI.UserInfo'
 local TimerCounterUI = require 'UI.TimerCounterUI'
 local PlayerListPanel = require'PlayerList.PlayerListPanel'
 local Helpers = require'LuaUtil.Helpers'
-local CLSLWHSender = require'protobuffer.CLSLWHSender'
+local GG.CLSLWHSender = require'protobuffer.GG.CLSLWHSender'
 local SEnv = SEnv
 _ENV = {}
 
@@ -120,7 +120,7 @@ end
 -- 设置当前在线人数
 function Class:UpdateOnlinePlayerCount(count)
     if self.playerListPanel.panel.activeSelf then
-        self.playerListPanel:OnSendPlayerListReq(CLSLWHSender)
+        self.playerListPanel:OnSendPlayerListReq(GG.CLSLWHSender)
     end
 end
 
@@ -164,7 +164,7 @@ end
 -- 以下代码为自动生成代码，请勿更改
 function Class:On_tog_PlayerListPanel_Event(tog_PlayerList)
     print("发送玩家列表请求")
-    self.playerListPanel:OnSendPlayerListReq(CLSLWHSender)
+    self.playerListPanel:OnSendPlayerListReq(GG.CLSLWHSender)
 end
 
 function Class:On_btn_Set_Event(btn_Set)

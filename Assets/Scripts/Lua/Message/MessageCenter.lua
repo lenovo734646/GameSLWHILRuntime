@@ -43,7 +43,7 @@ function MessageCenter:_addListener(msgType, event)
         self.dicMsgEvents[msgType] = {}
     end
     if not GF.table.contains(self.dicMsgEvents[msgType], event) then
-        -- print("成功添加这个监听")
+        -- Log("成功添加这个监听")
         table.insert(self.dicMsgEvents[msgType], event)
     end
 end
@@ -90,7 +90,7 @@ function MessageCenter:_removeListener(msgType, event)
     if self.dicMsgEvents[msgType] ~= nil then
         local index = GF.table.contains(self.dicMsgEvents[msgType], event)
         if index then
-            -- print("成功移除这个监听")
+            -- Log("成功移除这个监听")
             GF.table.removebyvalue(self.dicMsgEvents[msgType], event, true)
         end
     end

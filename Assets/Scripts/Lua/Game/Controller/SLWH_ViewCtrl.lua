@@ -18,7 +18,7 @@ local WaitForSeconds = GS.WaitForSeconds
 local yield = coroutine.yield
 
 local PBHelper = require 'protobuffer.PBHelper'
-local CLSLWHSender = require'protobuffer.CLSLWHSender'
+local GG.CLSLWHSender = require'protobuffer.GG.CLSLWHSender'
 local GameConfig = require 'GameConfig'
 local Helpers = require'LuaUtil.Helpers'
 
@@ -217,7 +217,7 @@ function Class:OnSceneReady()
     self:ResetView(roomdata)
     self:PlayIdleStateAnim() -- 开启空闲动画，避免中途加入时动物都是不动的
     -- 主动请求游戏状态数据
-    CLSLWHSender.Send_GetServerDataReq(function(ack)
+    GG.CLSLWHSender.Send_GetServerDataReq(function(ack)
         if ack._errmessage then
             g_Env.CreateHintMessage(ack._errmessage)
         else
@@ -715,6 +715,7 @@ function Class:OnShowState(data)
                 local animalFrom, animalTo = indexdata.animal_form, indexdata.animal_to
                 local itemData = self.runItemDataList[animalTo]
                 table.insert(winItemDataList, itemData)
+                --
                 local timeData = timedataList[i]
                 print("timeData =", timeData, " i = ", i )
                 if timeData ~= nil and not timeData.skipall then
@@ -1109,13 +1110,13 @@ end
 function Class:OnSendBet(item_id, betid)
     -- 用下面这个StartCoroutineGo发送会导致ack顺序不能保证，会导致下注ack返回顺序错误，导致玩家分数错误
     -- CoroutineHelper.StartCoroutineGo(self.View, function()
-    --     local data = CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SEnv.ShowErrorByHintHandler)
+    --     local data = GG.CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SEnv.ShowErrorByHintHandler)
     --     if data then
     --         self:OnReceiveBetAck(data)
     --     end
     -- end)
     -- 暂时改用下面这种方法发送
-    CLSLWHSender.Send_SetBetReq(function (ack)
+    GG.CLSLWHSender.Send_SetBetReq(function (ack)
         if ack._errmessage then
             if g_Env then
                 g_Env.ShowHitMessage(ack._errmessage)
@@ -1148,7 +1149,7 @@ end
 -- 发送请求历史路单数据
 function Class:SendHistoryReq()
     print('SendHistoryReq:')
-    CLSLWHSender.Send_HistoryReq(function (data)
+    GG.CLSLWHSender.Send_HistoryReq(function (data)
         self:OnHistroyAck(data)
     end)
 end

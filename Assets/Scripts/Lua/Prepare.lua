@@ -1,6 +1,6 @@
 SEnv = SubGame_Env
 -- if g_Env then
---     print = function (...)--日志屏蔽
+--     Log = function (...)--日志屏蔽
 --     end
 -- end
 _STR_ = _STR_ or function(str)
@@ -28,14 +28,14 @@ SEnv.Leave = function (...)
     end
 end
 SEnv.MessageBox = g_Env and g_Env.MessageBox or function(str)
-    print('[兼容函数MessageBox]',str)
+    Log('[兼容函数MessageBox]',str)
 end
 
 SEnv.ShowHintMessage = function(contentStr)
     if g_Env then
         g_Env.ShowHitMessage(contentStr)
     else
-        print(contentStr)
+        Log(contentStr)
     end
 end
 

@@ -3,8 +3,8 @@ local GF = GF
 local g_Env = g_Env or {}
 local AssertUnityObjValid = AssertUnityObjValid or {}
 
-local math, print, tostring, typeof, debug, string, assert, coroutine, tonumber
-    = math, print, tostring, typeof, debug, string, assert, coroutine, tonumber
+local math, Log, tostring, typeof, debug, string, assert, coroutine, tonumber
+    = math, Log, tostring, typeof, debug, string, assert, coroutine, tonumber
 
 local luaItemInfo = require 'UI.Item.LuaItemInfo'
 local ItemT = require 'Table.Item'
@@ -56,7 +56,7 @@ local Class = class(nil, {
 
 function Class:SetData(ack)
     self:__init(ack)
-    print("GamePlayer SetData NickName = ", self.NickName, self.Level)
+    Log("GamePlayer SetData NickName = ", self.NickName, self.Level)
 end
 
 function Class:__init(ack)
@@ -106,7 +106,7 @@ function Class:__init(ack)
     self.MagicItemId = ack.magic_item_id
     self.MagicItemSubId = ack.magic_item_sub_id
     self.MagicFactor = ack.magic_factor
-    -- print("打印出luagamePlayer:"..GF.table.print(self))
+    -- Log("打印出luagamePlayer:"..GF.table.Log(self))
 end
 -- 设置金币
 function Class:SetCurrency(currency)
@@ -192,7 +192,7 @@ function Class:SetUnLockGun(unLockGun, delta)
             newValue = unLockGun,
             delta = delta
         }
-        print("玩家炮台倍数:" .. tostring(self.UnLockGun))
+        Log("玩家炮台倍数:" .. tostring(self.UnLockGun))
         g_Env.messageCenter:SendMessage("CLIENT_PLAYER_UNLOCKGUN_CHANGED", msg)
     end
 end
@@ -285,7 +285,7 @@ function Class:DeltaBankCurrency(delta, _reason)
     if delta ~= 0 then
         local _oldValue = self.BankCurrency
         self.BankCurrency = self.BankCurrency + delta
-        -- print("玩家增加的银行金币数:" .. tostring(delta))
+        -- Log("玩家增加的银行金币数:" .. tostring(delta))
         local msg = {
             sender = self,
             oldValue = _oldValue,
@@ -478,7 +478,7 @@ function Class:SetMonthCardExpireTime(value)
             oldValue = _oldValue,
             newValue = value
         }
-        print("发送月卡时间变化消息: ",self.MonthCardExpireTime, value)
+        Log("发送月卡时间变化消息: ",self.MonthCardExpireTime, value)
         g_Env.messageCenter:SendMessage("CLIENT_MONTHCARD_REFRESH", msg)
     end
 end

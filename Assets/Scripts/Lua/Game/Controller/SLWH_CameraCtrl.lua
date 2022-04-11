@@ -1,15 +1,4 @@
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
 
-local DOTweenAnimation = GS.DG.Tweening.DOTweenAnimation
--- local DOTween_AnimationType = DOTweenAnimation.AnimationType
-
-local SEnv = SEnv
-_ENV = {}
 
 -- 控制摄像机DOTween 动画
 local Class = class()
@@ -23,7 +12,7 @@ function Class:__init()
     self.root = CameraRoot
     CameraRoot:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     -- self.eventListener:Init(self)
-	local coms = self.MainCamera:GetComponents(typeof(DOTweenAnimation))
+	local coms = self.MainCamera:GetComponents(typeof(GS.DOTweenAnimation))
 	print("coms = ", coms.Length)
 	for i = 0, coms.Length-1, 1 do
 		print(coms[i])
@@ -69,4 +58,4 @@ function Class:ToShowPoint()
 	self:MoveToPoint(self.showPoint)
 end
 
-return _ENV
+return Class

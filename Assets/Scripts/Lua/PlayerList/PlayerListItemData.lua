@@ -1,14 +1,8 @@
 
 
-local _G, g_Env, print, os, math
-    = _G, g_Env, print, os, math
-local class, typeof, type, string, utf8
-    = class, typeof, type, string, utf8
-
-_ENV = {}
 
 local Class = class()
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -24,4 +18,4 @@ function Class:__init(userID, userName, headID, headFrameID, gold, totalBets, wi
     self.rankImageSpr = rankImageSpr    -- 排名图片精灵
 end
 
-return _ENV
+return Class

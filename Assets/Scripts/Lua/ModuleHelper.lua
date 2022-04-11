@@ -1,6 +1,3 @@
-
-local _G = _G
-
 function moduledef(paramT)
     local t = paramT.t
     local name = paramT.name

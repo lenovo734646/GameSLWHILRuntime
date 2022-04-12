@@ -1,36 +1,9 @@
 
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local tinsert = table.insert
-local tonumber = tonumber
-local Assert = Assert
-
-local Ease = GS.DG.Tweening.Ease
-local Scene3DViewCtrl = require'controller.Scene3DViewCtrl'
-local InfinityScroView = require'OSAScrollView.InfinityScroView'
-local GameConfig = require'GameConfig'
-local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
-local UnityHelper = GS.UnityHelper
-
-local OSACore = GS.OSA.Core
-local ItemCountChangeMode = OSACore.ItemCountChangeMode
-
-local MainUI =  require'UI.MainUI'
-local SimpleSlot = require'controller.SimpleSlot'
-local CameraCtrl = require'controller.CameraCtrl'
-local SEnv = SEnv
-
-
-_ENV = {}
-
-local RUN_ITEM_COUNT = GameConfig.RunItemCount
-local ColorType = GameConfig.ColorType
-local ExWinType = GameConfig.ExWinType
+--
+local RUN_ITEM_COUNT = GG.GameConfig.RunItemCount
+local ColorType = GG.GameConfig.ColorType
+local ExWinType = GG.GameConfig.ExWinType
 
 local Class = class()
 
@@ -51,13 +24,13 @@ function Class:__init(roomdata)
     -- 进入即播放背景音乐，因为是否静音使用音量调节，所以这里一直播放就行了
     AudioManager.Instance:PlayMusic("BGMusic")
     -- EnjoyGame 小老虎机
-    self.slot = SimpleSlot.Create(self.slotPanelInitHelper)
+    self.slot = GG.SLWH_SimpleSlot.Create(self.slotPanelInitHelper)
 
     -- UI
-    self.mainUI = MainUI.Create(roomdata)
+    self.mainUI = GG.SLWH_MainUI.Create(roomdata)
 
     -- CameraCtrl
-    self.cameraCtrl = CameraCtrl.Create()
+    self.cameraCtrl = GG.SLWH_CameraCtrl.Create()
 
     -- 中间获胜动物舞台
     local winStageChildren = {}
@@ -73,7 +46,7 @@ function Class:__init(roomdata)
             item_id = tonumber(gameObject.name),
             animatorHelper = child:GetComponent(typeof(GS.AnimatorHelper)), 
         }
-        tinsert(winStageDataList, childdata)
+        table.insert(winStageDataList, childdata)
         gameObject:SetActive(false)
         for k, v in pairs(arr)do
             local n = tonumber(v)
@@ -111,7 +84,7 @@ function Class:__init(roomdata)
                 end
             end,
         }
-        tinsert(runItemDataList, data)
+        table.insert(runItemDataList, data)
     end
     self.runItemDataList = runItemDataList
 
@@ -123,7 +96,7 @@ function Class:__init(roomdata)
             colorMesh = self.colorRootTransform:GetChild(i):GetComponent("MeshRenderer"),
             animator = self.colorRootTransform:GetChild(i):GetComponent("Animator"),
         }
-        tinsert(colorDataList, data)
+        table.insert(colorDataList, data)
     end
     self.colorDataList = colorDataList
     -- 下注区
@@ -146,7 +119,7 @@ function Class:__init(roomdata)
     self.betAreaList = betAreaList
 
     -- 路单区
-    local roadScrollView = InfinityScroView.Create(self.OSAScrollViewCom)
+    local roadScrollView = GG.InfinityScroView.Create(self.OSAScrollViewCom)
     self.roadScrollView = roadScrollView
     --数据提供接口实现
     roadScrollView.OnCreateViewItemData = function (itemViewGameObject,itemIndex)
@@ -157,7 +130,7 @@ function Class:__init(roomdata)
     end
     --数据更新接口实现（itemViewGameObject会自动回收使用，所以需要对itemViewGameObject进行更新）
     roadScrollView.UpdateViewItemHandler = function (itemdata,index,viewItemData)
-        if not viewItemData or not UnityHelper.IsUnityObjectValid(viewItemData.gameObject) then
+        if not viewItemData or not GS.IsUnityObjectValid(viewItemData.gameObject) then
             return
         end
         local SetAnimalImg = function (animalImg, spr)
@@ -232,7 +205,7 @@ function Class:__init(roomdata)
         if not self.roadScrollView then
             return
         end
-        if changeMode == ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
+        if changeMode == GS.ItemCountChangeMode.INSERT then    --插入则自动滚动到末尾
             local itemsCount = self.roadScrollView:GetItemsCount()
             local tarIndex = itemsCount-1
             local DoneFunc = function ()
@@ -259,7 +232,7 @@ function Class:__init(roomdata)
     self.betSelectBtnsInitHelper = nil
 
     -- ctrl
-    self.ctrl = Scene3DViewCtrl.Create(self,View,roomdata)
+    self.ctrl = GG.SLWH_ViewCtrl.Create(self,View,roomdata)
     return self.ctrl
 end
 
@@ -344,8 +317,8 @@ end
 
 function Class:Release()
     -- 停止所有协程
-    CoroutineHelper.StopAllCoroutines()
-    CoroutineHelper.StopAllCoroutinesAuto(SEnv.CoroutineMonoBehaviour)
+    GG.CoroutineHelper.StopAllCoroutines()
+    GG.CoroutineHelper.StopAllCoroutinesAuto(SEnv.CoroutineMonoBehaviour)
     -- 停止所有动画播放
     for key, data in pairs(self.runItemDataList) do
         if data.animatorHelper and data.animatorHelper:GetAnimator() then
@@ -373,6 +346,4 @@ function Class:Release()
 end
 
 
-
-
-return _ENV
+return Class

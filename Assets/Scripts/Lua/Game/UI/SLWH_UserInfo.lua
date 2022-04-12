@@ -1,13 +1,5 @@
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert
 
-local SEnv = SEnv
-_ENV = {}
-
+-- 玩家信息
 local Class = class()
 
 function Create(...)
@@ -49,4 +41,4 @@ function Class:On_btnUserInfo_Event(btnUserInfo)
 end
 
 
-return _ENV
+return Class

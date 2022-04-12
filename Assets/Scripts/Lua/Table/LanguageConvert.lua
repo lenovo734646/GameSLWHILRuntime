@@ -1,6 +1,6 @@
 
 -- 小游戏自己的语言转换表，大厅里的转换表找不到会从这里找
-local constantStringConvertor = {
+SEnv.LanguageConvert = {
     -- 小游戏
     ["取消语音发送"] = {EN = "Cancel voice sending"},
     ["录音失败，请检查权限"] = {EN = "The recording failed, please check the permissions"},
@@ -26,5 +26,3 @@ local constantStringConvertor = {
     [" 总局数x{1} "] = {EN = "Total x {1}"},
 
 }
-
-return constantStringConvertor

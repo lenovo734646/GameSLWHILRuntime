@@ -1,25 +1,6 @@
 
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local GameObject = GS.GameObject
-local Screen = GS.UnityEngine.Screen
-local Vector2 = GS.UnityEngine.Vector2
-local ChatPanel = require'ChatSystem.ChatPanel'
-local ResultPanel = require'UI.ResultPanel'
-local UserInfo = require'UI.UserInfo'
-local TimerCounterUI = require 'UI.TimerCounterUI'
-local PlayerListPanel = require'PlayerList.PlayerListPanel'
-local Helpers = require'LuaUtil.Helpers'
-local GG.CLSLWHSender = require'protobuffer.GG.CLSLWHSender'
-local SEnv = SEnv
-_ENV = {}
-
-
+-- 主UI界面
 local Class = class()
 
 function Create(...)
@@ -28,23 +9,23 @@ end
 
 
 function Class:__init(roomdata, loader)
-    local View = GameObject.Find('UIRoot/Canvas/MainPanel')
+    local View = GS.GameObject.Find('UIRoot/Canvas/MainPanel')
     self.panel = View
     View:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     self.eventListener:Init(self)
 
     -- 聊天界面
-    self.chatPanel = ChatPanel.Create(self.ChatPanel, SEnv.loader, SEnv.playerRes, SEnv.CoroutineMonoBehaviour)
+    self.chatPanel = GG.ChatPanel.Create(self.ChatPanel, SEnv.loader, SEnv.playerRes, SEnv.CoroutineMonoBehaviour)
     -- 玩家列表界面
-    self.playerListPanel = PlayerListPanel.Create(self.playerListPanel, SEnv.CoroutineMonoBehaviour)
+    self.playerListPanel = GG.PlayerListPanel.Create(self.playerListPanel, SEnv.CoroutineMonoBehaviour)
 
     -- 结算界面
-    self.resultPanel = ResultPanel.Create(self.resultPanelGameObject)
+    self.resultPanel = GG.SLWH_ResultPanel.Create(self.resultPanelGameObject)
     -- 玩家信息
-    self.userInfo = UserInfo.Create(self.userinfo_luainithelper, roomdata)
+    self.userInfo = GG.SLWH_UserInfo.Create(self.userinfo_luainithelper, roomdata)
 
     -- 计时器
-    self.timeCounter = TimerCounterUI.Create(self.timecounter_luainithelper)
+    self.timeCounter = GG.SLWH_TimerCounterUI.Create(self.timecounter_luainithelper)
 
     -- 统计数据
     self.statisicalData  = {}
@@ -59,13 +40,13 @@ function Class:__init(roomdata, loader)
 
     self.gameStateSpineHelper.gameObject:SetActive(true)
     -- 刘海屏适配
-    local offsetX = Screen.safeArea.x
+    local offsetX = GS.Screen.safeArea.x
     local mainUIRectTransform = View:GetComponent("RectTransform")
     local dstLeft = mainUIRectTransform.offsetMin.x + offsetX
     local dstRight = mainUIRectTransform.offsetMax.x + offsetX
 
-    mainUIRectTransform.offsetMin = Vector2(dstLeft, mainUIRectTransform.offsetMin.y)
-    mainUIRectTransform.offsetMax = Vector2(-dstRight, mainUIRectTransform.offsetMax.y)
+    mainUIRectTransform.offsetMin = GS.Vector2(dstLeft, mainUIRectTransform.offsetMin.y)
+    mainUIRectTransform.offsetMax = GS.Vector2(-dstRight, mainUIRectTransform.offsetMax.y)
 end
 
 -- 设置统计数据
@@ -96,12 +77,12 @@ end
 
 -- 设置当前下注
 function Class:SetCurBetScore(betScore)
-    self.betText.text = Helpers.GameNumberFormat(betScore)
+    self.betText.text = GG.Helpers.GameNumberFormat(betScore)
 end
 
 -- 设置当前局数（自己游戏局数非服务器总局数）
 function Class:SetGameCount(count)
-    self.gameCountText.text = Helpers.GameNumberFormat(count)
+    self.gameCountText.text = GG.Helpers.GameNumberFormat(count)
 end
 
 function Class:OnStateChange(state)
@@ -211,14 +192,5 @@ function Class:On_btn_Exit_Event(btn_Exit)
     end
 end
 
--- function Class:On_tog_Music_Event(tog_Music)
---     AudioManager.Instance.MusicAudio.mute = not tog_Music.isOn
--- end
 
--- function Class:On_tog_Effect_Event(tog_Effect)
---     AudioManager.Instance.EffectAudio.mute = not tog_Effect.isOn
--- end
-
-
-
-return _ENV
+return Class

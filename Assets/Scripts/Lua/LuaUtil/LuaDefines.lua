@@ -147,6 +147,7 @@ if not GS then
     meta_GS.TweeningLoopType = CS.DG.Tweening.LoopType
     meta_GS.TweeningPathType = CS.DG.Tweening.PathType
     meta_GS.TweeningPathMode = CS.DG.Tweening.PathMode
+    meta_GS.TweeningRotateMode = CS.DG.Tweening.RotateMode
     meta_GS.DOTweenAnimation = CS.DG.Tweening.DOTweenAnimation
 
     -- System

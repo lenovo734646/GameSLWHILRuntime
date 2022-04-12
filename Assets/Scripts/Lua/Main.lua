@@ -70,7 +70,7 @@ end
 local OnEnterRoomAck = function(enterRoomAckData)
     Log('Send_EnterRoomAck:'..json.encode(enterRoomAckData))
     -- 重新申请当前房间的配置信息，避免房间配置更新之后玩家在游戏内各个房间进出无法拿到最新的房间配置信息
-    local roomCfgData, err = GG.GG.CLSLWHSender.Send_RoomConfigReq_Async(enterRoomAckData.room_id)
+    local roomCfgData, err = GG.CLSLWHSender.Send_RoomConfigReq_Async(enterRoomAckData.room_id)
     Log("roomCfgData:", json.encode(roomCfgData))
     if err then
         -- 获取房间信息失败 返回房间选择列表
@@ -114,7 +114,7 @@ function OnSceneLoaded(scene, mode)
     if scene.name == "RoomSelectScene" then
         gameView = nil
         GG.CoroutineHelper.StartCoroutine(function ()
-            local data, err = GG.GG.CLSLWHSender.Send_AllRoomConfigReq_Async()
+            local data, err = GG.CLSLWHSender.Send_AllRoomConfigReq_Async()
             Log('111Send_AllRoomConfigReq_Async:', json.encode(data))
             -- Log("data.errcode:", data.errcode)
             if data.errcode ~= 0 then
@@ -298,7 +298,7 @@ function OnNetworkReConnect()
         g_Env.uiManager:CloseUI('LoadingUI')
         GG.CoroutineHelper.StopAllCoroutines()
         -- 先重新请求进入房间
-        GG.GG.CLSLWHSender.Send_EnterRoomReq(function (data)
+        GG.CLSLWHSender.Send_EnterRoomReq(function (data)
             if not data._errmessage then
                 OnEnterRoomAck(data)
             else
@@ -326,7 +326,7 @@ local pauseTimestamp = 0
 local lastStateLeftTime = nil
 function OnApplicationPause(b)
     if b then -- 进入后台
-        print("SLWH 进入后台...")
+        Log("SLWH 进入后台...")
         SEnv.gamePause = true
         pauseTimestamp = UnityHelper.GetTimeStampSecond()
         if gameView then
@@ -334,15 +334,15 @@ function OnApplicationPause(b)
                 gameView.mainUI:OnCancelInput()-- 取消语音输入和文字输入
             end
             lastStateLeftTime = gameView.mainUI.timeCounter.time -- 保存进入后台前的状态剩余时间
-            print("lastStateLeftTime = ", lastStateLeftTime)
+            Log("lastStateLeftTime = ", lastStateLeftTime)
         end
     else
-        print("SLWH 进入前台...")
+        Log("SLWH 进入前台...")
         local tempTime = UnityHelper.GetTimeStampSecond()
         local passTime = tempTime - pauseTimestamp + 1 -- 加一秒冗余，避免小数情况判断不到 
-        print("passTime = ", passTime, "lastStateLeftTime = ", lastStateLeftTime)
+        Log("passTime = ", passTime, "lastStateLeftTime = ", lastStateLeftTime)
         if passTime > lastStateLeftTime or passTime > 3 then
-            CoroutineHelper.StopAllCoroutines() -- 确定要重新刷新数据才停止所有协程
+            GG.CoroutineHelper.StopAllCoroutines() -- 确定要重新刷新数据才停止所有协程
             GG.CLSLWHSender.Send_HistoryReq(function (data)
                 gameView.ctrl:OnHistroyAck(data)
             end)
@@ -361,7 +361,7 @@ function OnApplicationPause(b)
 end
 
 function OnApplicationFocus(b)
-    print("SLWH 失去焦点...")
+    Log("SLWH 失去焦点...")
     if not b then -- 失去焦点，手机上切到后台不会调用这个函数而是调用 OnApplicationPause
         if gameView then
             if gameView.mainUI then
@@ -370,20 +370,39 @@ function OnApplicationFocus(b)
         end
     else
         -- 有焦点
-        print("SLWH 获得焦点...")
+        Log("SLWH 获得焦点...")
     end
     -- 测试模拟切后台行为
     -- OnApplicationPause(not b)
 end
 
+-- 这里可以自定义滚动公告栏的位置和宽度
 if g_Env then
     g_Env.systemNoticeCtrl:SetSystemNoticePosition(0, -120)
     g_Env.systemNoticeCtrl:SetSystemNoticeWidth(840)
 end
+-- 根据协议错误码和协议名获取错误描述
+GetServerErrorMsg = function (errcode, msgName)
+    if IsRunInHall then
+        return g_Env.GetServerErrorMsg(errcode, msgName)
+    else
+        return "小游戏独立运行:".. tostring(msgName).. "errcode:".. tostring(errcode)
+    end
+end
 
+local hintMessage = GG.LuaHintMessage.Create()
+-- 小游戏统一提示函数
+ShowTips = function(...)
+    if IsRunInHall then
+        g_Env.ShowTips(...)
+    else
+        hintMessage:CreateHintMessage(...)
+    end
+end
 if IsRunInHall then
     Main()
 else
+    local bPause = false
     -- 测试函数
     function _OnAKeyDown()
         if gameView then

@@ -1,40 +1,12 @@
 
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-local math,pairs = math,pairs
-local Vector3 = GS.UnityEngine.Vector3
-local Ease = GS.DG.Tweening.Ease
-local RotateMode = GS.DG.Tweening.RotateMode
-local table = table
-local tinsert = table.insert
-
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local WaitForSeconds = GS.WaitForSeconds
 local yield = coroutine.yield
+--
+local ColorType = GG.GameConfig.ColorType
+local ExWinType = GG.GameConfig.ExWinType
+local AnimalType = GG.GameConfig.AnimalType
 
-local PBHelper = require 'protobuffer.PBHelper'
-local GG.CLSLWHSender = require'protobuffer.GG.CLSLWHSender'
-local GameConfig = require 'GameConfig'
-local Helpers = require'LuaUtil.Helpers'
-
-local RandomInt = GS.UnityHelper.RandomInt
-local clock = os.clock
-
-local AudioManager = AudioManager or GS.AudioManager
-local SEnv=SEnv
-
-_ENV = {}
-
-local ColorType = GameConfig.ColorType
-local ExWinType = GameConfig.ExWinType
-local AnimalType = GameConfig.AnimalType
-
-local Stopwatch = GS.System.Diagnostics.Stopwatch.StartNew()
+-- local Stopwatch = GS.System.Diagnostics.Stopwatch.StartNew()
 local winItemDataList = {} -- 记录本次所有中奖动物itemData
 local bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
 local bOtherBetAudioPlay = false
@@ -47,6 +19,11 @@ end
 
 function Class:__init(ui,View,roomdata)
     print("3D View Ctrl Init...roomdata.last_bet_id = ", roomdata.last_bet_id)
+    -- 变量初始化
+    winItemDataList = {} -- 记录本次所有中奖动物itemData
+    bSkip = false -- 是否跳过跑马灯动画，如果时间不够就跳过
+    bOtherBetAudioPlay = false
+    --
     self.ui = ui
     self.View = View
     self.roomdata = roomdata
@@ -64,7 +41,7 @@ function Class:__init(ui,View,roomdata)
     self.lastSeletedToggleIndex = 1
     self.lastCurrecy = SEnv.playerRes.currency
 
-    self.timeStamp = clock()
+    self.timeStamp = os.clock()
 
     --监听下注选择事件
     ui.betSelectBtnsEventListener:Init{
@@ -131,18 +108,18 @@ function Class:OnSceneReady()
     -- self.curWinResultData = { win = 0, bet_score = 0, self_score = SEnv.playerRes.currency,}
     -- 网络消息监听
     -- 游戏状态变化
-    PBHelper.AddListener('StateChangeNtf', function (data)
+    GG.PBHelper.AddListener('StateChangeNtf', function (data)
         --print("StateChangeNtf ", data.state)
         self:OnStateChangeNtf(data)
     end)
 
-    PBHelper.AddListener('CaiJinNtf', function (data)
+    GG.PBHelper.AddListener('CaiJinNtf', function (data)
         -- print("彩金消息: caijin_count = ", data.caijin_count)
         ui.mainUI:SetCaiJinCount(data.caijin_count)
     end)
     
     -- 玩家资源变化(金币,钻石，点卷，道具数)
-    PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
+    GG.PBHelper.AddListener('CLPF.ResChangedNtf', function (data)
         --print("分数变化ResChangedNtf...", data.res_type, data.res_value, data.res_delta, data.reason)
         if data.res_type == 2 and data.reason == 42 then  -- 金币改变且是从银行取出
             local win = 0
@@ -154,17 +131,17 @@ function Class:OnSceneReady()
         end
     end)
 
-    PBHelper.AddListener('CLPF.ResSyncNtf', function (data)
+    GG.PBHelper.AddListener('CLPF.ResSyncNtf', function (data)
         print("分数同步ResSyncNtf...", data.currency) -- 此消息暂时不能收到
     end)
 
     -- 本局自己输赢和庄家输赢
-    PBHelper.AddListener('SelfWinResultNtf', function (data)
+    GG.PBHelper.AddListener('SelfWinResultNtf', function (data)
         self:OnSelfWinResultNtf(data)
     end)
 
     -- 其他玩家下注广播
-    PBHelper.AddListener('OtherPlayerSetBetNtf', function (data)
+    GG.PBHelper.AddListener('OtherPlayerSetBetNtf', function (data)
         local item_id = data.info.index_id
         
         --print("OtherPlayerSetBetNtf...", item_id)
@@ -182,8 +159,8 @@ function Class:OnSceneReady()
             if not bOtherBetAudioPlay then
                 AudioManager.Instance:PlaySoundEff2D("betSound")
                 bOtherBetAudioPlay = true
-                CoroutineHelper.StartCoroutine(function ()
-                    yield(WaitForSeconds(0.05))
+                GG.CoroutineHelper.StartCoroutine(function ()
+                    GF.WaitForSeconds(0.05)
                     bOtherBetAudioPlay = nil
                 end)
             end
@@ -193,18 +170,18 @@ function Class:OnSceneReady()
     end)
 
     -- 在线人数  
-    PBHelper.AddListener("OnlinePlayerCountNtf", function (data)
+    GG.PBHelper.AddListener("OnlinePlayerCountNtf", function (data)
         self.ui.mainUI:UpdateOnlinePlayerCount(data.online_count)
     end)
     -- 玩家列表胜利次数
-    PBHelper.AddListener("PlayerWinCountInfoNtf", function (data)
+    GG.PBHelper.AddListener("PlayerWinCountInfoNtf", function (data)
         self.mainUI:UpdateOnlinePlayerCount(data.player_winCount_info_list)
     end)
 
 
 
     -- 统计数据
-    PBHelper.AddListener("StatisticDataNtf", function (data)
+    GG.PBHelper.AddListener("StatisticDataNtf", function (data)
         --print("统计数据："..json.encode(data))
         self.ui.mainUI:SetStatisticData(data.SixiCount, data.SanYuanCount, data.ZhuangCount, 
                                         data.XianCount, data.HeCount, data.AllGameCount)
@@ -257,18 +234,18 @@ function Class:InitAnimalAnimation()
         --动画控制，切换两个空闲状态动画
         data.PlayIdle = function () -- 播放空闲动画
             data.StopAnim()
-            data.animco = CoroutineHelper.StartCoroutine(function ()
+            data.animco = GG.CoroutineHelper.StartCoroutine(function ()
                 while true do
                     -- local delayTime = RandomFloat(0,2)
                     -- yield(WaitForSeconds(delayTime))
                     data.animatorHelper:Play("Idel")
-                    yield(WaitForSeconds(data.animatorHelper:GetDuration("Idel")))
+                    yield(GF.WaitForSeconds(data.animatorHelper:GetDuration("Idel")))
                 end
             end)
         end
         data.StopAnim = function () -- 停止动画
             if data.animco then
-                CoroutineHelper.StopCoroutine(data.animco)
+                GG.CoroutineHelper.StopCoroutine(data.animco)
                 data.animco = nil
             end
         end
@@ -313,7 +290,7 @@ function Class:InitAnimalAnimation()
                 data.transform.localEulerAngles = jumpTargetRot
                 data.animatorHelper:Play("Idel1") -- 避免结算时进入动物不动
             else
-                data.transform:DOLocalMove(jumpTargetPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
+                data.transform:DOLocalMove(jumpTargetPos, 0.9):SetDelay(0.2):SetEase(GS.TweeningEase.InOutQuad)
                 data.transform:DOLocalRotate(jumpTargetRot, 0.2):SetDelay(0.9)
                 data.animatorHelper:Play("Jump")
                 data.animatorHelper:SetBool("bJumpToCenter", true)
@@ -350,7 +327,7 @@ function Class:InitAnimalAnimation()
                 data.transform.localPosition = data.originalPos
                 data.transform.localEulerAngles = data.originalRot
             else
-                data.transform:DOLocalMove(data.originalPos, 0.9):SetDelay(0.2):SetEase(Ease.InOutQuad)
+                data.transform:DOLocalMove(data.originalPos, 0.9):SetDelay(0.2):SetEase(GS.TweeningEase.InOutQuad)
                 data.transform:DOLocalRotate(data.originalRot, 0.2):SetDelay(0.9)
                 data.animatorHelper:Play("Jump")
                 -- data.animatorHelper:SetBool("bJumpToCenter", false)
@@ -447,7 +424,7 @@ end
 
 function Class:OnContinueBtnClicked()
     if self:__GetContinueBetScore() <= 0 then
-        SEnv.ShowHintMessage(_G._STR_"上局没有下注记录")
+        ShowTips(_G._STR_"上局没有下注记录")
         return 
     end
     for item_id, betScore in pairs(self.betSnapShot) do  -- 共有几个下注区域需要下注
@@ -479,7 +456,7 @@ function Class:ConvertBetScoreToBetIndex(betScore)
             local c = math.floor(betScore / betScoreList[i])
             betScore = betScore - c * betScoreList[i]
             -- print("i = "..i.."  商"..c.."  剩余"..betScore)
-            tinsert(betData, {betid = i - 1, count = c})
+            table.insert(betData, {betid = i - 1, count = c})
         end
     end
     return betData
@@ -583,7 +560,7 @@ function Class:OnShowState(data)
     if winColor == ColorType.SiXi then
         local animalRatioArray = {}
         for i = AnimalType.Lion, AnimalType.Rabbit, 1 do
-            tinsert(animalRatioArray, self:__GetRatio(winSiXiColor, i))
+            table.insert(animalRatioArray, self:__GetRatio(winSiXiColor, i))
         end
         local sixiData = {
             sixiColor_id = winSiXiColor,
@@ -594,7 +571,7 @@ function Class:OnShowState(data)
     elseif winColor == ColorType.SanYuan then
         local animalRatioArray = {}
         for i = ColorType.Red, ColorType.Yellow, 1 do
-            tinsert(animalRatioArray, self:__GetRatio(i, winAnimal))
+            table.insert(animalRatioArray, self:__GetRatio(i, winAnimal))
         end
         local sanyuanData = {
             animal_id =  winAnimal,
@@ -655,7 +632,7 @@ function Class:OnShowState(data)
         -- print("开始时间分片...leftTime = ", leftTime)
         for i = 1, winItemCount, 1 do
             local timedata = {skipall = true}
-            tinsert(timedataList, 1, timedata)  -- 需要跳过也要有个占位的
+            table.insert(timedataList, 1, timedata)  -- 需要跳过也要有个占位的
             if leftTime <= 0 then
                 print("leftTime <= 0 时间分片结束...")
                 break
@@ -708,7 +685,7 @@ function Class:OnShowState(data)
         winItemDataList = {} 
         ui.cameraCtrl:ToRotatePoint() -- 摄像机到转动位置
         print("ShowRunTime = ", ShowResultTime, "winItemCount = ", winItemCount)
-        self.showCO = CoroutineHelper.StartCoroutine(function ()
+        self.showCO = GG.CoroutineHelper.StartCoroutine(function ()
             for i=1, winItemCount do
                 local indexdata = anim_result_list[i]
                 local colorFrom,colorTo = indexdata.color_form,indexdata.color_to
@@ -740,7 +717,7 @@ function Class:OnShowState(data)
                             print("不跳过跳入动画并且播放胜利动画", timeData.jumpToWinStageAndVictoryTime, timeData.skipJumpToWinStageAndVictory)
                             itemData.JumpToWinStage(winItemCount, i, false) -- false 不跳过跳入动画
                         end
-                        yield(WaitForSeconds(timeData.jumpToWinStageAndVictoryTime))
+                        yield(GF.WaitForSeconds(timeData.jumpToWinStageAndVictoryTime))
                     else
                         print("直接设置结果到讲台.....")
                         itemData.JumpToWinStage(winItemCount, i, true) -- 跳过跳入动画直接设置位置到中间奖台
@@ -754,7 +731,7 @@ function Class:OnShowState(data)
                             else
                                 itemData.JumpToOriginal(false)  
                             end
-                            yield(WaitForSeconds(timeData.jumpToOriginalTime))
+                            yield(GF.WaitForSeconds(timeData.jumpToOriginalTime))
                         end
                         ui.cameraCtrl:ToRotatePoint() -- 摄像机位置还原到转动位置，准备转下一个               
                     end
@@ -776,7 +753,7 @@ function Class:OnShowState(data)
             resultPanel:ShowResult(self.resultPanelData)
             ui.cameraCtrl:ToRotatePoint() --摄像机偷偷归位
             -- 以下挪到FreeState试试看
-            yield(WaitForSeconds(ShowResultTime))
+            yield(GF.WaitForSeconds(ShowResultTime))
             resultPanel:HideResult()
             if winColor == GameConfig.ColorType.SanYuan or winColor == GameConfig.ColorType.SiXi then
                 AudioManager.Instance:StopAllSoudEff()   -- 三元四喜音乐太长这里截断（或看情况做其他处理）
@@ -791,7 +768,7 @@ function Class:OnShowState(data)
                 end
             end
             if bSkip == false then
-                yield(WaitForSeconds(GameConfig.JumpTime))
+                yield(GF.WaitForSeconds(GameConfig.JumpTime))
             end
             -- print("关闭花瓣....")
             ui.winStage_huaban_animatorhelper:Play("Close") -- 播放花瓣关闭动画
@@ -848,17 +825,17 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
 
     local arrow_transform = ui.arrow_transform
     local colorStartRot = (colorFromindex - 1)*15
-    arrow_transform.eulerAngles = Vector3(0, colorStartRot, 0)
+    arrow_transform.eulerAngles = GS.Vector3(0, colorStartRot, 0)
     local arrowTotalRot = colorTotalWillRunCount*15
     --print("箭头转动数量：", colorTotalWillRunCount)
     --
-    local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-    CoroutineHelper.StartCoroutine(function ()
+    local curve =  GameConfig.Ease[GS.RandomInt(1,#GameConfig.Ease)]
+    GG.CoroutineHelper.StartCoroutine(function ()
         local fixTime = time - 1 -- 避免重连时间不够，指针直接跳到结束点
         if fixTime < 0.5 then
             fixTime = time
         end
-        yield(arrow_transform:DORotate(Vector3(0, -arrowTotalRot, 0), fixTime, RotateMode.LocalAxisAdd)
+        yield(arrow_transform:DORotate(GS.Vector3(0, -arrowTotalRot, 0), fixTime, GS.TweeningRotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         local colordata = colorDataList[colorToindex]
         colordata.animator.enabled = true  -- 播放中奖颜色闪烁动画
@@ -893,13 +870,13 @@ function Class:DoTweenShowResultAnim(colorFromindex, colorToindex, animalFromind
     local animalStartRot = (tIndex)*15
     --print("动物转动数量：", animalTotalWillRunCount)
     local animalRotRoot_transform = ui.animal_rotate_root_transform
-    animalRotRoot_transform.eulerAngles = Vector3(0, animalStartRot, 0)
+    animalRotRoot_transform.eulerAngles = GS.Vector3(0, animalStartRot, 0)
     local animalTotalRot = animalTotalWillRunCount*15
-    local curve =  GameConfig.Ease[RandomInt(1,#GameConfig.Ease)]
-    return CoroutineHelper.StartCoroutine(function ()
+    local curve =  GameConfig.Ease[GS.RandomInt(1,#GameConfig.Ease)]
+    return GG.CoroutineHelper.StartCoroutine(function ()
         local dur = time  -- 错开一点不同时停止
         --print("动物开转 = ", animalTotalRot, dur, time)
-        yield(animalRotRoot_transform:DORotate(Vector3(0, animalTotalRot, 0), dur, RotateMode.LocalAxisAdd)
+        yield(animalRotRoot_transform:DORotate(GS.Vector3(0, animalTotalRot, 0), dur, GS.TweeningRotateMode.LocalAxisAdd)
         :SetEase(curve):WaitForCompletion())
         yield()
     end)
@@ -1109,7 +1086,7 @@ end
 -- 押注网络协议处理
 function Class:OnSendBet(item_id, betid)
     -- 用下面这个StartCoroutineGo发送会导致ack顺序不能保证，会导致下注ack返回顺序错误，导致玩家分数错误
-    -- CoroutineHelper.StartCoroutineGo(self.View, function()
+    -- GG.CoroutineHelper.StartCoroutineGo(self.View, function()
     --     local data = GG.CLSLWHSender.Send_SetBetReq_Async(item_id, betid, SEnv.ShowErrorByHintHandler)
     --     if data then
     --         self:OnReceiveBetAck(data)
@@ -1168,7 +1145,7 @@ function Class:OnHistroyAck(data)
         local list = {}
         for _,info in ipairs(record_list)do
             local itemData = ui:GetHistoryIconData(info)
-            tinsert(list, itemData)
+            table.insert(list, itemData)
         end
         ui.roadScrollView:ReplaceItems(list)
         ui.roadScrollView:SmoothScrollToEnd()
@@ -1214,12 +1191,12 @@ end
 -- 设置自己下注分数
 function Class:__SetSelfBetScore(id, score)
     self.selfBetMap[id] = score
-    self.ui.betAreaList[id].selfBetScore.text = Helpers.GameNumberFormat(score)
+    self.ui.betAreaList[id].selfBetScore.text = GG.Helpers.GameNumberFormat(score)
 end
 -- 设置全体下注分数
 function Class:__SetTotalBetScore(id, score)
     self.totalBetMap[id] = score
-    self.ui.betAreaList[id].totalBetScore.text = Helpers.GameNumberFormat(score)
+    self.ui.betAreaList[id].totalBetScore.text = GG.Helpers.GameNumberFormat(score)
 end
 
 -- 重置所有下注分数
@@ -1266,8 +1243,8 @@ function Class:__SetArrowAndAnimalRot(color_index, animal_index)
     local animalRot = (animalIndex)*15
     -- print("同步指针角度:", roomdata.last_color_index, zhizhenRot)
     -- print("同步动物角度:", roomdata.last_animal_index, animalRot)
-    self.ui.arrow_transform.localEulerAngles = Vector3(0, zhizhenRot, 0)
-    self.ui.animal_rotate_root_transform.localEulerAngles = Vector3(0, animalRot, 0)
+    self.ui.arrow_transform.localEulerAngles = GG.Vector3(0, zhizhenRot, 0)
+    self.ui.animal_rotate_root_transform.localEulerAngles = GG.Vector3(0, animalRot, 0)
 end
 
 -- function Class:__SetAnimalRot(color_index, animal_index)
@@ -1284,4 +1261,4 @@ function Class:OnDestroy()
     self.ui:Release()
 end
 
-return _ENV
+return Class

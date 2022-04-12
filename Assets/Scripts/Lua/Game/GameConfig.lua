@@ -1,5 +1,5 @@
-local Tweening = CS.DG.Tweening
 
+-- 小游戏配置文件
 local Config={
     debug = false,
     ShowRunTime = 4,
@@ -27,15 +27,6 @@ local Config={
             return require("protobuffer."..pkgname)
         end
     end,
-
-    Ease = {
-        Tweening.Ease.InOutSine, Tweening.Ease.InOutQuad,
-        -- Tweening.Ease.InOutQuad, Tweening.Ease.InOutCubic,
-        -- Tweening.Ease.InOutCubic, Tweening.Ease.InOutQuart,
-        -- Tweening.Ease.InOutQuart, Tweening.Ease.InOutQuint,
-        -- Tweening.Ease.InOutExpo, Tweening.Ease.InOutFlash,
-        -- Tweening.Ease.InOutCirc, Tweening.Ease.InOutFlash
-    },
 
     -- 游戏状态 1=下注 2=开奖 3=空闲 
     GameState = {

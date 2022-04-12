@@ -1,17 +1,6 @@
 
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
 
-
-local GameConfig = require'GameConfig'
-
-_ENV = {}
-
-
+-- 结算界面
 local Class = class()
 
 function Create(...)
@@ -177,4 +166,4 @@ function Class:__GetNumString(num)
     return numStr
 end
 
-return _ENV
+return Class

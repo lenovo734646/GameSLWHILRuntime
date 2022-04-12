@@ -1,16 +1,5 @@
 
-local GS = GS
-local GF = GF
-local _G = _G
-local g_Env, class = g_Env, class
-local pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
-    = pairs, json, table, math, print, tostring, typeof, debug, LogE, string, assert, tonumber
-
-local floor = math.floor
-local SEnv = SEnv
-
-_ENV = {}
-
+-- 倒计时
 local Class = class()
 
 function Create(...)
@@ -41,13 +30,13 @@ function Class:StartCountDown(time, state, playSoundFunc)
     end
     --
     local timeText = self.timeText
-    timeText.text = tostring(floor(time+0.5))
+    timeText.text = tostring(math.floor(time+0.5))
 
     --
     local function doOneSecond(leftTime, bFinish)
         -- print("leftTime real = "..leftTime)
         self.time = leftTime
-        leftTime = floor(leftTime+0.5)
+        leftTime = math.floor(leftTime+0.5)
         if playSoundFunc ~= nil then
             playSoundFunc(leftTime)
         end
@@ -61,4 +50,4 @@ function Class:StartCountDown(time, state, playSoundFunc)
     self.timerID = SEnv.CountDownTimerManager.StartCountDown(time, doOneSecond)
 end
 
-return _ENV
+return Class

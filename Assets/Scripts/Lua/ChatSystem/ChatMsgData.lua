@@ -1,12 +1,7 @@
 
-
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-_ENV = {}
-
+--
 local Class = class()
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -27,4 +22,4 @@ function Class:GetTimeStamp()
     return os.date( "%H:%M:%S", self.timestampSec)
 end
 
-return _ENV
+return Class

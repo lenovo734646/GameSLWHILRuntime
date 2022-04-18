@@ -1,11 +1,12 @@
-local SEnv = SEnv or {}
-local CS = CS or {}
+local GS = GS
+local GF = GF
+local g_Env = g_Env or {}
+local AssertUnityObjValid = AssertUnityObjValid or {}
 
-local math, print, tostring, typeof, debug, string, assert, coroutine, tonumber =
-    math, print, tostring, typeof, debug, string, assert, coroutine, tonumber
+local math, Log, tostring, typeof, debug, string, assert, coroutine, tonumber
+    = math, Log, tostring, typeof, debug, string, assert, coroutine, tonumber
 
 local luaItemInfo = require 'UI.Item.LuaItemInfo'
-local FishGunForgeT = require 'Table.FishGunForge'
 local ItemT = require 'Table.Item'
 
 local Class = class(nil, {
@@ -47,10 +48,21 @@ local Class = class(nil, {
     MagicValue = 0, -- 魔力值
     MagicItemId = 0,
     MagicFactor = 0,
-    BankCurrency = 0 -- 银行资产
+    BankCurrency = 0, -- 银行资产
+    customHeadData = {},
+    HeadUrl = '',
+    Token = '',
 })
 
+function Class:SetData(ack)
+    self:__init(ack)
+    Log("GamePlayer SetData NickName = ", self.NickName, self.Level)
+end
+
 function Class:__init(ack)
+    if ack == nil then
+        return
+    end
     self.UserID = ack.user_id
     self.NickName = ack.nickname
     self.IsChangeName = ack.nickname_mdf and 1 or 0
@@ -67,12 +79,13 @@ function Class:__init(ack)
     self.BindCurrency = ack.bind_currency
     self.Diamond = ack.diamond
     self.integral = ack.integral
+    self.HeadUrl = ack.head_url
     for i = 1, #(ack.items) do
         local item = ack.items[i]
         local itemInfo = luaItemInfo(item.item_id, item.item_sub_id, item.item_count)
         table.insert(self.ItemList, itemInfo)
     end
-    CS.TimeHelper.SetServerTimestamp(ack.server_timestamp * 1000)
+    GS.TimeHelper.SetServerTimestamp(ack.server_timestamp * 1000)
     self.GuildId = ack.guild_id
     self.GuildJoinListState = ack.guild_join_list_state
     self.MonthCardExpireTime = ack.month_card_expire_time
@@ -82,10 +95,10 @@ function Class:__init(ack)
     self.HasUnReadMail = ack.has_unread_mail
     self.FetchedFirstPackage = ack.fetched_first_package
     local max_gun_value = ack.max_gun_value
-    local fistGun = table.FindBy(FishGunForgeT, function(g)
-        return g.Id == 1
-    end)
-    self.UnLockGun = math.max(max_gun_value, fistGun.GunValue)
+    -- local fistGun = GF.table.FindBy(FishGunForgeT, function(g)
+    --     return g.Id == 1
+    -- end)
+    self.UnLockGun = max_gun_value --math.max(max_gun_value, fistGun.GunValue)
     self.BankPasswordFlag = ack.bank_password_flag
     self.RankRewardGold = ack.rank_reward_gold
     self.RankRewardWarhead = ack.rank_reward_warhead
@@ -93,7 +106,7 @@ function Class:__init(ack)
     self.MagicItemId = ack.magic_item_id
     self.MagicItemSubId = ack.magic_item_sub_id
     self.MagicFactor = ack.magic_factor
-    -- print("打印出luagamePlayer:"..table.print(self))
+    -- Log("打印出luagamePlayer:"..GF.table.Log(self))
 end
 -- 设置金币
 function Class:SetCurrency(currency)
@@ -105,7 +118,7 @@ function Class:SetCurrency(currency)
             oldValue = _oldValue,
             newValue = self.Currency
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_CURRENCY_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_CURRENCY_CHANGED", msg)
     end
 end
 -- 设置银行资产
@@ -118,7 +131,7 @@ function Class:SetBankCurrency(bankCurrency)
             oldValue = _oldValue,
             newValue = self.BankCurrency
         }
-        SEnv.messageCenter:SendMessage("CLIENT_BANK_CURRENCY_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_BANK_CURRENCY_CHANGED", msg)
     end
 end
 
@@ -132,15 +145,15 @@ function Class:SetDiamond(diamond)
             oldValue = _oldValue,
             newValue = self.Diamond
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_DIAMOND_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_DIAMOND_CHANGED", msg)
     end
 end
 -- 道具变化
 function Class:SetItem(items)
-    if table.nums(items) > 0 then
+    if GF.table.nums(items) > 0 then
         for i = 1, #items do
             local t = luaItemInfo(items[i].item_id, items[i].item_sub_id, items[i].item_count)
-            local item = table.FindBy(self.ItemList, function(a)
+            local item = GF.table.FindBy(self.ItemList, function(a)
                 return a.ItemID == t.ItemID and a.ItemSubID == t.ItemSubID
             end)
             if item ~= nil then
@@ -150,7 +163,7 @@ function Class:SetItem(items)
             end
             local _content = ItemT[items[i].item_id][items[i].item_sub_id]
 
-            SEnv.messageCenter:SendMessage("CLIENT_PLAYER_ITEM_CHANGED", {
+            g_Env.messageCenter:SendMessage("CLIENT_PLAYER_ITEM_CHANGED", {
                 sender = self,
                 content = _content
             })
@@ -162,7 +175,7 @@ function Class:GetItem(id, subId)
     if #(self.ItemList) == 0 then
         return nil
     else
-        local item = table.FindBy(self.ItemList, function(a)
+        local item = GF.table.FindBy(self.ItemList, function(a)
             return a.ItemID == id and a.ItemSubID == subId
         end)
         return item
@@ -179,8 +192,8 @@ function Class:SetUnLockGun(unLockGun, delta)
             newValue = unLockGun,
             delta = delta
         }
-        print("玩家炮台倍数:" .. tostring(self.UnLockGun))
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_UNLOCKGUN_CHANGED", msg)
+        Log("玩家炮台倍数:" .. tostring(self.UnLockGun))
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_UNLOCKGUN_CHANGED", msg)
     end
 end
 
@@ -218,7 +231,7 @@ function Class:DeltaDiamond(delta, _reason)
             delta = delta,
             reason = _reason
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_DIAMOND_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_DIAMOND_CHANGED", msg)
     end
 end
 -- 金币变化
@@ -237,10 +250,10 @@ function Class:DeltaCurrency(delta, _reason)
             reason = _reason
         }
 
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_CURRENCY_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_CURRENCY_CHANGED", msg)
 
         --给小游戏发送(兼容措施)
-        if _G.MessageCenter and _G.MessageCenter.instance then
+        if GS.MessageCenter and GS.MessageCenter.instance then
             local ppt = {
                 Reason = _reason,
                 Delta = delta,
@@ -263,7 +276,7 @@ function Class:DeltaCurrency(delta, _reason)
                 end
                 
             end
-            _G.MessageCenter.instance:SendMessage("CLIENT_PLAYER_CURRENCY_CHANGED", msg)
+            GS.MessageCenter.instance:SendMessage("CLIENT_PLAYER_CURRENCY_CHANGED", msg)
         end
     end
 end
@@ -272,14 +285,14 @@ function Class:DeltaBankCurrency(delta, _reason)
     if delta ~= 0 then
         local _oldValue = self.BankCurrency
         self.BankCurrency = self.BankCurrency + delta
-        -- print("玩家增加的银行金币数:" .. tostring(delta))
+        -- Log("玩家增加的银行金币数:" .. tostring(delta))
         local msg = {
             sender = self,
             oldValue = _oldValue,
             newValue = self.BankCurrency,
             delta = delta
         }
-        SEnv.messageCenter:SendMessage("CLIENT_BANK_CURRENCY_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_BANK_CURRENCY_CHANGED", msg)
     end
 end
 -- 绑定金币变化
@@ -297,7 +310,7 @@ function Class:DeltaBindCurrency(delta, _reason)
             delta = delta,
             reason = _reason
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_BINDCURRENCY_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_BINDCURRENCY_CHANGED", msg)
     end
 end
 -- 积分变化
@@ -315,7 +328,7 @@ function Class:DeltaIntegral(delta, _reason)
             delta = delta,
             reason = _reason
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_INTEGRAL_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_INTEGRAL_CHANGED", msg)
     end
 end
 
@@ -329,8 +342,8 @@ function Class:SetNewHead(headId)
             oldValue = _oldValue,
             newValue = headId
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_HEADID", msg)
-        SEnv.accountListManager:UpdateAccountHead(headId)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_HEADID", msg)
+        g_Env.accountListManager:UpdateAccountHead(headId)
     end
 end
 -- 设置头像框
@@ -343,8 +356,8 @@ function Class:SetNewFrame(frameId)
             oldValue = _oldValue,
             newValue = frameId
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_FRAMEID", msg)
-        SEnv.accountListManager:UpdateAccountFrame(frameId)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_FRAMEID", msg)
+        g_Env.accountListManager:UpdateAccountFrame(frameId)
     end
 end
 -- 设置昵称
@@ -358,8 +371,8 @@ function Class:SetNickName(nickName)
             oldValue = _oldValue,
             newValue = nickName
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_NICKNAME", msg)
-        SEnv.accountListManager:UpdateAccountNickname(nickName)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_NICKNAME", msg)
+        g_Env.accountListManager:UpdateAccountNickname(nickName)
     end
 end
 -- vip经验变化
@@ -373,7 +386,7 @@ function Class:SetVipLevel(vipLevel, vipLevelExp)
         VIPLevelExp = vipLevelExp,
         VIPLevelChange = vipLevelChange
     }
-    SEnv.messageCenter:SendMessage("CLIENT_PLAYER_VIPLEVEL", msg)
+    g_Env.messageCenter:SendMessage("CLIENT_PLAYER_VIPLEVEL", msg)
 end
 -- 经验变化
 function Class:SetLevelExp(exp)
@@ -382,7 +395,7 @@ function Class:SetLevelExp(exp)
         sender = self,
         Exp = exp
     }
-    SEnv.messageCenter:SendMessage("CLIENT_PLAYER_LEVELEXP", msg)
+    g_Env.messageCenter:SendMessage("CLIENT_PLAYER_LEVELEXP", msg)
 end
 -- 等级变化
 function Class:SetLevel(level, items)
@@ -392,13 +405,13 @@ function Class:SetLevel(level, items)
         Level = level,
         Items = items
     }
-    SEnv.messageCenter:SendMessage("CLIENT_PLAYER_LEVEL", msg)
+    g_Env.messageCenter:SendMessage("CLIENT_PLAYER_LEVEL", msg)
 end
 
 -- 设置倍击倍数
 function Class:SetMultipleHitRate(rate)
     self.MultipleHit = rate
-    SEnv.messageCenter:SendMessage("ROOM_MUILTIPLE_HIT_CHANGE", {
+    g_Env.messageCenter:SendMessage("ROOM_MUILTIPLE_HIT_CHANGE", {
         sender = self
     })
 end
@@ -406,7 +419,7 @@ end
 -- 设置激光炮能量
 function Class:SetLaserEnergy(value)
     self.LaserGunEnergy = value
-    SEnv.messageCenter:SendMessage("ROOM_PLAYER_LASER_ENERGY_CHANGE", {
+    g_Env.messageCenter:SendMessage("ROOM_PLAYER_LASER_ENERGY_CHANGE", {
         sender = self
     })
 end
@@ -418,7 +431,7 @@ function Class:DeltaLaserEnergy(delta)
         if self.LaserGunEnergy < 0 then
             self.LaserGunEnergy = 0
         end
-        SEnv.messageCenter:SendMessage("ROOM_PLAYER_LASER_ENERGY_CHANGE", {
+        g_Env.messageCenter:SendMessage("ROOM_PLAYER_LASER_ENERGY_CHANGE", {
             sender = self
         })
     end
@@ -433,7 +446,7 @@ function Class:SetMagicValue(value)
             oldValue = _oldValue,
             newValue = value
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_MAGIC_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_MAGIC_CHANGED", msg)
     end
 end
 -- 能量值变化
@@ -451,7 +464,7 @@ function Class:DeltaMagicValue(delta, _reason)
             delta = delta,
             reason = _reason
         }
-        SEnv.messageCenter:SendMessage("CLIENT_PLAYER_MAGIC_CHANGED", msg)
+        g_Env.messageCenter:SendMessage("CLIENT_PLAYER_MAGIC_CHANGED", msg)
     end
 end
 
@@ -465,8 +478,8 @@ function Class:SetMonthCardExpireTime(value)
             oldValue = _oldValue,
             newValue = value
         }
-        print("发送月卡时间变化消息: ",self.MonthCardExpireTime, value)
-        SEnv.messageCenter:SendMessage("CLIENT_MONTHCARD_REFRESH", msg)
+        Log("发送月卡时间变化消息: ",self.MonthCardExpireTime, value)
+        g_Env.messageCenter:SendMessage("CLIENT_MONTHCARD_REFRESH", msg)
     end
 end
 
@@ -487,7 +500,7 @@ function Class:Release()
     self.BindCurrency = 0
     self.Diamond = 0
     self.integral = 0
-    CS.TimeHelper.SetServerTimestamp(0)
+    GS.TimeHelper.SetServerTimestamp(0)
     self.GuildId = 0
     self.GuildJoinListState = false
     self.MonthCardExpireTime = 0

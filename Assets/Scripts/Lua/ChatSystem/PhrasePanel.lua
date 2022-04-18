@@ -1,15 +1,4 @@
 
-local _G, g_Env, print, log, logError, os, math = _G, g_Env, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-local pairs = pairs
-local UnityEngine, GameObject, Image, Button = UnityEngine, GameObject, UnityEngine.UI.Image, UnityEngine.UI.Button
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local WaitForSeconds = UnityEngine.WaitForSeconds
-local _STR_ = _STR_
-local SysDefines = SysDefines
-_ENV = moduledef { seenamespace = CS }
 
 -- 常用语快捷聊天界面
 -- 快速聊天
@@ -44,27 +33,27 @@ local FontSize = 30
 
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
 function Class:__init(panel, itemPrefab)
     self.panel = panel
-    panel:GetComponent(typeof(LuaInitHelper)):Init(self)
+    panel:GetComponent(typeof(GS.LuaInitHelper)):Init(self)
     --
     if itemPrefab == nil then
-        logError("emojiPrefab is nil")
+        GF.logError("emojiPrefab is nil")
         return
     end
-    local curLanguage = SysDefines.curLanguage
+    local curLanguage = GS.SysDefines.curLanguage
     if curLanguage~='CN' then
         FontSize = 20
     end
     self.itemCount = #PhraseDataTable
     for k, v in pairs(PhraseDataTable) do
         local data = {}
-        local go = GameObject.Instantiate(itemPrefab, self.scrollView.content.transform)
-        go:GetComponent(typeof(LuaInitHelper)):Init(data)
+        local go = GS.Instantiate(itemPrefab, self.scrollView.content.transform)
+        go:GetComponent(typeof(GS.LuaInitHelper)):Init(data)
         go.name = v.index
         data.phraseText.fontSize = FontSize
         data.phraseText.text = v.txt
@@ -75,7 +64,7 @@ function Class:__init(panel, itemPrefab)
 end
 
 function Class:OnPhraseClick(data)
-    print("点击快捷常用语：index = ", data.index, data.txt, data.sound)
+    Log("点击快捷常用语：index = ", data.index, data.txt, data.sound)
 
     if self.OnPhraseClickCallBack ~= nil then
         self.OnPhraseClickCallBack(data)
@@ -108,10 +97,12 @@ function Class:Release()
     if self.scrollView and self.scrollView.content then
         for i = 0, self.scrollView.content.transform.childCount-1 do
             local go = self.scrollView.content.transform:GetChild(i)
-            go:GetComponent(typeof(Button)).onClick:RemoveAllListeners()
+            local btn = go:GetComponent(typeof(GS.Button))
+            btn.onClick:RemoveAllListeners()
+            btn.onClick:Invoke()
         end
     end
     self.OnPhraseClickCallBack = nil
 end
 
-return _ENV
+return Class

@@ -1,15 +1,8 @@
 
-local _G, assert, print, log, table, pairs, setmetatable,getmetatable = _G, assert, print, log, table, pairs, setmetatable, getmetatable
-local class, typeof, type, string, utf8, logError = class, typeof, type, string, utf8, logError
-local next = next
-
-
-
-_ENV = {}
-
+-- OSAScorllView 数据管理帮助模块
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
@@ -60,7 +53,7 @@ end
 
 function Class:InsertOne(index, item, freezeEndEdge)
     if item == nil then
-        logError("InsertItems models is null index = "..index)
+        GF.logError("InsertItems models is null index = "..index)
     end
     table.insert(self.itemList, index, item)
     return self:Insert(index, 1, freezeEndEdge)
@@ -149,4 +142,4 @@ function Class:NotifyListChangeExternally(freezeEndEdge)
     self.OSAScrollView:ResetItems(self:Count(), freezeEndEdge, self.keepVelocityOnCountChange)
 end
 
-return _ENV
+return Class

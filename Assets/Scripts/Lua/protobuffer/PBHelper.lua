@@ -1,5 +1,5 @@
-local _G, CS = _G, CS
-
+local GS = GS
+local GF = GF
 local protoc = require "protobuffer.protoc"
 local pb = require "pb"
 local pbencode = pb.encode
@@ -8,8 +8,9 @@ local pbdecode = pb.decode
 local assert, debug, print, require, io, tostring = assert, debug, print, require, io, tostring
 local tinsert = table.insert
 local tremove = table.remove
-local logError, logWarning, log = logError, logWarning, print
 local Config = require 'Config'
+local LogW_,log,tostring
+    = LogW,Log,tostring
 _ENV = {}
 
 -- local function LogE(str)
@@ -17,7 +18,7 @@ _ENV = {}
 -- end
 
 local function LogW(str)
-    logWarning('[PBHelper]' .. str .. '\n' .. debug.traceback())
+    LogW_('[PBHelper]' .. str .. '\n' .. debug.traceback())
 end
 
 local function Log(str)
@@ -38,7 +39,7 @@ end
 
 function Init(defautpbpackagename_)
     if not netComponent then
-        local NetInstance = CS.NetController.Instance
+        local NetInstance = GS.NetController.Instance
         netComponent = NetInstance.netComponent
         comSendFunc = netComponent.Send
         assert(netComponent)
@@ -48,7 +49,7 @@ function Init(defautpbpackagename_)
     protoc:load(Config:LoadPBString(defautpbpackagename_), defautpbpackagename_)
 end
 function Reset()
-    netComponent = CS.NetController.Instance.netComponent
+    netComponent = GS.NetController.Instance.netComponent
     comSendFunc = netComponent.Send
 end
 
@@ -78,7 +79,7 @@ end
 
 function AddListener(name, callback, self)
     -- Log('AddListener name:'..name)
-    if not name:Contains('.') then
+    if not GF.string.Contains(name, '.') then
         name = defautpkgnamewithpoint .. name
     end
 
@@ -110,7 +111,7 @@ function AddListener(name, callback, self)
 end
 
 function RemoveListener(name, callback, self)
-    if not name:Contains('.') then
+    if not GF.string.Contains(name, '.') then
         name = defautpkgnamewithpoint .. name
     end
     if listenercheckmap[callback] then
@@ -132,7 +133,7 @@ function RemoveListener(name, callback, self)
 end
 
 function RemoveAllListenerByName(name)
-    if not name:Contains('.') then
+    if not GF.string.Contains(name, '.') then
         name = defautpkgnamewithpoint .. name
     end
     local list = listenermap[name]

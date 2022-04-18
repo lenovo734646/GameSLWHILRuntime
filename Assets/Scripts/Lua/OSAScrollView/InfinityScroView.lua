@@ -1,36 +1,17 @@
 
-local _G, assert, print, log, logError, os, math = _G, assert, print, log, logError, os, math
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-local UnityEngine, GameObject = UnityEngine, GameObject
-local EditorAssetLoader = CS.EditorAssetLoader
-local CoroutineHelper = require'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-
-local OSA = CS.OSAHelper
-local ContentGravity = OSA.ContentGravity
-local OSAItemViewHolder = OSA.ItemViewHolder
-local OSAScrollView = require 'OSAScrollView.OSAScrollView'
-local ScrollItemViewDataHelper = require 'OSAScrollView.ScrollItemViewDataHelper'
-
-local table = table
-local pairs = pairs
-
-_ENV = {}
-
-
+-- OSAScrollView 的再包装
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end
 
 function Class:__init(OSAScrollViewCom)
     assert(OSAScrollViewCom)
     self.OSAScrollViewCom = OSAScrollViewCom
-    self.OSAScrollView = OSAScrollView.Create(OSAScrollViewCom)
+    self.OSAScrollView = GG.OSAScrollView.Create(OSAScrollViewCom)
     self:Init()
-    self.viewDataHelper = ScrollItemViewDataHelper.Create(OSAScrollViewCom)
+    self.viewDataHelper = GG.ScrollItemViewDataHelper.Create(OSAScrollViewCom)
 
     OSAScrollViewCom.UpdateViewsHolderCallback = function (paramters_)
         local viewsHolder = paramters_[1]
@@ -47,7 +28,7 @@ function Class:__init(OSAScrollViewCom)
     OSAScrollViewCom.CreateViewsHolderCallback = function (paramters_)
         local itemIndex = paramters_[1]
         local osaParam = OSAScrollViewCom.Parameters
-        local viewsHolder = OSAItemViewHolder()
+        local viewsHolder = GS.ItemViewHolder()
         viewsHolder.CollectViewsCallback = function ()
             if self.OnCreateViewItemData then
                 viewsHolder.bindData = self.OnCreateViewItemData(viewsHolder.root,itemIndex)
@@ -145,7 +126,7 @@ function Class:GetItemViewsHolderAtEnd()
         return nil
     end
     local index = self.OSAScrollView.OSAScrollViewCom.VisibleItemsCount - 1-- self:GetItemsCount()-1
-    -- print("GetItemViewsHolderAtEnd index = ", index)
+    -- Log("GetItemViewsHolderAtEnd index = ", index)
     return self.OSAScrollView:GetItemViewsHolder(index)
 end
 
@@ -166,7 +147,7 @@ end
 
 function Class:Release()
     -- local vhCount = self.OSAScrollViewCom.VisibleItemsCount
-    -- print("vhCount = ", vhCount)
+    -- Log("vhCount = ", vhCount)
     -- for i = 0, vhCount-1, 1 do
     --     local vh = self.OSAScrollView:GetItemViewsHolder(i)
     --     if vh then
@@ -189,5 +170,5 @@ function Class:Release()
     end
 end
 
-return _ENV
+return Class
 

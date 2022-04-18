@@ -1,17 +1,8 @@
-local string, tostring, math, pairs, typeof, type, print, table, tonumber, SysDefines = string, tostring, math, pairs,
-    typeof, type, print, table, tonumber, SysDefines
-local LuaInitHelper = CS.LuaInitHelper
-
-local DestroyImmediate = DestroyImmediate
-local CS,AssertUnityObjValid = CS,AssertUnityObjValid
-local getmetatable = getmetatable
-local assert=assert
-local select=select
-_ENV = {}
+local Class = class()
 
 --转换成万或者亿
-function GameNumberFormat(n)
-    local isEn = SysDefines.curLanguage ~= 'CN'
+function Class.GameNumberFormat(n)
+    local isEn = GS.SysDefines.curLanguage ~= 'CN'
     local unit = ''
     if isEn then
         if n >= 1000000000 then
@@ -52,16 +43,16 @@ end
 
 -- 检查手机号码位数是否有效
 -- 目前账号手机号格式为：国家码+手机号（如果0开头，则不需要输入0）
-function IsPhoneNumValid(phoneStr)
-    print("phoneStr = ", phoneStr)
-    if string.IsNullOrEmpty(phoneStr) or string.len(phoneStr) < 10 then
+function Class.IsPhoneNumValid(phoneStr)
+    Log("phoneStr = ", phoneStr)
+    if GF.string.IsNullOrEmpty(phoneStr) or string.len(phoneStr) < 10 then
         return false
     end
     return true
 end
 
 -- 自动加上空格
-function BuildStr(...)
+function Class.BuildStr(...)
     local t = {...}
     --这里使用select函数获取变参列表长度
     --#t获取长度可能会由于数组中某个变量是nil而中断
@@ -74,12 +65,12 @@ function BuildStr(...)
     return s
 end
 
-function GetFileNameFromPath(path)
-    path = path:replace('\\', '/')
+function Class.GetFileNameFromPath(path)
+    path = GF.string.replace(path,'\\', '/')
     return path:match("^.+/(.+)$") or ''
 end
 
-function Enum(t, start)
+function Class.Enum(t, start)
     local enStart = start or 1
 
     local args = t
@@ -93,7 +84,7 @@ function Enum(t, start)
 end
 
 -- Array转table
-function ArrayToTab(arr)
+function Class.ArrayToTab(arr)
     local len = arr.Length
     local table = {}
     for i = 1, len do
@@ -103,7 +94,7 @@ function ArrayToTab(arr)
 end
 
 -- List转table
-function ListToTab(list)
+function Class.ListToTab(list)
     local table = {}
     for k, v in pairs(list) do
         table[k] = v
@@ -112,7 +103,7 @@ function ListToTab(list)
 end
 
 -- Dictinary转table
-function DicToTab(dic)
+function Class.DicToTab(dic)
     local table = {}
     local iter = dic:GetEnumerator()
     while iter:MoveNext() do
@@ -123,12 +114,12 @@ function DicToTab(dic)
     return table
 end
 
-function GetDicInValue(dic, key)
+function Class.GetDicInValue(dic, key)
     local iter = dic:GetEnumerator()
     local value = nil
     while iter:MoveNext() do
         local curKey = iter.Current.Key
-        -- print("迭代key：" .. tostring(curKey))
+        -- Log("迭代key：" .. tostring(curKey))
         if key == curKey then
             value = iter.Current.Value
             break
@@ -137,27 +128,19 @@ function GetDicInValue(dic, key)
     return value
 end
 
-function GetInitHelperWithTable(obj, autoDestroy)
+-- 初始化游戏对象附件组件LuaInitHelper中的表，并返回
+function Class.GetInitHelperWithTable(obj, autoDestroy)
     local t = {}
     if autoDestroy == nil then
         autoDestroy = true
     end
-    return obj:GetComponent(typeof(LuaInitHelper)):Init(t, autoDestroy)
+    return obj:GetComponent(typeof(GS.LuaInitHelper)):Init(t, autoDestroy)
 end
 
-function PrintTable(t, spacestr)
-    spacestr = spacestr or ''
-    for key, value in pairs(t) do
-        print(spacestr .. 'k:' .. tostring(key) .. ' v:' .. tostring(value))
-        if type(value) == "table" then
-            PrintTable(value, spacestr .. ' ')
-        end
-    end
-end
 -- 数值转换为金额格式
-function NumberToMoney(n)
-    local numInterval = SysDefines.curLanguage == "CN" and 3 or 4
-    local lowLimit = SysDefines.curLanguage == "CN" and 999 or 9999
+function Class.NumberToMoney(n)
+    local numInterval = GS.SysDefines.curLanguage == "CN" and 3 or 4
+    local lowLimit = GS.SysDefines.curLanguage == "CN" and 999 or 9999
     if n <= lowLimit then
         return tostring(n)
     else
@@ -186,8 +169,8 @@ function NumberToMoney(n)
     end
 end
 
-function MoneyToNumber(str)
-    local numStr = string.replace(str, ',', '')
+function Class.MoneyToNumber(str)
+    local numStr = GF.string.replace(str, ',', '')
     if numStr ~= '' then
         return tonumber(numStr)
     else
@@ -197,8 +180,8 @@ end
 
 
 -- 下载
-local UnityWebRequest = CS.UnityEngine.Networking.UnityWebRequest
-function WebRequestGet(url, timeout)
+local UnityWebRequest = GS.UnityEngine.Networking.UnityWebRequest
+function Class.WebRequestGet(url, timeout)
     local request = UnityWebRequest.Get(url)
     --request.certificateHandler = CS.CertHandler()
     if timeout then
@@ -207,7 +190,7 @@ function WebRequestGet(url, timeout)
     return request
 end
 -- 上传
-function WebRequestPut(url, data, timeout)
+function Class.WebRequestPut(url, data, timeout)
     local request = UnityWebRequest.Put(url, data)
     --request.certificateHandler = CS.CertHandler()
     if timeout then
@@ -216,6 +199,94 @@ function WebRequestPut(url, data, timeout)
     return request
 end
 
+function Class.HookEvent(eventObj, hookdata)
+    assert(eventObj)
+    local mt = getmetatable(eventObj)
+    assert(mt)
+    local __index_old = mt.__index
+    hookdata.mtMap[mt] = __index_old
+    local userdataMap = hookdata.userdataMap
+    mt.__index = function(userdata, funcname)
+        local funcdata = hookdata[userdata]
+        if (funcname == 'AddListener' or funcname == 'RemoveListener') and not funcdata then
+            funcdata = {
+                __count = 0,
+                RemoveAllListenersFunc = __index_old(userdata, 'RemoveAllListeners')
+            }
+            userdataMap[userdata] = funcdata
+        end
 
+        if funcname == 'AddListener' then
+            funcdata.__count = funcdata.__count + 1
+        elseif funcname == 'RemoveAllListeners' then
+            userdataMap[userdata] = nil
+        elseif funcname == 'RemoveListener' then
+            funcdata.__count = funcdata.__count - 1
+        end
 
-return _ENV
+        if funcdata and funcdata.__count == 0 then
+            userdataMap[userdata] = nil
+        end
+        -- local f = oldf(t, funcname)
+        -- Log('__index ', t, funcname,f)
+        return __index_old(userdata, funcname)
+    end
+end
+
+function Class.HookUnityEvents()
+    local hookdata = {
+        userdataMap = {},
+        mtMap = {}
+    }
+    function hookdata:Clear()
+        for userdata, funcdata in pairs(self.userdataMap) do
+            funcdata.RemoveAllListenersFunc(userdata)
+            Log('Clear Listeners ', userdata)
+        end
+        -- reset mt
+        for mt, __index_old in pairs(self.mtMap) do
+            mt.__index = __index_old
+        end
+    end
+    local go = GS.GameObject()
+    local com = go:AddComponent(typeof(GS.Button))
+    Class.HookEvent(com.onClick, hookdata)
+    GS.DestroyImmediate(com)
+    local com = go:AddComponent(typeof(GS.TMPro.TMP_InputField))
+    Class.HookEvent(com.onSubmit, hookdata)
+    Class.HookEvent(com.onEndEdit, hookdata)
+    Class.HookEvent(com.onValueChanged, hookdata)
+    GS.DestroyImmediate(go)
+    return hookdata
+end
+
+-- 设置天数的下拉列表
+function Class.OnSelectMonth(dropDown, selectIndex, optionsDateMap)
+    Log("OnSelectMonth: index = ", selectIndex, dropDown.name)
+    local selectDate = optionsDateMap[selectIndex+1] -- selectIndex 是c# 过来的 下标是0 optionsDateMap是lua表下标是1
+    local year = selectDate.year
+    local month = selectDate.month
+    local days = GS.DateTime.DaysInMonth(year, month)
+    if year == GS.DateTime.Now.Year and month == GS.DateTime.Now.Month then
+        days = GS.DateTime.Now.Day;
+    end
+    local dayOptions = {}
+    for i = 1, days do
+        local dStr = string.format("%02d", i).."日"
+        --Log("dStr = ", dStr)
+        table.insert(dayOptions, GS.TMPro.TMP_Dropdown.OptionData(dStr))
+    end
+    dropDown:ClearOptions()
+    dropDown:AddOptions(dayOptions)
+    dropDown.value = 0
+end
+
+-- 设置下拉列表的显示层级，默认default，如果父对象有设置其他层级，那么谢啦列表将被遮挡
+function Class.SetDropDownListLayer(dropDown, layerName)
+    local canvasList = dropDown:GetComponentsInChildren(typeof(GS.UnityEngine.Canvas))
+    for i = 0, canvasList.Length-1 do  -- canvasList 为c#传过来的数组类型
+        canvasList[i].sortingLayerName = layerName
+    end
+end
+
+return Class

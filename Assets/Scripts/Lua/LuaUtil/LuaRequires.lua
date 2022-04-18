@@ -1,36 +1,97 @@
-function moduledef(paramT)
-    local t = paramT.t
-    local name = paramT.name
-    local seeall = paramT.seeall
-    local seenamespace = paramT.seenamespace
-    local _t = t or {}
-    if name then
-        _G[name] = _t
-    end
-    if seeall then
-        setmetatable(_t, {__index = _G}) 
-    end
-    if seenamespace then
-        setmetatable(_t, {__index = seenamespace}) 
-    end
-    return _t
-end
+-- 游戏涉及lua文件统一在此文件加载
+-- protobuffer文件夹下的结构体文件不在这里统一加载
+print("初始化全局变量GG")
+
+GG = {}
+
+require "ModuleHelper"  --此文件包含class定义，放到最前面
+require "Table.LanguageConvert" --涉及_STR_的定义，放到LuaDefines之前加载
 
 --FrameWork
 _G.json = require "LuaUtil.dkjson"
-require "LuaUtil.Functions"
+require "LuaUtil.dumper"
+
 require "LuaUtil.LuaDefines"
-require'LuaUtil.Logger'
-SysDf = require'LuaUtil.LuaSystemDefine'
+require "LuaUtil.Functions"
+require "LuaUtil.Logger"
 
---Message
-require "Message.MessageCenter"
-MsgType = require "Message.MessageType"
+GG.Config = require "Config"
+
+GG.LuaAssetLoader = require "LuaAssetLoader"
+GG.LuaHintMessage = require "LuaHintMessage"
+GG.LuaLoginCtrl = require   "LuaLoginCtrl"
+GG.WebRequest = require "WebRequest"
+
+-- LuaUtil
+GG.CoroutineHelper = require "LuaUtil.CoroutineHelper"
+GG.LanguageHelper = require "LuaUtil.LanguageHelper"
+GG.Helpers = require "LuaUtil.Helpers"
+
+-- Message
+GG.MessageCenter = require "Message.MessageCenter"
+GG.MsgType = require "Message.MessageType"
+
+-- Module -- 大厅 GamePlayer 小游戏独立运行登录用
+GG.GamePlayer = require "Module.GamePlayer"
+
+-- Pool
+GG.PoolManager, GG.Pool = require "Pool.PoolManager"
+
+-- protobuffer
+GG.CLGTSender = require "protobuffer.CLGTSender" -- 大厅消息协议
+GG.PBHelper = require "protobuffer.PBHelper"
+-- 
+GG.CLSLWHSender = require "protobuffer.CLSLWHSender" -- 小游戏消息协议
+
+-- Table
+GG.LanguageErrcode = require "Table.LanguageErrcode"
+GG.DisconnectTips = require "Table.DisconnectTips"
+GG.Language = require "Table.Language"
+GG.Item = require "Table.Item"
+
+-- OSAScroll
+GG.OSAScrollView = require 'OSAScrollView.OSAScrollView'
+GG.InfinityScroView = require 'OSAScrollView.InfinityScroView'
+GG.ScrollItemViewDataHelper = require 'OSAScrollView.ScrollItemViewDataHelper'
+
+-- Chat
+GG.EmojiPanel = require "ChatSystem.EmojiPanel"
+GG.PhrasePanel = require "ChatSystem.PhrasePanel"
+GG.VoicePanel = require "ChatSystem.VoicePanel"
+GG.ChatMsgData = require "ChatSystem.ChatMsgData"
+GG.ChatMsgView = require 'ChatSystem.ChatMsgView'
+GG.ChatPanel = require "ChatSystem.ChatPanel"
+GG.PBHelper = require 'protobuffer.PBHelper'
+GG.CLCHATROOMSender = require 'protobuffer.CLCHATROOMSender'
+-- PlayerList
+GG.PlayerListPanel = require "PlayerList.PlayerListPanel"
+GG.PlayerListItemData = require "PlayerList.PlayerListItemData"
+GG.PlayerListItemView = require "PlayerList.PlayerListItemView"
+
+-- Game 小游戏模块
+GG.GameConfig = require "Game.GameConfig"
+GG.CountDownTimerManager = require "Game.CountDownTimerManager"
+-- GG.ChouMaFly = require "Game.ChouMaFly"
+
+GG.SLWH_UserInfo = require "Game.UI.SLWH_UserInfo"
+GG.SLWH_TimerCounterUI = require "Game.UI.SLWH_TimerCounterUI"
+-- GG.SLWH_RulePanel = require "Game.UI.SLWH_RulePanel"
+GG.SLWH_ResultPanel = require "Game.UI.SLWH_ResultPanel"
+GG.SLWH_MainUI = require "Game.UI.SLWH_MainUI"
+GG.SLWH_SimpleSlot = require "Game.Controller.SLWH_SimpleSlot"
+GG.SLWH_CameraCtrl = require "Game.Controller.SLWH_CameraCtrl"
+
+GG.SLWH_View = require "Game.View.SLWH_View"
+GG.SLWH_ViewCtrl = require "Game.Controller.SLWH_ViewCtrl"
+GG.SLWH_RoomSelectView = require "Game.View.SLWH_RoomSelectView"
+GG.SLWH_RoomSelectViewCtrl = require "Game.Controller.SLWH_RoomSelectViewCtrl"
 
 
 
---Pool
-require "Pool.PoolManager"
+
+
+
+
 
 
 

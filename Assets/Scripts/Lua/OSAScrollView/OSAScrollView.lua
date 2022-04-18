@@ -1,23 +1,8 @@
 
-local _G, g_Env, print, log, logError = _G, g_Env, print, log, logError
-local class, typeof, type, string, utf8= class, typeof, type, string, utf8
-
-local UnityEngine, GameObject, Sprite = UnityEngine, GameObject, Sprite
-
-local OSA = CS.OSAHelper
-local OSACore = CS.Com.TheFallenGames.OSA.Core
-local OSAScrollView = OSA.OSAScrollView
-local MyParam = OSA.MyParam
-local MyItemViewHolder = OSA.MyItemViewHolder
-local ItemCountChangeMode = OSACore.ItemCountChangeMode
-local OSAItemViewHolder = OSA.ItemViewHolder
-
-
-_ENV = {}
-
+-- c# OSAScrollView 的lua回调设置
 local Class = class()
 
-function Create(...)
+function Class.Create(...)
     return Class(...)
 end 
 
@@ -103,10 +88,10 @@ function Class:ChangeItemsCount(paramters_)
     -- local osaView = paramters_[0]
     local changeMode = paramters_[1] -- 更改方式
     local itemsCount = paramters_[2] -- 更改数量
-    -- if changeMode == ItemCountChangeMode.RESET then
+    -- if changeMode == GS.ItemCountChangeMode.RESET then
     --     self:SetAllModelsHavePendingSizeChange()
     -- end
-    -- log(changeMode)
+    -- GF.log(changeMode)
     if self.ChangeItemsCountCallback then
         self:ChangeItemsCountCallback(changeMode, itemsCount)
     end
@@ -130,7 +115,7 @@ function Class:GetItemsCount()
 end
 -- 添加后马上获取不一定能获取到，要更新了 VisibleItemsCount 之后才能获取到
 function Class:GetItemViewsHolder(index)
-    print("VisibleItemsCount = ", self.OSAScrollViewCom.VisibleItemsCount)
+    Log("VisibleItemsCount = ", self.OSAScrollViewCom.VisibleItemsCount)
     local vh = self.OSAScrollViewCom:GetItemViewsHolder(index)
     if vh then
         return vh.bindData 
@@ -163,4 +148,4 @@ function Class:Release()
     self.OSAScrollViewCom = nil
 end
 
-return _ENV
+return Class

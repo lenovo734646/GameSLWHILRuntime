@@ -14,7 +14,7 @@ function LuaBase:get(str,...)
 	local tf = self.transform:Find(str)
 
 	if not tf then
-		logError("can not find child:"..str)
+		GF.logError("can not find child:"..str)
 	end
 
 	local obj = LuaClass(tf.gameObject)
@@ -29,7 +29,7 @@ function LuaBase:get(str,...)
 				obj[typeName] = component
 			end
 		else
-			logError("can not find component:"..typeName.." of "..str)
+			GF.logError("can not find component:"..typeName.." of "..str)
 		end
 	end
 	return obj
@@ -46,7 +46,7 @@ function LuaBase:getComponents(...)
 				self[typeName] = component
 			end
 		else
-			logError("can not find component:"..typeName.." of "..self.gameObject.Name)
+			GF.logError("can not find component:"..typeName.." of "..self.gameObject.Name)
 		end
 	end
 end
@@ -84,13 +84,13 @@ function LuaBase:CloseChildren(parent)
 	local count = parent.childCount
 	for i = 1, count do
 		local child = parent:GetChild(i - 1).gameObject
-		Destroy(child)
+		GS.Destroy(child)
 	end
 end
 
 --关闭页面
 function LuaBase:Close()
-	Destroy(self.gameObject)
+	GS.Destroy(self.gameObject)
 end
 
 return LuaBase

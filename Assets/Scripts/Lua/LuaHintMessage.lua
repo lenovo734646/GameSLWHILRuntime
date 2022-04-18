@@ -1,35 +1,32 @@
-local _G = _G
-local table, print, tostring, Log, typeof, Destroy, LogE, string, assert, type, UnityEngine = table, print, tostring,
-    Log, typeof, Destroy, LogE, string, assert, type, UnityEngine
+local _CreateHintMessage
 
+local Class = class()
 
-local CoroutineHelper = require 'LuaUtil.CoroutineHelper'
-local yield = coroutine.yield
-local SEnv=SEnv
-_ENV = moduledef {
-    seenamespace = CS
-}
----------------------
--- local showHintMessage
-
-function Create()
+function Class.Create()
     local this = {
         showingMsgT = {}
     }
-    this.ShowHintMessage = function(self, ...)
-        return ShowHintMessage(self, ...)
+    this.CreateHintMessage = function(self, ...)
+        return _CreateHintMessage(self, ...)
     end
     return this
 end
 
-function ShowHintMessage(this, msg)
-    Log('ShowHintMessage', msg, print(type(msg)))
+function _CreateHintMessage(this, msg,parent)
+    Log('_CreateHintMessage', msg, type(msg))
     if this.showingMsgT[msg] then
         return -- 同一个消息只显示一次
     end
-    local prefab = UnityEngine.Resources.Load('popupTipsUI')
-    local gameObject = UnityEngine.Object.Instantiate(prefab,SEnv.UIParent)
-    local initer = gameObject:GetComponent(typeof(LuaInitHelper))
+    local prefab = GS.UnityEngine.Resources.Load('popupTipsUI')
+    local uiParent = GS.GameObject.Find('HintMessage')
+    local gameObject = GS.UnityEngine.Object.Instantiate(prefab, uiParent)
+    
+    local initer = gameObject:GetComponent(typeof(GS.LuaInitHelper))
+
+    if parent then
+        gameObject.transform:SetParent(parent, false)   
+    end
+
     local t = {}
     initer:Init(t)
     t.tipsfont_text.text = msg
@@ -39,13 +36,13 @@ function ShowHintMessage(this, msg)
         end
     }
     this.showingMsgT[msg] = true
-    CoroutineHelper.StartCoroutine(function()
-        yield(UnityEngine.WaitForSeconds(3.8))
+    GG.CoroutineHelper.StartCoroutine(function()
+        GF.WaitForSeconds(3.8)
         if this.showingMsgT[msg] then
-            Destroy(gameObject)
+            GS.Destroy(gameObject)
         end
     end)
 end
 
 
-return _ENV
+return Class

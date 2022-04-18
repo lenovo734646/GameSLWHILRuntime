@@ -1,6 +1,6 @@
-
-local functional = functional
-local pairs, LogW, tostring, table = pairs, LogW, tostring, table
+local GS = GS
+local GF = GF
+local pairs, LogW, tostring = pairs, LogW, tostring
 
 local MessageCenter = class(nil, {
     autoReleaseEvents = {},
@@ -20,7 +20,7 @@ function MessageCenter:AddListener(msgType, func, target)
     if self.dicMsgBind[msgType] == nil then
         self.dicMsgBind[msgType] = {}
     end
-    local bindFunc = functional.bind1(func, target)
+    local bindFunc = GF.functional.bind1(func, target)
     table.insert(self.dicMsgBind[msgType], {
         bind = bindFunc,
         func = func,
@@ -42,29 +42,29 @@ function MessageCenter:_addListener(msgType, event)
     if self.dicMsgEvents[msgType] == nil then
         self.dicMsgEvents[msgType] = {}
     end
-    if not table.contains(self.dicMsgEvents[msgType], event) then
-        -- print("成功添加这个监听")
+    if not GF.table.contains(self.dicMsgEvents[msgType], event) then
+        -- Log("成功添加这个监听")
         table.insert(self.dicMsgEvents[msgType], event)
     end
 end
 
 function MessageCenter:RemoveListener(msgType, func, target)
-    local tbl = table.findMap(self.dicMsgBind[msgType], function(b)
+    local tbl = GF.table.findMap(self.dicMsgBind[msgType], function(b)
         return b.func == func and b.target == target
     end)
     for k, v in pairs(tbl) do
         self:_removeListener(msgType, v.bind)
-        table.removebyvalue(self.dicMsgBind[msgType], v)
+        GF.table.removebyvalue(self.dicMsgBind[msgType], v)
     end
 end
 
 function MessageCenter:RemoveAllByType(msgType, target)
-    local tbl = table.findMap(self.dicMsgBind[msgType], function(b)
+    local tbl = GF.table.findMap(self.dicMsgBind[msgType], function(b)
         return b.target == target
     end)
     for k, v in pairs(tbl) do
         self:_removeListener(msgType, v.bind)
-        table.removebyvalue(self.dicMsgBind[msgType], v)
+        GF.table.removebyvalue(self.dicMsgBind[msgType], v)
     end
 end
 
@@ -82,16 +82,16 @@ function MessageCenter:RemoveAllByTarget(target)
     end
     for k, v in pairs(tbl) do
         self:_removeListener(v.msgType, v.value.bind)
-        table.removebyvalue(self.dicMsgBind[v.msgType], v.value)
+        GF.table.removebyvalue(self.dicMsgBind[v.msgType], v.value)
     end
 end
 
 function MessageCenter:_removeListener(msgType, event)
     if self.dicMsgEvents[msgType] ~= nil then
-        local index = table.contains(self.dicMsgEvents[msgType], event)
+        local index = GF.table.contains(self.dicMsgEvents[msgType], event)
         if index then
-            -- print("成功移除这个监听")
-            table.removebyvalue(self.dicMsgEvents[msgType], event, true)
+            -- Log("成功移除这个监听")
+            GF.table.removebyvalue(self.dicMsgEvents[msgType], event, true)
         end
     end
 end

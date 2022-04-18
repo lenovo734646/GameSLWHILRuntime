@@ -1,0 +1,6 @@
+[submodule "Assets/ILRuntimeShared"]
+	path = Assets/ILRuntimeShared
+	url = https://github.com/lenovo734646/ILRuntimeShared.git
+[submodule "ILHotfixCommon"]
+	path = ILHotfixCommon
+	url = https://github.com/lenovo734646/ILHotfixCommon.git

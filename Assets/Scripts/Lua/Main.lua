@@ -184,7 +184,7 @@ function OnSceneLoaded(scene, mode)
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/庄1.mat','Assets/Dance/Xiazhu/Tex/Zhuang','_MainTex')
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/闲1.mat','Assets/Dance/Xiazhu/Tex/Xian','_MainTex')
             loadMatTexByLangAsync('Assets/Dance/Xiazhu/Tex/和1.mat','Assets/Dance/Xiazhu/Tex/He','_MainTex')
-            for k, v in pairs(LoadList) do
+            for k, v in pairs(LoadList) do7
                 if k == 1 then
                     for _, assetPath in pairs(v) do
                         Log("加载Asset：path = ", assetPath)

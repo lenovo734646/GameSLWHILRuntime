@@ -24,3 +24,5 @@
 /*.apk
 /Assets/Editor/changehash
 /Assets/Editor/changehash.meta
+/Logs
+/Output

@@ -4,8 +4,6 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using DG.Tweening;
 //using UnityEditor;
@@ -33,29 +31,29 @@ public class PathExporter : MonoBehaviour
             {
                 {"Id",i+1},{"name",dtp.name}
             });
-            wayPointsList.Add(new Dictionary<string, object>()
-            {
-                {"Id",i+1},{"key",dtp.name},{"length",CalculatePathLength(wps)},{"points",JsonConvert.SerializeObject(wps.ToArray())}
-            });
+//             wayPointsList.Add(new Dictionary<string, object>()
+//             {
+//                 {"Id",i+1},{"key",dtp.name},{"length",CalculatePathLength(wps)},{"points",JsonConvert.SerializeObject(wps.ToArray())}
+//             });
         }
         exportToJson();
     }
 
     private void exportToJson()
     {
-        FileStream fileStream = new FileStream(Application.dataPath + "/Editor/PathEditor/PathName.json", FileMode.OpenOrCreate);
-        StreamWriter streamWriter = new StreamWriter(fileStream);
-        streamWriter.WriteLine(JsonConvert.SerializeObject(wayNameList));
-        streamWriter.Close();
-        fileStream.Close();
-        fileStream.Dispose();
-
-        fileStream = new FileStream(Application.dataPath + "/Editor/PathEditor/PathWayPoints.json", FileMode.OpenOrCreate);
-        streamWriter = new StreamWriter(fileStream);
-        streamWriter.WriteLine(JsonConvert.SerializeObject(wayPointsList));
-        streamWriter.Close();
-        fileStream.Close();
-        fileStream.Dispose();
+//         FileStream fileStream = new FileStream(Application.dataPath + "/Editor/PathEditor/PathName.json", FileMode.OpenOrCreate);
+//         StreamWriter streamWriter = new StreamWriter(fileStream);
+//         streamWriter.WriteLine(JsonConvert.SerializeObject(wayNameList));
+//         streamWriter.Close();
+//         fileStream.Close();
+//         fileStream.Dispose();
+// 
+//         fileStream = new FileStream(Application.dataPath + "/Editor/PathEditor/PathWayPoints.json", FileMode.OpenOrCreate);
+//         streamWriter = new StreamWriter(fileStream);
+//         streamWriter.WriteLine(JsonConvert.SerializeObject(wayPointsList));
+//         streamWriter.Close();
+//         fileStream.Close();
+//         fileStream.Dispose();
 
         //AssetDatabase.Refresh();
     }
@@ -77,10 +75,10 @@ public class PathExporter : MonoBehaviour
             {
                 {"Id",i+1},{"name",dtp.name}
             });
-            wayPointsList.Add(new Dictionary<string, object>()
-            {
-                {"Id",i+1},{"key",dtp.name},{"length",CalculatePathLength(wps)},{"points",JsonConvert.SerializeObject(wps.ToArray())}
-            });
+//             wayPointsList.Add(new Dictionary<string, object>()
+//             {
+//                 {"Id",i+1},{"key",dtp.name},{"length",CalculatePathLength(wps)},{"points",JsonConvert.SerializeObject(wps.ToArray())}
+//             });
         }
         exportToLua();
     }

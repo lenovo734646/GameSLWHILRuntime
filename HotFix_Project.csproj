@@ -63,6 +63,9 @@
     <Reference Include="Protobuf">
       <HintPath>Library\ScriptAssemblies\Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="spine-unity">
+      <HintPath>..\..\U3D_fll\fll3d_plaza\client\Plaza\Library\ScriptAssemblies\spine-unity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -346,13 +349,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Hotfix\Games\SLWH\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Hotfix\ILHotfixCommon\.gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hotfix\Games\SLWH\GameController.cs" />
+    <Compile Include="Hotfix\Games\SLWH\MyApp.cs" />
+    <Compile Include="Hotfix\Games\SLWH\ThisGameConfig.cs" />
+    <Compile Include="Hotfix\Games\SLWH\ViewGameScene.cs" />
+    <Compile Include="Hotfix\Games\SLWH\ViewLoading.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\AccountInfo.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\AppBase.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\AppController.cs" />
@@ -362,6 +369,7 @@
     <Compile Include="Hotfix\ILHotfixCommon\Language.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Model.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\MsgClient.cs" />
+    <Compile Include="Hotfix\ILHotfixCommon\MsgMultiplayer.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\MsgServer.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\NetWorkController.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Protos\CLGT.cs" />

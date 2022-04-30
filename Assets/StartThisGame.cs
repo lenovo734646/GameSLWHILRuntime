@@ -50,7 +50,7 @@ public class StartThisGame : MonoBehaviour
 
 		btn.onClick.AddListener(() => {
 			btn.gameObject.SetActive(false);
-			this.StartCor(bridge_.DoStart(show_), false);
+			this.StartCor(bridge_.DoStart(show_, false), false);
 		});
 		show_.Desc(LanguageStartup.IsPreparingHotfixModule);
 	}
@@ -66,7 +66,8 @@ public class StartThisGame : MonoBehaviour
 		//如果
 		if (bridge_.Prepared() && !exit_) {
 			Progress(LanguageStartup.IsLoadingHotfixModule);
-			HotfixCaller.RunGame("Hotfix.Common.AppController", "Assets/Res/HotFixDll.json", "Assets/Res/HotFixDll_pdb.json", show_);
+			HotfixCaller.SetHotfixValue("defaultGameFromHost", "SLWH");
+			HotfixCaller.RunGame("Hotfix.Common.AppController", "Assets/Res/Games/SLWH/HotFixDll.json", "Assets/Res/Games/SLWH/HotFixDll_pdb.json", show_);
 			//解开循环引用
 			show_ = null;
 			//删除本组件,用不着了
@@ -75,12 +76,3 @@ public class StartThisGame : MonoBehaviour
 		}
 	}
 }
-
-namespace AssemblyCommon
-{
-	public partial class Config
-	{
-		public static string defaultWorkingDir = "Lobby";
-	}
-}
-

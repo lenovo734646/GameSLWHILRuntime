@@ -3358,6 +3358,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3489,6 +3490,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3620,6 +3622,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3751,6 +3754,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3882,6 +3886,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4013,6 +4018,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4144,6 +4150,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4250,6 +4257,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4356,6 +4364,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4462,6 +4471,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4568,6 +4578,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4674,6 +4685,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20026,6 +20038,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20145,6 +20158,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20264,6 +20278,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20383,6 +20398,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20502,6 +20518,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -20621,6 +20638,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -21484,6 +21502,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -21600,6 +21619,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -21716,6 +21736,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -21832,6 +21853,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -21948,6 +21970,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -22064,6 +22087,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -26709,7 +26733,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6990000593241935618}
-  - component: {fileID: 6990000593241935621}
   m_Layer: 0
   m_Name: animalIndexs
   m_TagString: Untagged
@@ -26724,7 +26747,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6990000593241935619}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -26755,94 +26778,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6990000593241935621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6990000593241935619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2bace99cbc1ffb4f840bbf6c21e98e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chebiaoRoot: {fileID: 6990000593241935619}
-  chebiaoGameObjects:
-  - {fileID: 7908339983238159158}
-  - {fileID: 7908339983932647785}
-  - {fileID: 7908339983276256088}
-  - {fileID: 7908339983203849052}
-  - {fileID: 7908339984772226911}
-  - {fileID: 7908339983657210556}
-  - {fileID: 7908339983522259008}
-  - {fileID: 7908339984789352450}
-  - {fileID: 7908339983327219375}
-  - {fileID: 7908339985209948380}
-  - {fileID: 7908339983363737430}
-  - {fileID: 7908339985061334349}
-  - {fileID: 7908339983907372440}
-  - {fileID: 7908339984537918896}
-  - {fileID: 7908339983730332855}
-  - {fileID: 7908339984725877616}
-  - {fileID: 7908339984047153283}
-  - {fileID: 7908339983902029880}
-  - {fileID: 7908339983603464003}
-  - {fileID: 7908339984863307752}
-  - {fileID: 7908339983566984045}
-  - {fileID: 7908339985168955535}
-  - {fileID: 7908339983813669958}
-  - {fileID: 7908339984233012948}
-  animalPrefabs: []
-  chebiaoList:
-  - gameObject: {fileID: 7908339983238159158}
-    ID: 2
-  - gameObject: {fileID: 7908339983932647785}
-    ID: 1
-  - gameObject: {fileID: 7908339983276256088}
-    ID: 3
-  - gameObject: {fileID: 7908339983203849052}
-    ID: 4
-  - gameObject: {fileID: 7908339984772226911}
-    ID: 2
-  - gameObject: {fileID: 7908339983657210556}
-    ID: 1
-  - gameObject: {fileID: 7908339983522259008}
-    ID: 3
-  - gameObject: {fileID: 7908339984789352450}
-    ID: 4
-  - gameObject: {fileID: 7908339983327219375}
-    ID: 2
-  - gameObject: {fileID: 7908339985209948380}
-    ID: 1
-  - gameObject: {fileID: 7908339983363737430}
-    ID: 3
-  - gameObject: {fileID: 7908339985061334349}
-    ID: 4
-  - gameObject: {fileID: 7908339983907372440}
-    ID: 2
-  - gameObject: {fileID: 7908339984537918896}
-    ID: 1
-  - gameObject: {fileID: 7908339983730332855}
-    ID: 3
-  - gameObject: {fileID: 7908339984725877616}
-    ID: 4
-  - gameObject: {fileID: 7908339984047153283}
-    ID: 2
-  - gameObject: {fileID: 7908339983902029880}
-    ID: 1
-  - gameObject: {fileID: 7908339983603464003}
-    ID: 3
-  - gameObject: {fileID: 7908339984863307752}
-    ID: 4
-  - gameObject: {fileID: 7908339983566984045}
-    ID: 2
-  - gameObject: {fileID: 7908339985168955535}
-    ID: 1
-  - gameObject: {fileID: 7908339983813669958}
-    ID: 3
-  - gameObject: {fileID: 7908339984233012948}
-    ID: 4
 --- !u!1 &7056845869691559139
 GameObject:
   m_ObjectHideFlags: 0

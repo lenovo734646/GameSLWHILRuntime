@@ -209,7 +209,6 @@ GameObject:
   - component: {fileID: 2136243508}
   - component: {fileID: 2136243510}
   - component: {fileID: 2136243509}
-  - component: {fileID: 1304461324567764645}
   m_Layer: 16
   m_Name: xianText
   m_TagString: Untagged
@@ -334,48 +333,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1304461324567764645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2136243507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 2136243509}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 0}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: "\u95F2"
-    sprite: {fileID: 0}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: P
-    sprite: {fileID: 0}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &84725628023745675
 GameObject:
   m_ObjectHideFlags: 0
@@ -2796,7 +2753,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468854029725851}
   - component: {fileID: 744337339706201974}
-  - component: {fileID: 1304461323405180511}
   m_Layer: 25
   m_Name: XiazhuAnniu_2
   m_TagString: Untagged
@@ -2842,21 +2798,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461323405180511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288685868804641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288685889094628
 GameObject:
   m_ObjectHideFlags: 0
@@ -2867,7 +2808,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468854052149598}
   - component: {fileID: 744337339725463179}
-  - component: {fileID: 1304461323745899884}
   m_Layer: 25
   m_Name: XiazhuAnniu_5
   m_TagString: Untagged
@@ -2913,21 +2853,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461323745899884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288685889094628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288685951792070
 GameObject:
   m_ObjectHideFlags: 0
@@ -2938,7 +2863,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468854114838908}
   - component: {fileID: 744337339654442645}
-  - component: {fileID: 1304461324942767207}
   m_Layer: 25
   m_Name: XiazhuAnniu_1
   m_TagString: Untagged
@@ -2984,21 +2908,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324942767207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288685951792070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288686008885633
 GameObject:
   m_ObjectHideFlags: 0
@@ -3042,7 +2951,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468853753761890}
   - component: {fileID: 744337339982165903}
-  - component: {fileID: 1304461325227683779}
   m_Layer: 25
   m_Name: XiazhuAnniu_7
   m_TagString: Untagged
@@ -3088,21 +2996,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461325227683779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288686146456280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288686203638735
 GameObject:
   m_ObjectHideFlags: 0
@@ -3113,7 +3006,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468853829814645}
   - component: {fileID: 744337338865898972}
-  - component: {fileID: 1304461324067175319}
   m_Layer: 25
   m_Name: XiazhuAnniu_13
   m_TagString: Untagged
@@ -3159,21 +3051,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324067175319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288686203638735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288686342866487
 GameObject:
   m_ObjectHideFlags: 0
@@ -3184,7 +3061,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468853698518157}
   - component: {fileID: 744337340045540196}
-  - component: {fileID: 1304461324590751109}
   m_Layer: 25
   m_Name: XiazhuAnniu_4
   m_TagString: Untagged
@@ -3230,21 +3106,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324590751109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288686342866487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288686536864628
 GameObject:
   m_ObjectHideFlags: 0
@@ -3306,7 +3167,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468854348977579}
   - component: {fileID: 744337339420308038}
-  - component: {fileID: 1304461324699649181}
   m_Layer: 25
   m_Name: XiazhuAnniu_8
   m_TagString: Untagged
@@ -3352,21 +3212,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324699649181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288686657818385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288686672959133
 GameObject:
   m_ObjectHideFlags: 0
@@ -3377,7 +3222,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468854299102247}
   - component: {fileID: 744337339436624834}
-  - component: {fileID: 1304461325022132486}
   m_Layer: 25
   m_Name: XiazhuAnniu_10
   m_TagString: Untagged
@@ -3423,21 +3267,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461325022132486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288686672959133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687006589864
 GameObject:
   m_ObjectHideFlags: 0
@@ -3448,7 +3277,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855173839122}
   - component: {fileID: 744337338562158335}
-  - component: {fileID: 1304461325269079277}
   m_Layer: 25
   m_Name: XiazhuAnniu_11
   m_TagString: Untagged
@@ -3494,21 +3322,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461325269079277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687006589864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687033759959
 GameObject:
   m_ObjectHideFlags: 0
@@ -3519,7 +3332,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855180026477}
   - component: {fileID: 744337338589447556}
-  - component: {fileID: 1304461324352776974}
   m_Layer: 25
   m_Name: XiazhuAnniu_9
   m_TagString: Untagged
@@ -3565,21 +3377,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324352776974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687033759959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687341139165
 GameObject:
   m_ObjectHideFlags: 0
@@ -3642,7 +3439,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855646255306}
   - component: {fileID: 744337338097803047}
-  - component: {fileID: 1304461324906130103}
   m_Layer: 25
   m_Name: XiazhuAnniu_12
   m_TagString: Untagged
@@ -3688,21 +3484,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324906130103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687483200112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687599853059
 GameObject:
   m_ObjectHideFlags: 0
@@ -3713,7 +3494,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855561569465}
   - component: {fileID: 744337338216031056}
-  - component: {fileID: 1304461323358302598}
   m_Layer: 25
   m_Name: XiazhuAnniu_14
   m_TagString: Untagged
@@ -3759,21 +3539,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461323358302598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687599853059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687726297875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3784,7 +3549,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855402813865}
   - component: {fileID: 744337338341310016}
-  - component: {fileID: 1304461324786940066}
   m_Layer: 25
   m_Name: XiazhuAnniu_15
   m_TagString: Untagged
@@ -3830,21 +3594,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324786940066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687726297875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687779815155
 GameObject:
   m_ObjectHideFlags: 0
@@ -3855,7 +3604,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855475192905}
   - component: {fileID: 744337338260726688}
-  - component: {fileID: 1304461324529021128}
   m_Layer: 25
   m_Name: XiazhuAnniu_6
   m_TagString: Untagged
@@ -3901,21 +3649,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324529021128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687779815155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &474288687977444422
 GameObject:
   m_ObjectHideFlags: 0
@@ -3926,7 +3659,6 @@ GameObject:
   m_Component:
   - component: {fileID: 999468855318408956}
   - component: {fileID: 744337338459261205}
-  - component: {fileID: 1304461324527452352}
   m_Layer: 25
   m_Name: XiazhuAnniu_3
   m_TagString: Untagged
@@ -3972,21 +3704,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1304461324527452352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474288687977444422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &477375910557664338
 GameObject:
   m_ObjectHideFlags: 0
@@ -7926,7 +7643,6 @@ GameObject:
   - component: {fileID: 744337338149574976}
   - component: {fileID: 744337338149574979}
   - component: {fileID: 744337338149574978}
-  - component: {fileID: 744337338149574989}
   m_Layer: 16
   m_Name: 6
   m_TagString: Untagged
@@ -8035,19 +7751,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337338149574989}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324529021128}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -8059,7 +7775,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -8071,40 +7787,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337338149574989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338149574991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339420575537}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339587733257}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339964210715}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337338161744267
 GameObject:
   m_ObjectHideFlags: 0
@@ -8252,7 +7934,6 @@ GameObject:
   - component: {fileID: 744337338165656508}
   - component: {fileID: 744337338165656511}
   - component: {fileID: 744337338165656510}
-  - component: {fileID: 744337338165656505}
   m_Layer: 16
   m_Name: 10
   m_TagString: Untagged
@@ -8361,19 +8042,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337338165656505}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461325022132486}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -8385,7 +8066,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -8397,40 +8078,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337338165656505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338165656507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338772375902}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338368346789}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338206634801}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337338202818570
 GameObject:
   m_ObjectHideFlags: 0
@@ -8443,7 +8090,6 @@ GameObject:
   - component: {fileID: 744337338202818575}
   - component: {fileID: 744337338202818574}
   - component: {fileID: 744337338202818569}
-  - component: {fileID: 744337338202818568}
   m_Layer: 16
   m_Name: 3
   m_TagString: Untagged
@@ -8552,19 +8198,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337338202818568}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324527452352}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -8576,7 +8222,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -8588,40 +8234,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337338202818568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338202818570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338455371034}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338994714276}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338240976882}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337338206634803
 GameObject:
   m_ObjectHideFlags: 0
@@ -9578,7 +9190,6 @@ GameObject:
   - component: {fileID: 744337338469669275}
   - component: {fileID: 744337338469669273}
   - component: {fileID: 744337338469669272}
-  - component: {fileID: 744337338469669278}
   m_Layer: 25
   m_Name: BetStage
   m_TagString: Untagged
@@ -9650,22 +9261,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &744337338469669278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338469669274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList: []
-  showlog: 0
 --- !u!1 &744337338478879566
 GameObject:
   m_ObjectHideFlags: 0
@@ -10488,7 +10083,6 @@ GameObject:
   - component: {fileID: 744337338813670087}
   - component: {fileID: 744337338813670086}
   - component: {fileID: 744337338813670081}
-  - component: {fileID: 744337338813670080}
   m_Layer: 16
   m_Name: 7
   m_TagString: Untagged
@@ -10597,19 +10191,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337338813670080}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461325227683779}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -10621,7 +10215,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -10633,40 +10227,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337338813670080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338813670082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339307792866}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339487626226}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338837304740}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337338837304742
 GameObject:
   m_ObjectHideFlags: 0
@@ -10814,7 +10374,6 @@ GameObject:
   - component: {fileID: 744337338845002108}
   - component: {fileID: 744337338845002111}
   - component: {fileID: 744337338845002110}
-  - component: {fileID: 744337338845002105}
   m_Layer: 16
   m_Name: 9
   m_TagString: Untagged
@@ -10923,19 +10482,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337338845002105}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324352776974}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -10947,7 +10506,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -10959,40 +10518,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337338845002105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338845002107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339445730468}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338084808657}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338292012140}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337338877069026
 GameObject:
   m_ObjectHideFlags: 0
@@ -11005,7 +10530,6 @@ GameObject:
   - component: {fileID: 744337338877069031}
   - component: {fileID: 744337338877069030}
   - component: {fileID: 744337338877069025}
-  - component: {fileID: 744337338877069024}
   - component: {fileID: 744337338877069028}
   m_Layer: 16
   m_Name: 13
@@ -11115,19 +10639,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337338877069024}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324067175319}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -11139,7 +10663,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -11151,40 +10675,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337338877069024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337338877069026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338325915380}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338811381815}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338583918710}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!114 &744337338877069028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11352,7 +10842,6 @@ GameObject:
   - component: {fileID: 744337339084141466}
   - component: {fileID: 744337339084141445}
   - component: {fileID: 744337339084141444}
-  - component: {fileID: 744337339084141447}
   m_Layer: 16
   m_Name: 12
   m_TagString: Untagged
@@ -11461,19 +10950,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339084141447}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324906130103}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -11485,7 +10974,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -11497,40 +10986,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339084141447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339084141441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339450719886}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339574369190}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339979079865}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337339117614823
 GameObject:
   m_ObjectHideFlags: 0
@@ -11678,7 +11133,6 @@ GameObject:
   - component: {fileID: 744337339205111003}
   - component: {fileID: 744337339205111002}
   - component: {fileID: 744337339205110981}
-  - component: {fileID: 744337339205110980}
   m_Layer: 16
   m_Name: 11
   m_TagString: Untagged
@@ -11787,19 +11241,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339205110980}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461325269079277}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -11811,7 +11265,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -11823,40 +11277,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339205110980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339205110982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339900508695}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339313069862}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338669417161}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337339225446068
 GameObject:
   m_ObjectHideFlags: 0
@@ -12050,7 +11470,6 @@ GameObject:
   - component: {fileID: 744337339226714447}
   - component: {fileID: 744337339226714446}
   - component: {fileID: 744337339226714441}
-  - component: {fileID: 744337339226714440}
   - component: {fileID: 744337339226714444}
   m_Layer: 16
   m_Name: 14
@@ -12160,19 +11579,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339226714440}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461323358302598}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -12184,7 +11603,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -12196,40 +11615,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339226714440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339226714442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339117614821}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338478879564}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338801855043}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!114 &744337339226714444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13207,7 +12592,6 @@ GameObject:
   - component: {fileID: 744337339484514715}
   - component: {fileID: 744337339484514714}
   - component: {fileID: 744337339484514693}
-  - component: {fileID: 744337339484514692}
   m_Layer: 16
   m_Name: 4
   m_TagString: Untagged
@@ -13316,19 +12700,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339484514692}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324590751109}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -13340,7 +12724,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -13352,40 +12736,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339484514692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339484514694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338072348552}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339622109296}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339922235931}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337339487626236
 GameObject:
   m_ObjectHideFlags: 0
@@ -13803,7 +13153,6 @@ GameObject:
   - component: {fileID: 744337339585617557}
   - component: {fileID: 744337339585617556}
   - component: {fileID: 744337339585617559}
-  - component: {fileID: 744337339585617558}
   - component: {fileID: 744337339585617514}
   m_Layer: 16
   m_Name: 15
@@ -13913,19 +13262,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339585617558}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324786940066}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -13937,7 +13286,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -13949,40 +13298,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339585617558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339585617552}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338161744265}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339900497399}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339824121268}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!114 &744337339585617514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14388,7 +13703,6 @@ GameObject:
   - component: {fileID: 744337339714377109}
   - component: {fileID: 744337339714377108}
   - component: {fileID: 744337339714377111}
-  - component: {fileID: 744337339714377110}
   m_Layer: 16
   m_Name: 8
   m_TagString: Untagged
@@ -14497,19 +13811,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339714377110}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324699649181}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -14521,7 +13835,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -14533,40 +13847,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339714377110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339714377104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339314023610}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337340120502701}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339518338220}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337339824121270
 GameObject:
   m_ObjectHideFlags: 0
@@ -15254,7 +14534,6 @@ GameObject:
   - component: {fileID: 744337339945782248}
   - component: {fileID: 744337339945782251}
   - component: {fileID: 744337339945782250}
-  - component: {fileID: 744337339945784341}
   m_Layer: 16
   m_Name: 5
   m_TagString: Untagged
@@ -15363,19 +14642,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 744337339945784341}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461323745899884}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -15387,7 +14666,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -15399,40 +14678,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &744337339945784341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744337339945784343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339836359614}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337339370710110}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337338306127581}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &744337339964210693
 GameObject:
   m_ObjectHideFlags: 0
@@ -19250,7 +18495,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1304461323582820485}
-  - component: {fileID: 1304461323582820486}
   m_Layer: 15
   m_Name: winStage
   m_TagString: Untagged
@@ -19274,46 +18518,6 @@ Transform:
   m_Father: {fileID: 1304461324910240666}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1304461323582820486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461323582820484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: 02,06,10,14,18,22
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981378398766534}
-    sType: 
-    manualName: 
-  - name: 01,05,09,13,17,21
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981378985423513}
-    sType: 
-    manualName: 
-  - name: 03,07,11,15,19,23
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981380228731459}
-    sType: 
-    manualName: 
-  - name: 04,08,12,16,20,24
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981378503529183}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &1304461323601159164
 GameObject:
   m_ObjectHideFlags: 0
@@ -26079,7 +25283,6 @@ GameObject:
   - component: {fileID: 1304461324758692781}
   - component: {fileID: 1304461324758692780}
   - component: {fileID: 1304461324758692787}
-  - component: {fileID: 1304461324758692786}
   m_Layer: 16
   m_Name: 2
   m_TagString: Untagged
@@ -26188,19 +25391,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1304461324758692786}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461323405180511}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -26212,7 +25415,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -26224,40 +25427,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1304461324758692786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324758692784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461324890529890}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461324239167112}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461323830784773}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &1304461324890529888
 GameObject:
   m_ObjectHideFlags: 0
@@ -26402,14 +25571,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1304461324910240666}
-  - component: {fileID: 1304461324910240660}
-  - component: {fileID: 1304461324910240667}
-  - component: {fileID: 1304461324910240662}
-  - component: {fileID: 1304461324910240661}
-  - component: {fileID: 1304461324910240663}
-  - component: {fileID: 1304461324910240656}
-  - component: {fileID: 1304461324567764638}
-  - component: {fileID: 1304461324567764639}
   m_Layer: 15
   m_Name: View
   m_TagString: Untagged
@@ -26435,465 +25596,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1304461324910240660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 849889d7c858f6949958da251d66ca15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
---- !u!114 &1304461324910240667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 2100000, guid: 11549197c86b5444fba8c3601427eb4e, type: 2}
-  - {fileID: 2100000, guid: 8751be7f216afa24a97703c50bc35b6e, type: 2}
-  - {fileID: 2100000, guid: 2104e1655972d2840a3579f0929cc955, type: 2}
-  sortByName: 0
-  initList:
-  - name: animal_rotate_root_transform
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981379295364907}
-    sType: 
-    manualName: 
-  - name: arrow_transform
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981378854586595}
-    sType: 
-    manualName: 
-  - name: colorRootTransform
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1553981378986990035}
-    sType: 
-    manualName: 
-  - name: runItemIndexs
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 2493920655106213143}
-    sType: 
-    manualName: 
-  - name: winStageInitHelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461323582820486}
-    sType: 
-    manualName: 
-  - name: betAreaBtnsInitHelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 6746968398382172042}
-    sType: 
-    manualName: 
-  - name: betAreaBtnsEventListener
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 6746968398382172043}
-    sType: 
-    manualName: 
-  - name: OSAScrollViewCom
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 0}
-    sType: 
-    manualName: 
-  - name: roadInitMultiListHelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 0}
-    sType: 
-    manualName: 
-  - name: betSelectBtnsInitHelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 8402688884443118205}
-    sType: 
-    manualName: 
-  - name: SelectEffect
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 7444721290905915355}
-    sType: 
-    manualName: 
-  - name: continue_button
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 8402688884562965693}
-    sType: 
-    manualName: 
-  - name: betSelectBtnsEventListener
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 8402688884443118204}
-    sType: 
-    manualName: 
-  - name: viewEventBroadcaster
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461324910240662}
-    sType: 
-    manualName: 
-  - name: winStage_huaban_animatorhelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 2223381252850127367}
-    sType: 
-    manualName: 
-  - name: winStageAnimal
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461323887947188}
-    sType: 
-    manualName: 
-  - name: slotPanelInitHelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 0}
-    sType: 
-    manualName: 
-  - name: SpotLight_Animal_animator
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 3401854616897226871}
-    sType: 
-    manualName: 
-  - name: Baoshi_1_animator
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1304461324132890223}
-    sType: 
-    manualName: 
-  - name: directionallight_animationhelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1797165588625455658}
-    sType: 
-    manualName: 
-  - name: pointlight_animationhelper
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 102785918}
-    sType: 
-    manualName: 
-  - name: JumpTarget_Transform
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 1763560982}
-    sType: 
-    manualName: 
-  showlog: 0
---- !u!114 &1304461324910240662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 939c85bcb5add9c429f10dd263e63171, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
-  events:
-  - name: freeState
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: kaishixiazhu
-            m_BoolArgument: 0
-          m_CallState: 2
-  - name: betState
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Play
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: kaishixiazhu
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 6746968398382172034}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Broadcast
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: enableBetBtns
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688884443118206}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Broadcast
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: enableBetBtns
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_isOn
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: ShowBetStage
-            m_BoolArgument: 1
-          m_CallState: 2
-  - name: showState
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Play
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: tingzhixiazhu
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 6746968398382172034}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Broadcast
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: disableBetBtns
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688884443118206}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: Broadcast
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: disableBetBtns
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_isOn
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: HideBetStage
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!114 &1304461324910240661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a9a500ba4c32f94090f7e07947e4b36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameObjects:
-  - {fileID: 0}
-  waitForEndFrame: 1
-  delaySecond: 0.1
-  event:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1304461324910240660}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: CallLuaByEvent
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: OnSceneReady
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1304461324910240663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90da319fe2cdc3a41b8f41b147375961, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
-  keyEvents:
-  - keyCode: 271
-    keyEventType: 1
-    keyEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: CallLuaByGameObjectName
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - keyCode: 13
-    keyEventType: 1
-    keyEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: CallLuaByGameObjectName
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  mouseButtonEvents: []
---- !u!114 &1304461324910240656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bd933bd60e56ad46b8ddd11ea20fe89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnKeyDown:
-    m_PersistentCalls:
-      m_Calls: []
-  OnKeyUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnKey:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseButtonDown:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseButtonUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseButton:
-    m_PersistentCalls:
-      m_Calls: []
-  keyDownList: 
-  keyUpList: 
-  keyList: 
-  onMouseButtonDownList: 
-  onMouseButtonUpList: 
-  onMouseButtonList: 
---- !u!114 &1304461324567764638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e47ac479767a1044db97607632422bf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1304461324567764639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461324910240665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e8e1d8448891a4b8aa2429be4e9fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleTrueEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1304461324567764638}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlaySoundEff2D
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: btnSound
-          m_BoolArgument: 0
-        m_CallState: 2
-  toggleFalseEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1304461325074310309
 GameObject:
   m_ObjectHideFlags: 0
@@ -27006,7 +25708,6 @@ GameObject:
   - component: {fileID: 1304461325103584603}
   - component: {fileID: 1304461325103584596}
   - component: {fileID: 3513567222043044947}
-  - component: {fileID: 535584437}
   m_Layer: 25
   m_Name: BetStageRoot
   m_TagString: Untagged
@@ -27239,198 +25940,6 @@ MonoBehaviour:
   optionalRotationMode: 0
   optionalScrambleMode: 0
   optionalString: 
---- !u!114 &535584437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304461325103584602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 939c85bcb5add9c429f10dd263e63171, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
-  events:
-  - name: ShowBetStage
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1304461325103584596}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1304461325103584596}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayForward
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - name: HideBetStage
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1304461325103584596}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1304461325103584596}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: DOPlayBackwards
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &1304461325152383816
 GameObject:
   m_ObjectHideFlags: 0
@@ -31876,7 +30385,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1553981378503529183}
   - component: {fileID: 1304461325002028343}
-  - component: {fileID: 2223381252305979494}
   m_Layer: 15
   m_Name: 4
   m_TagString: Untagged
@@ -31919,21 +30427,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2223381252305979494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2223381252305979493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &2223381252348461303
 GameObject:
   m_ObjectHideFlags: 0
@@ -31975,7 +30468,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1553981378398766534}
   - component: {fileID: 1304461325098459688}
-  - component: {fileID: 2223381252402552701}
   m_Layer: 15
   m_Name: 1
   m_TagString: Untagged
@@ -32018,21 +30510,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2223381252402552701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2223381252402552700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &2223381252420840116
 GameObject:
   m_ObjectHideFlags: 0
@@ -32190,7 +30667,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1553981378985423513}
   - component: {fileID: 1304461324520133997}
-  - component: {fileID: 2223381252764805212}
   m_Layer: 15
   m_Name: 2
   m_TagString: Untagged
@@ -32233,21 +30709,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2223381252764805212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2223381252764805155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &2223381252850127366
 GameObject:
   m_ObjectHideFlags: 0
@@ -32258,7 +30719,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1553981378865219772}
   - component: {fileID: 1304461324606517074}
-  - component: {fileID: 2223381252850127367}
   m_Layer: 15
   m_Name: HuaBan
   m_TagString: Untagged
@@ -32308,21 +30768,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2223381252850127367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2223381252850127366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &2223381252852109913
 GameObject:
   m_ObjectHideFlags: 0
@@ -32459,7 +30904,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1553981380228731459}
   - component: {fileID: 1304461323234948523}
-  - component: {fileID: 2223381253760649466}
   m_Layer: 15
   m_Name: 3
   m_TagString: Untagged
@@ -32502,21 +30946,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2223381253760649466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2223381253760649465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &2223381253792609758
 GameObject:
   m_ObjectHideFlags: 0
@@ -32559,7 +30988,6 @@ GameObject:
   - component: {fileID: 2274541615075239107}
   - component: {fileID: 2274541615075239116}
   - component: {fileID: 7419569673397394337}
-  - component: {fileID: 1797165588625455658}
   m_Layer: 15
   m_Name: DirectionalLight
   m_TagString: Untagged
@@ -32660,22 +31088,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &1797165588625455658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2274541615075239117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55f0ab0f5eddd7c43a32b521e423f674, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationTarget: {fileID: 7419569673397394337}
-  animationClips:
-  - {fileID: 7400000, guid: 354855b23b988e94081fa4daff13936a, type: 2}
-  - {fileID: 7400000, guid: 1e734cd29d721c34ba22440e3c0b7580, type: 2}
 --- !u!1 &2330619938563940329
 GameObject:
   m_ObjectHideFlags: 0
@@ -34801,7 +33213,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326756889538}
   - component: {fileID: 2493920653608819439}
-  - component: {fileID: 3340903801580050809}
   m_Layer: 15
   m_Name: 21
   m_TagString: "\u718A\u732B"
@@ -34844,21 +33255,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903801580050809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903801580050808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903801593129557
 GameObject:
   m_ObjectHideFlags: 0
@@ -34869,7 +33265,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326700769519}
   - component: {fileID: 2493920653763434865}
-  - component: {fileID: 3340903801593129558}
   m_Layer: 15
   m_Name: 07
   m_TagString: "\u7334\u5B50"
@@ -34912,21 +33307,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903801593129558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903801593129557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903801679445334
 GameObject:
   m_ObjectHideFlags: 0
@@ -34937,7 +33317,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326791272428}
   - component: {fileID: 2493920654216159436}
-  - component: {fileID: 3340903801679445335}
   m_Layer: 15
   m_Name: 19
   m_TagString: "\u7334\u5B50"
@@ -34980,21 +33359,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903801679445335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903801679445334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903801821995341
 GameObject:
   m_ObjectHideFlags: 0
@@ -35005,7 +33369,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326480882679}
   - component: {fileID: 2493920654698234644}
-  - component: {fileID: 3340903801821995342}
   m_Layer: 15
   m_Name: 03
   m_TagString: "\u7334\u5B50"
@@ -35048,21 +33411,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903801821995342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903801821995341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903801900174659
 GameObject:
   m_ObjectHideFlags: 0
@@ -35073,7 +33421,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326561155065}
   - component: {fileID: 2493920653856778939}
-  - component: {fileID: 3340903801900174716}
   m_Layer: 15
   m_Name: 11
   m_TagString: "\u7334\u5B50"
@@ -35116,21 +33463,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903801900174716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903801900174659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903801939150010
 GameObject:
   m_ObjectHideFlags: 0
@@ -35141,7 +33473,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326530895360}
   - component: {fileID: 2493920653791962931}
-  - component: {fileID: 3340903801939150011}
   m_Layer: 15
   m_Name: 09
   m_TagString: "\u718A\u732B"
@@ -35184,21 +33515,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903801939150011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903801939150010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802042896675
 GameObject:
   m_ObjectHideFlags: 0
@@ -35209,7 +33525,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326418627481}
   - component: {fileID: 2493920653878155775}
-  - component: {fileID: 3340903802042896732}
   m_Layer: 15
   m_Name: 01
   m_TagString: "\u718A\u732B"
@@ -35252,21 +33567,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802042896732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802042896675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802076879177
 GameObject:
   m_ObjectHideFlags: 0
@@ -35277,7 +33577,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326385497075}
   - component: {fileID: 2493920654529357209}
-  - component: {fileID: 3340903802076879178}
   m_Layer: 15
   m_Name: 04
   m_TagString: "\u5154\u5B50"
@@ -35320,21 +33619,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802076879178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802076879177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802123266710
 GameObject:
   m_ObjectHideFlags: 0
@@ -35345,7 +33629,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327254007852}
   - component: {fileID: 2493920654111888649}
-  - component: {fileID: 3340903802123266711}
   m_Layer: 15
   m_Name: 17
   m_TagString: "\u718A\u732B"
@@ -35388,21 +33671,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802123266711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802123266710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802272998268
 GameObject:
   m_ObjectHideFlags: 0
@@ -35413,7 +33681,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327128984006}
   - component: {fileID: 2493920654127711880}
-  - component: {fileID: 3340903802272998269}
   m_Layer: 15
   m_Name: 02
   m_TagString: "\u72EE\u5B50"
@@ -35456,21 +33723,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802272998269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802272998268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802358365779
 GameObject:
   m_ObjectHideFlags: 0
@@ -35481,7 +33733,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327017207017}
   - component: {fileID: 2493920654032729095}
-  - component: {fileID: 3340903802358365772}
   m_Layer: 15
   m_Name: 23
   m_TagString: "\u7334\u5B50"
@@ -35524,21 +33775,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802358365772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802358365779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802438332973
 GameObject:
   m_ObjectHideFlags: 0
@@ -35549,7 +33785,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327097211031}
   - component: {fileID: 2493920655429556702}
-  - component: {fileID: 3340903802438332974}
   m_Layer: 15
   m_Name: 18
   m_TagString: "\u72EE\u5B50"
@@ -35592,21 +33827,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802438332974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802438332973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802448918413
 GameObject:
   m_ObjectHideFlags: 0
@@ -35617,7 +33837,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327086824759}
   - component: {fileID: 2493920655505668337}
-  - component: {fileID: 3340903802448918414}
   m_Layer: 15
   m_Name: 13
   m_TagString: "\u718A\u732B"
@@ -35660,21 +33879,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802448918414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802448918413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802529192105
 GameObject:
   m_ObjectHideFlags: 0
@@ -35685,7 +33889,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326837842451}
   - component: {fileID: 2493920653642738155}
-  - component: {fileID: 3340903802529192106}
   m_Layer: 15
   m_Name: 06
   m_TagString: "\u72EE\u5B50"
@@ -35728,21 +33931,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802529192106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802529192105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802607427234
 GameObject:
   m_ObjectHideFlags: 0
@@ -35753,7 +33941,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489326928626712}
   - component: {fileID: 2493920654736887477}
-  - component: {fileID: 3340903802607427235}
   m_Layer: 15
   m_Name: 15
   m_TagString: "\u7334\u5B50"
@@ -35796,21 +33983,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802607427235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802607427234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903802874075045
 GameObject:
   m_ObjectHideFlags: 0
@@ -35821,7 +33993,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327736376607}
   - component: {fileID: 2493920655634595414}
-  - component: {fileID: 3340903802874075046}
   m_Layer: 15
   m_Name: 14
   m_TagString: "\u72EE\u5B50"
@@ -35864,21 +34035,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903802874075046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903802874075045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803046270145
 GameObject:
   m_ObjectHideFlags: 0
@@ -35889,7 +34045,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327436713595}
   - component: {fileID: 2493920654189840142}
-  - component: {fileID: 3340903803046270146}
   m_Layer: 15
   m_Name: 24
   m_TagString: "\u5154\u5B50"
@@ -35932,21 +34087,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803046270146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803046270145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803182019226
 GameObject:
   m_ObjectHideFlags: 0
@@ -35957,7 +34097,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489328375638048}
   - component: {fileID: 2493920655599025854}
-  - component: {fileID: 3340903803182019227}
   m_Layer: 15
   m_Name: 22
   m_TagString: "\u72EE\u5B50"
@@ -36000,21 +34139,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803182019227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803182019226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803277669065
 GameObject:
   m_ObjectHideFlags: 0
@@ -36025,7 +34149,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489328406276211}
   - component: {fileID: 2493920655682597786}
-  - component: {fileID: 3340903803277669066}
   m_Layer: 15
   m_Name: 10
   m_TagString: "\u72EE\u5B50"
@@ -36068,21 +34191,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803277669066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803277669065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803408893784
 GameObject:
   m_ObjectHideFlags: 0
@@ -36093,7 +34201,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489328248102370}
   - component: {fileID: 2493920653704885018}
-  - component: {fileID: 3340903803408893785}
   m_Layer: 15
   m_Name: 12
   m_TagString: "\u5154\u5B50"
@@ -36136,21 +34243,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803408893785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803408893784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803470917117
 GameObject:
   m_ObjectHideFlags: 0
@@ -36161,7 +34253,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489328043816775}
   - component: {fileID: 2493920654418372346}
-  - component: {fileID: 3340903803470917118}
   m_Layer: 15
   m_Name: 20
   m_TagString: "\u5154\u5B50"
@@ -36204,21 +34295,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803470917118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803470917117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803581158730
 GameObject:
   m_ObjectHideFlags: 0
@@ -36229,7 +34305,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327967375344}
   - component: {fileID: 2493920654184634657}
-  - component: {fileID: 3340903803581158731}
   m_Layer: 15
   m_Name: 05
   m_TagString: "\u718A\u732B"
@@ -36272,21 +34347,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803581158731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803581158730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803610442085
 GameObject:
   m_ObjectHideFlags: 0
@@ -36297,7 +34357,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327912809439}
   - component: {fileID: 2493920654224861977}
-  - component: {fileID: 3340903803610442086}
   m_Layer: 15
   m_Name: 16
   m_TagString: "\u5154\u5B50"
@@ -36340,21 +34399,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803610442086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803610442085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3340903803662252567
 GameObject:
   m_ObjectHideFlags: 0
@@ -36365,7 +34409,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2672489327987679405}
   - component: {fileID: 2493920655307734154}
-  - component: {fileID: 3340903803662252560}
   m_Layer: 15
   m_Name: 08
   m_TagString: "\u5154\u5B50"
@@ -36408,21 +34451,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3340903803662252560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3340903803662252567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1800c41b4d2723647bc7568bdc3fa072, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AutoPlayOnAwake: 0
-  autoPlayAnimName: 
-  animatorStateInfoEventList: []
 --- !u!1 &3381446334789556256
 GameObject:
   m_ObjectHideFlags: 0
@@ -53922,9 +51950,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6746968398382172044}
-  - component: {fileID: 6746968398382172043}
-  - component: {fileID: 6746968398382172042}
-  - component: {fileID: 6746968398382172034}
   m_Layer: 16
   m_Name: betAreaButtons
   m_TagString: Untagged
@@ -53956,434 +51981,6 @@ RectTransform:
   m_AnchoredPosition: {x: -123, y: 15.9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6746968398382172043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6746968398382172047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 849889d7c858f6949958da251d66ca15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
---- !u!114 &6746968398382172042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6746968398382172047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 6746968398490329511}
-  - {fileID: 1304461324758692786}
-  - {fileID: 744337338202818568}
-  - {fileID: 744337339484514692}
-  - {fileID: 744337339945784341}
-  - {fileID: 744337338149574989}
-  - {fileID: 744337338813670080}
-  - {fileID: 744337339714377110}
-  - {fileID: 744337338845002105}
-  - {fileID: 744337338165656505}
-  - {fileID: 744337339205110980}
-  - {fileID: 744337339084141447}
-  - {fileID: 744337338877069024}
-  - {fileID: 744337339226714440}
-  - {fileID: 744337339585617558}
-  sortByName: 0
-  initList: []
-  showlog: 0
---- !u!114 &6746968398382172034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6746968398382172047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 939c85bcb5add9c429f10dd263e63171, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
-  events:
-  - name: enableBetBtns
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6746968398490329512}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1304461324758692787}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337338202818569}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339484514693}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339945782250}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337338149574978}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337338813670081}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339714377111}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337338845002110}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337338165656510}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339205110981}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339084141444}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337338877069025}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339226714441}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 744337339585617559}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - name: disableBetBtns
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6746968398490329512}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1304461324758692787}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337338202818569}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339484514693}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339945782250}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337338149574978}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337338813670081}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339714377111}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337338845002110}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337338165656510}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339205110981}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339084141444}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337338877069025}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339226714441}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 744337339585617559}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &6746968398490329514
 GameObject:
   m_ObjectHideFlags: 0
@@ -54396,7 +51993,6 @@ GameObject:
   - component: {fileID: 6746968398490329510}
   - component: {fileID: 6746968398490329513}
   - component: {fileID: 6746968398490329512}
-  - component: {fileID: 6746968398490329511}
   m_Layer: 16
   m_Name: 1
   m_TagString: Untagged
@@ -54505,19 +52101,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6746968398382172043}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent2
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 6746968398490329511}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324942767207}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Play
         m_Mode: 5
@@ -54529,7 +52125,7 @@ MonoBehaviour:
           m_StringArgument: Anxia
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -54541,40 +52137,6 @@ MonoBehaviour:
           m_StringArgument: btnSound
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6746968398490329511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6746968398490329514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects: []
-  sortByName: 0
-  initList:
-  - name: totalBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 6746968398118038143}
-    sType: 
-    manualName: 
-  - name: selfBetScore
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 6746968397348205303}
-    sType: 
-    manualName: 
-  - name: ratioText
-    t: {fileID: 0}
-    monoType: {fileID: 0}
-    anyType: {fileID: 744337340019289603}
-    sType: 
-    manualName: 
-  showlog: 0
 --- !u!1 &6753885636344777502
 GameObject:
   m_ObjectHideFlags: 0
@@ -54845,7 +52407,6 @@ GameObject:
   - component: {fileID: 3216050665967300727}
   - component: {fileID: 6812599503058795386}
   - component: {fileID: 102785919}
-  - component: {fileID: 102785918}
   m_Layer: 15
   m_Name: PointLight
   m_TagString: Untagged
@@ -54946,22 +52507,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &102785918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7156709706241753564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55f0ab0f5eddd7c43a32b521e423f674, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationTarget: {fileID: 102785919}
-  animationClips:
-  - {fileID: 7400000, guid: 88795d6f5b9e5c44db4a79be8496cecf, type: 2}
-  - {fileID: 7400000, guid: c5ebe30fdcfd3174b9f1be6c9d893775, type: 2}
 --- !u!1 &7168217679011507790
 GameObject:
   m_ObjectHideFlags: 0
@@ -55399,8 +52944,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7444721290905915352}
-  - component: {fileID: 7444721290905915353}
-  - component: {fileID: 7444721290905915354}
   m_Layer: 16
   m_Name: SelectEffect
   m_TagString: Untagged
@@ -55429,37 +52972,6 @@ RectTransform:
   m_AnchoredPosition: {x: 80, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7444721290905915353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7444721290905915355}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b12240278e94f0d43abd221e0ebfa004, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  keepX: 0
-  keepY: 0
-  keepZ: 0
---- !u!114 &7444721290905915354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7444721290905915355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9637c0ec082960f40beebf3c2587b9e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trigger:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &7451642345468970529
 GameObject:
   m_ObjectHideFlags: 0
@@ -56329,7 +53841,6 @@ GameObject:
   - component: {fileID: 4116476082183052554}
   - component: {fileID: 7703225518122569902}
   - component: {fileID: 2611590105156018973}
-  - component: {fileID: 1468671414155654857}
   m_Layer: 16
   m_Name: zhuangText
   m_TagString: Untagged
@@ -56454,48 +53965,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1468671414155654857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8041500573216979328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 2611590105156018973}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 0}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: "\u5E84"
-    sprite: {fileID: 0}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: D
-    sprite: {fileID: 0}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8071171260812767337
 GameObject:
   m_ObjectHideFlags: 0
@@ -57685,7 +55154,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8402688882823736306}
   - component: {fileID: 8402688882823736301}
-  - component: {fileID: 8402688882823736300}
   - component: {fileID: 8402688882823736304}
   m_Layer: 16
   m_Name: 0
@@ -57773,7 +55241,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LuaUnityEventListener, Assembly-CSharp
         m_MethodName: OnCustumEvent2
         m_Mode: 2
@@ -57785,7 +55253,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7444721290905915354}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveToByEvent, Assembly-CSharp
         m_MethodName: OnEventCall
         m_Mode: 2
@@ -57797,7 +55265,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764639}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ToggleEventSeparator, Assembly-CSharp
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -57810,22 +55278,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
---- !u!114 &8402688882823736300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688882823736307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b12240278e94f0d43abd221e0ebfa004, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  keepX: 1
-  keepY: 1
-  keepZ: 1
 --- !u!114 &8402688882823736304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58103,7 +55555,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LuaUnityEventListener, Assembly-CSharp
         m_MethodName: OnCustumEvent2
         m_Mode: 2
@@ -58115,7 +55567,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7444721290905915354}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveToByEvent, Assembly-CSharp
         m_MethodName: OnEventCall
         m_Mode: 2
@@ -58127,7 +55579,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764639}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ToggleEventSeparator, Assembly-CSharp
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -58342,7 +55794,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LuaUnityEventListener, Assembly-CSharp
         m_MethodName: OnCustumEvent2
         m_Mode: 2
@@ -58354,7 +55806,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7444721290905915354}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveToByEvent, Assembly-CSharp
         m_MethodName: OnEventCall
         m_Mode: 2
@@ -58366,7 +55818,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764639}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ToggleEventSeparator, Assembly-CSharp
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -58495,7 +55947,6 @@ GameObject:
   - component: {fileID: 8402688882957125990}
   - component: {fileID: 8402688882957125984}
   - component: {fileID: 8402688882957125985}
-  - component: {fileID: 8402688882957125986}
   m_Layer: 16
   m_Name: Background
   m_TagString: Untagged
@@ -58561,48 +56012,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8402688882957125986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688882957125991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688882957125985}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 7f92be88ee8802f4d99553ddcf09b31a, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: bea9941d0750d7d4cbea8f255ff79bad, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688883073326913
 GameObject:
   m_ObjectHideFlags: 0
@@ -58614,7 +56023,6 @@ GameObject:
   - component: {fileID: 8402688883073326912}
   - component: {fileID: 8402688883073326914}
   - component: {fileID: 8402688883073326915}
-  - component: {fileID: 8402688883073326972}
   m_Layer: 16
   m_Name: Background
   m_TagString: Untagged
@@ -58680,48 +56088,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8402688883073326972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688883073326913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688883073326915}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 1895f68a5dda7ec4584cc75867cd7fa2, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: 948fc950ae744364d9d6488937274b5f, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688883236620682
 GameObject:
   m_ObjectHideFlags: 0
@@ -58736,7 +56102,6 @@ GameObject:
   - component: {fileID: 8402688883236620676}
   - component: {fileID: 8402688883236620683}
   - component: {fileID: 8402688883236620680}
-  - component: {fileID: 8402688883236620672}
   m_Layer: 16
   m_Name: Clear
   m_TagString: Untagged
@@ -58845,7 +56210,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent
         m_Mode: 5
@@ -58869,7 +56234,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -59006,48 +56371,6 @@ MonoBehaviour:
   optionalRotationMode: 0
   optionalScrambleMode: 0
   optionalString: 
---- !u!114 &8402688883236620672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688883236620682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688883236620679}
-  toggle: {fileID: 0}
-  button: {fileID: 8402688883236620676}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 9de6e5ed21deb8845ae80e86dfa3da9f, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: f1c994034e3bac14fa8fc53acbc8ed05, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688883284268506
 GameObject:
   m_ObjectHideFlags: 0
@@ -59059,7 +56382,6 @@ GameObject:
   - component: {fileID: 8402688883284268501}
   - component: {fileID: 8402688883284268503}
   - component: {fileID: 8402688883284268500}
-  - component: {fileID: 8402688883284268507}
   m_Layer: 16
   m_Name: Background
   m_TagString: Untagged
@@ -59125,48 +56447,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8402688883284268507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688883284268506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688883284268500}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 08f0dcd03afc85c48939f33f55607e1b, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: 909aa3bc87354584198a9b667c629e7c, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688883307303704
 GameObject:
   m_ObjectHideFlags: 0
@@ -59339,7 +56619,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LuaUnityEventListener, Assembly-CSharp
         m_MethodName: OnCustumEvent2
         m_Mode: 2
@@ -59351,7 +56631,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7444721290905915354}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveToByEvent, Assembly-CSharp
         m_MethodName: OnEventCall
         m_Mode: 2
@@ -59363,7 +56643,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764639}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ToggleEventSeparator, Assembly-CSharp
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -59567,7 +56847,6 @@ GameObject:
   - component: {fileID: 8402688883669981248}
   - component: {fileID: 8402688883669981250}
   - component: {fileID: 8402688883669981251}
-  - component: {fileID: 8402688883669981308}
   m_Layer: 16
   m_Name: Background
   m_TagString: Untagged
@@ -59633,48 +56912,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8402688883669981308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688883669981249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688883669981251}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 3aeed0e389260b343adfcec0f240aa8c, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: 7883ad31b065fae4c8b4880dacecc93a, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688883672858914
 GameObject:
   m_ObjectHideFlags: 0
@@ -59772,7 +57009,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LuaUnityEventListener, Assembly-CSharp
         m_MethodName: OnCustumEvent2
         m_Mode: 2
@@ -59784,7 +57021,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7444721290905915354}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveToByEvent, Assembly-CSharp
         m_MethodName: OnEventCall
         m_Mode: 2
@@ -59796,7 +57033,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764639}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ToggleEventSeparator, Assembly-CSharp
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -59925,7 +57162,6 @@ GameObject:
   - component: {fileID: 8402688883837124889}
   - component: {fileID: 8402688883837124891}
   - component: {fileID: 8402688883837124888}
-  - component: {fileID: 8402688883837124895}
   m_Layer: 16
   m_Name: Background
   m_TagString: Untagged
@@ -59991,48 +57227,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8402688883837124895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688883837124894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688883837124888}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 2a5e672323390fd4999993907ac1fd49, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: f20c44bebc0538d4082c16b055311ff4, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688883894147431
 GameObject:
   m_ObjectHideFlags: 0
@@ -60119,7 +57313,6 @@ GameObject:
   - component: {fileID: 8402688883957287319}
   - component: {fileID: 8402688883957287313}
   - component: {fileID: 8402688883957287318}
-  - component: {fileID: 8402688883957287317}
   m_Layer: 16
   m_Name: Background
   m_TagString: Untagged
@@ -60185,48 +57378,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8402688883957287317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688883957287316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688883957287318}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: d2c733e3751517c44b23a3f5d8d8cac0, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: 161790129bbb9eb419a48b54e3e4a7bc, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688884443118145
 GameObject:
   m_ObjectHideFlags: 0
@@ -60239,9 +57390,6 @@ GameObject:
   - component: {fileID: 8402688884443118146}
   - component: {fileID: 8402688884443118147}
   - component: {fileID: 8402688884443118207}
-  - component: {fileID: 8402688884443118204}
-  - component: {fileID: 8402688884443118205}
-  - component: {fileID: 8402688884443118206}
   m_Layer: 16
   m_Name: betSelectBtns
   m_TagString: Untagged
@@ -60321,257 +57469,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 1
---- !u!114 &8402688884443118204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688884443118145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 849889d7c858f6949958da251d66ca15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
---- !u!114 &8402688884443118205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688884443118145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 8402688882823736301}
-  - {fileID: 8402688882922665865}
-  - {fileID: 8402688883486894235}
-  - {fileID: 8402688884853873891}
-  - {fileID: 8402688882935313217}
-  - {fileID: 8402688883672858972}
-  sortByName: 0
-  initList: []
-  showlog: 0
---- !u!114 &8402688884443118206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688884443118145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 939c85bcb5add9c429f10dd263e63171, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLog: 0
-  events:
-  - name: enableBetBtns
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8402688882823736301}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688882922665865}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688883486894235}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688884853873891}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688882935313217}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688883672858972}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688883236620676}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 8402688884562965693}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - name: disableBetBtns
-    delayInMillisecond: 0
-    UnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 8402688882823736301}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688882922665865}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688883486894235}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688884853873891}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688882935313217}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688883672858972}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688883236620676}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8402688884562965693}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: set_interactable
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &8402688884562965635
 GameObject:
   m_ObjectHideFlags: 0
@@ -60586,7 +57483,6 @@ GameObject:
   - component: {fileID: 8402688884562965693}
   - component: {fileID: 8402688884562965632}
   - component: {fileID: 8402688884562965633}
-  - component: {fileID: 8402688884562965694}
   m_Layer: 16
   m_Name: Continue
   m_TagString: Untagged
@@ -60695,7 +57591,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnCustumEvent
         m_Mode: 5
@@ -60719,7 +57615,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764638}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: PlaySoundEff2D
         m_Mode: 5
@@ -60856,48 +57752,6 @@ MonoBehaviour:
   optionalRotationMode: 0
   optionalScrambleMode: 0
   optionalString: 
---- !u!114 &8402688884562965694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688884562965635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 8402688884562965692}
-  toggle: {fileID: 0}
-  button: {fileID: 8402688884562965693}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: f3145837d0584224f9c788d7dde4cbe0, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: 22183fdaea1948648bc1fc68a1943a79, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8402688884616034816
 GameObject:
   m_ObjectHideFlags: 0
@@ -60908,7 +57762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8402688884616034819}
   - component: {fileID: 8402688884616034818}
-  - component: {fileID: 8402688884616034877}
   m_Layer: 16
   m_Name: Layout
   m_TagString: Untagged
@@ -60969,30 +57822,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &8402688884616034877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402688884616034816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e4c019941ccb643926014bde293aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 8402688882823736301}
-  - {fileID: 8402688882922665865}
-  - {fileID: 8402688883486894235}
-  - {fileID: 8402688884853873891}
-  - {fileID: 8402688882935313217}
-  - {fileID: 8402688883672858972}
-  - {fileID: 8402688883236620676}
-  - {fileID: 8402688884562965693}
-  sortByName: 0
-  initList: []
-  showlog: 0
 --- !u!1 &8402688884844855658
 GameObject:
   m_ObjectHideFlags: 0
@@ -61165,7 +57994,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8402688884443118204}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LuaUnityEventListener, Assembly-CSharp
         m_MethodName: OnCustumEvent2
         m_Mode: 2
@@ -61177,7 +58006,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7444721290905915354}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MoveToByEvent, Assembly-CSharp
         m_MethodName: OnEventCall
         m_Mode: 2
@@ -61189,7 +58018,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1304461324567764639}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ToggleEventSeparator, Assembly-CSharp
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -61393,7 +58222,6 @@ GameObject:
   - component: {fileID: 7297508178386306488}
   - component: {fileID: 4379736278107804058}
   - component: {fileID: 6964513399661556000}
-  - component: {fileID: 1304461324567764642}
   m_Layer: 16
   m_Name: heText
   m_TagString: Untagged
@@ -61518,48 +58346,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1304461324567764642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8421401740426138774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 6964513399661556000}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 0}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: "\u548C"
-    sprite: {fileID: 0}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: T
-    sprite: {fileID: 0}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &8441087428016306906
 GameObject:
   m_ObjectHideFlags: 0
@@ -80550,15 +77336,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccd14661536ac9f43aa84cc660cfd483, type: 3}
---- !u!4 &744337338420947686 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6290405036518850880, guid: ccd14661536ac9f43aa84cc660cfd483,
-    type: 3}
-  m_PrefabInstance: {fileID: 6708226891400817574}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &744337338421155282 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6290405036519079540, guid: ccd14661536ac9f43aa84cc660cfd483,
+    type: 3}
+  m_PrefabInstance: {fileID: 6708226891400817574}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &744337338420947686 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6290405036518850880, guid: ccd14661536ac9f43aa84cc660cfd483,
     type: 3}
   m_PrefabInstance: {fileID: 6708226891400817574}
   m_PrefabAsset: {fileID: 0}

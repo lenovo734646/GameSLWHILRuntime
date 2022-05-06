@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9181828374200993031}
-  - component: {fileID: 82571507235313518}
-  - component: {fileID: 3595566842200890808}
   m_Layer: 0
   m_Name: commonSound
   m_TagString: Untagged
@@ -32,76 +30,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &82571507235313518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7022528425820379347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c9b24ec153458a4f87a4f0dcb7bc697, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClipDatas:
-  - name: alert
-    clip: {fileID: 8300000, guid: 5eb892679e7f20946b69cd5f670c40d4, type: 3}
-    pathOrName: Assets/Dance/Sound/alert
-  - name: betSound
-    clip: {fileID: 8300000, guid: b6a0a7c1d9bd28243867d2ca5fefb2b1, type: 3}
-    pathOrName: Assets/Dance/Sound/betSound
-  - name: betStateMusic
-    clip: {fileID: 8300000, guid: 74585c5a32297364987e75553118bf6d, type: 3}
-    pathOrName: Assets/Dance/Sound/betStateMusic
-  - name: BGMusic
-    clip: {fileID: 8300000, guid: 86b698d2b9e50d3408a2967d64b34536, type: 3}
-    pathOrName: Assets/Dance/Sound/BGMusic
-  - name: caiJinLong
-    clip: {fileID: 8300000, guid: 47f6575d5a9c1984382f47703f3f5c40, type: 3}
-    pathOrName: Assets/Dance/Sound/caiJinLong
-  - name: dasanyuan
-    clip: {fileID: 8300000, guid: 971730063939ed5498735fecae70ab23, type: 3}
-    pathOrName: Assets/Dance/Sound/dasanyuan
-  - name: dasixi
-    clip: {fileID: 8300000, guid: 7b4ddcbd83aac4845b01a9717206bec8, type: 3}
-    pathOrName: Assets/Dance/Sound/dasixi
-  - name: lottery_for
-    clip: {fileID: 8300000, guid: a9b2322e2d1d4c6458601a8053341cf9, type: 3}
-    pathOrName: Assets/Dance/Sound/lottery_for
-  - name: TimerTick
-    clip: {fileID: 8300000, guid: acc5f08879b638249b2e84787888c4a0, type: 3}
-    pathOrName: Assets/Dance/Sound/TimerTick
-  - name: vs_alert
-    clip: {fileID: 8300000, guid: 30253db73d192324ba3f97cd5f28b586, type: 3}
-    pathOrName: Assets/Dance/Sound/vs_alert
-  - name: win_bet
-    clip: {fileID: 8300000, guid: 47a27a2d9a36d084e9f3c4c8dacb719b, type: 3}
-    pathOrName: Assets/Dance/Sound/win_bet
-  audioClips:
-  - {fileID: 8300000, guid: 5eb892679e7f20946b69cd5f670c40d4, type: 3}
-  - {fileID: 8300000, guid: b6a0a7c1d9bd28243867d2ca5fefb2b1, type: 3}
-  - {fileID: 8300000, guid: 74585c5a32297364987e75553118bf6d, type: 3}
-  - {fileID: 8300000, guid: 86b698d2b9e50d3408a2967d64b34536, type: 3}
-  - {fileID: 8300000, guid: 47f6575d5a9c1984382f47703f3f5c40, type: 3}
-  - {fileID: 8300000, guid: 971730063939ed5498735fecae70ab23, type: 3}
-  - {fileID: 8300000, guid: 7b4ddcbd83aac4845b01a9717206bec8, type: 3}
-  - {fileID: 8300000, guid: a9b2322e2d1d4c6458601a8053341cf9, type: 3}
-  - {fileID: 8300000, guid: acc5f08879b638249b2e84787888c4a0, type: 3}
-  - {fileID: 8300000, guid: 30253db73d192324ba3f97cd5f28b586, type: 3}
-  - {fileID: 8300000, guid: 47a27a2d9a36d084e9f3c4c8dacb719b, type: 3}
-  basePath: Assets/Dance/Sound/
-  autoAddToAudioManager: 1
-  initOnStart: 1
---- !u!114 &3595566842200890808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7022528425820379347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f60d99aa605d554daa112b92e271401, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

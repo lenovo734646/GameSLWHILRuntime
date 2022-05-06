@@ -356,6 +356,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hotfix\Games\SLWH\GameController.cs" />
+    <Compile Include="Hotfix\Games\SLWH\Language.cs" />
     <Compile Include="Hotfix\Games\SLWH\MyApp.cs" />
     <Compile Include="Hotfix\Games\SLWH\ThisGameConfig.cs" />
     <Compile Include="Hotfix\Games\SLWH\ViewGameScene.cs" />

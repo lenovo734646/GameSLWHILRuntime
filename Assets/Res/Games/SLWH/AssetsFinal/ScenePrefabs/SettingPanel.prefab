@@ -219,7 +219,6 @@ GameObject:
   - component: {fileID: 536485621509876116}
   - component: {fileID: 536485621509876118}
   - component: {fileID: 536485621509876117}
-  - component: {fileID: 536485621509876119}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -284,48 +283,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &536485621509876119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536485621509876123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a795c46fa2d532e498656857bd94c8c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoApply: 1
-  changeByEvent: 0
-  text: {fileID: 0}
-  textMeshPro: {fileID: 0}
-  textMeshProUGUI: {fileID: 0}
-  skeletonGraphic: {fileID: 0}
-  image: {fileID: 536485621509876117}
-  toggle: {fileID: 0}
-  button: {fileID: 0}
-  supportLanguageList:
-  - name: CN
-    content: 
-    sprite: {fileID: 21300000, guid: 7d147a2df5734424f9b4835f64672df1, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
-  - name: EN
-    content: 
-    sprite: {fileID: 21300000, guid: f0b29c0546a51da4e9b0fdb71a098120, type: 3}
-    sprite2: {fileID: 0}
-    gameObject: {fileID: 0}
-    buttonSwapSprites:
-      highlightedSprite: {fileID: 0}
-      pressedSprite: {fileID: 0}
-      selectedSprite: {fileID: 0}
-      disabledSprite: {fileID: 0}
 --- !u!1 &536485621560854034
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +460,6 @@ GameObject:
   m_Component:
   - component: {fileID: 536485621706207428}
   - component: {fileID: 536485621706207429}
-  - component: {fileID: 6704447422131765881}
   m_Layer: 5
   m_Name: tog_Effect
   m_TagString: Untagged
@@ -591,7 +547,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6704447422131765881}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -616,48 +572,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
---- !u!114 &6704447422131765881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536485621706207435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e8e1d8448891a4b8aa2429be4e9fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleTrueEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6022266350645494964}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  toggleFalseEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6022266350645494964}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!1 &536485621954696192
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +1084,6 @@ GameObject:
   m_Component:
   - component: {fileID: 536485623020784122}
   - component: {fileID: 536485623020784123}
-  - component: {fileID: 1490543428046876824}
   m_Layer: 5
   m_Name: tog_Music
   m_TagString: Untagged
@@ -1258,7 +1171,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1490543428046876824}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnToggleValueChange
         m_Mode: 0
@@ -1283,48 +1196,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 1
---- !u!114 &1490543428046876824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536485623020784121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e8e1d8448891a4b8aa2429be4e9fd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleTrueEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1951350738644004779}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  toggleFalseEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1951350738644004779}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
 --- !u!1 &536485623086710158
 GameObject:
   m_ObjectHideFlags: 0

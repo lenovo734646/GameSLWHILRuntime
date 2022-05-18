@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: GameRes
+  m_EditorClassIdentifier: 
+  m_GroupName: GameRes
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c7f37fa66d058ed49ac4ca4f0b7b5b7f
+  m_SerializeEntries:
+  - m_GUID: 11549197c86b5444fba8c3601427eb4e
+    m_Address: Assets/Res/Games/SLWH/Dance/Secne_Model/ColorLight/light_Red.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 8751be7f216afa24a97703c50bc35b6e
+    m_Address: Assets/Res/Games/SLWH/Dance/Secne_Model/ColorLight/light_Green.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 2104e1655972d2840a3579f0929cc955
+    m_Address: Assets/Res/Games/SLWH/Dance/Secne_Model/ColorLight/light_Yellow.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: f7f03e6a541988b439944d6cfd399172
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/color_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 5ba634637abbc754b8c710797906521c
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/color_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 72582f31f22ab704599b7aa7b7f86b5d
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/color_3.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 5060d7d98d9210c48983988a642e6c5d
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalLion.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 016692a91b9d9634bb45dcb0986f38d4
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalLion_Gold.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 1401f9ab893079b478d4fedd24809f6b
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalPanda_Gold.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 367e380c7bb67154081d9147882ff952
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalRabbit_Gold.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 07bfed771a8ef58458241501afe59a63
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalRabbit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 4bd0bfa992751d94d9b212d226720f8c
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalPanda.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: bdf125223cae4c34eac98bf29c4dfefc
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalMonky.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: ed34d634ad43c61468b20afdfc875326
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/animalMonky_Gold.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: f9caaba968322e549ae737ce7dd365aa
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/img_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 25e814a9e0e7f7f44afa10258918b23d
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/colorBG_3.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: f621c6c6ac7877c469e00a4bc2908753
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/colorBG_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 482f3bfd92f141442ba02b589a213a03
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/colorBG_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: c284a81c77bed8b45867d77896c845de
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/img_3.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 442a296f00ea19443be3ccdff47e5bbc
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/img_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 35b49f47ed6b2394a90aa213cbe46196
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/img_4.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: 0baefefa904a0f742a4acd15af1e5376
+    m_Address: Assets/Res/Games/SLWH/Scenes/MainScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: dbd1f92bbe9a2434c8bf7ff742c18800, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7ae5fa3cec47c12468488381c3507f2c, type: 2}
+    - {fileID: 11400000, guid: 123fd285697acba41a6b17dc63002b5b, type: 2}

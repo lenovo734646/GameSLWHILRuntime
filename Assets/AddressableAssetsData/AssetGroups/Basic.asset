@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Basic
+  m_EditorClassIdentifier: 
+  m_GroupName: Basic
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a0849a18faa4c84459d639367672cbe7
+  m_SerializeEntries:
+  - m_GUID: 0897f58384a690849a8714e3281bf560
+    m_Address: Assets/SLWH/AssetsFinal/ScenePrefabs/View.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: c0a9df68dcaa7f64f9dce4056c895d6c
+    m_Address: Assets/Res/Games/SLWH/Scenes/LoadingScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: fc9e791a92694ff44be63bca646f1fa9
+    m_Address: Assets/Res/Games/SLWH/HotFixDll_pdb.json
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: b4791521902c84940a518d271fb38341
+    m_Address: Assets/Res/Games/SLWH/HotFixDll.json
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SLWH
+  - m_GUID: bd59fd0040423174f93eeb634057e86b
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Main/BigSmallItem.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 114aecdf621fa394e9f0126988f6cc74
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Main/type_1_b.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 840dc0c384bfb484fbf0a57ea5572ec7
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Main/type_2_b.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 2ef301c61c7772341a148b92e25e0dfa
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Main/type_3_b.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1cd8a77f79446524aaf96ea9ab52a908
+    m_Address: Assets/Res/Games/SLWH/Dance/Prefabs/Item_Record.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d56a58c629a34444d834f4c95e19c2e4
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/type_3.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e9ffa34b8afb9634395d303fa2224aac
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/type_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5ae7ffa31786feb479242883bbf35d34
+    m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/type_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: dbd1f92bbe9a2434c8bf7ff742c18800, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: e599e286d4e25ec41ac26f251bb804bc, type: 2}
+    - {fileID: 11400000, guid: 258146c25158b3d45bdbc95f59403273, type: 2}

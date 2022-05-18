@@ -67,6 +67,8 @@ public class StartThisGame : MonoBehaviour
 		if (bridge_.Prepared() && !exit_) {
 			Progress(LanguageStartup.IsLoadingHotfixModule);
 			HotfixCaller.SetHotfixValue("defaultGameFromHost", "SLWH");
+			HotfixCaller.SetHotfixValue("disableNetwork", true);
+			
 			HotfixCaller.RunGame("Hotfix.Common.AppController", "Assets/Res/Games/SLWH/HotFixDll.json", "Assets/Res/Games/SLWH/HotFixDll_pdb.json", show_);
 			//解开循环引用
 			show_ = null;

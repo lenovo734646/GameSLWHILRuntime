@@ -352,9 +352,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Hotfix\ILHotfixCommon\.gitignore" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Hotfix\Games\SLWH\GameController.cs" />
     <Compile Include="Hotfix\Games\SLWH\Language.cs" />
     <Compile Include="Hotfix\Games\SLWH\MyApp.cs" />
@@ -386,7 +383,7 @@
     <Compile Include="Hotfix\ILHotfixCommon\view\ViewToast.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Hotfix\ILHotfixCommon\.git" />
+    <Content Include="Hotfix\ILHotfixCommon\.gitignore" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

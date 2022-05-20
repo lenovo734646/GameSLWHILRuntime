@@ -51,17 +51,17 @@ namespace ILRuntimeCrossbindAdapter
 
             public ILTypeInstance ILInstance { get { return instance; } }
 
-            public void Progress(System.Int64 downed, System.Int64 totalLength)
+            public override void Progress(System.Int64 downed, System.Int64 totalLength)
             {
                 mProgress_0.Invoke(this.instance, downed, totalLength);
             }
 
-            public void Desc(System.String desc)
+            public override void Desc(System.String desc)
             {
                 mDesc_1.Invoke(this.instance, desc);
             }
 
-            public void SetState(AssemblyCommon.DownloadState st)
+            public override void SetState(AssemblyCommon.DownloadState st)
             {
                 mSetState_2.Invoke(this.instance, st);
             }

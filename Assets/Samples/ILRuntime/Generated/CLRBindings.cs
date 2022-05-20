@@ -78,13 +78,14 @@ namespace ILRuntime.Runtime.Generated
             System_Collections_Generic_List_1_ILRuntimeCrossbindAdapter_ControllerBaseAdapter_Binding_Adapter_Binding_Enumerator_Binding.Register(app);
             System_Text_Encoding_Binding.Register(app);
             LitJson_JsonMapper_Binding.Register(app);
+            AssemblyCommon_IProtoMessage_Binding.Register(app);
             AssemblyCommon_BinaryStream_Binding.Register(app);
             AssemblyCommon_MsgJsonForm_Binding.Register(app);
-            AssemblyCommon_DictionaryCached_2_Int32_ILTypeInstance_Binding.Register(app);
-            AssemblyCommon_DictionaryCached_2_Type_ILTypeInstance_Binding.Register(app);
             AssemblyCommon_MsgPbForm_Binding.Register(app);
             AssemblyCommon_MsgPbBase_Binding.Register(app);
             AssemblyCommon_MsgPbFormStringHeader_Binding.Register(app);
+            AssemblyCommon_DictionaryCached_2_Int32_ILTypeInstance_Binding.Register(app);
+            AssemblyCommon_DictionaryCached_2_Type_ILTypeInstance_Binding.Register(app);
             System_Collections_Generic_List_1_KeyValuePair_2_Type_ILTypeInstance_Binding.Register(app);
             System_Collections_Generic_KeyValuePair_2_Type_ILTypeInstance_Binding.Register(app);
             System_Action_1_IProtoMessage_Binding.Register(app);
@@ -94,7 +95,6 @@ namespace ILRuntime.Runtime.Generated
             UnityEngine_Time_Binding.Register(app);
             System_EventHandler_1_ILTypeInstance_Binding.Register(app);
             System_Byte_Binding.Register(app);
-            AssemblyCommon_IProtoMessage_Binding.Register(app);
             System_NotImplementedException_Binding.Register(app);
             System_Collections_Generic_Dictionary_2_Int32_String_Binding.Register(app);
             UnityEngine_GameObject_Binding.Register(app);

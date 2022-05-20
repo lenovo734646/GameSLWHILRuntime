@@ -12,18 +12,18 @@ public class AShower : IShowDownloadProgress
 {
 	public StartThisGame thisP;
 	float timeElapse_ = 0.0f;
-	public void Desc(string desc)
+	public override void Desc(string desc)
 	{
 		thisP.Progress(desc);
 	}
 
-	public void Progress(long downed, long totalLength)
+	public override void Progress(long downed, long totalLength)
 	{
 		if (Time.time - timeElapse_ > 1.0f && totalLength > 0)
 			thisP.Progress(string.Format(LanguageStartup.DownloadProgress, (int)(downed * 100.0f / totalLength)));
 	}
 
-	public void SetState(DownloadState st)
+	public override void SetState(DownloadState st)
 	{
 		if (st == DownloadState.Downloading) {
 			timeElapse_ = Time.time;

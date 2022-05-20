@@ -33,10 +33,10 @@ namespace ILRuntime.Runtime.Generated
             method = type.GetMethod("Stop", flag, null, args, null);
             app.RegisterCLRMethodRedirection(method, Stop_2);
 
-            field = type.GetField("progress", flag);
-            app.RegisterCLRFieldGetter(field, get_progress_0);
-            app.RegisterCLRFieldSetter(field, set_progress_0);
-            app.RegisterCLRFieldBinding(field, CopyToStack_progress_0, AssignFromStack_progress_0);
+            field = type.GetField("progressOfLoading", flag);
+            app.RegisterCLRFieldGetter(field, get_progressOfLoading_0);
+            app.RegisterCLRFieldSetter(field, set_progressOfLoading_0);
+            app.RegisterCLRFieldBinding(field, CopyToStack_progressOfLoading_0, AssignFromStack_progressOfLoading_0);
 
 
         }
@@ -88,14 +88,14 @@ namespace ILRuntime.Runtime.Generated
         }
 
 
-        static object get_progress_0(ref object o)
+        static object get_progressOfLoading_0(ref object o)
         {
-            return ((AssemblyCommon.ControllerBase)o).progress;
+            return ((AssemblyCommon.ControllerBase)o).progressOfLoading;
         }
 
-        static StackObject* CopyToStack_progress_0(ref object o, ILIntepreter __intp, StackObject* __ret, IList<object> __mStack)
+        static StackObject* CopyToStack_progressOfLoading_0(ref object o, ILIntepreter __intp, StackObject* __ret, IList<object> __mStack)
         {
-            var result_of_this_method = ((AssemblyCommon.ControllerBase)o).progress;
+            var result_of_this_method = ((AssemblyCommon.ControllerBase)o).progressOfLoading;
             object obj_result_of_this_method = result_of_this_method;
             if(obj_result_of_this_method is CrossBindingAdaptorType)
             {    
@@ -104,16 +104,16 @@ namespace ILRuntime.Runtime.Generated
             return ILIntepreter.PushObject(__ret, __mStack, result_of_this_method);
         }
 
-        static void set_progress_0(ref object o, object v)
+        static void set_progressOfLoading_0(ref object o, object v)
         {
-            ((AssemblyCommon.ControllerBase)o).progress = (AssemblyCommon.IShowDownloadProgress)v;
+            ((AssemblyCommon.ControllerBase)o).progressOfLoading = (AssemblyCommon.IShowDownloadProgress)v;
         }
 
-        static StackObject* AssignFromStack_progress_0(ref object o, ILIntepreter __intp, StackObject* ptr_of_this_method, IList<object> __mStack)
+        static StackObject* AssignFromStack_progressOfLoading_0(ref object o, ILIntepreter __intp, StackObject* ptr_of_this_method, IList<object> __mStack)
         {
             ILRuntime.Runtime.Enviorment.AppDomain __domain = __intp.AppDomain;
-            AssemblyCommon.IShowDownloadProgress @progress = (AssemblyCommon.IShowDownloadProgress)typeof(AssemblyCommon.IShowDownloadProgress).CheckCLRTypes(StackObject.ToObject(ptr_of_this_method, __domain, __mStack), (CLR.Utils.Extensions.TypeFlags)0);
-            ((AssemblyCommon.ControllerBase)o).progress = @progress;
+            AssemblyCommon.IShowDownloadProgress @progressOfLoading = (AssemblyCommon.IShowDownloadProgress)typeof(AssemblyCommon.IShowDownloadProgress).CheckCLRTypes(StackObject.ToObject(ptr_of_this_method, __domain, __mStack), (CLR.Utils.Extensions.TypeFlags)0);
+            ((AssemblyCommon.ControllerBase)o).progressOfLoading = @progressOfLoading;
             return ptr_of_this_method;
         }
 

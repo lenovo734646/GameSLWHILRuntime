@@ -14,13 +14,13 @@ public class ILRuntimeCLRBinding
     {
 		//用新的分析热更dll调用引用来生成绑定代码
 		ILRuntime.Runtime.Enviorment.AppDomain domain = new ILRuntime.Runtime.Enviorment.AppDomain();
-        using (System.IO.FileStream fs = new System.IO.FileStream("Assets/Res/Games/SLWH/HotFixDll.json", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+        using (System.IO.FileStream fs = new System.IO.FileStream("Assets/Res/Games/FQZS/HotFixDll.json", System.IO.FileMode.Open, System.IO.FileAccess.Read))
         {
             domain.LoadAssembly(fs);
 
             //Crossbind Adapter is needed to generate the correct binding code
             InitILRuntime(domain);
-            ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/Samples/ILRuntime/Generated");
+            ILRuntime.Runtime.CLRBinding.BindingCodeGenerator.GenerateBindingCode(domain, "Assets/ILRuntimeShared/Samples/ILRuntime/Generated");
         }
 
         AssetDatabase.Refresh();

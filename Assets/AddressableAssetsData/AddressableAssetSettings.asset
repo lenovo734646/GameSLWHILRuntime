@@ -34,7 +34,7 @@ MonoBehaviour:
   m_RemoteCatalogLoadPath:
     m_Id: 4ea6713146956b64b919c8150e6dd628
   m_ContentStateBuildPath: 
-  m_overridePlayerVersion: 
+  m_overridePlayerVersion: SLWH
   m_GroupAssets:
   - {fileID: 11400000, guid: 890045bcabeed834f95e61f886690904, type: 2}
   - {fileID: 11400000, guid: 4c656ad236bea714e94bc7c1b29ae5ac, type: 2}
@@ -59,7 +59,7 @@ MonoBehaviour:
       - m_Id: bbc7d7e056938a9439b8ca77972abbbe
         m_Value: ServerData/[BuildTarget]
       - m_Id: 4ea6713146956b64b919c8150e6dd628
-        m_Value: http://localhost/[BuildTarget]
+        m_Value: '{AssemblyCommon.Config.orignalUpdateUrl}/Games/SLWH/[BuildTarget]'
     m_ProfileEntryNames:
     - m_Id: ef311c8856ca8ae47bed812864d9ca83
       m_Name: BuildTarget

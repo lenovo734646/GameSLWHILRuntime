@@ -361,6 +361,8 @@
     <Compile Include="Hotfix\ILHotfixCommon\AccountInfo.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\AppBase.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\AppController.cs" />
+    <Compile Include="Hotfix\ILHotfixCommon\AudioManager.cs" />
+    <Compile Include="Hotfix\ILHotfixCommon\CircleGame.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Common.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Config.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\GameControllerBase.cs" />
@@ -369,12 +371,14 @@
     <Compile Include="Hotfix\ILHotfixCommon\MsgClient.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\MsgMultiplayer.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\MsgServer.cs" />
+    <Compile Include="Hotfix\ILHotfixCommon\MsgSlotGame.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\NetWorkController.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Protos\CLGT.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Protos\CLPF.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Protos\Global.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\Session.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\SessionBase.cs" />
+    <Compile Include="Hotfix\ILHotfixCommon\SlotGame.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\view\ViewBankLogin.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\view\ViewBankMain.cs" />
     <Compile Include="Hotfix\ILHotfixCommon\view\ViewBase.cs" />

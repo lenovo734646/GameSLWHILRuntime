@@ -12,18 +12,18 @@ public class AShower : IShowDownloadProgress
 {
 	public StartThisGame thisP;
 	float timeElapse_ = 0.0f;
-	public override void Desc(string desc)
+	public override void OnDesc(string desc)
 	{
 		thisP.Progress(desc);
 	}
 
-	public override void Progress(long downed, long totalLength)
+	public override void OnProgress(long downed, long totalLength)
 	{
 		if (Time.time - timeElapse_ > 1.0f && totalLength > 0)
 			thisP.Progress(string.Format(LanguageStartup.DownloadProgress, (int)(downed * 100.0f / totalLength)));
 	}
 
-	public override void SetState(DownloadState st)
+	public override void OnSetState(DownloadState st)
 	{
 		if (st == DownloadState.Downloading) {
 			timeElapse_ = Time.time;
@@ -67,9 +67,7 @@ public class StartThisGame : MonoBehaviour
 		if (bridge_.Prepared() && !exit_) {
 			Progress(LanguageStartup.IsLoadingHotfixModule);
 			HotfixCaller.SetHotfixValue("defaultGameFromHost", "SLWH");
-			HotfixCaller.SetHotfixValue("disableNetwork", true);
-			
-			HotfixCaller.RunGame("Hotfix.Common.AppController", "Assets/Res/Games/SLWH/HotFixDll.json", "Assets/Res/Games/SLWH/HotFixDll_pdb.json", show_);
+			HotfixCaller.RunGame("Hotfix.Common.App", "Assets/Res/Games/SLWH/HotFixDll.json", "Assets/Res/Games/SLWH/HotFixDll_pdb.json", show_);
 			//解开循环引用
 			show_ = null;
 			//删除本组件,用不着了

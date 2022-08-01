@@ -69,6 +69,10 @@ MonoBehaviour:
     m_Address: Assets/Res/Games/SLWH/Dance/UI/Result/type_1.png
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: d7b287eeb337687439eb8b67ebd4e771
+    m_Address: Assets/Res/Games/SLWH/Scenes/LoginScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: dbd1f92bbe9a2434c8bf7ff742c18800, type: 2}
   m_SchemaSet:

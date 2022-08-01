@@ -41,13 +41,13 @@ public class StartThisGame : MonoBehaviour
 	void Start()
 	{
 		show_.thisP = this;
+
 		bridge_ = GetComponent<BridgeToHotfix>();
 
 		var canvas = GameObject.Find("Canvas");
 		var btn = canvas.FindChildDeeply("Button").GetComponent<Button>();
 		txtPro = canvas.FindChildDeeply("txtProgress").GetComponent<Text>();
-
-
+		show_.SetUIRoot(canvas);
 		btn.onClick.AddListener(() => {
 			btn.gameObject.SetActive(false);
 			this.StartCor(bridge_.DoStart(show_, false), false);

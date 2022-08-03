@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 101912819}
   - component: {fileID: 101912820}
   - component: {fileID: 101912821}
+  - component: {fileID: 101912822}
   m_Layer: 0
   m_Name: LuaRuntime
   m_TagString: Untagged
@@ -177,10 +178,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 101912818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f17213fe06d9d014381f393d980b64bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 7928e39d3db5c7c41a89dbcdf1a3b4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bridge_: {fileID: 0}
+--- !u!81 &101912822
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101912818}
+  m_Enabled: 1
 --- !u!1 &460814598
 GameObject:
   m_ObjectHideFlags: 0

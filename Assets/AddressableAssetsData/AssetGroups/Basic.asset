@@ -73,6 +73,130 @@ MonoBehaviour:
     m_Address: Assets/Res/Games/SLWH/Scenes/LoginScene.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 86b698d2b9e50d3408a2967d64b34536
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/BGMusic.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 74585c5a32297364987e75553118bf6d
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/betStateMusic.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a9b2322e2d1d4c6458601a8053341cf9
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/lottery_for.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 30253db73d192324ba3f97cd5f28b586
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/vs_alert.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: acc5f08879b638249b2e84787888c4a0
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/TimerTick.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b6a0a7c1d9bd28243867d2ca5fefb2b1
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/betSound.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1aa4e02b988c91e49984d5e7ea48270a
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/start_bet.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 89115d5961e30774093ad46d0962c545
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/stop_bet.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 612b3027ad19bd74683235179ef03c6d
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/enjoygame_zhuang.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 7ec447e58c7a5a644a75c9320ec644eb
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/enjoygame_xian.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 4ff9476f50a2c0445b85022729a8f2c3
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/enjoygame_he.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 765c11b27dafa4c42aa87069f0535879
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/red_lion.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 778758b0ab7f33a428895a3c70d293e6
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/red_panda.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 885e796168eefa149ba205f1fff13db7
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/green_lion.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8a4d2d52054121e4b81bfe56d2f44cb3
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/green_panda.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ea14adcbb83d1694799bcb6ee6d0fb9c
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/green_monkey.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 4b98677f092cea944b79880b13bebe25
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/red_rabbit.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8b9a3f8fe220afb4aaf2d25b66741f15
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/red_monkey.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 7cc75c310c0a96146ac4fa091f045b12
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/green_rabbit.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 80925feaca8f31b48afaae4fa021e4e0
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/yellow_panda.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 24e511eecb570e94988bb54625a21f20
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/yellow_lion.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 34fe0e0c918722441b4c7045c6027df0
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/yellow_rabbit.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f9176cbfa2088b94db63c36910dc4ecf
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/yellow_monkey.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 971730063939ed5498735fecae70ab23
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/dasanyuan.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 7b4ddcbd83aac4845b01a9717206bec8
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/dasixi.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 47f6575d5a9c1984382f47703f3f5c40
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/caiJinLong.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b01fafc0fb2504748a07923002edba3d
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/mode3.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6627135c5c287fb46be1a59bc67ffd83
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/mode4.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 3e69020ccf3779e4f8cf847ad3f1f21a
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/freegame.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c863ec369d1265946b0cd0a9e8c5ce4d
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/lighting.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f57dd854a2414984f955eb13f354ccd8
+    m_Address: Assets/Res/Games/SLWH/Dance/Sound/CN/cashpool.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: dbd1f92bbe9a2434c8bf7ff742c18800, type: 2}
   m_SchemaSet:

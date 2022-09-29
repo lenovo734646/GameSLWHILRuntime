@@ -41,7 +41,7 @@ public class StartThisGame : MonoBehaviour
 	void Start()
 	{
 		show_.thisP = this;
-
+		Config.showCtrlReleaseLog = true;
 		bridge_ = GetComponent<BridgeToHotfix>();
 
 		var canvas = GameObject.Find("Canvas");
@@ -50,7 +50,7 @@ public class StartThisGame : MonoBehaviour
 		show_.SetUIRoot(canvas);
 		btn.onClick.AddListener(() => {
 			btn.gameObject.SetActive(false);
-			this.StartCor(bridge_.DoStart(show_, false), false);
+			Globals.cor.StartCor(bridge_.DoStart(show_, false), false);
 		});
 		show_.Desc(LanguageStartup.IsPreparingHotfixModule);
 	}
